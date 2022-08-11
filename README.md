@@ -1,4 +1,4 @@
 # mooreseditor
-moorestechのmodエディタです
+moorestechのmodエディタです。
 
-[Materio](https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free) をフォークして開発します。
+[Materio](https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free) をフォークして開発します。

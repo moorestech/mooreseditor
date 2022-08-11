@@ -26,6 +26,47 @@ const navigation = (): VerticalNavItemsType => {
       path: '/account-settings'
     },
     {
+      sectionTitle: 'Settings'
+    },
+    {
+      title: 'Metadata',
+      icon: HomeOutline,
+      path: '/settings/metadata'
+    },
+    {
+      sectionTitle: 'Element'
+    },
+    {
+      title: 'Item',
+      icon: HomeOutline,
+      path: '/element/item'
+    },
+    {
+      title: 'Block',
+      icon: HomeOutline,
+      path: '/element/block'
+    },
+    {
+      title: 'Ore',
+      icon: HomeOutline,
+      path: '/element/ore'
+    },
+    {
+      title: 'Quest',
+      icon: HomeOutline,
+      path: '/element/quest'
+    },
+    {
+      title: 'CraftRecipe',
+      icon: HomeOutline,
+      path: '/element/craftRecipe'
+    },
+    {
+      title: 'MachineRecipe',
+      icon: HomeOutline,
+      path: '/element/machineRecipe'
+    },
+    {
       sectionTitle: 'Pages'
     },
     {

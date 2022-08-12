@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import React, { useState } from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -14,7 +14,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import {ChevronUp} from "mdi-material-ui";
-import ChevronDown from "mdi-material-ui/ChevronDown";
 
 const createData = (name: string, maxStacks: number) => {
   return {
@@ -56,40 +55,53 @@ const rows = [
   createData('Gingerbread', 356)
 ]
 
-const ItemTable = () => {
-  return (
-    <TableContainer component={Paper}>
-      <Table aria-label='collapsible table'>
+class ItemTable  extends React.Component {
 
-        <TableHead>
-          <TableRow>
-            <TableCell>Icon</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell align='right'>Max Stacks</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
+  render() {
+    console.log("aaa")
+    const rowsTag = rows.map(row => {
+        console.log(row.name)
 
-        <TableBody>
-          {rows.map(row => (
-            <Row key={row.name} row={row} />
-          ))}
+        return <Row key={row.name} row={row} />
+      })
 
-          <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-            <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={() => {
-                rows.push(createData('Frozen yoghurt', 159),)
-              }}>
-                <ChevronUp />
-              </IconButton>
-            </TableCell>
-          </TableRow>
+    console.log(rowsTag.length)
 
-        </TableBody>
+    return (
+      <TableContainer component={Paper}>
+        <Table aria-label='collapsible table'>
 
-      </Table>
-    </TableContainer>
-  )
+          <TableHead>
+            <TableRow>
+              <TableCell>Icon</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell align='right'>Max Stacks</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            { rowsTag }
+
+            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+              <TableCell>
+                <IconButton aria-label='expand row' size='small' onClick={() => {
+                  rows.push(createData('Frozen yoghurt ' + rows.length, 159));
+
+                  this.render();
+                }}>
+                  <ChevronUp />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+
+          </TableBody>
+
+        </Table>
+      </TableContainer>
+    )
+  }
 }
+
 
 export default ItemTable

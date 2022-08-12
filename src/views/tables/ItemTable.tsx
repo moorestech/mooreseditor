@@ -13,7 +13,7 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import {ChevronUp} from "mdi-material-ui";
+import AddIcon from '@mui/material/Icon';
 
 const createData = (name: string, maxStacks: number) => {
   return {
@@ -55,52 +55,45 @@ const rows = [
   createData('Gingerbread', 356)
 ]
 
-class ItemTable  extends React.Component {
+function ItemTable() {
+  const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
 
-  render() {
-    console.log("aaa")
-    const rowsTag = rows.map(row => {
-        console.log(row.name)
+  const rowsTag = copiedRow.map(row => {
+    return <Row key={row.name} row={row} />
+  })
 
-        return <Row key={row.name} row={row} />
-      })
+  return (
+    <TableContainer component={Paper}>
+      <Table aria-label='collapsible table'>
 
-    console.log(rowsTag.length)
+        <TableHead>
+          <TableRow>
+            <TableCell>Icon</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell align='right'>Max Stacks</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
 
-    return (
-      <TableContainer component={Paper}>
-        <Table aria-label='collapsible table'>
+        <TableBody>
+          { rowsTag }
 
-          <TableHead>
-            <TableRow>
-              <TableCell>Icon</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell align='right'>Max Stacks</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
+          <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+            <TableCell>
+              <IconButton aria-label='expand row' size='small' onClick={() => {
+                const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
+                setRows(addedRow);
+              }}>
+                <AddIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
 
-          <TableBody>
-            { rowsTag }
+        </TableBody>
 
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-              <TableCell>
-                <IconButton aria-label='expand row' size='small' onClick={() => {
-                  rows.push(createData('Frozen yoghurt ' + rows.length, 159));
-
-                  this.render();
-                }}>
-                  <ChevronUp />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-
-          </TableBody>
-
-        </Table>
-      </TableContainer>
-    )
-  }
+      </Table>
+    </TableContainer>
+  )
 }
 
 

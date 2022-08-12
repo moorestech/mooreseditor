@@ -13,7 +13,7 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from '@mui/material/Icon';
+import Plus from 'mdi-material-ui/Plus';
 
 const createData = (name: string, maxStacks: number) => {
   return {
@@ -84,7 +84,7 @@ function ItemTable() {
                 const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
                 setRows(addedRow);
               }}>
-                <AddIcon />
+                <Plus />
               </IconButton>
             </TableCell>
           </TableRow>

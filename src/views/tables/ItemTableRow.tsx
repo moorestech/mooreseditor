@@ -23,29 +23,15 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
   const insideRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    //対象の要素を取得
     const el = insideRef.current;
-
-    //対象の要素がなければ何もしない
     if (!el) return;
-
-    //クリックした時に実行する関数
     const handleClickOutside = (e: MouseEvent) => {
-      if (el?.contains(e.target as Node)) {
-        setEditName(true)
-      } else {
-        setEditName(false)
-      }
+      setEditName(el?.contains(e.target as Node));
     };
-
-    //クリックイベントを設定
     document.addEventListener("click", handleClickOutside);
 
-    //クリーンアップ関数
-    return () => {
-      //コンポーネントがアンマウント、再レンダリングされたときにクリックイベントを削除
-      document.removeEventListener("click", handleClickOutside);
-    }});
+    return () => {document.removeEventListener("click", handleClickOutside);}}
+  );
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -56,10 +42,17 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
       <TableCell component='th' scope='row' ref={insideRef}>
         {
           editName ?
-            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={row.name} autoFocus={true} /> :
+            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={row.name} autoFocus={true} onFocus={e => e.target.select()}
+                       onKeyPress={e => {
+                         if (e.key == 'Enter') {
+                           setEditName(false);
+                         }
+                       }}
+            /> :
             <p>{row.name}</p>
         }
       </TableCell>
+
       <TableCell align='right'>
         {
           editMaxStacks ?

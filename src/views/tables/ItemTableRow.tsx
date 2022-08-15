@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell'
 
 // ** Icons Imports
 import TextField from "@mui/material/TextField";
+import EditableTextField from "../form-layouts/EditableTextField";
 
 interface ItemTableRowProps {
   name: string;
@@ -39,8 +40,6 @@ const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:b
 }
 
 const ItemTableRow = (props: { row: ItemTableRowProps }) => {
-
-  const { row } = props
   const [editName,setEditName] = useState<boolean>(false);
   const [editMaxStacks,setMaxStacks] = useState<boolean>(false);
 
@@ -60,19 +59,25 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
         <img src='/images/logos/mastercard-label.png' alt='testItem' width={40} height={40} />
       </TableCell>
 
+      <TableCell component='th' scope='row'>
+        <EditableTextField>
+
+        </EditableTextField>
+
+      </TableCell>
       <TableCell component='th' scope='row' ref={editNameRef}>
         {
           editName ?
-            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={row.name} autoFocus={true} onFocus={e => e.target.select()}/> :
-            <p>{row.name}</p>
+            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={props.row.name} autoFocus={true} onFocus={e => e.target.select()}/> :
+            <p>{props.row.name}</p>
         }
       </TableCell>
 
       <TableCell align='right' ref={editMaxStacksRef}>
         {
           editMaxStacks ?
-            <TextField fullWidth label='MaxStacks' placeholder='Max Stacks' size={"small"} defaultValue={row.maxStacks} autoFocus={true} type='number'  onFocus={e => e.target.select()}/> :
-            <p>{row.maxStacks}</p>
+            <TextField fullWidth label='MaxStacks' placeholder='Max Stacks' size={"small"} defaultValue={props.row.maxStacks} autoFocus={true} type='number'  onFocus={e => e.target.select()}/> :
+            <p>{props.row.maxStacks}</p>
         }
       </TableCell>
       <TableCell />

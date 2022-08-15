@@ -21,7 +21,7 @@ const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:b
       editAction(false);
     }
   }
-  document.addEventListener('keydown', keyDownHandler);;
+  document.addEventListener('keydown', keyDownHandler);
 
 
 

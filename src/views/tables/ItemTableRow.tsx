@@ -13,6 +13,30 @@ interface ItemTableRowProps {
   maxStacks: number;
 }
 
+const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:boolean) => void) => {
+  const keyDownHandler = (event : KeyboardEvent) => {
+
+    if (event.key === 'Enter' || event.key === 'Escape') {
+      event.preventDefault();
+      editAction(false);
+    }
+  }
+  document.addEventListener('keydown', keyDownHandler);;
+
+
+
+  const el = ref.current;
+  if (!el) return;
+  const handleClickOutside = (e: MouseEvent) => {
+    editAction(el?.contains(e.target as Node));
+  };
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener('keydown',keyDownHandler);
+  }
+}
 
 const ItemTableRow = (props: { row: ItemTableRowProps }) => {
 
@@ -22,17 +46,11 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
 
 
 
-  const insideRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = insideRef.current;
-    if (!el) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      setEditName(el?.contains(e.target as Node));
-    };
-    document.addEventListener("click", handleClickOutside);
+  const editNameRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {SedEditeState(editNameRef,setEditName)}, []);
 
-    return () => {document.removeEventListener("click", handleClickOutside);}}
-  );
+  const editMaxStacksRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {SedEditeState(editMaxStacksRef,setMaxStacks)}, []);
 
 
 
@@ -42,24 +60,18 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
         <img src='/images/logos/mastercard-label.png' alt='testItem' width={40} height={40} />
       </TableCell>
 
-      <TableCell component='th' scope='row' ref={insideRef}>
+      <TableCell component='th' scope='row' ref={editNameRef}>
         {
           editName ?
-            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={row.name} autoFocus={true} onFocus={e => e.target.select()}
-                       onKeyPress={e => {
-                         if (e.key == 'Enter') {
-                           setEditName(false);
-                         }
-                       }}
-            /> :
+            <TextField fullWidth label='Name' placeholder='Item Name' size={"small"} defaultValue={row.name} autoFocus={true} onFocus={e => e.target.select()}/> :
             <p>{row.name}</p>
         }
       </TableCell>
 
-      <TableCell align='right'>
+      <TableCell align='right' ref={editMaxStacksRef}>
         {
           editMaxStacks ?
-            <TextField fullWidth label='MaxStacks' placeholder='row.maxStacks' size={"small"} defaultValue={row.maxStacks} autoFocus={true} type='number'  /> :
+            <TextField fullWidth label='MaxStacks' placeholder='Max Stacks' size={"small"} defaultValue={row.maxStacks} autoFocus={true} type='number'  onFocus={e => e.target.select()}/> :
             <p>{row.maxStacks}</p>
         }
       </TableCell>

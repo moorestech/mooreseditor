@@ -20,8 +20,9 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
   const [editName,setEditName] = useState<boolean>(false);
   const [editMaxStacks,setMaxStacks] = useState<boolean>(false);
 
-  const insideRef = useRef<HTMLDivElement>(null);
 
+
+  const insideRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = insideRef.current;
     if (!el) return;
@@ -32,6 +33,8 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
 
     return () => {document.removeEventListener("click", handleClickOutside);}}
   );
+
+
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

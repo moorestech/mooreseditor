@@ -38,7 +38,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Item',
-      icon: () => <img src="/images/favicon.png" alt={"aa"} width={24} height={24}/>,
+      icon: HomeOutline, //画像はこうする icon: () => <img src="/images/favicon.png" alt={"aa"} width={24} height={24}/>,
       path: '/element/item'
     },
     {

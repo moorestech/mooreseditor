@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useEffect, useRef, useState} from 'react'
+import React from 'react'
 
 // ** MUI Imports
 import TableRow from '@mui/material/TableRow'
@@ -17,7 +17,7 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
       <TableCell>
-        <img src='/images/logos/mastercard-label.png' alt='testItem' width={40} height={40} />
+        <img src='/images/logos/iron ingot.png' alt='testItem' width={40} height={40} />
       </TableCell>
 
 

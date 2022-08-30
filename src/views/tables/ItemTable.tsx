@@ -25,7 +25,10 @@ const createData = (name : string,maxStacks : number) => {
 
 
 const rows = [
-  createData('Frozen yoghurt', 159),
+  createData('Iron Ingot', 100),
+  createData('Iron Ingot', 100),
+  createData('Iron Ingot', 100),
+  createData('Iron Ingot', 100),
 ]
 
 function ItemTable() {

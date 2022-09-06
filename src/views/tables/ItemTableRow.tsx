@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell'
 
 // ** Icons Imports
 import EditableTextField from "../form-layouts/EditableTextField";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 
 interface ItemTableRowProps {
   name: string;
@@ -19,9 +19,9 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
       <TableCell>
 
-        <Button>
+        <IconButton aria-label='expand row' size='small'>
           <img src='/images/logos/iron ingot.png' alt='testItem' width={40} height={40} />
-        </Button>
+        </IconButton>
       </TableCell>
 
 

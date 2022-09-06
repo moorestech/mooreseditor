@@ -1,6 +1,8 @@
+import BlockTable from "src/views/tables/BlockTable";
+
 const BlockPage = () => {
   return (
-    <p></p>
+    <BlockTable></BlockTable>
   )
 }
 

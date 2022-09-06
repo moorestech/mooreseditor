@@ -1,4 +1,4 @@
-import ItemTable from "../../../views/tables/ItemTable";
+import ItemTable from "src/views/tables/ItemTable";
 
 const ItemPage = () => {
   return (

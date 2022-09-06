@@ -34,10 +34,6 @@ const rows = [
 function ItemTable() {
   const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
 
-  const rowsTag = copiedRow.map(row => {
-    return <ItemTableRow key={row.name} row={row} />
-  })
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label='collapsible table'>
@@ -52,7 +48,9 @@ function ItemTable() {
         </TableHead>
 
         <TableBody>
-          { rowsTag }
+          { copiedRow.map(row => {
+            return <ItemTableRow key={row.name} row={row} />
+          }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>

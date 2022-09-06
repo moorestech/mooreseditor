@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell'
 
 // ** Icons Imports
 import EditableTextField from "../form-layouts/EditableTextField";
+import Button from "@mui/material/Button";
 
 interface ItemTableRowProps {
   name: string;
@@ -17,7 +18,10 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
       <TableCell>
-        <img src='/images/logos/iron ingot.png' alt='testItem' width={40} height={40} />
+
+        <Button>
+          <img src='/images/logos/iron ingot.png' alt='testItem' width={40} height={40} />
+        </Button>
       </TableCell>
 
 

@@ -41,7 +41,7 @@ function CraftRecipeTable() {
 
         <TableHead>
           <TableRow>
-            <TableCell>Result Item</TableCell>
+            <TableCell>Craft Item</TableCell>
             <TableCell></TableCell>
             <TableCell>Edit</TableCell>
           </TableRow>

@@ -63,7 +63,7 @@ const BlockTableRow = (props: { row: ItemTableRowProps }) => {
 
       <TableCell>
         <FormControl>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-label">Item</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"

@@ -42,7 +42,10 @@ function OreTable() {
           <TableRow>
             <TableCell>Icon</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell align='right'>Max Stacks</TableCell>
+            <TableCell>Mining Item</TableCell>
+            <TableCell>Vein Size</TableCell>
+            <TableCell>Vein Frequency</TableCell>
+            <TableCell>Priority</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>

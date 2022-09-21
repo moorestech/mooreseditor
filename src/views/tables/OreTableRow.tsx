@@ -8,6 +8,10 @@ import TableCell from '@mui/material/TableCell'
 // ** Icons Imports
 import EditableTextField from "../form-layouts/EditableTextField";
 import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import {Select} from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 
 interface ItemTableRowProps {
   name: string;
@@ -26,11 +30,39 @@ const OreTableRow = (props: { row: ItemTableRowProps }) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.name} type={"text"}/>
+
+        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Item Name"}/>
       </TableCell>
-      <TableCell align='right'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"}/>
+
+      <TableCell>
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Item</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value="Iron Ingot"
+            label="Item"
+          >
+            <MenuItem value="Iron Ingot">Iron Ingot</MenuItem>
+            <MenuItem value="Copper Ingot">Copper Ingot</MenuItem>
+            <MenuItem value="Gold Ingot">Gold Ingot</MenuItem>
+          </Select>
+        </FormControl>
       </TableCell>
+
+
+      <TableCell component='th' scope='row'>
+        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Size"}/>
+      </TableCell>
+
+      <TableCell component='th' scope='row'>
+        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Frequency"}/>
+      </TableCell>
+
+      <TableCell component='th' scope='row'>
+        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Priority"}/>
+      </TableCell>
+
       <TableCell />
 
     </TableRow>

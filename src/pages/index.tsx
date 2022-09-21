@@ -1,104 +1,120 @@
+// ** React Imports
+import { SyntheticEvent, useState } from 'react'
+
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import TabContext from '@mui/lab/TabContext'
+import { styled } from '@mui/material/styles'
+import MuiTab, { TabProps } from '@mui/material/Tab'
 
 // ** Icons Imports
-import Poll from 'mdi-material-ui/Poll'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
+import CubeOutline from 'mdi-material-ui/CubeOutline'
+import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
+import InformationOutline from 'mdi-material-ui/InformationOutline'
 
-// ** Custom Components Imports
-import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
+// ** Demo Tabs Imports
+import TabInfo from 'src/views/account-settings/TabInfo'
+import TabAccount from 'src/views/account-settings/TabAccount'
+import TabSecurity from 'src/views/account-settings/TabSecurity'
 
-// ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+// ** Third Party Styles Imports
+import 'react-datepicker/dist/react-datepicker.css'
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import Close from "mdi-material-ui/Close";
+import AlertTitle from "@mui/material/AlertTitle";
+import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
 
-// ** Demo Components Imports
-import Table from 'src/views/dashboard/Table'
-import Trophy from 'src/views/dashboard/Trophy'
-import TotalEarning from 'src/views/dashboard/TotalEarning'
-import StatisticsCard from 'src/views/dashboard/StatisticsCard'
-import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
-import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
-import SalesByCountries from 'src/views/dashboard/SalesByCountries'
-import ItemTable from "../views/tables/ItemTable";
+const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    minWidth: 100
+  },
+  [theme.breakpoints.down('sm')]: {
+    minWidth: 67
+  }
+}))
+
+const TabName = styled('span')(({ theme }) => ({
+  lineHeight: 1.71,
+  fontSize: '0.875rem',
+  marginLeft: theme.spacing(2.4),
+  [theme.breakpoints.down('md')]: {
+    display: 'none'
+  }
+}))
 
 const Dashboard = () => {
+
+  // ** State
+  const [value, setValue] = useState<string>('account')
+
+  const handleChange = (event: SyntheticEvent, newValue: string) => {
+    setValue(newValue)
+  }
+
   return (
-    <ApexChartWrapper>
-      <Grid container spacing={6}>
-        <Grid  item  xs={12}>
-          <ItemTable />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Trophy />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <StatisticsCard />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <WeeklyOverview />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <TotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$25.6k'
-                icon={<Poll />}
-                color='success'
-                trendNumber='+42%'
-                title='Total Profit'
-                subtitle='Weekly Profit'
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='$78'
-                title='Refunds'
-                trend='negative'
-                color='secondary'
-                trendNumber='-15%'
-                subtitle='Past Month'
-                icon={<CurrencyUsd />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='862'
-                trend='negative'
-                trendNumber='-18%'
-                title='New Project'
-                subtitle='Yearly Project'
-                icon={<BriefcaseVariantOutline />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats='15'
-                color='warning'
-                trend='negative'
-                trendNumber='-18%'
-                subtitle='Last Week'
-                title='Sales Queries'
-                icon={<HelpCircleOutline />}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <SalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
-          <DepositWithdraw />
-        </Grid>
-        <Grid item xs={12}>
-          <Table />
-        </Grid>
-      </Grid>
-    </ApexChartWrapper>
+    <Card>
+      <TabContext value={value}>
+        <TabList
+          onChange={handleChange}
+          aria-label='account-settings tabs'
+          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+        >
+          <Tab
+            value='account'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <CubeOutline />
+                <TabName>Basic</TabName>
+              </Box>
+            }
+          />
+        </TabList>
+
+        <TabPanel sx={{ p: 0 }} value='account'>
+          <CardContent>
+            <form>
+              <Grid container spacing={7}>
+
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Id'/>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Name'/>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Version'/>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Author'/>
+                </Grid>
+
+                <Grid item xs={12} sx={{ marginTop: 4.8 }}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    label='Description'
+                    minRows={2}
+                  />
+                </Grid>
+              </Grid>
+            </form>
+          </CardContent>
+        </TabPanel>
+      </TabContext>
+    </Card>
   )
 }
 

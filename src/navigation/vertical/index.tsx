@@ -21,20 +21,7 @@ const navigation = (): VerticalNavItemsType => {
       path: '/'
     },
     {
-      title: 'Account Settings',
-      icon: AccountCogOutline,
-      path: '/account-settings'
-    },
-    {
-      sectionTitle: 'Settings'
-    },
-    {
-      title: 'Metadata',
-      icon: HomeOutline,
-      path: '/settings/metadata'
-    },
-    {
-      sectionTitle: 'Element'
+      sectionTitle: 'Config'
     },
     {
       title: 'Item',

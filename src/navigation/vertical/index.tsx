@@ -26,32 +26,32 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Item',
       icon: HomeOutline, //画像はこうする icon: () => <img src="/images/favicon.png" alt={"aa"} width={24} height={24}/>,
-      path: '/element/item'
+      path: '/config/item'
     },
     {
       title: 'Block',
       icon: HomeOutline,
-      path: '/element/block'
+      path: '/config/block'
     },
     {
       title: 'Ore',
       icon: HomeOutline,
-      path: '/element/ore'
+      path: '/config/ore'
     },
     {
       title: 'Quest',
       icon: HomeOutline,
-      path: '/element/quest'
+      path: '/config/quest'
     },
     {
       title: 'CraftRecipe',
       icon: HomeOutline,
-      path: '/element/craftRecipe'
+      path: '/config/craftRecipe'
     },
     {
       title: 'MachineRecipe',
       icon: HomeOutline,
-      path: '/element/machineRecipe'
+      path: '/config/machineRecipe'
     },
     {
       sectionTitle: 'Pages'

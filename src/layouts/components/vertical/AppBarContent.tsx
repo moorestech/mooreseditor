@@ -17,6 +17,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
+import Button from "@mui/material/Button";
 
 interface Props {
   hidden: boolean
@@ -35,6 +36,11 @@ const AppBarContent = (props: Props) => {
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+
+        <Button size='small' variant='contained'>
+          Open Project
+        </Button>
+
         {hidden ? (
           <IconButton
             color='inherit'
@@ -63,12 +69,12 @@ const AppBarContent = (props: Props) => {
             target='_blank'
             rel='noreferrer'
             sx={{ mr: 4, display: 'flex' }}
-            href='https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free'
+            href='https://github.com/moorestech/mooreseditor'
           >
             <img
               height={24}
               alt='github stars'
-              src='https://img.shields.io/github/stars/themeselection/materio-mui-react-nextjs-admin-template-free?style=social'
+              src='https://img.shields.io/github/stars/moorestech/mooreseditor?style=social'
             />
           </Box>
         )}

@@ -42,7 +42,7 @@ const BlockTableRow = (props: { row: ItemTableRowProps }) => {
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.name} type={"text"}/>
+        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Block Name"}/>
       </TableCell>
 
       <TableCell>

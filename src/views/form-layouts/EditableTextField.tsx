@@ -28,7 +28,7 @@ const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:b
   }
 }
 
-const EditableTextField =  (props: { fieldValue : string,type:string}) => {
+const EditableTextField =  (props: { fieldValue : string,type:string,label : string,placeholder:string}) => {
 
 
   const editNameRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ const EditableTextField =  (props: { fieldValue : string,type:string}) => {
     <p ref={editNameRef}>
       {
         isEdit ?
-        <TextField fullWidth label='Name' type={props.type} placeholder='Item Name' size={"small"} defaultValue={props.fieldValue} autoFocus={true} onFocus={e => e.target.select()}/> :
+        <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} defaultValue={props.fieldValue} autoFocus={true} onFocus={e => e.target.select()}/> :
         <p>{props.fieldValue}</p>
       }
 

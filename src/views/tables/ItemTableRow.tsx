@@ -26,10 +26,10 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.name} type={"text"}/>
+        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Item Name"}/>
       </TableCell>
       <TableCell align='right'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"}/>
+        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Max Stack"}/>
       </TableCell>
       <TableCell />
 

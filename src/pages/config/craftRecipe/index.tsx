@@ -1,6 +1,8 @@
+import CraftRecipeTable from "../../../views/tables/CraftRecipeTable";
+
 const CraftRecipePage = () => {
   return (
-    <p></p>
+    <CraftRecipeTable></CraftRecipeTable>
   )
 }
 

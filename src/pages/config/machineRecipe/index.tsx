@@ -1,6 +1,9 @@
+import MachineRecipeTable from "../../../views/tables/MachineRecipeTable";
+
 const MachinePage = () => {
   return (
-    <p></p>
+    // eslint-disable-next-line react/jsx-no-undef
+    <MachineRecipeTable></MachineRecipeTable>
   )
 }
 

@@ -5,5 +5,5 @@ export interface EfaHandle {
     readonly kind: FileSystemKind;
     readonly name: string;
     readonly path: string;
-    readonly parentDirectory: EfaDirectoryHandle | undefined;
+    getParent() : EfaDirectoryHandle | undefined ;
 }

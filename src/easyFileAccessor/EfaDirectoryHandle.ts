@@ -1,32 +1,31 @@
 import {EfaHandle, FileSystemKind} from "./EfaHandle";
 import {EfaFileHandle} from "./EfaFIleHandle";
+import {FileWithDirectoryAndFileHandle} from "browser-fs-access";
 
 export class EfaDirectoryHandle implements EfaHandle {
   readonly kind: FileSystemKind;
   readonly name: string;
   readonly path: string;
+  readonly parentDirectory: EfaDirectoryHandle;
 
   readonly childrenFiles: EfaFileHandle[];
   readonly childrenDirectories: EfaDirectoryHandle[]
 
 
-  private parentDirectory: EfaDirectoryHandle | undefined;
-
-
-  constructor (parentDirectory : EfaDirectoryHandle | undefined,name: string, path: string, childrenFiles: EfaFileHandle[]) {
+  constructor (parentDirectory : EfaDirectoryHandle,name: string, path: string, childrenFiles: FileWithDirectoryAndFileHandle[]) {
     this.kind = 'directory';
     this.name = name;
     this.path = path;
-    this.childrenFiles = childrenFiles;
+    this.parentDirectory = parentDirectory;
+
+    this.childrenFiles = [];
+    for (const childrenFile of childrenFiles) {
+      this.childrenFiles.push(new EfaFileHandle(this,childrenFile))
+    }
 
     this.childrenDirectories = [];
     parentDirectory?.addChildrenDirectory(this);
   }
-
-  public getParent (): EfaDirectoryHandle | undefined {
-    return this.parentDirectory;
-  }
-
   private addChildrenDirectory (children: EfaDirectoryHandle): void {
     this.childrenDirectories.push(children);
   }

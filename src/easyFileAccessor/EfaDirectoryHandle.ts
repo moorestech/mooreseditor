@@ -13,24 +13,22 @@ export class EfaDirectoryHandle implements EfaHandle {
   private parentDirectory: EfaDirectoryHandle | undefined;
 
 
-  constructor (name: string, path: string, childrenFiles: EfaFileHandle[], childrenDirectories: EfaDirectoryHandle[]) {
+  constructor (parentDirectory : EfaDirectoryHandle | undefined,name: string, path: string, childrenFiles: EfaFileHandle[]) {
     this.kind = 'directory';
     this.name = name;
     this.path = path;
     this.childrenFiles = childrenFiles;
-    this.childrenDirectories = childrenDirectories;
 
-    for (const childrenDirectory of childrenDirectories) {
-      childrenDirectory.setParent(this);
-    }
+    this.childrenDirectories = [];
+    parentDirectory?.addChildrenDirectory(this);
   }
 
   public getParent (): EfaDirectoryHandle | undefined {
     return this.parentDirectory;
   }
 
-  private setParent (parentDirectory: EfaDirectoryHandle): void {
-    this.parentDirectory = parentDirectory;
+  private addChildrenDirectory (children: EfaDirectoryHandle): void {
+    this.childrenDirectories.push(children);
   }
 
 }

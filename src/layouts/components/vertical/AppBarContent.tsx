@@ -18,12 +18,17 @@ import ModeToggler from 'src/@core/layouts/components/shared-components/ModeTogg
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import Button from "@mui/material/Button";
+import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
 
 interface Props {
   hidden: boolean
   settings: Settings
   toggleNavVisibility: () => void
   saveSettings: (values: Settings) => void
+}
+
+async function OpenProject(){
+  const dirHandle = await EfaOpenDirectory();
 }
 
 const AppBarContent = (props: Props) => {
@@ -37,7 +42,7 @@ const AppBarContent = (props: Props) => {
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
 
-        <Button size='small' variant='contained'>
+        <Button size='small' variant='contained' onClick={OpenProject}>
           Open Project
         </Button>
 

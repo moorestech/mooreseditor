@@ -6,13 +6,13 @@ export class EfaDirectoryHandle implements EfaHandle {
   readonly kind: FileSystemKind;
   readonly name: string;
   readonly path: string;
-  readonly parentDirectory: EfaDirectoryHandle;
+  readonly parentDirectory?: EfaDirectoryHandle;
 
   readonly childrenFiles: EfaFileHandle[];
   readonly childrenDirectories: EfaDirectoryHandle[]
 
 
-  constructor (parentDirectory : EfaDirectoryHandle,name: string, path: string, childrenFiles: FileWithDirectoryAndFileHandle[]) {
+  constructor (name: string, path: string, childrenFiles: FileWithDirectoryAndFileHandle[],parentDirectory? : EfaDirectoryHandle,) {
     this.kind = 'directory';
     this.name = name;
     this.path = path;

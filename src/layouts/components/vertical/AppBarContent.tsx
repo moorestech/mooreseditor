@@ -29,6 +29,7 @@ interface Props {
 
 async function OpenProject(){
   const dirHandle = await EfaOpenDirectory();
+  console.log(dirHandle);
 }
 
 const AppBarContent = (props: Props) => {

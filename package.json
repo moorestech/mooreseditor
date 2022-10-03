@@ -52,7 +52,6 @@
     "@mui/material": "^5.4.3",
     "@popperjs/core": "^2.11.2",
     "apexcharts-clevision": "3.28.5",
-    "browser-fs-access": "^0.31.0",
     "clsx": "^1.1.1",
     "mdi-material-ui": "^7.1.0",
     "next": "12.0.4",

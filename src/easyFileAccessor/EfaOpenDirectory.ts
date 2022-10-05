@@ -12,7 +12,7 @@ export async function createDirectory(handle :  FileSystemDirectoryHandle,parent
     }
   }
   const directoryPath = parentPath + '/' + handle.name;
-  const thisDirectory = new EfaDirectoryHandle(handle.name,directoryPath,files,parentDirectory);
+  const thisDirectory = new EfaDirectoryHandle(handle.name,directoryPath,handle,files,parentDirectory);
 
 
   for await (const entry of handle.values()) {

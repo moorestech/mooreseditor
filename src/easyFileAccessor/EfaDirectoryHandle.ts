@@ -12,14 +12,16 @@ export class EfaDirectoryHandle implements EfaHandle {
   readonly childrenFiles: EfaFileHandle[];
   readonly childrenDirectories: EfaDirectoryHandle[]
 
+  private readonly directoryHandle : FileSystemDirectoryHandle;
 
   //parentDirectoryをreadonlyにするために、parentDirectoryをセットし、自身の子ディレクトリを知らない状態でコンストラクトする
-  constructor (name: string, path: string, childrenFiles: FileSystemFileHandle[],parentDirectory? : EfaDirectoryHandle) {
+  constructor (name: string, path: string,directoryHandle : FileSystemDirectoryHandle, childrenFiles: FileSystemFileHandle[],parentDirectory? : EfaDirectoryHandle) {
     this.kind = 'directory';
     this.name = name;
     this.path = path;
     this.parentDirectory = parentDirectory;
     this.isRoot = parentDirectory === undefined;
+    this.directoryHandle = directoryHandle;
 
     this.childrenFiles = [];
     for (const childrenFile of childrenFiles) {
@@ -32,6 +34,24 @@ export class EfaDirectoryHandle implements EfaHandle {
   }
   private addChildrenDirectory (children: EfaDirectoryHandle): void {
     this.childrenDirectories.push(children);
+  }
+
+  async createFile(name: string): Promise<EfaFileHandle> {
+    const fileHandle = await this.directoryHandle.getFileHandle(name,{create: true});
+    const filePath = this.path + '/' + name;
+    const file = new EfaFileHandle(filePath,this,fileHandle);
+    this.childrenFiles.push(file);
+
+    return file;
+  }
+
+  async createDirectory(name: string): Promise<EfaDirectoryHandle> {
+    const directoryHandle = await this.directoryHandle.getDirectoryHandle(name,{create: true});
+    const directoryPath = this.path + '/' + name;
+    const directory = new EfaDirectoryHandle(name,directoryPath,directoryHandle,[],this);
+    this.childrenDirectories.push(directory);
+
+    return directory;
   }
 
   //そのパスのファイルもしくはディレクトリが存在するかチェックする

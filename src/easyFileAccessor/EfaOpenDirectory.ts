@@ -25,10 +25,13 @@ export async function createDirectory(handle :  FileSystemDirectoryHandle,parent
 }
 
 export async function efaOpenDirectory(id:string = "", mode:OpenDirectoryMode = 'readwrite', defaultDirectory:OpenDefaultDirectory = 'documents'): Promise<EfaDirectoryHandle> {
-  const dirHandle = await window.showDirectoryPicker();
+  const dirHandle = await window.showDirectoryPicker({
+    id: id,
+    startIn: defaultDirectory,
+    mode: mode
+  });
 
   return await createDirectory(dirHandle, "", undefined);
-
 }
 
 export default efaOpenDirectory

@@ -92,8 +92,17 @@ export class EfaDirectoryHandle implements EfaHandle {
 
     //子ディレクトリをチェック
     for (const childrenDirectory of this.childrenDirectories) {
-      if (childrenDirectory.name == pathArray[0]){
+      if (childrenDirectory.name === pathArray[0]){
         return childrenDirectory.isExist(nextPath);
+      }
+    }
+
+    //子ファイルをチェック
+    if (pathArray.length === 1){
+      for (const childrenFile of this.childrenFiles) {
+        if (childrenFile.name === pathArray[0]){
+          return true;
+        }
       }
     }
 

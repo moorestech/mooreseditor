@@ -6,6 +6,4 @@ export interface EfaHandle {
     readonly name: string;
     readonly path: string;
     readonly parentDirectory? : EfaDirectoryHandle;
-
-    isExist(path : string) : boolean;
 }

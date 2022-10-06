@@ -50,7 +50,7 @@ export default class ModMeta {
 
 
 
-  async CreateModMeta(metaFile : EfaFileHandle) : Promise<ModMeta> {
+  static async CreateModMeta(metaFile : EfaFileHandle) : Promise<ModMeta> {
     const file = await metaFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);

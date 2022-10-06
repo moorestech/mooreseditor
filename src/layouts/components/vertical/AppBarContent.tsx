@@ -19,6 +19,8 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import Button from "@mui/material/Button";
 import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
+import Mod from "../../../mod/Mod";
+import ModMeta from "../../../mod/ModMeta";
 
 interface Props {
   hidden: boolean
@@ -30,6 +32,12 @@ interface Props {
 async function OpenProject(){
   const dirHandle = await EfaOpenDirectory();
   console.log(dirHandle);
+
+  const metaFile = await dirHandle.getFileHandle("mod_meta.json");
+  if (metaFile !== undefined) {
+    const mod = new Mod(await ModMeta.CreateModMeta(metaFile))
+    console.log(mod);
+  }
 }
 
 const AppBarContent = (props: Props) => {

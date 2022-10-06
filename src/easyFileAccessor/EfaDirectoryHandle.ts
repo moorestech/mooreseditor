@@ -57,13 +57,38 @@ export class EfaDirectoryHandle implements EfaHandle {
   //そのパスのファイルもしくはディレクトリが存在するかチェックする
   //パスの指定はこのインスタンスから見た相対パス
   isExist(path: string): boolean {
+    return this.getHandle(path) !== undefined;
+  }
+
+  getDirectoryHandle(path: string): EfaDirectoryHandle | undefined {
+    const handle = this.getHandle(path);
+    if (handle === undefined || handle.kind === 'file'){
+      return undefined;
+    }
+    if (handle.kind === 'directory'){
+      return handle as EfaDirectoryHandle;
+    }
+  }
+
+  getFileHandle(path: string): EfaFileHandle | undefined {
+    const handle = this.getHandle(path);
+    if (handle === undefined || handle.kind === 'directory'){
+      return undefined;
+    }
+    if (handle.kind === 'file'){
+      return handle as EfaFileHandle;
+    }
+  }
+
+  private getHandle(path: string): EfaHandle | undefined {
+
     if (path.length === 0){
-      return true;
+      return this;
     }
 
     const pathArray = path.split('/');
     if (pathArray.length === 0){
-      return true;
+      return this;
     }
     const nextPath = pathUtil.join(...pathArray.slice(1));
 
@@ -74,17 +99,17 @@ export class EfaDirectoryHandle implements EfaHandle {
 
         // /hoge の状態の時配列は['','hoge']になるので、rootだけの指定かどうかをチェックする
         if (pathArray[1] === this.name && pathArray.length == 2){
-          return true;
+          return this;
         }else if (pathArray[1] === this.name){
           // /hoge/fuga の状態の時は fugaにして子をチェックする
           const rootNextPath = pathUtil.join(...pathArray.slice(2));
 
-          return this.isExist(rootNextPath);
+          return this.getHandle(rootNextPath);
         }
 
-        return false;
+        return undefined;
       }else{
-        return this.parentDirectory.isExist(path);
+        return this.parentDirectory.getHandle(path);
       }
     }
 
@@ -92,28 +117,28 @@ export class EfaDirectoryHandle implements EfaHandle {
 
     // . なのでtrueを返す
     if (pathArray[0] === '.' && pathArray.length === 1){
-      return true;
+      return this;
     }
 
     // ./hoge なので.を除いてチェック
     if (pathArray[0] === '.'){
 
-      return this.isExist(nextPath)
+      return this.getHandle(nextPath)
     }
 
     // ../hoge なので親ディレクトリをチェック
     if (pathArray[0] === '..'){
       if (this.parentDirectory === undefined){
-        return false;
+        return undefined;
       }else{
-        return this.parentDirectory.isExist(nextPath);
+        return this.parentDirectory.getHandle(nextPath);
       }
     }
 
     //子ディレクトリをチェック
     for (const childrenDirectory of this.childrenDirectories) {
       if (childrenDirectory.name === pathArray[0]){
-        return childrenDirectory.isExist(nextPath);
+        return childrenDirectory.getHandle(nextPath);
       }
     }
 
@@ -121,13 +146,12 @@ export class EfaDirectoryHandle implements EfaHandle {
     if (pathArray.length === 1){
       for (const childrenFile of this.childrenFiles) {
         if (childrenFile.name === pathArray[0]){
-          return true;
+          return childrenFile;
         }
       }
     }
 
-
-    return false;
+    return undefined;
   }
 
 }

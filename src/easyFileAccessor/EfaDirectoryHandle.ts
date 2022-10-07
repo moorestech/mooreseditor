@@ -60,24 +60,26 @@ export class EfaDirectoryHandle implements EfaHandle {
     return this.getHandle(path) !== undefined;
   }
 
-  getDirectoryHandle(path: string): EfaDirectoryHandle | undefined {
+  getDirectoryHandle(path: string): EfaDirectoryHandle {
     const handle = this.getHandle(path);
     if (handle === undefined || handle.kind === 'file'){
-      return undefined;
+      throw new Error("Not found file");
     }
     if (handle.kind === 'directory'){
       return handle as EfaDirectoryHandle;
     }
+    throw new Error("Not found file");
   }
 
-  getFileHandle(path: string): EfaFileHandle | undefined {
+  getFileHandle(path: string): EfaFileHandle {
     const handle = this.getHandle(path);
     if (handle === undefined || handle.kind === 'directory'){
-      return undefined;
+      throw new Error("Not found file");
     }
     if (handle.kind === 'file'){
       return handle as EfaFileHandle;
     }
+    throw new Error("Not found file");
   }
 
   private getHandle(path: string): EfaHandle | undefined {

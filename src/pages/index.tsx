@@ -39,11 +39,11 @@ const TabName = styled('span')(({ theme }) => ({
 let modMeta:ModMeta;
 const Dashboard = () => {
   const [tabValue, setTabValue] = useState<string>('basic')
-  const [id, setId] = useState<string>('')
-  const [author, setAuthor] = useState<string>('')
-  const [name, setName] = useState<string>('')
-  const [version, setVersion] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
+  const [id, setId] = useState<string>(Mod.instance ? Mod.instance.meta.id : '')
+  const [author, setAuthor] = useState<string>(Mod.instance ? Mod.instance.meta.author : '')
+  const [name, setName] = useState<string>(Mod.instance ? Mod.instance.meta.name : '')
+  const [version, setVersion] = useState<string>(Mod.instance ? Mod.instance.meta.version : '')
+  const [description, setDescription] = useState<string>(Mod.instance ? Mod.instance.meta.description : '')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setTabValue(newValue)

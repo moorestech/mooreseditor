@@ -4,7 +4,6 @@ export default class ModMeta {
   private readonly _id: string;
   private readonly _author: string;
   private readonly _metaFileHandle : EfaFileHandle;
-
   private _name: string;
   private _version: string;
   private _description: string;
@@ -12,7 +11,6 @@ export default class ModMeta {
 
   get id(): string {return this._id;}
   get author(): string {return this._author;}
-
   get name(): string {return this._name;}
   get version(): string {return this._version;}
   get description(): string {return this._description;}
@@ -21,18 +19,14 @@ export default class ModMeta {
     await this.save();
     this._name = name;
   }
-
   async changeVersion(version: string) {
     await this.save();
     this._version = version;
   }
-
   async changeDescription(description: string) {
     await this.save();
     this._description = description;
   }
-
-
   async save() {
     const json = {
       id: this._id,
@@ -41,7 +35,6 @@ export default class ModMeta {
       author: this._author,
       description: this._description
     }
-
     const writable = await this._metaFileHandle.createWritable();
     await writable.write(JSON.stringify(json,undefined,4));
     await writable.close();

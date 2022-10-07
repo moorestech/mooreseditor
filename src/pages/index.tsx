@@ -10,32 +10,11 @@ import TabContext from '@mui/lab/TabContext'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
-// ** Icons Imports
 import CubeOutline from 'mdi-material-ui/CubeOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import InformationOutline from 'mdi-material-ui/InformationOutline'
-
-// ** Demo Tabs Imports
-import TabInfo from 'src/views/account-settings/TabInfo'
-import TabAccount from 'src/views/account-settings/TabAccount'
-import TabSecurity from 'src/views/account-settings/TabSecurity'
-
-// ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Close from "mdi-material-ui/Close";
-import AlertTitle from "@mui/material/AlertTitle";
-import Link from "@mui/material/Link";
-import Button from "@mui/material/Button";
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -64,12 +43,15 @@ const Dashboard = () => {
     setValue(newValue)
   }
 
+
+
+
   return (
     <Card>
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='account-settings tabs'
+          aria-label='mod-settings tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
@@ -89,16 +71,17 @@ const Dashboard = () => {
               <Grid container spacing={7}>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Id'/>
+                  <TextField fullWidth label='Id' disabled={true} defaultValue={""}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Name'/>
+                  <TextField fullWidth label='Author' disabled={true} defaultValue={""}/>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Name' defaultValue={""}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Version'/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Author'/>
+                  <TextField fullWidth label='Version' defaultValue={""}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{ marginTop: 4.8 }}>

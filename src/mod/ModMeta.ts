@@ -43,7 +43,7 @@ export default class ModMeta {
     }
 
     const writable = await this._metaFileHandle.createWritable();
-    await writable.write(JSON.stringify(json));
+    await writable.write(JSON.stringify(json,undefined,4));
     await writable.close();
   }
 

@@ -1,7 +1,7 @@
 import {EfaDirectoryHandle} from "./EfaDirectoryHandle";
 
 type OpenDirectoryMode =  'readwrite' | 'read';
-type OpenDefaultDirectory = 'documents' | 'desktop' | 'downloads' | 'music' | 'pictures' | 'videos';
+type OpenDefaultDirectory = '' |'documents' | 'desktop' | 'downloads' | 'music' | 'pictures' | 'videos';
 
 export async function createDirectory(handle :  FileSystemDirectoryHandle,parentPath : string,parentDirectory? : EfaDirectoryHandle) : Promise<EfaDirectoryHandle>{
   const files : FileSystemFileHandle[] = [];
@@ -24,12 +24,23 @@ export async function createDirectory(handle :  FileSystemDirectoryHandle,parent
   return thisDirectory;
 }
 
-export async function efaOpenDirectory(id = "", mode:OpenDirectoryMode = 'readwrite', defaultDirectory:OpenDefaultDirectory = 'documents'): Promise<EfaDirectoryHandle> {
-  const dirHandle = await window.showDirectoryPicker({
-    id: id,
-    startIn: defaultDirectory,
-    mode: mode
-  });
+export async function efaOpenDirectory(id = "", mode:OpenDirectoryMode = 'readwrite', defaultDirectory:OpenDefaultDirectory = ''): Promise<EfaDirectoryHandle> {
+
+  //TODO 改善求む
+  let dirHandle : FileSystemDirectoryHandle;
+  if (defaultDirectory === ''){
+    dirHandle = await window.showDirectoryPicker({
+      id: id,
+      mode: mode
+    });
+  }else{
+    dirHandle = await window.showDirectoryPicker({
+      id: id,
+      startIn: defaultDirectory,
+      mode: mode
+    });
+  }
+
 
   return await createDirectory(dirHandle, "", undefined);
 }

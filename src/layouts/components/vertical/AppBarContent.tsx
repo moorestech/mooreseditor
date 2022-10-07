@@ -32,7 +32,7 @@ interface Props {
 async function OpenProject(){
   try {
     const dirHandle = await EfaOpenDirectory();
-    const metaFile = await dirHandle.getFileHandle("mod_meta.json");
+    const metaFile = await dirHandle.getFileHandle("modMeta.json");
 
     if (metaFile !== undefined) {
       const mod = new Mod(await ModMeta.CreateModMeta(metaFile))

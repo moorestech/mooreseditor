@@ -54,21 +54,21 @@ export default class ModMeta {
     const file = await metaFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
-    
+
     const id = json.id;
-    if (id === undefined){throw new Error("id is undefined in mod_meta.json");}
+    if (id === undefined){throw new Error("id is undefined in modMeta.json");}
 
     const name = json.name;
-    if (name === undefined){throw new Error("name is undefined in mod_meta.json");}
+    if (name === undefined){throw new Error("name is undefined in modMeta.json");}
 
     const version = json.version;
-    if (version === undefined){throw new Error("version is undefined in mod_meta.json");}
+    if (version === undefined){throw new Error("version is undefined in modMeta.json");}
 
     const author = json.author;
-    if (author === undefined){throw new Error("author is undefined in mod_meta.json");}
+    if (author === undefined){throw new Error("author is undefined in modMeta.json");}
 
     const description = json.description;
-    if (description === undefined){throw new Error("description is undefined in mod_meta.json");}
+    if (description === undefined){throw new Error("description is undefined in modMeta.json");}
 
     return new ModMeta(metaFile, id, name, version, author, description);
   }

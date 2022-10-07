@@ -113,7 +113,6 @@ const Dashboard = () => {
                     value={description}
                     onChange={e => {
                       setDescription(e.target.value);
-                      console.log(modMeta)
                       modMeta?.changeDescription(e.target.value);
                     }}
                   />

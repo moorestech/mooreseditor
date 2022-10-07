@@ -54,8 +54,23 @@ export default class ModMeta {
     const file = await metaFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
+    
+    const id = json.id;
+    if (id === undefined){throw new Error("id is undefined in mod_meta.json");}
 
-    return new ModMeta(metaFile,json.id,json.name,json.version,json.author,json.description);
+    const name = json.name;
+    if (name === undefined){throw new Error("name is undefined in mod_meta.json");}
+
+    const version = json.version;
+    if (version === undefined){throw new Error("version is undefined in mod_meta.json");}
+
+    const author = json.author;
+    if (author === undefined){throw new Error("author is undefined in mod_meta.json");}
+
+    const description = json.description;
+    if (description === undefined){throw new Error("description is undefined in mod_meta.json");}
+
+    return new ModMeta(metaFile, id, name, version, author, description);
   }
 
   private constructor(metaFile : EfaFileHandle, id: string, name: string, version: string, author: string, description: string) {

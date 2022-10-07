@@ -15,6 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import Mod from "../mod/Mod";
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -37,18 +38,30 @@ const TabName = styled('span')(({ theme }) => ({
 const Dashboard = () => {
 
   // ** State
-  const [value, setValue] = useState<string>('account')
+  const [tabValue, setTabValue] = useState<string>('account')
+  const [id, setId] = useState<string>('')
+  const [author, setAuthor] = useState<string>('')
+  const [name, setName] = useState<string>('')
+  const [version, setVersion] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue)
+    setTabValue(newValue)
   }
 
+  Mod.onModUpdate.subscribe((mod) => {
+    setId(mod.meta.id);
+    setAuthor(mod.meta.author);
+    setName(mod.meta.name);
+    setVersion(mod.meta.version);
+    setDescription(mod.meta.description);
+  });
 
 
 
   return (
     <Card>
-      <TabContext value={value}>
+      <TabContext value={tabValue}>
         <TabList
           onChange={handleChange}
           aria-label='mod-settings tabs'
@@ -71,17 +84,17 @@ const Dashboard = () => {
               <Grid container spacing={7}>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Id' disabled={true} defaultValue={""}/>
+                  <TextField fullWidth label='Id' disabled={true} value={id}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Author' disabled={true} defaultValue={""}/>
+                  <TextField fullWidth label='Author' disabled={true} value={author}/>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Name' defaultValue={""}/>
+                  <TextField fullWidth label='Name' value={name}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Version' defaultValue={""}/>
+                  <TextField fullWidth label='Version' value={version}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{ marginTop: 4.8 }}>
@@ -90,6 +103,7 @@ const Dashboard = () => {
                     multiline
                     label='Description'
                     minRows={2}
+                    value={description}
                   />
                 </Grid>
               </Grid>

@@ -2,10 +2,10 @@ import ModMeta from "./ModMeta";
 import {Observable, Subject} from "rxjs";
 
 export default class Mod {
-  get onModUpdate() : Observable<Mod> {
+  static get onModUpdate() : Observable<Mod> {
     return Mod.onModUpdateSubject;
   }
-  static onModUpdateSubject : Subject<Mod> = new Subject<Mod>();
+  private static onModUpdateSubject : Subject<Mod> = new Subject<Mod>();
 
 
 

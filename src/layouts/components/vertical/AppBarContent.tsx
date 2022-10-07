@@ -31,12 +31,10 @@ interface Props {
 
 async function OpenProject(){
   const dirHandle = await EfaOpenDirectory();
-  console.log(dirHandle);
-
   const metaFile = await dirHandle.getFileHandle("mod_meta.json");
+
   if (metaFile !== undefined) {
     const mod = new Mod(await ModMeta.CreateModMeta(metaFile))
-    console.log(mod);
   }
 }
 

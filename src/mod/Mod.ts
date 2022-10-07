@@ -2,10 +2,11 @@ import ModMeta from "./ModMeta";
 import {Observable, Subject} from "rxjs";
 
 export default class Mod {
-  static get onModUpdate() : Observable<Mod> {
-    return Mod.onModUpdateSubject;
-  }
+  static get onModUpdate() : Observable<Mod> {return Mod.onModUpdateSubject;}
   private static onModUpdateSubject : Subject<Mod> = new Subject<Mod>();
+
+  static get instance() : Mod {return Mod._instance;}
+  private static _instance : Mod;
 
 
 
@@ -18,6 +19,7 @@ export default class Mod {
 
   constructor(meta: ModMeta) {
     this._meta = meta;
+    Mod._instance = this;
     Mod.onModUpdateSubject.next(this);
   }
 }

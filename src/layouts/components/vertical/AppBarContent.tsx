@@ -21,6 +21,7 @@ import Button from "@mui/material/Button";
 import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
 import Mod from "../../../mod/Mod";
 import ModMeta from "../../../mod/ModMeta";
+import ItemConfig from "../../../mod/ItemConfig";
 
 interface Props {
   hidden: boolean
@@ -33,10 +34,12 @@ async function OpenProject(){
   try {
     const dirHandle = await EfaOpenDirectory();
     const metaFile = await dirHandle.getFileHandle("modMeta.json");
+    const modMeta = await ModMeta.CreateModMeta(metaFile);
 
-    if (metaFile !== undefined) {
-      const mod = new Mod(await ModMeta.CreateModMeta(metaFile))
-    }
+    const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
+    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile);
+
+    const mod = new Mod(modMeta, itemConfig);
   }catch (e) {
     console.log(e);
   }

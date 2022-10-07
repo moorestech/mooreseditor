@@ -16,6 +16,7 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Mod from "../mod/Mod";
+import ModMeta from "../mod/ModMeta";
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -35,10 +36,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
+let modMeta:ModMeta;
 const Dashboard = () => {
-
-  // ** State
-  const [tabValue, setTabValue] = useState<string>('account')
+  const [tabValue, setTabValue] = useState<string>('basic')
   const [id, setId] = useState<string>('')
   const [author, setAuthor] = useState<string>('')
   const [name, setName] = useState<string>('')
@@ -55,6 +55,7 @@ const Dashboard = () => {
     setName(mod.meta.name);
     setVersion(mod.meta.version);
     setDescription(mod.meta.description);
+    modMeta = mod.meta;
   });
 
 
@@ -68,7 +69,7 @@ const Dashboard = () => {
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='account'
+            value='basic'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <CubeOutline />
@@ -78,7 +79,7 @@ const Dashboard = () => {
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='account'>
+        <TabPanel sx={{ p: 0 }} value='basic'>
           <CardContent>
             <form>
               <Grid container spacing={7}>
@@ -91,10 +92,16 @@ const Dashboard = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Name' value={name}/>
+                  <TextField fullWidth label='Name' value={name} onChange={e => {
+                    setName(e.target.value);
+                    modMeta?.changeName(e.target.value);
+                  }}  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Version' value={version}/>
+                  <TextField fullWidth label='Version' value={version} onChange={e => {
+                    setVersion(e.target.value);
+                    modMeta?.changeVersion(e.target.value);
+                  }}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{ marginTop: 4.8 }}>
@@ -104,6 +111,11 @@ const Dashboard = () => {
                     label='Description'
                     minRows={2}
                     value={description}
+                    onChange={e => {
+                      setDescription(e.target.value);
+                      console.log(modMeta)
+                      modMeta?.changeDescription(e.target.value);
+                    }}
                   />
                 </Grid>
               </Grid>

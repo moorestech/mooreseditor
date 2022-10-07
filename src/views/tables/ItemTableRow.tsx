@@ -8,13 +8,10 @@ import TableCell from '@mui/material/TableCell'
 // ** Icons Imports
 import EditableTextField from "../form-layouts/EditableTextField";
 import IconButton from "@mui/material/IconButton";
+import {Item} from "../../mod/Item";
 
-interface ItemTableRowProps {
-  name: string;
-  maxStacks: number;
-}
 
-const ItemTableRow = (props: { row: ItemTableRowProps }) => {
+const ItemTableRow = (props: { row: Item }) => {
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
       <TableCell>
@@ -26,7 +23,7 @@ const ItemTableRow = (props: { row: ItemTableRowProps }) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Item Name"}/>
+        <EditableTextField fieldValue={props.row.id} type={"text"} placeholder={""} label={"Item Name"}/>
       </TableCell>
       <TableCell align='right'>
         <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Max Stack"}/>

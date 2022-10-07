@@ -2,14 +2,14 @@ import {Item} from "./Item";
 import {EfaFileHandle} from "../easyFileAccessor/EfaFIleHandle";
 
 export default class ItemConfig{
-  private readonly items: Item[] = [];
+  get items() : Item[] {return this._items;}
+  private _items : Item[];
   private readonly _metaFileHandle: EfaFileHandle;
 
-  getItemCount() : number {return this.items.length;}
-  getItem(index: number) : Item {return this.items[index];}
-  addItem(item: Item) : void {this.items.push(item);}
-  removeItem(index: number) {this.items.splice(index,1);}
-  setItem(index: number, item: Item) {this.items[index] = item;}
+  async changeItems(items : Item[]) {
+    this._items = items;
+    await this.save();
+  }
 
   async save() {
     const json = [];
@@ -44,7 +44,7 @@ export default class ItemConfig{
   }
 
   private constructor(items : Item[],configFile : EfaFileHandle) {
-    this.items = items;
+    this._items = items;
     this._metaFileHandle = configFile;
   }
 }

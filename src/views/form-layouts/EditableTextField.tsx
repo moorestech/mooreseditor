@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
 import React, {useEffect,useRef,useState} from "react";
+import Typography from "@mui/material/Typography";
 
 
 
@@ -36,14 +37,16 @@ const EditableTextField =  (props: { fieldValue : string,type:string,label : str
   useEffect(() => {SedEditeState(editNameRef,setIsEdit)}, []);
 
   return (
-    <p ref={editNameRef}>
+    <div ref={editNameRef}>
       {
         isEdit ?
         <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} defaultValue={props.fieldValue} autoFocus={true} onFocus={e => e.target.select()}/> :
-        <p>{props.fieldValue}</p>
+        <Typography variant='body2'>
+          {props.fieldValue}
+        </Typography>
       }
 
-    </p>
+    </div>
   )
 }
 

@@ -14,25 +14,17 @@ import TableContainer from '@mui/material/TableContainer'
 import IconButton from "@mui/material/IconButton";
 import Plus from 'mdi-material-ui/Plus';
 import ItemTableRow from "./ItemTableRow";
-
-const createData = (name : string,maxStacks : number) => {
-  return {
-    name,
-    maxStacks,
-  }
-}
+import {Item} from "../../mod/Item";
+import Mod from "../../mod/Mod";
 
 
-
-const rows = [
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-]
 
 function ItemTable() {
-  const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
+  const [itemRows, setItemRows] = useState<Item[]>(Mod.instance ? Mod.instance.itemConfig.items : []);
+
+  Mod.onModUpdate.subscribe((mod) => {
+    setItemRows(mod.itemConfig.items);
+  });
 
   return (
     <TableContainer component={Paper}>
@@ -48,15 +40,16 @@ function ItemTable() {
         </TableHead>
 
         <TableBody>
-          { copiedRow.map(row => {
-            return <ItemTableRow key={row.name} row={row} />
+          { itemRows.map(row => {
+            return <ItemTableRow key={row.id} row={row} />;
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={() => {
-                const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
-                setRows(addedRow);
+              <IconButton aria-label='expand row' size='small' onClick={async () => {
+                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100));
+                await Mod.instance.itemConfig.changeItems(addedRow);
+                setItemRows(addedRow);
               }}>
                 <Plus />
               </IconButton>

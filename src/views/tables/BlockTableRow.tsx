@@ -11,15 +11,9 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import {Select} from "@mui/material";
-import Button from "@mui/material/Button";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import TextField from "@mui/material/TextField";
-import DialogActions from "@mui/material/DialogActions";
+import MachineParamEditModal from "../modal/MachineParamEditModal";
 
 interface ItemTableRowProps {
   name: string;
@@ -27,16 +21,8 @@ interface ItemTableRowProps {
 }
 
 const BlockTableRow = (props: { row: ItemTableRowProps }) => {
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    console.log("aaa");
-    setOpen(false);
-  };
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -78,32 +64,12 @@ const BlockTableRow = (props: { row: ItemTableRowProps }) => {
       </TableCell>
 
       <TableCell>
-        <IconButton aria-label='expand row' size='small' onClick={handleClickOpen}>
+        <IconButton aria-label='expand row' size='small' onClick={() => setIsOpen(true)}>
           <Pencil/>
-
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Subscribe</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                To subscribe to this website, please enter your email address here. We
-                will send updates occasionally.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleClose}>Subscribe</Button>
-            </DialogActions>
-          </Dialog>
         </IconButton>
+
+        <MachineParamEditModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></MachineParamEditModal>
+
       </TableCell>
 
       <TableCell />

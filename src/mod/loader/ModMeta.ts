@@ -1,4 +1,4 @@
-import {EfaFileHandle} from "../easyFileAccessor/EfaFIleHandle";
+import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
 
 export default class ModMeta {
   private readonly _id: string;

@@ -19,9 +19,9 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import Button from "@mui/material/Button";
 import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
-import Mod from "../../../mod/Mod";
-import ModMeta from "../../../mod/ModMeta";
-import ItemConfig from "../../../mod/ItemConfig";
+import Mod from "../../../mod/loader/Mod";
+import ModMeta from "../../../mod/loader/ModMeta";
+import ItemConfig from "../../../mod/loader/ItemConfig";
 
 interface Props {
   hidden: boolean

@@ -8,7 +8,7 @@ import TableCell from '@mui/material/TableCell'
 // ** Icons Imports
 import EditableTextField from "../form-layouts/EditableTextField";
 import IconButton from "@mui/material/IconButton";
-import {Item} from "../../mod/Item";
+import {Item} from "../../mod/element/Item";
 
 
 const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {

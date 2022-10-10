@@ -15,8 +15,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import Mod from "../mod/Mod";
-import ModMeta from "../mod/ModMeta";
+import Mod from "../mod/loader/Mod";
+import ModMeta from "../mod/loader/ModMeta";
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {

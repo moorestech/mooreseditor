@@ -14,8 +14,8 @@ import TableContainer from '@mui/material/TableContainer'
 import IconButton from "@mui/material/IconButton";
 import Plus from 'mdi-material-ui/Plus';
 import ItemTableRow from "./ItemTableRow";
-import {DefaultItemIconUrl, Item} from "../../mod/Item";
-import Mod from "../../mod/Mod";
+import {DefaultItemIconUrl, Item} from "../../mod/element/Item";
+import Mod from "../../mod/loader/Mod";
 
 
 

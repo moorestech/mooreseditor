@@ -1,6 +1,6 @@
-import {DefaultItemIconUrl, Item} from "./Item";
-import {EfaFileHandle} from "../easyFileAccessor/EfaFIleHandle";
-import {EfaDirectoryHandle} from "../easyFileAccessor/EfaDirectoryHandle";
+import {DefaultItemIconUrl, Item} from "../element/Item";
+import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
+import {EfaDirectoryHandle} from "../../easyFileAccessor/EfaDirectoryHandle";
 
 export default class ItemConfig{
   get items() : Item[] {return this._items;}

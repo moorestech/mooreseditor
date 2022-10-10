@@ -14,7 +14,7 @@ import TableContainer from '@mui/material/TableContainer'
 import IconButton from "@mui/material/IconButton";
 import Plus from 'mdi-material-ui/Plus';
 import ItemTableRow from "./ItemTableRow";
-import {Item} from "../../mod/Item";
+import {DefaultItemIconUrl, Item} from "../../mod/Item";
 import Mod from "../../mod/Mod";
 
 
@@ -47,7 +47,7 @@ function ItemTable() {
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
               <IconButton aria-label='expand row' size='small' onClick={async () => {
-                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100));
+                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100,DefaultItemIconUrl));
                 await Mod.instance.itemConfig.changeItems(addedRow);
                 setItemRows(addedRow);
               }}>

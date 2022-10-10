@@ -17,7 +17,7 @@ const ItemTableRow = (props: { row: Item }) => {
       <TableCell>
 
         <IconButton aria-label='expand row' size='small'>
-          <img src='/images/logos/iron ingot.png' alt='testItem' width={40} height={40} />
+          <img src={props.row.imageUrl} alt='testItem' width={40} height={40} />
         </IconButton>
       </TableCell>
 

@@ -1,5 +1,6 @@
-import {Item} from "./Item";
+import {DefaultItemIconUrl, Item} from "./Item";
 import {EfaFileHandle} from "../easyFileAccessor/EfaFIleHandle";
+import {EfaDirectoryHandle} from "../easyFileAccessor/EfaDirectoryHandle";
 
 export default class ItemConfig{
   get items() : Item[] {return this._items;}
@@ -26,7 +27,7 @@ export default class ItemConfig{
     await writable.close();
   }
 
-  public static async CreateItemConfig(configFile : EfaFileHandle) : Promise<ItemConfig> {
+  public static async CreateItemConfig(configFile : EfaFileHandle,itemIconDir : EfaDirectoryHandle) : Promise<ItemConfig> {
     const file = await configFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
@@ -36,7 +37,15 @@ export default class ItemConfig{
       const id = itemJson.id;
       const maxStacks = itemJson.maxStacks;
 
-      const item = new Item(id,maxStacks);
+      let imageUrl = DefaultItemIconUrl;
+      try {
+        const iconArray = await (await (await itemIconDir.getFileHandle(id+".png")).getFile()).arrayBuffer();
+        imageUrl = URL.createObjectURL(new Blob([iconArray],{type: "image/png"}));
+      }catch (e) {
+        //TODO アイテムアイコンの画像が無かったときの対処
+      }
+
+      const item = new Item(id,maxStacks,imageUrl);
       items.push(item);
     }
 

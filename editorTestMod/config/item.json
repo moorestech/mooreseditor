@@ -1,206 +1,214 @@
-﻿[
-  {
-    "id": "iron ore",
-    "maxStacks": 100
-  },
-  {
-    "id": "iron ingot",
-    "maxStacks": 100
-  },
-  {
-    "id": "stick",
-    "maxStacks": 100
-  },
-  {
-    "id": "gear",
-    "maxStacks": 100
-  },
-  {
-    "id": "iron screw",
-    "maxStacks": 100
-  },
-  {
-    "id": "plate",
-    "maxStacks": 100
-  },
-  {
-    "id": "beltconbeyor",
-    "maxStacks": 100
-  },
-  {
-    "id": "pole",
-    "maxStacks": 100
-  },
-  {
-    "id": "copper ore",
-    "maxStacks": 100
-  },
-  {
-    "id": "copper ingot",
-    "maxStacks": 100
-  },
-  {
-    "id": "copper wiere",
-    "maxStacks": 100
-  },
-  {
-    "id": "basic circuit",
-    "maxStacks": 100
-  },
-  {
-    "id": "machine case",
-    "maxStacks": 100
-  },
-  {
-    "id": "crasher",
-    "maxStacks": 100
-  },
-  {
-    "id": "compressor",
-    "maxStacks": 100
-  },
-  {
-    "id": "generator",
-    "maxStacks": 100
-  },
-  {
-    "id": "miner",
-    "maxStacks": 100
-  },
-  {
-    "id": "coal",
-    "maxStacks": 100
-  },
-  {
-    "id": "coal powder",
-    "maxStacks": 100
-  },
-  {
-    "id": "steel ingot",
-    "maxStacks": 100
-  },
-  {
-    "id": "steel screw",
-    "maxStacks": 100
-  },
-  {
-    "id": "steel gear",
-    "maxStacks": 100
-  },
-  {
-    "id": "goald ore",
-    "maxStacks": 100
-  },
-  {
-    "id": "gold powder",
-    "maxStacks": 100
-  },
-  {
-    "id": "goald ingot",
-    "maxStacks": 100
-  },
-  {
-    "id": "gold wiere",
-    "maxStacks": 100
-  },
-  {
-    "id": "advansed circuit",
-    "maxStacks": 100
-  },
-  {
-    "id": "adovanced machine case",
-    "maxStacks": 100
-  },
-  {
-    "id": "generator mk2",
-    "maxStacks": 100
-  },
-  {
-    "id": "miner mk2",
-    "maxStacks": 100
-  },
-  {
-    "id": "silicon processor",
-    "maxStacks": 100
-  },
-  {
-    "id": "precision circuit",
-    "maxStacks": 100
-  },
-  {
-    "id": "precision gear",
-    "maxStacks": 100
-  },
-  {
-    "id": "sand",
-    "maxStacks": 100
-  },
-  {
-    "id": "silicon",
-    "maxStacks": 100
-  },
-  {
-    "id": "silicon wafer",
-    "maxStacks": 100
-  },
-  {
-    "id": "precision mortor",
-    "maxStacks": 100
-  },
-  {
-    "id": "IC chip assembler",
-    "maxStacks": 100
-  },
-  {
-    "id": "ic chip",
-    "maxStacks": 100
-  },
-  {
-    "id": "generator mk3",
-    "maxStacks": 100
-  },
-  {
-    "id": "graphic board",
-    "maxStacks": 100
-  },
-  {
-    "id": "btc miner",
-    "maxStacks": 100
-  },
-  {
-    "id": "btc",
-    "maxStacks": 100
-  },
-  {
-    "id": "10btc",
-    "maxStacks": 100
-  },
-  {
-    "id": "100btc",
-    "maxStacks": 100
-  },
-  {
-    "id": "1000btc",
-    "maxStacks": 100
-  },
-  {
-    "id": "10000btc",
-    "maxStacks": 100
-  },
-  {
-    "id": "smelting",
-    "maxStacks": 100
-  },
-  {
-    "id": "precision assembler",
-    "maxStacks": 100
-  },
-  {
-    "id": "ironchest",
-    "maxStacks": 100
-  },
-  {
-    "id": "steel chest",
-    "maxStacks": 100
-  }
+[
+    {
+        "id": "iron ore",
+        "maxStacks": 100
+    },
+    {
+        "id": "iron ingot",
+        "maxStacks": 100
+    },
+    {
+        "id": "stick",
+        "maxStacks": 100
+    },
+    {
+        "id": "gear",
+        "maxStacks": 100
+    },
+    {
+        "id": "iron screw",
+        "maxStacks": 100
+    },
+    {
+        "id": "plate",
+        "maxStacks": 100
+    },
+    {
+        "id": "beltconbeyor",
+        "maxStacks": 100
+    },
+    {
+        "id": "pole",
+        "maxStacks": 100
+    },
+    {
+        "id": "copper ore",
+        "maxStacks": 100
+    },
+    {
+        "id": "copper ingot",
+        "maxStacks": 100
+    },
+    {
+        "id": "copper wiere",
+        "maxStacks": 100
+    },
+    {
+        "id": "basic circuit",
+        "maxStacks": 100
+    },
+    {
+        "id": "machine case",
+        "maxStacks": 100
+    },
+    {
+        "id": "crasher",
+        "maxStacks": 100
+    },
+    {
+        "id": "compressor",
+        "maxStacks": 100
+    },
+    {
+        "id": "generator",
+        "maxStacks": 100
+    },
+    {
+        "id": "miner",
+        "maxStacks": 100
+    },
+    {
+        "id": "coal",
+        "maxStacks": 100
+    },
+    {
+        "id": "coal powder",
+        "maxStacks": 100
+    },
+    {
+        "id": "steel ingot",
+        "maxStacks": 100
+    },
+    {
+        "id": "steel screw",
+        "maxStacks": 100
+    },
+    {
+        "id": "steel gear",
+        "maxStacks": 100
+    },
+    {
+        "id": "goald ore",
+        "maxStacks": 100
+    },
+    {
+        "id": "gold powder",
+        "maxStacks": 100
+    },
+    {
+        "id": "goald ingot",
+        "maxStacks": 100
+    },
+    {
+        "id": "gold wiere",
+        "maxStacks": 100
+    },
+    {
+        "id": "advansed circuit",
+        "maxStacks": 100
+    },
+    {
+        "id": "adovanced machine case",
+        "maxStacks": 100
+    },
+    {
+        "id": "generator mk2",
+        "maxStacks": 100
+    },
+    {
+        "id": "miner mk2",
+        "maxStacks": 100
+    },
+    {
+        "id": "silicon processor",
+        "maxStacks": 100
+    },
+    {
+        "id": "precision circuit",
+        "maxStacks": 100
+    },
+    {
+        "id": "precision gear",
+        "maxStacks": 100
+    },
+    {
+        "id": "sand",
+        "maxStacks": 100
+    },
+    {
+        "id": "silicon",
+        "maxStacks": 100
+    },
+    {
+        "id": "silicon wafer",
+        "maxStacks": 100
+    },
+    {
+        "id": "precision mortor",
+        "maxStacks": 100
+    },
+    {
+        "id": "IC chip assembler",
+        "maxStacks": 100
+    },
+    {
+        "id": "ic chip",
+        "maxStacks": 100
+    },
+    {
+        "id": "generator mk3",
+        "maxStacks": 100
+    },
+    {
+        "id": "graphic board",
+        "maxStacks": 100
+    },
+    {
+        "id": "btc miner",
+        "maxStacks": 100
+    },
+    {
+        "id": "btc",
+        "maxStacks": 100
+    },
+    {
+        "id": "10btc",
+        "maxStacks": 100
+    },
+    {
+        "id": "100btc",
+        "maxStacks": 100
+    },
+    {
+        "id": "1000btc",
+        "maxStacks": 100
+    },
+    {
+        "id": "10000btc",
+        "maxStacks": 100
+    },
+    {
+        "id": "smelting",
+        "maxStacks": 100
+    },
+    {
+        "id": "precision assembler",
+        "maxStacks": 100
+    },
+    {
+        "id": "ironchest",
+        "maxStacks": 100
+    },
+    {
+        "id": "steel chest",
+        "maxStacks": 100
+    },
+    {
+        "id": "new item346",
+        "maxStacks": 100
+    },
+    {
+        "id": "new item230",
+        "maxStacks": 100
+    }
 ]

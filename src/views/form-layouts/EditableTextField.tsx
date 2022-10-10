@@ -28,19 +28,26 @@ const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:b
     document.removeEventListener('keydown',keyDownHandler);
   }
 }
-
-const EditableTextField =  (props: { fieldValue : string,type:string,label : string,placeholder:string}) => {
+const EditableTextField =  (props: { fieldValue : string,type:string,label : string,placeholder:string,onEdit:(value: string) => void}) => {
 
 
   const editNameRef = useRef<HTMLDivElement>(null);
   const [isEdit,setIsEdit] = useState<boolean>(false);
+  const [value,setValue] = useState<string>(props.fieldValue);
   useEffect(() => {SedEditeState(editNameRef,setIsEdit)}, []);
 
   return (
     <div ref={editNameRef}>
       {
         isEdit ?
-        <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} defaultValue={props.fieldValue} autoFocus={true} onFocus={e => e.target.select()}/> :
+        <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} defaultValue={props.fieldValue} autoFocus={true}
+                   value={value}
+                   onFocus={e => e.target.select()}
+                   onChange={(e) => {
+                     setValue(e.target.value);
+                     props.onEdit(e.target.value)
+                   }}
+        /> :
         <Typography variant='body2'>
           {props.fieldValue}
         </Typography>

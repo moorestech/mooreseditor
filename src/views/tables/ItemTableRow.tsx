@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import {Item} from "../../mod/Item";
 
 
-const ItemTableRow = (props: { row: Item }) => {
+const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
       <TableCell>
@@ -23,10 +23,20 @@ const ItemTableRow = (props: { row: Item }) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.id} type={"text"} placeholder={""} label={"Item Name"}/>
+        <EditableTextField fieldValue={props.row.id} type={"text"} placeholder={""} label={"Item Name"}
+                           onEdit={text => {
+                             const newItem = new Item(text,props.row.maxStacks,props.row.imageUrl);
+                             props.onEdit(newItem);
+                           }
+        }/>
       </TableCell>
       <TableCell align='right'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Max Stack"}/>
+        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Max Stack"}
+                           onEdit={text => {
+                             const newItem = new Item(props.row.id,parseInt(text),props.row.imageUrl);
+                             props.onEdit(newItem);
+                           }}
+        />
       </TableCell>
       <TableCell />
 

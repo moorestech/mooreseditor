@@ -22,6 +22,7 @@ import Mod from "../../mod/Mod";
 function ItemTable() {
   const [itemRows, setItemRows] = useState<Item[]>(Mod.instance ? Mod.instance.itemConfig.items : []);
 
+
   Mod.onModUpdate.subscribe((mod) => {
     setItemRows(mod.itemConfig.items);
   });
@@ -33,16 +34,21 @@ function ItemTable() {
         <TableHead>
           <TableRow>
             <TableCell>Icon</TableCell>
-            <TableCell>Name</TableCell>
+            <TableCell>Id</TableCell>
             <TableCell align='right'>Max Stacks</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
 
         <TableBody>
-          { itemRows.map(row => {
-            return <ItemTableRow key={row.id} row={row} />;
-          }) }
+          {itemRows.map((item, index) => {
+            return <ItemTableRow key={index} row={item} onEdit={(item) => {
+              const newItems = [...itemRows];
+              newItems[index] = item;
+              setItemRows(newItems);
+              Mod.instance?.itemConfig.changeItems(newItems);
+            }}/>
+          })}
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>

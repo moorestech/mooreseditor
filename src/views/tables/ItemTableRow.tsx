@@ -23,7 +23,7 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.id} type={"text"} placeholder={""} label={"Item Name"}
+        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Item Name"}
                            onEdit={text => {
                              const newItem = new Item(text,props.row.maxStacks,props.row.imageUrl);
                              props.onEdit(newItem);
@@ -33,7 +33,7 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
       <TableCell align='right'>
         <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Max Stack"}
                            onEdit={text => {
-                             const newItem = new Item(props.row.id,parseInt(text),props.row.imageUrl);
+                             const newItem = new Item(props.row.name,parseInt(text),props.row.imageUrl);
                              props.onEdit(newItem);
                            }}
         />

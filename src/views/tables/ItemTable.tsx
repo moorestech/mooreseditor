@@ -34,7 +34,7 @@ function ItemTable() {
         <TableHead>
           <TableRow>
             <TableCell>Icon</TableCell>
-            <TableCell>Id</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell align='right'>Max Stacks</TableCell>
             <TableCell />
           </TableRow>

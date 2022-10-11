@@ -1,214 +1,206 @@
 [
     {
-        "id": "iron ore",
+        "name": "iron ore",
         "maxStacks": 100
     },
     {
-        "id": "iron ingot",
+        "name": "iron ingot",
         "maxStacks": 100
     },
     {
-        "id": "stick",
+        "name": "stick",
         "maxStacks": 100
     },
     {
-        "id": "gear",
+        "name": "gear",
         "maxStacks": 100
     },
     {
-        "id": "iron screw",
+        "name": "iron screw",
         "maxStacks": 100
     },
     {
-        "id": "plate",
+        "name": "plate",
         "maxStacks": 100
     },
     {
-        "id": "beltconbeyor",
+        "name": "beltconbeyor",
         "maxStacks": 100
     },
     {
-        "id": "pole",
+        "name": "pole",
         "maxStacks": 100
     },
     {
-        "id": "copper ore",
+        "name": "copper ore",
         "maxStacks": 100
     },
     {
-        "id": "copper ingot",
+        "name": "copper ingot",
         "maxStacks": 100
     },
     {
-        "id": "copper wiere",
+        "name": "copper wiere",
         "maxStacks": 100
     },
     {
-        "id": "basic circuit",
+        "name": "basic circuit",
         "maxStacks": 100
     },
     {
-        "id": "machine case",
+        "name": "machine case",
         "maxStacks": 100
     },
     {
-        "id": "crasher",
+        "name": "crasher",
         "maxStacks": 100
     },
     {
-        "id": "compressor",
+        "name": "compressor",
         "maxStacks": 100
     },
     {
-        "id": "generator",
+        "name": "generator",
         "maxStacks": 100
     },
     {
-        "id": "miner",
+        "name": "miner",
         "maxStacks": 100
     },
     {
-        "id": "coal",
+        "name": "coal",
         "maxStacks": 100
     },
     {
-        "id": "coal powder",
+        "name": "coal powder",
         "maxStacks": 100
     },
     {
-        "id": "steel ingot",
+        "name": "steel ingot",
         "maxStacks": 100
     },
     {
-        "id": "steel screw",
+        "name": "steel screw",
         "maxStacks": 100
     },
     {
-        "id": "steel gear",
+        "name": "steel gear",
         "maxStacks": 100
     },
     {
-        "id": "goald ore",
+        "name": "goald ore",
         "maxStacks": 100
     },
     {
-        "id": "gold powder",
+        "name": "gold powder",
         "maxStacks": 100
     },
     {
-        "id": "goald ingot",
+        "name": "goald ingot",
         "maxStacks": 100
     },
     {
-        "id": "gold wiere",
+        "name": "gold wiere",
         "maxStacks": 100
     },
     {
-        "id": "advansed circuit",
+        "name": "advansed circuit",
         "maxStacks": 100
     },
     {
-        "id": "adovanced machine case",
+        "name": "adovanced machine case",
         "maxStacks": 100
     },
     {
-        "id": "generator mk2",
+        "name": "generator mk2",
         "maxStacks": 100
     },
     {
-        "id": "miner mk2",
+        "name": "miner mk2",
         "maxStacks": 100
     },
     {
-        "id": "silicon processor",
+        "name": "silicon processor",
         "maxStacks": 100
     },
     {
-        "id": "precision circuit",
+        "name": "precision circuit",
         "maxStacks": 100
     },
     {
-        "id": "precision gear",
+        "name": "precision gear",
         "maxStacks": 100
     },
     {
-        "id": "sand",
+        "name": "sand",
         "maxStacks": 100
     },
     {
-        "id": "silicon",
+        "name": "silicon",
         "maxStacks": 100
     },
     {
-        "id": "silicon wafer",
+        "name": "silicon wafer",
         "maxStacks": 100
     },
     {
-        "id": "precision mortor",
+        "name": "precision mortor",
         "maxStacks": 100
     },
     {
-        "id": "IC chip assembler",
+        "name": "IC chip assembler",
         "maxStacks": 100
     },
     {
-        "id": "ic chip",
+        "name": "ic chip",
         "maxStacks": 100
     },
     {
-        "id": "generator mk3",
+        "name": "generator mk3",
         "maxStacks": 100
     },
     {
-        "id": "graphic board",
+        "name": "graphic board",
         "maxStacks": 100
     },
     {
-        "id": "btc miner",
+        "name": "btc miner",
         "maxStacks": 100
     },
     {
-        "id": "btc",
+        "name": "btc",
         "maxStacks": 100
     },
     {
-        "id": "10btc",
+        "name": "10btc",
         "maxStacks": 100
     },
     {
-        "id": "100btc",
+        "name": "100btc",
         "maxStacks": 100
     },
     {
-        "id": "1000btc",
+        "name": "1000btc",
         "maxStacks": 100
     },
     {
-        "id": "10000btc",
+        "name": "10000btc",
         "maxStacks": 100
     },
     {
-        "id": "smelting",
+        "name": "smelting",
         "maxStacks": 100
     },
     {
-        "id": "precision assembler",
+        "name": "precision assembler",
         "maxStacks": 100
     },
     {
-        "id": "ironchest",
+        "name": "ironchest",
         "maxStacks": 100
     },
     {
-        "id": "steel chest",
-        "maxStacks": 100
-    },
-    {
-        "id": "new item346",
-        "maxStacks": 100
-    },
-    {
-        "id": "new item230",
+        "name": "steel chest",
         "maxStacks": 100
     }
 ]

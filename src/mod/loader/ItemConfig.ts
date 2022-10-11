@@ -3,9 +3,9 @@ import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
 import {EfaDirectoryHandle} from "../../easyFileAccessor/EfaDirectoryHandle";
 
 export default class ItemConfig{
-  get items() : Item[] {return this._items;}
+  get items() : ReadonlyArray<Item> {return this._items;}
   private _items : Item[];
-  private readonly _metaFileHandle: EfaFileHandle;
+  private readonly itemFileHandle: EfaFileHandle;
 
   async changeItems(items : Item[]) {
     this._items = items;
@@ -22,7 +22,7 @@ export default class ItemConfig{
       json.push(itemJson);
     }
 
-    const writable = await this._metaFileHandle.createWritable();
+    const writable = await this.itemFileHandle.createWritable();
     await writable.write(JSON.stringify(json,undefined,4));
     await writable.close();
   }
@@ -35,7 +35,7 @@ export default class ItemConfig{
     const text = await file.text();
     const json = JSON.parse(text);
     const items : Item[] = [];
-    
+
     for (const itemJson of json) {
       const name = itemJson.name;
       const maxStacks = itemJson.maxStacks;
@@ -56,6 +56,6 @@ export default class ItemConfig{
 
   private constructor(items : Item[],configFile : EfaFileHandle) {
     this._items = items;
-    this._metaFileHandle = configFile;
+    this.itemFileHandle = configFile;
   }
 }

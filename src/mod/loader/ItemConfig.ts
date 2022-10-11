@@ -27,16 +27,18 @@ export default class ItemConfig{
     await writable.close();
   }
 
+
+
+
   public static async CreateItemConfig(configFile : EfaFileHandle,itemIconDir : EfaDirectoryHandle) : Promise<ItemConfig> {
     const file = await configFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
-
     const items : Item[] = [];
+    
     for (const itemJson of json) {
       const name = itemJson.name;
       const maxStacks = itemJson.maxStacks;
-
       let imageUrl = DefaultItemIconUrl;
       try {
         const iconArray = await (await (await itemIconDir.getFileHandle(name+".png")).getFile()).arrayBuffer();

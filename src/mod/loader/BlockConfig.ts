@@ -57,7 +57,7 @@ export class BlockConfig {
       const scaleVec = new Vector3(scale[0],scale[1],scale[2]);
       const modelTransform = new Transform(posVec,rotVec,scaleVec);
       const block = new Block(name,type,itemModId,itemName,modelTransform,param);
-      
+
       blocks.push(block);
     }
 

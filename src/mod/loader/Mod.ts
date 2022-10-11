@@ -1,6 +1,7 @@
 import ModMeta from "./ModMeta";
 import {Observable, Subject} from "rxjs";
 import ItemConfig from "./ItemConfig";
+import {BlockConfig} from "./BlockConfig";
 
 export default class Mod {
   static get onModUpdate() : Observable<Mod> {return Mod.onModUpdateSubject;}
@@ -18,9 +19,13 @@ export default class Mod {
   private readonly _itemConfig : ItemConfig;
   get itemConfig() : ItemConfig {return this._itemConfig;}
 
-  constructor(meta: ModMeta,itemConfig : ItemConfig) {
+  private readonly _blockConfig : BlockConfig;
+  get blockConfig() : BlockConfig {return this._blockConfig;}
+
+  constructor(meta: ModMeta,itemConfig : ItemConfig,blockConfig : BlockConfig) {
     this._meta = meta;
     this._itemConfig = itemConfig;
+    this._blockConfig = blockConfig;
     Mod._instance = this;
     Mod.onModUpdateSubject.next(this);
   }

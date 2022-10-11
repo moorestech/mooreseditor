@@ -22,6 +22,7 @@ import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
 import Mod from "../../../mod/loader/Mod";
 import ModMeta from "../../../mod/loader/ModMeta";
 import ItemConfig from "../../../mod/loader/ItemConfig";
+import {BlockConfig} from "../../../mod/loader/BlockConfig";
 
 interface Props {
   hidden: boolean
@@ -39,8 +40,9 @@ async function OpenProject(){
     const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
     const itemAssetsDir = await dirHandle.getDirectoryHandle("assets/item");
     const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,itemAssetsDir);
+    const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
 
-    const mod = new Mod(modMeta, itemConfig);
+    const mod = new Mod(modMeta, itemConfig,blockConfig);
   }catch (e) {
     console.log(e);
   }

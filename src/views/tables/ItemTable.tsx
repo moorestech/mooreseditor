@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -22,9 +22,11 @@ import Mod from "../../mod/loader/Mod";
 function ItemTable() {
   const [itemRows, setItemRows] = useState<ReadonlyArray<Item> >(Mod.instance ? Mod.instance.itemConfig.items : []);
 
-  Mod.onModUpdate.subscribe((mod) => {
-    setItemRows(mod.itemConfig.items);
-  });
+  useEffect(() => {
+    const subscription = Mod.onModUpdate.subscribe((mod) => {setItemRows(mod.itemConfig.items);})
+
+    return () => {subscription.unsubscribe();}
+  }, [itemRows]);
 
   return (
     <TableContainer component={Paper}>

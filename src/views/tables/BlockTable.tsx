@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableRow from '@mui/material/TableRow'
@@ -18,9 +18,11 @@ import {Vector3} from "../../mod/element/Vector3";
 function BlockTable() {
   const [blockRows, setBlockRows] = useState<ReadonlyArray<Block> >(Mod.instance ? Mod.instance.blockConfig.blocks : []);
 
-  Mod.onModUpdate.subscribe((mod) => {
-    setBlockRows(mod.blockConfig.blocks);
-  });
+  useEffect(() => {
+    const subscription = Mod.onModUpdate.subscribe((mod) => {setBlockRows(mod.blockConfig.blocks);})
+
+    return () => {subscription.unsubscribe();}
+  }, [blockRows]);
 
   return (
     <TableContainer component={Paper}>
@@ -37,15 +39,14 @@ function BlockTable() {
         </TableHead>
 
         <TableBody>
-          { blockRows.map(row => {
-            return <BlockTableRow key={row.name} row={row} onEdit={
+          { blockRows.map((item, index) => {
+            return <BlockTableRow key={item.name} row={item} onEdit={
               block => {
                 const newBlocks = [...blockRows];
-                newBlocks[blockRows.indexOf(row)] = block;
+                newBlocks[index] = block;
                 setBlockRows(newBlocks);
                 Mod.instance?.blockConfig.changeBlocks(newBlocks);
-              }
-            }/>
+              }}/>
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

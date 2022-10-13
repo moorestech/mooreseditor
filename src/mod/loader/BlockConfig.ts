@@ -8,7 +8,7 @@ export class BlockConfig {
   private _blocks : Block[];
   private readonly blockFileHandle: EfaFileHandle;
 
-  async changeItems(blocks : Block[]) {
+  async changeBlocks(blocks : Block[]) {
     this._blocks = blocks;
     await this.save();
   }
@@ -42,20 +42,27 @@ export class BlockConfig {
     const json = JSON.parse(text);
     const blocks : Block[] = [];
 
-    for (const blockJson of json) {
+    for (const blockJson of json.Blocks) {
       const name = blockJson.name;
       const type = blockJson.type;
       const itemModId = blockJson.itemModId;
       const itemName = blockJson.itemName;
       const param = blockJson.param;
-      const pos:number[] = blockJson.modelTransform.pos;
-      const rot:number[] = blockJson.modelTransform.rot;
-      const scale:number[] = blockJson.modelTransform.scale;
 
-      const posVec = new Vector3(pos[0],pos[1],pos[2]);
-      const rotVec = new Vector3(rot[0],rot[1],rot[2]);
-      const scaleVec = new Vector3(scale[0],scale[1],scale[2]);
-      const modelTransform = new Transform(posVec,rotVec,scaleVec);
+      let modelTransform = new Transform(Vector3.zero,Vector3.zero,Vector3.one);
+      if (blockJson.modelTransform !== undefined) {
+        console.log(blockJson)
+        const pos = blockJson.modelTransform.pos;
+        const rot = blockJson.modelTransform.rot;
+        const scale = blockJson.modelTransform.scale;
+
+        const posVec = new Vector3(pos[0],pos[1],pos[2]);
+        const rotVec = new Vector3(rot[0],rot[1],rot[2]);
+        const scaleVec = new Vector3(scale[0],scale[1],scale[2]);
+        modelTransform = new Transform(posVec,rotVec,scaleVec);
+      }
+      console.log(blockJson.modelTransform)
+
       const block = new Block(name,type,itemModId,itemName,modelTransform,param);
 
       blocks.push(block);

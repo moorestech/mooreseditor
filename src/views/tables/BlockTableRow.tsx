@@ -14,13 +14,10 @@ import {Select} from "@mui/material";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
 import MachineParamEditModal from "../modal/MachineParamEditModal";
+import {Block} from "../../mod/element/Block";
 
-interface ItemTableRowProps {
-  name: string;
-  maxStacks: number;
-}
 
-const BlockTableRow = (props: { row: ItemTableRowProps }) => {
+const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
 
@@ -28,7 +25,12 @@ const BlockTableRow = (props: { row: ItemTableRowProps }) => {
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Block Name"}/>
+        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Block Name"}
+                           onEdit={name => {
+                             const newBlock = new Block(name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,props.row.param);
+                              props.onEdit(newBlock);
+                           }}
+        />
       </TableCell>
 
       <TableCell>

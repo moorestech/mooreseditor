@@ -20,8 +20,7 @@ import Mod from "../../mod/loader/Mod";
 
 
 function ItemTable() {
-  const [itemRows, setItemRows] = useState<Item[]>(Mod.instance ? Mod.instance.itemConfig.items : []);
-
+  const [itemRows, setItemRows] = useState<ReadonlyArray<Item> >(Mod.instance ? Mod.instance.itemConfig.items : []);
 
   Mod.onModUpdate.subscribe((mod) => {
     setItemRows(mod.itemConfig.items);

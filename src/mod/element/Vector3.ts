@@ -8,4 +8,8 @@ export class Vector3 {
     this.y = y;
     this.z = z;
   }
+
+
+  public static readonly zero = new Vector3(0,0,0);
+  public static readonly one = new Vector3(1,1,1);
 }

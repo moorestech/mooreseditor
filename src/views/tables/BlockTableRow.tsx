@@ -28,7 +28,7 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
         <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Block Name"}
                            onEdit={name => {
                              const newBlock = new Block(name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,props.row.param);
-                              props.onEdit(newBlock);
+                             props.onEdit(newBlock);
                            }}
         />
       </TableCell>

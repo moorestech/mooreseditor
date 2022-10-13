@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 
 
 
-const SedEditeState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:boolean) => void) => {
+const SetEditState = (ref: React.RefObject<HTMLDivElement>,editAction: (state:boolean) => void) => {
   const keyDownHandler = (event : KeyboardEvent) => {
 
     if (event.key === 'Enter' || event.key === 'Escape') {
@@ -34,13 +34,13 @@ const EditableTextField =  (props: { fieldValue : string,type:string,label : str
   const editNameRef = useRef<HTMLDivElement>(null);
   const [isEdit,setIsEdit] = useState<boolean>(false);
   const [value,setValue] = useState<string>(props.fieldValue);
-  useEffect(() => {SedEditeState(editNameRef,setIsEdit)}, []);
+  useEffect(() => {SetEditState(editNameRef,setIsEdit)}, [isEdit]);
 
   return (
     <div ref={editNameRef}>
       {
         isEdit ?
-        <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} defaultValue={props.fieldValue} autoFocus={true}
+        <TextField fullWidth label={props.label} type={props.type} placeholder={props.placeholder} size={"small"} autoFocus={true}
                    value={value}
                    onFocus={e => e.target.select()}
                    onChange={(e) => {

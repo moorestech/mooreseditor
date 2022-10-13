@@ -51,7 +51,6 @@ export class BlockConfig {
 
       let modelTransform = new Transform(Vector3.zero,Vector3.zero,Vector3.one);
       if (blockJson.modelTransform !== undefined) {
-        console.log(blockJson)
         const pos = blockJson.modelTransform.pos;
         const rot = blockJson.modelTransform.rot;
         const scale = blockJson.modelTransform.scale;
@@ -61,7 +60,6 @@ export class BlockConfig {
         const scaleVec = new Vector3(scale[0],scale[1],scale[2]);
         modelTransform = new Transform(posVec,rotVec,scaleVec);
       }
-      console.log(blockJson.modelTransform)
 
       const block = new Block(name,type,itemModId,itemName,modelTransform,param);
 

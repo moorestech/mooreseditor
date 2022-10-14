@@ -36,7 +36,7 @@ export class EfaDirectoryHandle implements EfaHandle {
     this.childrenDirectories.push(children);
   }
 
-  async createFile(name: string): Promise<EfaFileHandle> {
+  async getOrCreateFile(name: string): Promise<EfaFileHandle> {
     const fileHandle = await this.directoryHandle.getFileHandle(name,{create: true});
     const filePath = this.path + '/' + name;
     const file = new EfaFileHandle(filePath,this,fileHandle);
@@ -45,7 +45,7 @@ export class EfaDirectoryHandle implements EfaHandle {
     return file;
   }
 
-  async createDirectory(name: string): Promise<EfaDirectoryHandle> {
+  async getOrCreateDirectory(name: string): Promise<EfaDirectoryHandle> {
     const directoryHandle = await this.directoryHandle.getDirectoryHandle(name,{create: true});
     const directoryPath = this.path + '/' + name;
     const directory = new EfaDirectoryHandle(name,directoryPath,directoryHandle,[],this);

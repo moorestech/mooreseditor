@@ -54,7 +54,7 @@ function ItemTable() {
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
               <IconButton aria-label='expand row' size='small' onClick={async () => {
-                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100,DefaultItemIconUrl));
+                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100,DefaultItemIconUrl,""));
                 await Mod.instance.itemConfig.changeItems(addedRow);
                 setItemRows(addedRow);
               }}>

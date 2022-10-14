@@ -38,8 +38,7 @@ async function OpenProject(){
     const modMeta = await ModMeta.CreateModMeta(metaFile);
 
     const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
-    const itemAssetsDir = await dirHandle.getDirectoryHandle("assets/item");
-    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,itemAssetsDir);
+    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle);
     const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
 
     const mod = new Mod(modMeta, itemConfig,blockConfig);

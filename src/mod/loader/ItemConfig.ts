@@ -31,7 +31,7 @@ export default class ItemConfig{
 
 
 
-  public static async CreateItemConfig(configFile : EfaFileHandle,itemIconDir : EfaDirectoryHandle) : Promise<ItemConfig> {
+  public static async CreateItemConfig(configFile : EfaFileHandle,modRootDir : EfaDirectoryHandle) : Promise<ItemConfig> {
     const file = await configFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
@@ -40,10 +40,10 @@ export default class ItemConfig{
     for (const itemJson of json) {
       const name = itemJson.name;
       const maxStacks = itemJson.maxStacks;
-      const imagePath = itemJson.imagePath;
+      const imagePath : string = itemJson.imagePath;
       let imageUrl = DefaultItemIconUrl;
       try {
-        const iconArray = await (await (await itemIconDir.getFileHandle(name+".png")).getFile()).arrayBuffer();
+        const iconArray = await (await (await modRootDir.getFileHandle(imagePath)).getFile()).arrayBuffer();
         imageUrl = URL.createObjectURL(new Blob([iconArray],{type: "image/png"}));
       }catch (e) {
         //TODO アイテムアイコンの画像が無かったときの対処

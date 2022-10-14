@@ -17,7 +17,8 @@ export default class ItemConfig{
     for (const item of this.items) {
       const itemJson = {
         name: item.name,
-        maxStacks: item.maxStacks
+        maxStacks: item.maxStacks,
+        imagePath : item.imagePath
       }
       json.push(itemJson);
     }
@@ -39,6 +40,7 @@ export default class ItemConfig{
     for (const itemJson of json) {
       const name = itemJson.name;
       const maxStacks = itemJson.maxStacks;
+      const imagePath = itemJson.imagePath;
       let imageUrl = DefaultItemIconUrl;
       try {
         const iconArray = await (await (await itemIconDir.getFileHandle(name+".png")).getFile()).arrayBuffer();
@@ -47,7 +49,7 @@ export default class ItemConfig{
         //TODO アイテムアイコンの画像が無かったときの対処
       }
 
-      const item = new Item(name,maxStacks,imageUrl);
+      const item = new Item(name,maxStacks,imageUrl,imagePath);
       items.push(item);
     }
 

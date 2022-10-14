@@ -2,10 +2,13 @@ import {DefaultItemIconUrl, Item} from "../element/Item";
 import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
 import {EfaDirectoryHandle} from "../../easyFileAccessor/EfaDirectoryHandle";
 
+export const DefaultImageDirectory = "assets/item";
+
 export default class ItemConfig{
   get items() : ReadonlyArray<Item> {return this._items;}
   private _items : Item[];
   private readonly itemFileHandle: EfaFileHandle;
+  private readonly modRootDirHandle : EfaDirectoryHandle;
 
   async changeItems(items : Item[]) {
     this._items = items;
@@ -26,6 +29,34 @@ export default class ItemConfig{
     const writable = await this.itemFileHandle.createWritable();
     await writable.write(JSON.stringify(json,undefined,4));
     await writable.close();
+  }
+
+  public async uploadImage(index : number){
+    //ファイルを開くウィンドウを出す
+    const fileHandle = await window.showOpenFilePicker({types: [
+      {
+        description: 'Item Icon Image',
+        accept: {'image/png': ['.png'],},
+      }]})
+
+    //ファイルを読み込む
+    const file = await fileHandle[0].getFile();
+    const arrayBuffer = await file.arrayBuffer();
+    const imageBlob = new Blob([arrayBuffer],{type: "image/png"});
+    const imageUrl = URL.createObjectURL(imageBlob);
+
+
+    //blobを保存する
+    const fileName = this._items[index].name + ".png";
+    const imageFile = await (await this.modRootDirHandle.getDirectoryHandle(DefaultImageDirectory)).getOrCreateFile(fileName);
+    const writable = await imageFile.createWritable();
+    await writable.write(imageBlob);
+    await writable.close();
+
+    //配列を更新する
+    const imageFilePath = DefaultImageDirectory + "/" + fileName;
+    this._items[index] = new Item(this._items[index].name, this._items[index].maxStacks, imageUrl, imageFilePath);
+    await this.save();
   }
 
 
@@ -53,11 +84,12 @@ export default class ItemConfig{
       items.push(item);
     }
 
-    return new ItemConfig(items,configFile);
+    return new ItemConfig(items,configFile,modRootDir);
   }
 
-  private constructor(items : Item[],configFile : EfaFileHandle) {
+  private constructor(items : Item[],configFile : EfaFileHandle,modRootDir : EfaDirectoryHandle) {
     this._items = items;
     this.itemFileHandle = configFile;
+    this.modRootDirHandle = modRootDir;
   }
 }

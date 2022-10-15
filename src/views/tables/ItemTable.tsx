@@ -16,11 +16,15 @@ import Plus from 'mdi-material-ui/Plus';
 import ItemTableRow from "./ItemTableRow";
 import {DefaultItemIconUrl, Item} from "../../mod/element/Item";
 import Mod from "../../mod/loader/Mod";
+import MachineParamEditModal from "../modal/MachineParamEditModal";
+import Pencil from "mdi-material-ui/Pencil";
+import CreateItemModal from "../modal/CreateItemModal";
 
 
 
 function ItemTable() {
   const [itemRows, setItemRows] = useState<ReadonlyArray<Item> >(Mod.instance ? Mod.instance.itemConfig.items : []);
+  const [createModalOpen,setCreateModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const subscription = Mod.onModUpdate.subscribe((mod) => {setItemRows(mod.itemConfig.items);})
@@ -53,13 +57,17 @@ function ItemTable() {
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={async () => {
-                const addedRow = itemRows.concat(new Item("new item" + Math.floor(Math.random() * 1000),100,DefaultItemIconUrl,""));
+
+              <IconButton aria-label='expand row' size='small' onClick={() => setCreateModalOpen(true)}>
+                <Plus/>
+              </IconButton>
+              <CreateItemModal isOpen={createModalOpen} onClose={() => {setCreateModalOpen(false)}}
+               onSubmit={async (itemName, maxStack) => {
+                const addedRow = itemRows.concat(new Item(itemName,maxStack,DefaultItemIconUrl,""));
                 await Mod.instance.itemConfig.changeItems(addedRow);
                 setItemRows(addedRow);
-              }}>
-                <Plus />
-              </IconButton>
+              }}></CreateItemModal>
+
             </TableCell>
           </TableRow>
 

@@ -20,22 +20,7 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
           <img src={props.row.imageUrl} alt='testItem' width={40} height={40} />
         </IconButton>
       </TableCell>
-
-
-      <TableCell component='th' scope='row'>
-
-
-        <TextField fullWidth label={"Item Name"} type={"text"} size={"small"}
-                   value={props.row.name}
-                   onFocus={e => e.target.select()}
-                   onChange={(e) => {
-                     const name = e.target.value;
-                     const newItem = new Item(name,props.row.maxStacks,props.row.imageUrl,props.row.imagePath);
-                     props.onEdit(newItem);
-                   }}
-        />
-
-      </TableCell>
+      <TableCell component='th' scope='row'>{props.row.name}</TableCell>
       <TableCell align='right'>
 
         <TextField fullWidth label={"Max Stack"} type={"number"} size={"small"}

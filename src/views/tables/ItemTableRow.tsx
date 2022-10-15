@@ -14,8 +14,12 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
 
         <IconButton aria-label='expand row' size='small'
         onClick={async () =>{
-          const newItem = await Mod.instance.itemConfig.updateItemImage(props.row)
-          props.onEdit(newItem);
+          try {
+            const newItem = await Mod.instance.itemConfig.updateItemImage(props.row)
+            props.onEdit(newItem);
+          }catch (e) {
+            console.log(e)
+          }
         }}>
           <img src={props.row.imageUrl} alt='testItem' width={40} height={40} />
         </IconButton>

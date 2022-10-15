@@ -31,7 +31,7 @@ export default class ItemConfig{
     await writable.close();
   }
 
-  public async uploadImage(index : number){
+  public async updateItemImage(item : Item) : Promise<Item>{
     //ファイルを開くウィンドウを出す
     const fileHandle = await window.showOpenFilePicker({types: [
       {
@@ -47,16 +47,14 @@ export default class ItemConfig{
 
 
     //blobを保存する
-    const fileName = this._items[index].name + ".png";
+    const fileName = item.name + ".png";
     const imageFile = await (await this.modRootDirHandle.getDirectoryHandle(DefaultImageDirectory)).getOrCreateFile(fileName);
     const writable = await imageFile.createWritable();
     await writable.write(imageBlob);
     await writable.close();
-
-    //配列を更新する
     const imageFilePath = DefaultImageDirectory + "/" + fileName;
-    this._items[index] = new Item(this._items[index].name, this._items[index].maxStacks, imageUrl, imageFilePath);
-    await this.save();
+
+    return new Item(item.name, item.maxStacks, imageUrl, imageFilePath);
   }
 
 

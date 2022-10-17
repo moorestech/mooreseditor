@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions'
 
 import Close from 'mdi-material-ui/Close'
 import Mod from "../../mod/loader/Mod";
+import {DialogTitle} from "@mui/material";
 
 
 const CreateItemModal = (props: { isOpen:boolean, onClose: () => void ,onSubmit : (itemName : string,maxStack:number) => void}) => {
@@ -26,30 +27,22 @@ const CreateItemModal = (props: { isOpen:boolean, onClose: () => void ,onSubmit 
   return (
     <Dialog
       fullWidth
-      open={props.isOpen}
       maxWidth='md'
       scroll='body'
       onClose={() => props.onClose()}
       onBackdropClick={() =>  props.onClose()}
+      open={props.isOpen}
     >
-      <DialogContent sx={{ pb: 8, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
-        <IconButton
-          size='small'
-          onClick={() =>  props.onClose()}
-          sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
-        >
-          <Close />
-        </IconButton>
-        <Box sx={{ mb: 8, textAlign: 'center' }}>
-          <Typography variant='h4'>
-            Edit Machine Parameters
-          </Typography>
-          <Typography variant='h6'>
-            Can't change item name.
-          </Typography>
-        </Box>
-
+      <DialogContent sx={{ px:15,py:15,pt:8  }}>
         <Grid container spacing={6}>
+          <Grid item sm={12} sx={{ textAlign: 'center' }} >
+            <Typography variant='h4'>
+              Edit Machine Parameters
+            </Typography>
+            <Typography variant='h6'>
+              Can't change item name.
+            </Typography>
+          </Grid>
           <Grid item sm={6} xs={12}>
             <TextField error={nameIsDuplicateError || isEmptyError} fullWidth label='Name' placeholder='Input Slot' type={'text'} autoFocus={true}
                        onChange={event => {
@@ -75,10 +68,8 @@ const CreateItemModal = (props: { isOpen:boolean, onClose: () => void ,onSubmit 
                        helperText={maxStacksIsError ? 'Output Slot must be greater than 0' : ''}/>
           </Grid>
         </Grid>
-
       </DialogContent>
-
-      <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}>
+      <DialogActions  sx={{justifyContent: 'center' ,pb:8}}>
         <Button variant='contained' sx={{ mr: 1 }} onClick={() =>  {
           props.onClose();
           props.onSubmit(itemName,maxStacks);

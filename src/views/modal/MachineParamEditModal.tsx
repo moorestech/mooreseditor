@@ -11,6 +11,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import Close from 'mdi-material-ui/Close'
+import Mod from "../../mod/loader/Mod";
 
 
 const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) => {
@@ -22,53 +23,49 @@ const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) =
   return (
     <Dialog
       fullWidth
-      open={props.isOpen}
       maxWidth='md'
       scroll='body'
       onClose={() => props.onClose()}
       onBackdropClick={() =>  props.onClose()}
+      open={props.isOpen}
     >
-      <DialogContent sx={{ pb: 8, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
-        <IconButton
-          size='small'
-          onClick={() =>  props.onClose()}
-          sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
-        >
-          <Close />
-        </IconButton>
-        <Box sx={{ mb: 8, textAlign: 'center' }}>
-          <Typography variant='h4'>
-            Edit Machine Parameters
-          </Typography>
-        </Box>
-
+      <DialogContent sx={{ px:15,py:15,pt:8  }}>
         <Grid container spacing={6}>
-          <Grid item sm={6} xs={12}>
-            <TextField error={inputIsError} fullWidth defaultValue={3} label='Input Slot' placeholder='Input Slot' type={'number'}
-                       onChange={event => {
-                         setInputIsError(parseInt(event.target.value) < 0)
-                       }}
-                       helperText={inputIsError ? 'Input Slot must be greater than 0' : ''}/>
+          <Grid item sm={12} sx={{ textAlign: 'center' }} >
+            <Typography variant='h4'>
+              Edit Machine Parameters
+            </Typography>
           </Grid>
-          <Grid item sm={6} xs={12}>
-            <TextField error={outputIsError}  fullWidth defaultValue={3} label='Output Slot' placeholder='Output Slot' type={'number'}
-                       onChange={event => {
-                         setOutputIsError(parseInt(event.target.value) < 0)
-                       }}
-                       helperText={outputIsError ? 'Output Slot must be greater than 0' : ''}/>
+
+
+          <Grid container spacing={6}>
+            <Grid item sm={6} xs={12}>
+              <TextField error={inputIsError} fullWidth defaultValue={3} label='Input Slot' placeholder='Input Slot' type={'number'}
+                         onChange={event => {
+                           setInputIsError(parseInt(event.target.value) < 0)
+                         }}
+                         helperText={inputIsError ? 'Input Slot must be greater than 0' : ''}/>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <TextField error={outputIsError}  fullWidth defaultValue={3} label='Output Slot' placeholder='Output Slot' type={'number'}
+                         onChange={event => {
+                           setOutputIsError(parseInt(event.target.value) < 0)
+                         }}
+                         helperText={outputIsError ? 'Output Slot must be greater than 0' : ''}/>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField error={requiredPowerIsError}  fullWidth defaultValue={100} label='Required Power' placeholder='Required Power' type={'number'}
+                         onChange={event => {
+                           setRequiredPowerIsError(parseInt(event.target.value) < 0)
+                         }}
+                         helperText={requiredPowerIsError ? 'Required Power must be greater than 0' : ''}/>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TextField error={requiredPowerIsError}  fullWidth defaultValue={100} label='Required Power' placeholder='Required Power' type={'number'}
-                       onChange={event => {
-                         setRequiredPowerIsError(parseInt(event.target.value) < 0)
-                       }}
-                       helperText={requiredPowerIsError ? 'Required Power must be greater than 0' : ''}/>
-          </Grid>
+
+
         </Grid>
-
       </DialogContent>
-
-      <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}>
+      <DialogActions  sx={{justifyContent: 'center' }}>
         <Button variant='contained' sx={{ mr: 1 }} onClick={() =>  props.onClose()}>
           Submit
         </Button>
@@ -77,6 +74,7 @@ const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) =
         </Button>
       </DialogActions>
     </Dialog>
+
   )
 }
 

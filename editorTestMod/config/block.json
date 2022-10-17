@@ -2,7 +2,7 @@
     "Blocks": [
         {
             "name": "belt_conveyor",
-            "type": "Block",
+            "type": "BeltConveyor",
             "itemModId": "sakastudio:moorestechBaseMod",
             "itemName": "beltconbeyor",
             "param": {

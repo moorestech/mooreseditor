@@ -40,7 +40,10 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
       <TableCell>
         <FormControl>
           <InputLabel >Type</InputLabel>
-          <SelectBlockType value={props.row.type} label={'Type'} />
+          <SelectBlockType value={props.row.type} label={'Type'} onChange={type => {
+            const newBlock = new Block(props.row.name,type,props.row.itemModId,props.row.itemName,props.row.modelTransform,props.row.param);
+            props.onEdit(newBlock);
+          }} />
         </FormControl>
       </TableCell>
 

@@ -14,6 +14,7 @@ import MachineParamEditModal from "../modal/MachineParamEditModal";
 import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
 import Mod from "../../mod/loader/Mod";
+import SelectBlockType from "../../mod/component/SelectBlockType";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
@@ -38,25 +39,15 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
 
       <TableCell>
         <FormControl>
-          <InputLabel id="select-block-type">Type</InputLabel>
-          <Select
-            labelId="select-block-type"
-            id="demo-simple-select"
-            value="Block"
-            label="Age"
-          >
-            <MenuItem value="Block">Block</MenuItem>
-            <MenuItem value="Machine">Machine</MenuItem>
-            <MenuItem value="Miner">Miner</MenuItem>
-          </Select>
+          <InputLabel >Type</InputLabel>
+          <SelectBlockType value={props.row.type} label={'Type'} />
         </FormControl>
       </TableCell>
 
       <TableCell>
         <FormControl>
-          <InputLabel id="demo-simple-select-label">Item</InputLabel>
+          <InputLabel>Item</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
             id="demo-simple-select"
             defaultValue={props.row.itemName}
             label="Item"
@@ -66,9 +57,6 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
                 return <MenuItem key={item.name} value={item.name}>{item.name}</MenuItem>
               })
             }
-            <MenuItem value="Iron Ingot">Iron Ingot</MenuItem>
-            <MenuItem value="Copper Ingot">Copper Ingot</MenuItem>
-            <MenuItem value="Gold Ingot">Gold Ingot</MenuItem>
           </Select>
         </FormControl>
       </TableCell>

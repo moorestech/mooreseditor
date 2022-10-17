@@ -3,6 +3,8 @@ import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
 import {Transform} from "../element/Transform";
 import {Vector3} from "../element/Vector3";
 
+export const DefaultBlockType:ReadonlyArray<string> = ['Block' , 'Machine' , 'BeltConveyor' , 'Miner' , 'Generator' , 'ElectricPole' , 'Chest']
+
 export class BlockConfig {
   get blocks() : ReadonlyArray<Block> {return this._blocks;}
   private _blocks : Block[];

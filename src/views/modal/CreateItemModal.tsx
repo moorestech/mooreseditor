@@ -37,10 +37,10 @@ const CreateItemModal = (props: { isOpen:boolean, onClose: () => void ,onSubmit 
         <Grid container spacing={6}>
           <Grid item sm={12} sx={{ textAlign: 'center' }} >
             <Typography variant='h4'>
-             Create new item.
+             Create new item
             </Typography>
             <Typography variant='h6'>
-              Can't change item name.
+              Can't change item name
             </Typography>
           </Grid>
           <Grid item sm={6} xs={12}>

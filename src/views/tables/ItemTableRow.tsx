@@ -21,7 +21,7 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
             console.log(e)
           }
         }}>
-          <img src={props.row.imageUrl} alt='testItem' width={40} height={40} />
+          <img src={props.row.imageUrl} alt={props.row.name} width={40} height={40} />
         </IconButton>
       </TableCell>
       <TableCell component='th' scope='row'>{props.row.name}</TableCell>

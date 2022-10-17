@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import MachineParamEditModal from "../modal/MachineParamEditModal";
 import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
+import Mod from "../../mod/loader/Mod";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
@@ -57,9 +58,14 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value="Iron Ingot"
+            defaultValue={props.row.itemName}
             label="Item"
           >
+            {
+              Mod.instance?.itemConfig.items.map(item => {
+                return <MenuItem key={item.name} value={item.name}>{item.name}</MenuItem>
+              })
+            }
             <MenuItem value="Iron Ingot">Iron Ingot</MenuItem>
             <MenuItem value="Copper Ingot">Copper Ingot</MenuItem>
             <MenuItem value="Gold Ingot">Gold Ingot</MenuItem>

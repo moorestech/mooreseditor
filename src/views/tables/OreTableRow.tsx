@@ -6,11 +6,10 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 
 // ** Icons Imports
-import EditableTextField from "../form-layouts/EditableTextField";
 import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import {Select} from "@mui/material";
+import {Select, TextField} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 
 interface ItemTableRowProps {
@@ -31,7 +30,7 @@ const OreTableRow = (props: { row: ItemTableRowProps }) => {
 
       <TableCell component='th' scope='row'>
 
-        <EditableTextField fieldValue={props.row.name} type={"text"} placeholder={""} label={"Item Name"}/>
+        <TextField value={props.row.name} type={"text"} placeholder={""} label={"Item Name"}/>
       </TableCell>
 
       <TableCell>
@@ -52,15 +51,15 @@ const OreTableRow = (props: { row: ItemTableRowProps }) => {
 
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Size"}/>
+        <TextField value={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Size"}/>
       </TableCell>
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Frequency"}/>
+        <TextField value={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Vein Frequency"}/>
       </TableCell>
 
       <TableCell component='th' scope='row'>
-        <EditableTextField fieldValue={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Priority"}/>
+        <TextField value={props.row.maxStacks.toString()} type={"number"} placeholder={""} label={"Priority"}/>
       </TableCell>
 
       <TableCell />

@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell'
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import {Select} from "@mui/material";
+import {Button, Select} from "@mui/material";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
 import MachineParamEditModal from "../modal/MachineParamEditModal";
@@ -15,6 +15,7 @@ import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
 import Mod from "../../mod/loader/Mod";
 import SelectBlockType from "../../mod/component/SelectBlockType";
+import SelectBlockModal from "../modal/SelectBlockModal";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
@@ -69,7 +70,7 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           <Pencil/>
         </IconButton>
 
-        <MachineParamEditModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></MachineParamEditModal>
+        <SelectBlockModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></SelectBlockModal>
 
       </TableCell>
 

@@ -11,21 +11,25 @@ export class CraftRecipe {
 }
 
 export class CraftRecipeItem{
-  public readonly Item : Item | undefined;
+  public readonly ItemName : string | undefined;
+  public readonly ItemModId : string | undefined;
   public readonly Count : number | undefined;
 
-  constructor(item : Item | undefined,count : number | undefined) {
-    this.Item = item;
+  constructor(itemName : string | undefined,itemModId : string | undefined,count : number | undefined) {
+    this.ItemName = itemName;
+    this.ItemModId = itemModId;
     this.Count = count;
   }
 }
 
 export class CraftResultItem{
-  public readonly Item : Item;
+  public readonly ItemName : string;
+  public readonly ItemModId : string;
   public readonly Count : number;
 
-  constructor(item : Item,count : number) {
-    this.Item = item;
+  constructor(itemName : string,itemModId : string,count : number) {
+    this.ItemName = itemName;
+    this.ItemModId = itemModId;
     this.Count = count;
   }
 }

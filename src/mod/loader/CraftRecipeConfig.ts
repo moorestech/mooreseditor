@@ -1,6 +1,7 @@
 import {Item} from "../element/Item";
 import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
 import {CraftRecipe, CraftRecipeItem, CraftResultItem} from "../element/CraftRecipe";
+import {ItemConfigUtil} from "../util/ItemConfigUtil";
 
 export class CraftRecipeConfig {
 
@@ -41,9 +42,11 @@ export class CraftRecipeConfig {
     //forループで全てのレシピを読み込む
     for (const recipe of json) {
       //結果アイテムの読み込み
-      const resultItem = CraftRecipeConfig.searchItem(items,recipe.result.itemName,recipe.result.modId);
-      const resultCount = recipe.result.count;
-      const craftResultItem = new CraftResultItem(resultItem,resultCount);
+      const resultItem = ItemConfigUtil.GetItem(recipe.result.itemName,recipe.result.modId,items);
+      if (resultItem === undefined) {
+        throw new Error("resultItem is undefined");
+      }
+      const craftResultItem = new CraftResultItem(recipe.result.itemName,recipe.result.modId,recipe.result.count);
 
       //レシピの読み込み
       const craftRecipeItems : CraftRecipeItem[] = [];
@@ -51,13 +54,16 @@ export class CraftRecipeConfig {
         const itemName = itemJson.itemName;
         const itemModId = itemJson.modId;
         if (itemName === undefined || itemModId === undefined) {
-          craftRecipeItems.push(new CraftRecipeItem(undefined,undefined));
+          craftRecipeItems.push(new CraftRecipeItem(undefined,undefined,undefined));
         }
 
-        const item = CraftRecipeConfig.searchItem(items,itemName,itemModId);
-        const count = itemJson.count;
+        const item = ItemConfigUtil.GetItem(itemName,itemModId,items);
+        if (item === undefined) {
+          throw new Error("item is undefined");
+        }
 
-        craftRecipeItems.push(new CraftRecipeItem(item,count));
+        const count = itemJson.count;
+        craftRecipeItems.push(new CraftRecipeItem(itemName,itemModId,count));
       }
 
       craftRecipes.push(new CraftRecipe(craftResultItem,craftRecipeItems));
@@ -65,18 +71,6 @@ export class CraftRecipeConfig {
 
 
     return new CraftRecipeConfig(craftRecipes,configFile);
-  }
-
-
-  //TODO 複数modロードに対応したらmodIdを考慮する
-  private static searchItem(items : ReadonlyArray<Item>,name : string,modId : string) : Item {
-    for (const item of items) {
-      if (item.name === name) {
-        return item;
-      }
-    }
-
-    throw new Error("Item not found");
   }
 
   private constructor(recipes : CraftRecipe[],configFile : EfaFileHandle) {

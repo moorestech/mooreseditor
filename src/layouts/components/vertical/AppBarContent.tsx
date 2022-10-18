@@ -23,6 +23,7 @@ import Mod from "../../../mod/loader/Mod";
 import ModMeta from "../../../mod/loader/ModMeta";
 import ItemConfig from "../../../mod/loader/ItemConfig";
 import {BlockConfig} from "../../../mod/loader/BlockConfig";
+import {CraftRecipeConfig} from "../../../mod/loader/CraftRecipeConfig";
 
 interface Props {
   hidden: boolean
@@ -40,8 +41,11 @@ async function OpenProject(){
     const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
     const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle);
     const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
+    const craftConfig = await
+      CraftRecipeConfig.CreateCraftRecipeConfig(await dirHandle.getFileHandle("config/craftRecipe.json"),itemConfig.items);
 
-    const mod = new Mod(modMeta, itemConfig,blockConfig);
+    //Modクラスは作られた時点でイベントが発火されるので、このままでOK
+    new Mod(modMeta, itemConfig,blockConfig,craftConfig);
   }catch (e) {
     console.log(e);
   }

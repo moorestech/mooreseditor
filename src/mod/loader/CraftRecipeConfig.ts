@@ -5,18 +5,18 @@ import {ItemConfigUtil} from "../util/ItemConfigUtil";
 
 export class CraftRecipeConfig {
 
-  get recipes() : ReadonlyArray<CraftRecipe> {return this.craftRecipes;}
-  private craftRecipes : CraftRecipe[];
+  get CraftRecipes() : ReadonlyArray<CraftRecipe> {return this._craftRecipes;}
+  private _craftRecipes : CraftRecipe[];
   private readonly craftConfigFileHandle: EfaFileHandle;
 
   async changeRecipes(recipes : CraftRecipe[]) {
-    this.craftRecipes = recipes;
+    this._craftRecipes = recipes;
     await this.save();
   }
 
   async save() {
     const json = [];
-    for (const craftRecipe of this.craftRecipes) {
+    for (const craftRecipe of this._craftRecipes) {
       const itemJson = {
         items: craftRecipe.Items,
         result: craftRecipe.ResultItem,
@@ -74,7 +74,7 @@ export class CraftRecipeConfig {
   }
 
   private constructor(recipes : CraftRecipe[],configFile : EfaFileHandle) {
-    this.craftRecipes = recipes;
+    this._craftRecipes = recipes;
     this.craftConfigFileHandle = configFile;
   }
 }

@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -13,27 +13,19 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import IconButton from "@mui/material/IconButton";
 import Plus from 'mdi-material-ui/Plus';
-import ItemTableRow from "./ItemTableRow";
 import CraftRecipeTableRow from "./CraftRecipeTableRow";
+import {CraftRecipe} from "../../mod/element/CraftRecipe";
+import Mod from "../../mod/loader/Mod";
 
-const createData = (name : string,maxStacks : number) => {
-  return {
-    name,
-    maxStacks,
-  }
-}
-
-
-
-const rows = [
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-]
 
 function CraftRecipeTable() {
-  const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
+  const [craftRecipes, setCraftRecipes] = useState<ReadonlyArray<CraftRecipe>>(Mod.instance? Mod.instance.craftRecipeConfig.CraftRecipes : []);
+
+  useEffect(() => {
+    const subscription = Mod.onModUpdate.subscribe((mod) => {setCraftRecipes(mod.craftRecipeConfig.CraftRecipes);})
+
+    return () => {subscription.unsubscribe();}
+  }, [craftRecipes]);
 
   return (
     <TableContainer component={Paper}>
@@ -48,15 +40,14 @@ function CraftRecipeTable() {
         </TableHead>
 
         <TableBody>
-          { copiedRow.map(row => {
-            return <CraftRecipeTableRow key={row.name} row={row} />
+          { craftRecipes.map((recipe,index) => {
+            return <CraftRecipeTableRow key={index} recipe={recipe} items={Mod.instance?.itemConfig.items} />
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
               <IconButton aria-label='expand row' size='small' onClick={() => {
-                const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
-                setRows(addedRow);
+                //TODO レシピ作成モーダルを出す
               }}>
                 <Plus />
               </IconButton>

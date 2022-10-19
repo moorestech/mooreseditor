@@ -44,7 +44,7 @@ export class CraftRecipeConfig {
       //結果アイテムの読み込み
       const resultItem = ItemConfigUtil.GetItem(recipe.result.itemName,recipe.result.modId,items);
       if (resultItem === undefined) {
-        throw new Error("resultItem is undefined");
+        throw new Error(recipe.result.itemName + " : " + recipe.result.modId + " is not found");
       }
       const craftResultItem = new CraftResultItem(recipe.result.itemName,recipe.result.modId,recipe.result.count);
 
@@ -53,13 +53,14 @@ export class CraftRecipeConfig {
       for (const itemJson of recipe.items) {
         const itemName = itemJson.itemName;
         const itemModId = itemJson.modId;
-        if (itemName === undefined || itemModId === undefined) {
+        if (itemName === null || itemModId === null) {
           craftRecipeItems.push(new CraftRecipeItem(undefined,undefined,undefined));
+          continue;
         }
 
         const item = ItemConfigUtil.GetItem(itemName,itemModId,items);
         if (item === undefined) {
-          throw new Error("item is undefined");
+          throw new Error(itemName + " : " + itemModId + " is not found");
         }
 
         const count = itemJson.count;

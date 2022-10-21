@@ -11,9 +11,10 @@ import Mod from "../../mod/loader/Mod";
 import Tooltip from "@mui/material/Tooltip";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import {Item} from "../../mod/element/Item";
 
 
-const SelectBlockModal = (props: { isOpen:boolean, onClose: () => void ,onSelect : (itemName : string,maxStack:number) => void}) => {
+const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect : (item : Item) => void}) => {
 
 
   const renderItems = () => {
@@ -61,4 +62,4 @@ const SelectBlockModal = (props: { isOpen:boolean, onClose: () => void ,onSelect
   )
 }
 
-export default SelectBlockModal
+export default SelectItemModal

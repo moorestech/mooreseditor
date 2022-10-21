@@ -15,11 +15,18 @@ import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
 import Mod from "../../mod/loader/Mod";
 import SelectBlockType from "../../mod/component/SelectBlockType";
-import SelectBlockModal from "../modal/SelectBlockModal";
+import SelectItemModal from "../modal/SelectItemModal";
+import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
   const [isOpen, setIsOpen] = React.useState(false);
+
+
+  const itemModId = props.row.itemModId;
+  const itemName = props.row.itemName;
+
+  const itemImagUrl = ItemConfigUtil.GetItem(itemModId,itemName,Mod.instance.itemConfig.items)?.imageUrl;
 
 
   return (
@@ -49,20 +56,21 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
       </TableCell>
 
       <TableCell>
-        <FormControl>
-          <InputLabel>Item</InputLabel>
-          <Select
-            id="demo-simple-select"
-            defaultValue={props.row.itemName}
-            label="Item"
-          >
-            {
-              Mod.instance?.itemConfig.items.map(item => {
-                return <MenuItem key={item.name} value={item.name}>{item.name}</MenuItem>
-              })
-            }
-          </Select>
-        </FormControl>
+        <IconButton aria-label='expand row' size='small'
+                    onClick={async () =>{
+                      const itemModId = props.row.itemModId;
+                      const itemName = props.row.itemName;
+                      try {
+                        const item = ItemConfigUtil.GetItem(itemModId,itemName,Mod.instance.itemConfig.items);
+
+                        const newBlock = new Block(props.row.name,props.row.type,itemModId,itemName,props.row.modelTransform,props.row.param);
+                        props.onEdit(newBlock);
+                      }catch (e) {
+                        console.log(e)
+                      }
+                    }}>
+          <img src={props.row.imageUrl} alt={props.row.name} width={40} height={40} />
+        </IconButton>
       </TableCell>
 
       <TableCell>
@@ -70,7 +78,7 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           <Pencil/>
         </IconButton>
 
-        <SelectBlockModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></SelectBlockModal>
+        <MachineParamEditModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></MachineParamEditModal>
 
       </TableCell>
 

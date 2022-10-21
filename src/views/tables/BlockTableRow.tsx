@@ -1,13 +1,8 @@
-// ** React Imports
 import React from 'react'
-
-// ** MUI Imports
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import {Button, Select} from "@mui/material";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
 import MachineParamEditModal from "../modal/MachineParamEditModal";
@@ -21,13 +16,10 @@ import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isItemOpen, setIsItemOpen] = React.useState(false);
 
-
-  const itemModId = props.row.itemModId;
-  const itemName = props.row.itemName;
-
-  const itemImagUrl = ItemConfigUtil.GetItem(itemModId,itemName,Mod.instance.itemConfig.items)?.imageUrl;
-
+  const itemImagUrl = ItemConfigUtil.GetItem(props.row.itemName,props.row.itemModId,Mod.instance.itemConfig.items)?.imageUrl;
+  const itemNameText = ItemConfigUtil.GetItem(props.row.itemName,props.row.itemModId,Mod.instance.itemConfig.items)?.name;
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -56,21 +48,22 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
       </TableCell>
 
       <TableCell>
-        <IconButton aria-label='expand row' size='small'
-                    onClick={async () =>{
-                      const itemModId = props.row.itemModId;
-                      const itemName = props.row.itemName;
-                      try {
-                        const item = ItemConfigUtil.GetItem(itemModId,itemName,Mod.instance.itemConfig.items);
-
-                        const newBlock = new Block(props.row.name,props.row.type,itemModId,itemName,props.row.modelTransform,props.row.param);
-                        props.onEdit(newBlock);
-                      }catch (e) {
-                        console.log(e)
-                      }
-                    }}>
-          <img src={props.row.imageUrl} alt={props.row.name} width={40} height={40} />
+        <IconButton aria-label='expand row' size='small' onClick={() => setIsItemOpen(true)}>
+          <img src={itemImagUrl} alt={itemNameText} width={40} height={40} />
         </IconButton>
+        <SelectItemModal
+          isOpen={isItemOpen} onClose={() => {setIsItemOpen(false)}}
+          onSelect={async (item) =>{
+            setIsItemOpen(false)
+            try {
+              const itemModId = item.modId
+              const itemName = item.name
+
+              const newBlock = new Block(props.row.name,props.row.type,itemModId,itemName,props.row.modelTransform,props.row.param);
+              props.onEdit(newBlock);
+            }catch (e) {
+              console.log(e)
+            }}} />
       </TableCell>
 
       <TableCell>

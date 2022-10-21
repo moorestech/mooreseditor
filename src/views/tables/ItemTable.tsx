@@ -26,7 +26,7 @@ function ItemTable() {
   const [itemRows, setItemRows] = useState<ReadonlyArray<Item> >(Mod.instance ? Mod.instance.itemConfig.items : []);
   const [createModalOpen,setCreateModalOpen] = useState<boolean>(false);
 
-  const modId = Mod.instance?.meta.id;
+  const modId = Mod.instance?.meta.mergedId;
 
   useEffect(() => {
     const subscription = Mod.onModUpdate.subscribe((mod) => {setItemRows(mod.itemConfig.items);})

@@ -11,6 +11,7 @@ export default class ModMeta {
 
   get id(): string {return this._id;}
   get author(): string {return this._author;}
+  get mergedId(): string {return this._id + ":" + this._version;}
   get name(): string {return this._name;}
   get version(): string {return this._version;}
   get description(): string {return this._description;}

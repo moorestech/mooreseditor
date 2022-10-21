@@ -54,13 +54,13 @@ export default class ItemConfig{
     await writable.close();
     const imageFilePath = DefaultImageDirectory + "/" + fileName;
 
-    return new Item(item.name, item.maxStacks, imageUrl, imageFilePath);
+    return new Item(item.modId,item.name, item.maxStacks, imageUrl, imageFilePath);
   }
 
 
 
 
-  public static async CreateItemConfig(configFile : EfaFileHandle,modRootDir : EfaDirectoryHandle) : Promise<ItemConfig> {
+  public static async CreateItemConfig(configFile : EfaFileHandle,modRootDir : EfaDirectoryHandle,modId : string) : Promise<ItemConfig> {
     const file = await configFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);
@@ -78,7 +78,7 @@ export default class ItemConfig{
         //TODO アイテムアイコンの画像が無かったときの対処
       }
 
-      const item = new Item(name,maxStacks,imageUrl,imagePath);
+      const item = new Item(modId,name,maxStacks,imageUrl,imagePath);
       items.push(item);
     }
 

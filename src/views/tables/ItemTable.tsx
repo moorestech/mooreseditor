@@ -26,6 +26,8 @@ function ItemTable() {
   const [itemRows, setItemRows] = useState<ReadonlyArray<Item> >(Mod.instance ? Mod.instance.itemConfig.items : []);
   const [createModalOpen,setCreateModalOpen] = useState<boolean>(false);
 
+  const modId = Mod.instance?.meta.id;
+
   useEffect(() => {
     const subscription = Mod.onModUpdate.subscribe((mod) => {setItemRows(mod.itemConfig.items);})
 
@@ -63,7 +65,7 @@ function ItemTable() {
               </IconButton>
               <CreateItemModal isOpen={createModalOpen} onClose={() => {setCreateModalOpen(false)}}
                onSubmit={async (itemName, maxStack) => {
-                const addedRow = itemRows.concat(new Item(itemName,maxStack,DefaultItemIconUrl,""));
+                const addedRow = itemRows.concat(new Item(modId,itemName,maxStack,DefaultItemIconUrl,""));
                 await Mod.instance.itemConfig.changeItems(addedRow);
                 setItemRows(addedRow);
               }}></CreateItemModal>

@@ -12,6 +12,7 @@ import Mod from "../../mod/loader/Mod";
 import SelectBlockType from "../../mod/component/SelectBlockType";
 import SelectItemModal from "../modal/SelectItemModal";
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
+import EditBlockParamModal from "../modal/EditBlockParamModal";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
@@ -71,13 +72,13 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           <Pencil/>
         </IconButton>
 
-        <MachineParamEditModal
-          isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param}
+        <EditBlockParamModal
+          isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param} type={props.row.type}
           onSubmit={param => {
             const newBlock = new Block(props.row.name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,param);
             props.onEdit(newBlock);
             setIsOpen(false)
-          }}></MachineParamEditModal>
+          }} />
 
       </TableCell>
 

@@ -39,7 +39,7 @@ async function OpenProject(){
     const modMeta = await ModMeta.CreateModMeta(metaFile);
 
     const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
-    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle,modMeta.id);
+    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle,modMeta.mergedId);
     const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
     const craftConfig = await
       CraftRecipeConfig.CreateCraftRecipeConfig(await dirHandle.getFileHandle("config/craftRecipe.json"),itemConfig.items);

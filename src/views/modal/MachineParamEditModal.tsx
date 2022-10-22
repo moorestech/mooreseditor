@@ -14,11 +14,14 @@ import Close from 'mdi-material-ui/Close'
 import Mod from "../../mod/loader/Mod";
 
 
-const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) => {
-
+const MachineParamEditModal = (props: { isOpen:boolean,param : any, onClose: () => void ,onSubmit:(data:any) => void}) => {
   const [inputIsError, setInputIsError] = useState<boolean>(false)
   const [outputIsError, setOutputIsError] = useState<boolean>(false)
   const [requiredPowerIsError, setRequiredPowerIsError] = useState<boolean>(false)
+
+  let inputSlot = props.param.inputSlot
+  let outputSlot = props.param.outputSlot
+  let requiredPower = props.param.requiredPower
 
   return (
     <Dialog
@@ -40,23 +43,26 @@ const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) =
 
           <Grid container spacing={6}>
             <Grid item sm={6} xs={12}>
-              <TextField error={inputIsError} fullWidth defaultValue={3} label='Input Slot' placeholder='Input Slot' type={'number'}
+              <TextField error={inputIsError} fullWidth defaultValue={inputSlot} label='Input Slot' placeholder='Input Slot' type={'number'}
                          onChange={event => {
-                           setInputIsError(parseInt(event.target.value) < 0)
+                           inputSlot = parseInt(event.target.value)
+                           setInputIsError(inputSlot < 0)
                          }}
                          helperText={inputIsError ? 'Input Slot must be greater than 0' : ''}/>
             </Grid>
             <Grid item sm={6} xs={12}>
-              <TextField error={outputIsError}  fullWidth defaultValue={3} label='Output Slot' placeholder='Output Slot' type={'number'}
+              <TextField error={outputIsError}  fullWidth defaultValue={outputSlot} label='Output Slot' placeholder='Output Slot' type={'number'}
                          onChange={event => {
-                           setOutputIsError(parseInt(event.target.value) < 0)
+                           outputSlot = parseInt(event.target.value)
+                           setOutputIsError(outputSlot < 0)
                          }}
                          helperText={outputIsError ? 'Output Slot must be greater than 0' : ''}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField error={requiredPowerIsError}  fullWidth defaultValue={100} label='Required Power' placeholder='Required Power' type={'number'}
+              <TextField error={requiredPowerIsError}  fullWidth defaultValue={requiredPower} label='Required Power' placeholder='Required Power' type={'number'}
                          onChange={event => {
-                           setRequiredPowerIsError(parseInt(event.target.value) < 0)
+                           requiredPower = parseInt(event.target.value)
+                           setRequiredPowerIsError(requiredPower < 0)
                          }}
                          helperText={requiredPowerIsError ? 'Required Power must be greater than 0' : ''}/>
             </Grid>
@@ -66,7 +72,16 @@ const MachineParamEditModal = (props: { isOpen:boolean, onClose: () => void }) =
         </Grid>
       </DialogContent>
       <DialogActions  sx={{justifyContent: 'center' }}>
-        <Button variant='contained' sx={{ mr: 1 }} onClick={() =>  props.onClose()}>
+        <Button
+          variant='contained' sx={{ mr: 1 }}
+          onClick={() =>  {
+            const param = {
+              inputSlot: inputSlot,
+              outputSlot: outputSlot,
+              requiredPower:requiredPower,
+            }
+            props.onSubmit(param)
+          }}>
           Submit
         </Button>
         <Button variant='outlined' color='secondary' onClick={() =>  props.onClose()}>

@@ -71,7 +71,13 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           <Pencil/>
         </IconButton>
 
-        <MachineParamEditModal isOpen={isOpen} onClose={() => {setIsOpen(false)}}></MachineParamEditModal>
+        <MachineParamEditModal
+          isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param}
+          onSubmit={param => {
+            const newBlock = new Block(props.row.name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,param);
+            props.onEdit(newBlock);
+            setIsOpen(false)
+          }}></MachineParamEditModal>
 
       </TableCell>
 

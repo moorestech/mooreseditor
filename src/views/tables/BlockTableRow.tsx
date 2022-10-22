@@ -68,17 +68,18 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
       </TableCell>
 
       <TableCell>
+        {/*
+        TODO ブロックパラメーターの編集モーダルを完成させる（現在はベルトコンベアと機械だけ）
         <IconButton aria-label='expand row' size='small' onClick={() => setIsOpen(true)}>
           <Pencil/>
         </IconButton>
-
         <EditBlockParamModal
           isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param} type={props.row.type}
           onSubmit={param => {
             const newBlock = new Block(props.row.name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,param);
             props.onEdit(newBlock);
             setIsOpen(false)
-          }} />
+          }} />*/}
 
       </TableCell>
 

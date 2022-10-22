@@ -1,17 +1,15 @@
-import React, { Ref, useState, forwardRef, ReactElement } from 'react'
+import React from 'react'
 
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
 import Mod from "../../mod/loader/Mod";
 import Tooltip from "@mui/material/Tooltip";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {Item} from "../../mod/element/Item";
+import {IconButton} from "@mui/material";
 
 
 const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect : (item : Item) => void}) => {
@@ -19,13 +17,15 @@ const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect 
 
   const renderItems = () => {
     return Mod.instance?.itemConfig.items.map(item => {
-
+      //TODO sakastudio パディングが編なのでいい感じに修正する
       return (
-        <Grid item key={item.name}>
-          <Tooltip arrow title={item.name} placement='top'>
-            <Card>
-              <CardContent sx={{ display: 'flex' }}>
-                <img src={item.imageUrl} alt={item.name} width={40} height={40} />
+        <Grid item key={item.name} sx={{p:0}}>
+          <Tooltip arrow title={item.name} placement='top'  sx={{p:0}}>
+            <Card sx={{p:0}}>
+              <CardContent sx={{width:50,height:50,p:0}}>
+                <IconButton aria-label='expand row' size='small'  onClick={() => props.onSelect(item)}>
+                  <img src={item.imageUrl} alt={item.name} width={40} height={40} />
+                </IconButton>
               </CardContent>
             </Card>
           </Tooltip>

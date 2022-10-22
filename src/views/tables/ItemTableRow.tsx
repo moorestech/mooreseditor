@@ -32,7 +32,7 @@ const ItemTableRow = (props: { row: Item,onEdit:(item: Item) => void}) => {
                    onFocus={e => e.target.select()}
                    onChange={(e) => {
                      const text = e.target.value;
-                     const newItem = new Item(props.row.name,parseInt(text),props.row.imageUrl,props.row.imagePath);
+                     const newItem = new Item(props.row.modId,props.row.name,parseInt(text),props.row.imageUrl,props.row.imagePath);
                      props.onEdit(newItem);
                    }}
         />

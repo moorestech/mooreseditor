@@ -17,7 +17,7 @@ const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect 
 
   const renderItems = () => {
     return Mod.instance?.itemConfig.items.map(item => {
-      //TODO sakastudio パディングが編なのでいい感じに修正する
+      //TODO sakastudio パディングが変なのでいい感じに修正する
       return (
         <Grid item key={item.name} sx={{p:0}}>
           <Tooltip arrow title={item.name} placement='top'  sx={{p:0}}>
@@ -34,6 +34,7 @@ const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect 
     })
   }
 
+  //TODO sakastudio 若干左にずれてるので修正する
   return (
     <Dialog
       fullWidth

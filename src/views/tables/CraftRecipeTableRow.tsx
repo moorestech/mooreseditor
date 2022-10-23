@@ -17,9 +17,6 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
 
   const [isEditModalOn, setIsEditModalOn] = useState<boolean>(false);
 
-
-  console.log(isEditModalOn);
-
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
 

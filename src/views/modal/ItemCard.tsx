@@ -13,7 +13,7 @@ const ItemCard = (props: { itemName: string,url:string, onClick:() => void}) => 
         <Card sx={{p:0}}>
           <CardContent sx={{width:50,height:50,p:0}}>
 
-            <IconButton aria-label='expand row' size='small' onClick={()=>{props.onClick}}>
+            <IconButton aria-label='expand row' size='small' onClick={()=>{props.onClick()}}>
               <img src={props.url} alt={props.itemName} width={40} height={40} />
             </IconButton>
 

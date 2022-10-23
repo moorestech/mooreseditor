@@ -18,6 +18,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {IconButton} from "@mui/material";
 import ItemCard from "./ItemCard";
+import SelectItemModal from "./SelectItemModal";
 
 
 const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose: () => void, onSubmit: () => void }) => {
@@ -27,6 +28,8 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose:
   const resultItemModId = props.row.ResultItem.ItemModId;
   const resultItem = ItemConfigUtil.GetItem(resultItemName,resultItemModId,Mod.instance?.itemConfig.items)
   const resultItemImageUrl = resultItem?.imageUrl ?? "";
+
+  console.log(isSetItem)
 
   return (
     <Dialog
@@ -49,13 +52,23 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose:
 
 
           <Grid item xs={12}>
-            <Grid container spacing={6}>
+            <Grid container spacing={6} justifyContent={'center'}>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
             </Grid>
-            <Grid container spacing={6}>
+            <Grid container spacing={6} justifyContent={'center'}>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
             </Grid>
-            <Grid container spacing={6}>
+            <Grid container spacing={6} justifyContent={'center'}>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
+              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setIsSetItem(true)}}></ItemCard>
             </Grid>
           </Grid>
+        <SelectItemModal isOpen={isSetItem} onClose={() =>{setIsSetItem(false)}} onSelect={()=>{setIsSetItem(false)}}></SelectItemModal>
       </DialogContent>
 
 

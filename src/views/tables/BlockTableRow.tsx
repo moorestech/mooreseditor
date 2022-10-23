@@ -16,7 +16,6 @@ import EditBlockParamModal from "../modal/block/EditBlockParamModal";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
-  const [isOpen, setIsOpen] = React.useState(false);
   const [isItemOpen, setIsItemOpen] = React.useState(false);
 
   const itemImagUrl = ItemConfigUtil.GetItem(props.row.itemName,props.row.itemModId,Mod.instance.itemConfig.items)?.imageUrl;

@@ -1,11 +1,6 @@
-// ** React Imports
-import React from 'react'
-
-// ** MUI Imports
+import React, {useState} from 'react'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
-
-// ** Icons Imports
 import IconButton from "@mui/material/IconButton";
 import Pencil from "mdi-material-ui/Pencil";
 import {CraftRecipe} from "../../mod/element/CraftRecipe";
@@ -20,8 +15,10 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
 
   const resultItem = ItemConfigUtil.GetItem(resultItemName,resultModId, props.items);
 
-  const [isEditModalOn, setIsEditModalOn] = React.useState(false);
+  const [isEditModalOn, setIsEditModalOn] = useState<boolean>(false);
 
+
+  console.log(isEditModalOn);
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -36,9 +33,8 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
       <TableCell>
         <IconButton aria-label='expand row' size='small' onClick={() => {setIsEditModalOn(true)}}>
           <Pencil/>
-          <CraftRecipeEditModal row={props.recipe} isOpen={isEditModalOn} onClose={() => {setIsEditModalOn(false)}} onSubmit={() => {setIsEditModalOn(false)}}></CraftRecipeEditModal>
-
         </IconButton>
+        <CraftRecipeEditModal row={props.recipe} isOpen={isEditModalOn} onClose={() => {setIsEditModalOn(false)}} onSubmit={() => {setIsEditModalOn(false)}}></CraftRecipeEditModal>
       </TableCell>
 
 

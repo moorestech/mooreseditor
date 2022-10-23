@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import Close from 'mdi-material-ui/Close'
-import Mod from "../../mod/loader/Mod";
+import Mod from "../../../mod/loader/Mod";
 
 
 const BeltConveyorParamEditModal = (props: { isOpen:boolean,param : any, onClose: () => void ,onSubmit:(data:any) => void}) => {

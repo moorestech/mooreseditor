@@ -5,14 +5,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
-import MachineParamEditModal from "../modal/MachineParamEditModal";
+import MachineParamEditModal from "../modal/block/MachineParamEditModal";
 import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
 import Mod from "../../mod/loader/Mod";
 import SelectBlockType from "../../mod/component/SelectBlockType";
 import SelectItemModal from "../modal/SelectItemModal";
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
-import EditBlockParamModal from "../modal/EditBlockParamModal";
+import EditBlockParamModal from "../modal/block/EditBlockParamModal";
 
 
 const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {

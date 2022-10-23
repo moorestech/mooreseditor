@@ -16,7 +16,7 @@ import Plus from 'mdi-material-ui/Plus';
 import ItemTableRow from "./ItemTableRow";
 import {DefaultItemIconUrl, Item} from "../../mod/element/Item";
 import Mod from "../../mod/loader/Mod";
-import MachineParamEditModal from "../modal/MachineParamEditModal";
+import MachineParamEditModal from "../modal/block/MachineParamEditModal";
 import Pencil from "mdi-material-ui/Pencil";
 import CreateItemModal from "../modal/CreateItemModal";
 

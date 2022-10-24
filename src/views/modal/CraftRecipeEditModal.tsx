@@ -5,30 +5,32 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import Mod from "../../mod/loader/Mod";
 import {CraftRecipe, CraftRecipeItem} from "../../mod/element/CraftRecipe";
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import ItemCard from "./ItemCard";
 import SelectItemModal from "./SelectItemModal";
+import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 
 
-const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
+const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
   const [editingItemIndex, setEditingItemIndex] = useState<number>(-1)
   const [recipe, setRecipe] = useState<CraftRecipe>({...props.row});
 
-  const resultItemName = props.row.ResultItem.ItemName;
-  const resultItem = ItemConfigUtil.GetItem(resultItemName,props.row.ResultItem.ItemModId,Mod.instance?.itemConfig.items)
-  const resultItemImageUrl = resultItem?.imageUrl ?? "";
+  const items = props.items;
 
-  const craftTableEditor: JSX.Element[] = [];
-  for (let i = 0; i < 9; i++) {
-    craftTableEditor.push(
-      <Grid container spacing={6} justifyContent={'center'}>
-        <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(0)}}></ItemCard>
-        <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(1)}}></ItemCard>
-        <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(2)}}></ItemCard>
-      </Grid>
-    )
+  const resultItemName = props.row.ResultItem.ItemName;
+  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,props.row.ResultItem.ItemModId,items)?.imageUrl ?? "";
+
+
+  const itemRecipeData:{itemName:string,itemUrl:string}[] = [];
+  for (let i = 0; i < props.row.Items.length; i++) {
+    const item = props.row.Items[i];
+    if (item.ItemName === undefined || item.ItemModId === undefined){
+      itemRecipeData.push({itemName:"none",itemUrl:NoneItemIconUrl});
+    }else{
+      const itemData = ItemConfigUtil.GetItem(item.ItemName,item.ItemModId,items);
+      itemRecipeData.push({itemName:itemData?.name ?? "",itemUrl:itemData?.imageUrl ?? ""});
+    }
   }
 
   return (
@@ -52,20 +54,22 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose:
 
 
           <Grid item xs={12}>
-            <Grid container spacing={6} justifycontent={'center'}>
-              <itemcard itemname={resultitemname} url={resultitemimageurl} onclick={() => {seteditingitemindex(0)}}></itemcard>
-              <itemcard itemname={resultitemname} url={resultitemimageurl} onclick={() => {seteditingitemindex(1)}}></itemcard>
-              <itemcard itemname={resultitemname} url={resultitemimageurl} onclick={() => {seteditingitemindex(2)}}></itemcard>
+            {//TODO 繰り返しを消したい
+            }
+            <Grid container spacing={6} justifyContent={'center'}>
+              <ItemCard itemName={itemRecipeData[0].itemName} url={itemRecipeData[0].itemUrl} onClick={() => {setEditingItemIndex(0)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[1].itemName} url={itemRecipeData[1].itemUrl} onClick={() => {setEditingItemIndex(1)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[2].itemName} url={itemRecipeData[2].itemUrl} onClick={() => {setEditingItemIndex(2)}}></ItemCard>
             </Grid>
             <Grid container spacing={6} justifyContent={'center'}>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(3)}}></ItemCard>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(4)}}></ItemCard>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(5)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[3].itemName} url={itemRecipeData[3].itemUrl} onClick={() => {setEditingItemIndex(3)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[4].itemName} url={itemRecipeData[4].itemUrl} onClick={() => {setEditingItemIndex(4)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[5].itemName} url={itemRecipeData[5].itemUrl} onClick={() => {setEditingItemIndex(5)}}></ItemCard>
             </Grid>
             <Grid container spacing={6} justifyContent={'center'}>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(6)}}></ItemCard>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(7)}}></ItemCard>
-              <ItemCard itemName={resultItemName} url={resultItemImageUrl} onClick={() => {setEditingItemIndex(8)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[6].itemName} url={itemRecipeData[6].itemUrl} onClick={() => {setEditingItemIndex(6)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[7].itemName} url={itemRecipeData[7].itemUrl} onClick={() => {setEditingItemIndex(7)}}></ItemCard>
+              <ItemCard itemName={itemRecipeData[8].itemName} url={itemRecipeData[8].itemUrl} onClick={() => {setEditingItemIndex(8)}}></ItemCard>
             </Grid>
           </Grid>
 
@@ -73,7 +77,6 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe, onClose:
           isOpen={editingItemIndex != -1} onClose={() =>{setEditingItemIndex(-1)}}
           onSelect={(item)=>{
             const count = recipe.Items[editingItemIndex].Count;
-            console.log(item.name)
             recipe.Items[editingItemIndex] = new CraftRecipeItem(item.name,item.modId,count);
             setRecipe(recipe)
 

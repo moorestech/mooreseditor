@@ -1,4 +1,5 @@
 export const DefaultItemIconUrl  = "/images/logos/iron ingot.png";
+export const NoneItemIconUrl = "/images/none_icon.png";
 
 export class Item{
   public readonly modId : string;

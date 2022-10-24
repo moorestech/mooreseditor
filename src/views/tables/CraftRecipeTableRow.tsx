@@ -31,7 +31,7 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
         <IconButton aria-label='expand row' size='small' onClick={() => {setIsEditModalOn(true)}}>
           <Pencil/>
         </IconButton>
-        <CraftRecipeEditModal row={props.recipe} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}} onSubmit={() => {setIsEditModalOn(false)}}></CraftRecipeEditModal>
+        <CraftRecipeEditModal row={props.recipe.Copy()} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}} onSubmit={() => {setIsEditModalOn(false)}}></CraftRecipeEditModal>
       </TableCell>
 
 

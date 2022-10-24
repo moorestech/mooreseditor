@@ -14,17 +14,17 @@ import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 
 const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
   const [editingItemIndex, setEditingItemIndex] = useState<number>(-1)
-  const [recipe, setRecipe] = useState<CraftRecipe>({...props.row});
+  const [recipe, setRecipe] = useState<CraftRecipe>(props.row);
 
   const items = props.items;
 
-  const resultItemName = props.row.ResultItem.ItemName;
-  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,props.row.ResultItem.ItemModId,items)?.imageUrl ?? "";
+  const resultItemName = recipe.ResultItem.ItemName;
+  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,recipe.ResultItem.ItemModId,items)?.imageUrl ?? "";
 
 
   const itemRecipeData:{itemName:string,itemUrl:string}[] = [];
-  for (let i = 0; i < props.row.Items.length; i++) {
-    const item = props.row.Items[i];
+  for (let i = 0; i < recipe.Items.length; i++) {
+    const item = recipe.Items[i];
     if (item.ItemName === undefined || item.ItemModId === undefined){
       itemRecipeData.push({itemName:"none",itemUrl:NoneItemIconUrl});
     }else{
@@ -53,7 +53,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  
         </Grid>
 
 
-          <Grid item xs={12}>
+          <Grid item xs={12} spacing={6}>
             {//TODO 繰り返しを消したい
             }
             <Grid container spacing={6} justifyContent={'center'}>
@@ -93,7 +93,10 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  
         }}>
           Submit
         </Button>
-        <Button variant='outlined' color='secondary' onClick={() => props.onClose()}>
+        <Button variant='outlined' color='secondary' onClick={() => {
+          props.onClose()
+
+        }}>
           Cancel
         </Button>
       </DialogActions>

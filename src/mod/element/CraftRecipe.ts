@@ -8,6 +8,15 @@ export class CraftRecipe {
     this.ResultItem = resultItem;
     this.Items = items;
   }
+
+  Copy() : CraftRecipe {
+    const items : CraftRecipeItem[] = [];
+    for (const item of this.Items) {
+      items.push(item.Copy());
+    }
+
+    return new CraftRecipe(this.ResultItem.Copy(),items);
+  }
 }
 
 export class CraftRecipeItem{
@@ -20,6 +29,10 @@ export class CraftRecipeItem{
     this.ItemModId = itemModId;
     this.Count = count;
   }
+
+  Copy() {
+    return new CraftRecipeItem(this.ItemName,this.ItemModId,this.Count);
+  }
 }
 
 export class CraftResultItem{
@@ -31,5 +44,9 @@ export class CraftResultItem{
     this.ItemName = itemName;
     this.ItemModId = itemModId;
     this.Count = count;
+  }
+
+  Copy() {
+    return new CraftResultItem(this.ItemName,this.ItemModId,this.Count);
   }
 }

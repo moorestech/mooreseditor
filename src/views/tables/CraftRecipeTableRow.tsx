@@ -9,7 +9,7 @@ import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import CraftRecipeEditModal from "../modal/CraftRecipeEditModal";
 
 
-const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<Item>}) => {
+const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<Item>,onSubmit:(recipe:CraftRecipe)=>void }) => {
   const resultItemName = props.recipe.ResultItem.ItemName;
   const resultModId = props.recipe.ResultItem.ItemModId;
 
@@ -31,7 +31,11 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
         <IconButton aria-label='expand row' size='small' onClick={() => {setIsEditModalOn(true)}}>
           <Pencil/>
         </IconButton>
-        <CraftRecipeEditModal row={props.recipe.Copy()} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}} onSubmit={() => {setIsEditModalOn(false)}}></CraftRecipeEditModal>
+        <CraftRecipeEditModal
+          row={props.recipe.Copy()} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}}
+          onSubmit={recipe => {
+            props.onSubmit(recipe);
+            setIsEditModalOn(false)}}></CraftRecipeEditModal>
       </TableCell>
 
 

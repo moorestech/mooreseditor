@@ -15,6 +15,7 @@ import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
   const [editingItemIndex, setEditingItemIndex] = useState<number>(-1)
   const [recipe, setRecipe] = useState<CraftRecipe>(props.row);
+  const backupRecipe = props.row.Copy();
 
   const items = props.items;
 
@@ -95,7 +96,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  
         </Button>
         <Button variant='outlined' color='secondary' onClick={() => {
           props.onClose()
-
+          setRecipe(backupRecipe);
         }}>
           Cancel
         </Button>

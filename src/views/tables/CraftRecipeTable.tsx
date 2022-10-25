@@ -41,7 +41,14 @@ function CraftRecipeTable() {
 
         <TableBody>
           { craftRecipes.map((recipe,index) => {
-            return <CraftRecipeTableRow key={index} recipe={recipe} items={Mod.instance?.itemConfig.items} />
+            return <CraftRecipeTableRow
+              key={index} recipe={recipe} items={Mod.instance?.itemConfig.items}
+            onSubmit={(recipe)=>{
+              const newRecipes = [...craftRecipes];
+              newRecipes[index] = recipe;
+              setCraftRecipes(newRecipes);
+              Mod.instance?.craftRecipeConfig.changeRecipes(newRecipes);
+            }}/>
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

@@ -18,12 +18,20 @@ export class CraftRecipeConfig {
   async save() {
     const json = [];
     for (const craftRecipe of this._craftRecipes) {
+      const items = [];
+      for (const item of craftRecipe.Items) {
+        items.push({itemName : item.ItemName??null, modId : item.ItemModId??null, count : item.Count});
+      }
+      const result = {itemName : craftRecipe.ResultItem.ItemName, modId : craftRecipe.ResultItem.ItemModId, count : craftRecipe.ResultItem.Count}
+
       const itemJson = {
-        items: craftRecipe.Items,
-        result: craftRecipe.ResultItem,
+        items: items,
+        result: result,
       }
       json.push(itemJson);
     }
+
+    console.log(json)
 
     const writable = await this.craftConfigFileHandle.createWritable();
     await writable.write(JSON.stringify(json,undefined,4));
@@ -55,7 +63,7 @@ export class CraftRecipeConfig {
         const itemName = itemJson.itemName;
         const itemModId = itemJson.modId;
         if (itemName === null || itemModId === null) {
-          craftRecipeItems.push(new CraftRecipeItem(undefined,undefined,undefined));
+          craftRecipeItems.push(new CraftRecipeItem(undefined,undefined,0));
           continue;
         }
 

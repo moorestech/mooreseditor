@@ -22,9 +22,17 @@ export class CraftRecipe {
 export class CraftRecipeItem{
   public readonly ItemName : string | undefined;
   public readonly ItemModId : string | undefined;
-  public readonly Count : number | undefined;
+  public readonly Count : number;
 
-  constructor(itemName : string | undefined,itemModId : string | undefined,count : number | undefined) {
+  /**
+   * クラフトレシピのアイテムを作成する
+   * アイテムがないときはnullで表現する
+   * unifiedを使わないのは、JSON.stringifyのときにundefinedは消えてしまうため
+   * @param itemName
+   * @param itemModId
+   * @param count
+   */
+  constructor(itemName : string | undefined,itemModId : string | undefined,count : number) {
     this.ItemName = itemName;
     this.ItemModId = itemModId;
     this.Count = count;

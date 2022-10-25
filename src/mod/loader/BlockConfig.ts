@@ -10,6 +10,7 @@ export class BlockConfig {
   private _blocks : Block[];
   private readonly blockFileHandle: EfaFileHandle;
 
+  //TODO 配列を直接セットする方式はよくないと思うが、配列をStateに使ったりするので一旦これでやってる もっといいやり方あったら教えてください
   async changeBlocks(blocks : Block[]) {
     this._blocks = blocks;
     await this.save();

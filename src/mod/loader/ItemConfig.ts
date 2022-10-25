@@ -10,6 +10,7 @@ export default class ItemConfig{
   private readonly itemFileHandle: EfaFileHandle;
   private readonly modRootDirHandle : EfaDirectoryHandle;
 
+  //TODO 配列を直接セットする方式はよくないと思うが、配列をStateに使ったりするので一旦これでやってる もっといいやり方あったら教えてください
   async changeItems(items : Item[]) {
     this._items = items;
     await this.save();

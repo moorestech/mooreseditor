@@ -9,6 +9,7 @@ export class CraftRecipeConfig {
   private _craftRecipes : CraftRecipe[];
   private readonly craftConfigFileHandle: EfaFileHandle;
 
+  //TODO 配列を直接セットする方式はよくないと思うが、配列をStateに使ったりするので一旦これでやってる もっといいやり方あったら教えてください
   async changeRecipes(recipes : CraftRecipe[]) {
     this._craftRecipes = recipes;
     await this.save();

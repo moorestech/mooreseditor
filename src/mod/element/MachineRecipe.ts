@@ -1,10 +1,14 @@
 export class MachineRecipe {
+  public readonly BlockId : number;
+  public readonly Time : number;
   public readonly InputItems : MachineRecipeInputItem[];
   public readonly OutputItems : MachineRecipeOutputItem[];
 
-  constructor(inputItems : MachineRecipeInputItem[],outputItems : MachineRecipeOutputItem[]) {
+  constructor(inputItems : MachineRecipeInputItem[],outputItems : MachineRecipeOutputItem[],blockId : number,time : number) {
     this.InputItems = inputItems;
     this.OutputItems = outputItems;
+    this.BlockId = blockId;
+    this.Time = time;
   }
 }
 

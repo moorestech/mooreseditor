@@ -9,7 +9,7 @@ import {CraftRecipe, CraftRecipeItem, CraftResultItem} from "../../mod/element/C
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import ItemCard from "./ItemCard";
 import SelectItemModal from "./SelectItemModal";
-import {Item, NoneItemIconUrl} from "../../mod/element/Item";
+import {DefaultItemIconUrl, Item, NoneItemIconUrl} from "../../mod/element/Item";
 import TextField from "@mui/material/TextField";
 import {Delete} from "mdi-material-ui";
 import {IconButton} from "@mui/material";
@@ -27,7 +27,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
 
   const resultItemName = recipe.ResultItem.ItemName;
   const resultItemCount = recipe.ResultItem.Count;
-  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,recipe.ResultItem.ItemModId,items)?.imageUrl ?? "";
+  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,recipe.ResultItem.ItemModId,items)?.imageUrl ?? DefaultItemIconUrl;
 
 
   const itemRecipeData:{itemName:string,itemUrl:string,count:number}[] = [];
@@ -164,7 +164,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
 
 
       <DialogActions sx={{justifyContent: 'center', pb: 8}}>
-        <Button variant='contained' sx={{mr: 1}} onClick={() => {
+        <Button disabled={recipe.ResultItem.Count <= 0} variant='contained' sx={{mr: 1}} onClick={() => {
           props.onClose();
           props.onSubmit(recipe);
         }}>

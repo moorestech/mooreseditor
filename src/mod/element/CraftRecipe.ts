@@ -54,11 +54,11 @@ export class CraftRecipeItem{
 }
 
 export class CraftResultItem{
-  public readonly ItemName : string;
-  public readonly ItemModId : string;
+  public readonly ItemName : string | undefined;
+  public readonly ItemModId : string | undefined;
   public readonly Count : number;
 
-  constructor(itemName : string,itemModId : string,count : number) {
+  constructor(itemName : string | undefined,itemModId : string | undefined,count : number) {
     this.ItemName = itemName;
     this.ItemModId = itemModId;
     this.Count = count;

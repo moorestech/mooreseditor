@@ -9,7 +9,7 @@ import {CraftRecipe, CraftRecipeItem, CraftResultItem} from "../../mod/element/C
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import ItemCard from "./ItemCard";
 import SelectItemModal from "./SelectItemModal";
-import {DefaultItemIconUrl, Item, NoneItemIconUrl} from "../../mod/element/Item";
+import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 import TextField from "@mui/material/TextField";
 import {Delete} from "mdi-material-ui";
 import {IconButton} from "@mui/material";
@@ -25,11 +25,14 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
 
   const items = props.items;
 
-  const resultItemName = recipe.ResultItem.ItemName;
-  const resultItemCount = recipe.ResultItem.Count;
-  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,recipe.ResultItem.ItemModId,items)?.imageUrl ?? DefaultItemIconUrl;
+  const resultItemName = recipe.ResultItem.ItemName ?? "";
+  const resultItemCount = recipe.ResultItem.Count
+
+  //結果アイテムがundefinedの場合はNoneアイテムを返す
+  const resultItemImageUrl = ItemConfigUtil.GetItem(resultItemName,recipe.ResultItem.ItemModId??"",items)?.imageUrl ?? NoneItemIconUrl;
 
 
+  //アイテムデータへのアクセスを楽にするための配列構築
   const itemRecipeData:{itemName:string,itemUrl:string,count:number}[] = [];
   for (let i = 0; i < recipe.Items.length; i++) {
     const item = recipe.Items[i];
@@ -71,10 +74,9 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
           </Grid>
         </Grid>
 
-
+        {/*  レシピ(3x3)のマス*/}
           <Grid item xs={12} spacing={6} mt={15}>
-            {//TODO 繰り返しを消したい
-            }
+            {/*  TODO 繰り返しを消したい */}
             <Grid container mb={5} spacing={6} justifyContent={'center'}>
               <ItemCard itemName={itemRecipeData[0].itemName} url={itemRecipeData[0].itemUrl} onClick={() => {setRecipeEditingItemIndex(0)}}></ItemCard>
               <TextField value={itemRecipeData[0].count} onChange={v=>{changeRecipeItemCount(0,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
@@ -120,6 +122,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
             </Grid>
           </Grid>
 
+        {/*  結果アイテムの表示*/}
         <Grid item sm={12} sx={{textAlign: 'center'}}>
           <Typography variant='body1'>Result item</Typography>
         </Grid>
@@ -137,7 +140,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
         </Grid>
 
 
-
+        {/*  レシピのアイテム選択モーダル */}
         <SelectItemModal
           isOpen={recipeEditingItemIndex != closeStateEditModalIndex} onClose={() =>{setRecipeEditingItemIndex(closeStateEditModalIndex)}}
           onSelect={(item)=>{
@@ -149,6 +152,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
             setRecipeEditingItemIndex(closeStateEditModalIndex)
         }}></SelectItemModal>
 
+        {/*  結果アイテムの選択モーダル */}
         <SelectItemModal
           isOpen={isResultItemEditing} onClose={() =>{setIsResultItemEditing(false)}}
           onSelect={(item)=>{
@@ -164,7 +168,7 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items 
 
 
       <DialogActions sx={{justifyContent: 'center', pb: 8}}>
-        <Button disabled={recipe.ResultItem.Count <= 0} variant='contained' sx={{mr: 1}} onClick={() => {
+        <Button disabled={recipe.ResultItem.Count <= 0 || recipe.ResultItem.ItemName === undefined} variant='contained' sx={{mr: 1}} onClick={() => {
           props.onClose();
           props.onSubmit(recipe);
         }}>

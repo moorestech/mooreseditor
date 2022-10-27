@@ -10,8 +10,8 @@ import CraftRecipeEditModal from "../modal/CraftRecipeEditModal";
 
 
 const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<Item>,onSubmit:(recipe:CraftRecipe)=>void }) => {
-  const resultItemName = props.recipe.ResultItem.ItemName;
-  const resultModId = props.recipe.ResultItem.ItemModId;
+  const resultItemName = props.recipe.ResultItem.ItemName??"";
+  const resultModId = props.recipe.ResultItem.ItemModId??"";
 
   const resultItem = ItemConfigUtil.GetItem(resultItemName,resultModId, props.items);
 

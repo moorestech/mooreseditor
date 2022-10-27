@@ -15,13 +15,13 @@ import {Delete} from "mdi-material-ui";
 import {IconButton} from "@mui/material";
 
 
-const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
+const CraftRecipeEditModal = (props: { isOpen: boolean,recipe:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
   const closeStateEditModalIndex = -1;
 
   const [recipeEditingItemIndex, setRecipeEditingItemIndex] = useState<number>(closeStateEditModalIndex)
   const [isResultItemEditing, setIsResultItemEditing] = useState<boolean>(false);
-  const [recipe, setRecipe] = useState<CraftRecipe>(props.row);
-  const backupRecipe = props.row.Copy();
+  const [recipe, setRecipe] = useState<CraftRecipe>(props.recipe);
+  const backupRecipe = props.recipe.Copy();
 
   const items = props.items;
 

@@ -32,7 +32,7 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
           <Pencil/>
         </IconButton>
         <CraftRecipeEditModal
-          row={props.recipe.Copy()} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}}
+          recipe={props.recipe.Copy()} isOpen={isEditModalOn} items={props.items} onClose={() => {setIsEditModalOn(false)}}
           onSubmit={recipe => {
             props.onSubmit(recipe);
             setIsEditModalOn(false)}}></CraftRecipeEditModal>

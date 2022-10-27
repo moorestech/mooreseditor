@@ -38,7 +38,7 @@ export class MachineRecipeConfig {
       for (const outputItem of recipe.output) {
         outputItems.push(new MachineRecipeOutputItem(outputItem.itemName,outputItem.modId,outputItem.count,outputItem.percent))
       }
-      const blockId = recipe.BlockId;
+      const blockId = recipe.BlockID;
       const time = recipe.time;
 
       machineRecipes.push(new MachineRecipe(inputItems,outputItems,blockId,time));

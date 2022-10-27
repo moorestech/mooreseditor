@@ -4,27 +4,16 @@ import React from 'react'
 // ** MUI Imports
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
-
-// ** Icons Imports
-import IconButton from "@mui/material/IconButton";
-import Pencil from "mdi-material-ui/Pencil";
 import {MachineRecipe} from "../../mod/element/MachineRecipe";
 import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
-import ItemCard from "../modal/ItemCard";
 import Tooltip from "@mui/material/Tooltip";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 
-const MachineRecipeTableRow = (props: { recipe: MachineRecipe, items: ReadonlyArray<Item> }) => {
-
-  const dummy = () => {
-
-  }
+const MachineRecipeTableRow = (props: { blockName:string,recipe: MachineRecipe, items: ReadonlyArray<Item> }) => {
 
   return (
     <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-
+      <TableCell>{props.blockName}</TableCell>
       <TableCell>
         {props.recipe.InputItems.map((recipe, index) => {
           const itemName = recipe.ItemName ?? "";

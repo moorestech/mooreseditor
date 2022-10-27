@@ -24,7 +24,7 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
- 
+
       <TableCell>
         <Tooltip arrow title={resultItem?.name??""} placement='top'  sx={{p:0}}><img src={resultItem?.imageUrl} alt={resultItem?.name} width={40} height={40} /></Tooltip>
       </TableCell>

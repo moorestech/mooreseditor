@@ -20,22 +20,26 @@ import CraftRecipeEditModal from "../modal/CraftRecipeEditModal";
 
 
 function CraftRecipeTable() {
-  const [craftRecipes, setCraftRecipes] = useState<ReadonlyArray<CraftRecipe>>(Mod.instance? Mod.instance.craftRecipeConfig.CraftRecipes : []);
+  const [craftRecipes, setCraftRecipes] = useState<ReadonlyArray<CraftRecipe>>(Mod.instance ? Mod.instance.craftRecipeConfig.CraftRecipes : []);
   const [isNewCraftRecipeModalOpen, setIsNewCraftRecipeModalOpen] = useState<boolean>(false);
-  const createTempRecipe = ()=>{
+  const createTempRecipe = () => {
     //仮のレシピを作成する
-    const craftRecipes : CraftRecipeItem[] = [];
+    const craftRecipes: CraftRecipeItem[] = [];
     for (let i = 0; i < 9; i++) {
-      craftRecipes.push(new CraftRecipeItem(undefined,undefined,0))
+      craftRecipes.push(new CraftRecipeItem(undefined, undefined, 0))
     }
 
-    return  new CraftRecipe(new CraftResultItem(undefined,undefined,0),craftRecipes)
+    return new CraftRecipe(new CraftResultItem(undefined, undefined, 0), craftRecipes)
   }
 
   useEffect(() => {
-    const subscription = Mod.onModUpdate.subscribe((mod) => {setCraftRecipes(mod.craftRecipeConfig.CraftRecipes);})
+    const subscription = Mod.onModUpdate.subscribe((mod) => {
+      setCraftRecipes(mod.craftRecipeConfig.CraftRecipes);
+    })
 
-    return () => {subscription.unsubscribe();}
+    return () => {
+      subscription.unsubscribe();
+    }
   }, [craftRecipes]);
 
   return (
@@ -47,30 +51,42 @@ function CraftRecipeTable() {
             <TableCell>Craft Item</TableCell>
             <TableCell></TableCell>
             <TableCell>Edit</TableCell>
+            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
-          { craftRecipes.map((recipe,index) => {
+          {craftRecipes.map((recipe, index) => {
             return <CraftRecipeTableRow
-              key={index} recipe={recipe} items={Mod.instance?.itemConfig.items??[]}
-            onSubmit={(recipe)=>{
-              const newRecipes = [...craftRecipes];
-              newRecipes[index] = recipe;
-              setCraftRecipes(newRecipes);
-              Mod.instance?.craftRecipeConfig.changeRecipes(newRecipes);
-            }}/>
-          }) }
+              key={index} recipe={recipe} items={Mod.instance?.itemConfig.items ?? []}
+              onSubmit={(recipe) => {
+                const newRecipes = [...craftRecipes];
+                newRecipes[index] = recipe;
+                setCraftRecipes(newRecipes);
+                Mod.instance?.craftRecipeConfig.changeRecipes(newRecipes);
+              }}
+              onDelete={()=>{
+                const newRecipes = [...craftRecipes];
+                newRecipes.splice(index,1);
+                setCraftRecipes(newRecipes);
+                Mod.instance?.craftRecipeConfig.changeRecipes(newRecipes);
+              }}/>
+          })}
 
-          <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+          <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
             <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={() => {setIsNewCraftRecipeModalOpen(true)}}>
-                <Plus />
+              <IconButton aria-label='expand row' size='small' onClick={() => {
+                setIsNewCraftRecipeModalOpen(true)
+              }}>
+                <Plus/>
               </IconButton>
               <CraftRecipeEditModal
-                isOpen={isNewCraftRecipeModalOpen} recipe={createTempRecipe()} items={Mod.instance?.itemConfig.items??[]} onClose={() =>{setIsNewCraftRecipeModalOpen(false)}}
+                isOpen={isNewCraftRecipeModalOpen} recipe={createTempRecipe()}
+                items={Mod.instance?.itemConfig.items ?? []} onClose={() => {
+                setIsNewCraftRecipeModalOpen(false)
+              }}
                 onSubmit={recipe => {
-                  const newRecipes = [...craftRecipes,recipe];
+                  const newRecipes = [...craftRecipes, recipe];
                   setCraftRecipes(newRecipes);
                   Mod.instance?.craftRecipeConfig.changeRecipes(newRecipes);
                   setIsNewCraftRecipeModalOpen(false);

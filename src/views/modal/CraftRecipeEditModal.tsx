@@ -11,6 +11,8 @@ import ItemCard from "./ItemCard";
 import SelectItemModal from "./SelectItemModal";
 import {Item, NoneItemIconUrl} from "../../mod/element/Item";
 import TextField from "@mui/material/TextField";
+import {Delete} from "mdi-material-ui";
+import {IconButton} from "@mui/material";
 
 
 const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  ReadonlyArray<Item>, onClose: () => void, onSubmit: (recipe : CraftRecipe) => void }) => {
@@ -39,7 +41,12 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  
   const changeItemCount = (index : number,count:number) => {
     const oldItem = recipe.Items[index];
     recipe.Items[index] = new CraftRecipeItem(oldItem.ItemName, oldItem.ItemModId, count);
-    setRecipe(recipe);
+    setRecipe(recipe.Copy());
+  }
+
+  const deleteItem = (index:number) => {
+    recipe.Items[index] = new CraftRecipeItem(undefined, undefined, 0);
+    setRecipe(recipe.Copy());
   }
 
   return (
@@ -67,44 +74,54 @@ const CraftRecipeEditModal = (props: { isOpen: boolean,row:CraftRecipe,items :  
             }
             <Grid container mb={5} spacing={6} justifyContent={'center'}>
               <ItemCard itemName={itemRecipeData[0].itemName} url={itemRecipeData[0].itemUrl} onClick={() => {setEditingItemIndex(0)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[0].count} onChange={v=>{changeItemCount(0,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[0].count} onChange={v=>{changeItemCount(0,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(0)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[1].itemName} url={itemRecipeData[1].itemUrl} onClick={() => {setEditingItemIndex(1)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[1].count} onChange={v=>{changeItemCount(1,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[1].count} onChange={v=>{changeItemCount(1,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(1)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[2].itemName} url={itemRecipeData[2].itemUrl} onClick={() => {setEditingItemIndex(2)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[2].count} onChange={v=>{changeItemCount(2,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[2].count} onChange={v=>{changeItemCount(2,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(2)}}><Delete/></IconButton>
             </Grid>
 
 
             <Grid container mb={5}  spacing={6} justifyContent={'center'}>
               <ItemCard itemName={itemRecipeData[3].itemName} url={itemRecipeData[3].itemUrl} onClick={() => {setEditingItemIndex(3)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[3].count} onChange={v=>{changeItemCount(3,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[3].count} onChange={v=>{changeItemCount(3,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(3)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[4].itemName} url={itemRecipeData[4].itemUrl} onClick={() => {setEditingItemIndex(4)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[4].count} onChange={v=>{changeItemCount(4,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[4].count} onChange={v=>{changeItemCount(4,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(4)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[5].itemName} url={itemRecipeData[5].itemUrl} onClick={() => {setEditingItemIndex(5)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[5].count} onChange={v=>{changeItemCount(5,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[5].count} onChange={v=>{changeItemCount(5,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(5)}}><Delete/></IconButton>
             </Grid>
 
 
             <Grid container mb={5}  spacing={6} justifyContent={'center'}>
               <ItemCard itemName={itemRecipeData[6].itemName} url={itemRecipeData[6].itemUrl} onClick={() => {setEditingItemIndex(6)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[6].count} onChange={v=>{changeItemCount(6,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[6].count} onChange={v=>{changeItemCount(6,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(6)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[7].itemName} url={itemRecipeData[7].itemUrl} onClick={() => {setEditingItemIndex(7)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[7].count} onChange={v=>{changeItemCount(7,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[7].count} onChange={v=>{changeItemCount(7,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(7)}}><Delete/></IconButton>
 
               <ItemCard itemName={itemRecipeData[8].itemName} url={itemRecipeData[8].itemUrl} onClick={() => {setEditingItemIndex(8)}}></ItemCard>
-              <TextField defaultValue={itemRecipeData[8].count} onChange={v=>{changeItemCount(8,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <TextField value={itemRecipeData[8].count} onChange={v=>{changeItemCount(8,parseInt(v.target.value))}} label="Count" type={'number'} variant="outlined" sx={{width:60}}/>
+              <IconButton onClick={()=>{deleteItem(8)}}><Delete/></IconButton>
             </Grid>
           </Grid>
 
         <SelectItemModal
           isOpen={editingItemIndex != -1} onClose={() =>{setEditingItemIndex(-1)}}
           onSelect={(item)=>{
-            const count = recipe.Items[editingItemIndex].Count;
+            let count = recipe.Items[editingItemIndex].Count;
+            if(count == 0) count = 1
             recipe.Items[editingItemIndex] = new CraftRecipeItem(item.name,item.modId,count);
             setRecipe(recipe)
 

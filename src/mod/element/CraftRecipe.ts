@@ -1,12 +1,22 @@
 import {Item} from "./Item";
 
 export class CraftRecipe {
-  public readonly ResultItem : CraftResultItem;
+  public get ResultItem() : CraftResultItem {return this._resultItem;}
+  private _resultItem : CraftResultItem;
   public readonly Items : CraftRecipeItem[];
 
   constructor(resultItem : CraftResultItem, items : CraftRecipeItem[]) {
-    this.ResultItem = resultItem;
+    this._resultItem = resultItem;
     this.Items = items;
+  }
+
+  /**
+   * 結果のアイテムを差し替える
+   * @param craftResultItem
+   * @constructor
+   */
+  public SetResultItem(craftResultItem : CraftResultItem) : void {
+    this._resultItem = craftResultItem;
   }
 
   Copy() : CraftRecipe {

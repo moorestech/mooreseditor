@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -14,25 +14,23 @@ import TableContainer from '@mui/material/TableContainer'
 import IconButton from "@mui/material/IconButton";
 import Plus from 'mdi-material-ui/Plus';
 import MachineRecipeTableRow from "./MachineRecipeTableRow";
-
-const createData = (name : string,maxStacks : number) => {
-  return {
-    name,
-    maxStacks,
-  }
-}
-
-
-
-const rows = [
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
-]
+import {MachineRecipe} from "../../mod/element/MachineRecipe";
+import Mod from "../../mod/loader/Mod";
 
 function MachineRecipeTable() {
-  const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
+  const [machineRecipes, setMachineRecipes] = useState<ReadonlyArray<MachineRecipe>>(Mod.instance?.machineRecipeConfig.MachineRecipes??[]);
+
+  const items = Mod.instance?.itemConfig.items;
+
+  useEffect(() => {
+    const subscription = Mod.onModUpdate.subscribe((mod) => {
+      setMachineRecipes(mod.machineRecipeConfig.MachineRecipes);
+    })
+
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, [machineRecipes]);
 
   return (
     <TableContainer component={Paper}>
@@ -40,23 +38,21 @@ function MachineRecipeTable() {
 
         <TableHead>
           <TableRow>
-            <TableCell>Reslut Item</TableCell>
+            <TableCell>Input Item</TableCell>
+            <TableCell>Output Item</TableCell>
             <TableCell></TableCell>
-            <TableCell>Edit</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
-          { copiedRow.map(row => {
-            return <MachineRecipeTableRow key={row.name} row={row} />
+          {
+            machineRecipes.map((recipe,index) => {
+            return <MachineRecipeTableRow key={index} recipe={recipe} items={items} />
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={() => {
-                const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
-                setRows(addedRow);
-              }}>
+              <IconButton aria-label='expand row' size='small'>
                 <Plus />
               </IconButton>
             </TableCell>

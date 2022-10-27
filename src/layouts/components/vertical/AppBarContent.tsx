@@ -24,6 +24,7 @@ import ModMeta from "../../../mod/loader/ModMeta";
 import ItemConfig from "../../../mod/loader/ItemConfig";
 import {BlockConfig} from "../../../mod/loader/BlockConfig";
 import {CraftRecipeConfig} from "../../../mod/loader/CraftRecipeConfig";
+import {MachineRecipeConfig} from "../../../mod/loader/MachineRecipeConfig";
 
 interface Props {
   hidden: boolean
@@ -41,11 +42,11 @@ async function OpenProject(){
     const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
     const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle,modMeta.mergedId);
     const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
-    const craftConfig = await
-      CraftRecipeConfig.CreateCraftRecipeConfig(await dirHandle.getFileHandle("config/craftRecipe.json"),itemConfig.items);
+    const craftConfig = await CraftRecipeConfig.CreateCraftRecipeConfig(await dirHandle.getFileHandle("config/craftRecipe.json"),itemConfig.items);
+    const machineConfig = await MachineRecipeConfig.CreateMachineRecipeConfig(await dirHandle.getFileHandle("config/machineRecipe.json"));
 
     //Modクラスは作られた時点でイベントが発火されるので、このままでOK
-    new Mod(modMeta, itemConfig,blockConfig,craftConfig);
+    new Mod(modMeta, itemConfig,blockConfig,craftConfig,machineConfig);
   }catch (e) {
     console.log(e);
   }

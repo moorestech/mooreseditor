@@ -22,7 +22,7 @@ export class MachineRecipeConfig {
 
 
 
-  public static async CreateMachineRecipeConfig(configFile : EfaFileHandle,items : ReadonlyArray<Item>) : Promise<MachineRecipeConfig> {
+  public static async CreateMachineRecipeConfig(configFile : EfaFileHandle) : Promise<MachineRecipeConfig> {
     const file = await configFile.getFile();
     const text = await file.text();
     const json = JSON.parse(text);

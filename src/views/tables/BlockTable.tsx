@@ -33,20 +33,29 @@ function BlockTable() {
             <TableCell>Name</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Item</TableCell>
-            <TableCell />
+            <TableCell>Edit</TableCell>
+            <TableCell>Delete</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
 
         <TableBody>
           { blockRows.map((item, index) => {
-            return <BlockTableRow key={item.name} row={item} onEdit={
-              block => {
+            return <BlockTableRow
+              key={item.name} row={item}
+              onEdit={block => {
                 const newBlocks = [...blockRows];
                 newBlocks[index] = block;
                 setBlockRows(newBlocks);
                 Mod.instance?.blockConfig.changeBlocks(newBlocks);
-              }}/>
+              }}
+              onDelete={()=>{
+                const newBlocks = [...blockRows];
+                newBlocks.splice(index,1);
+                setBlockRows(newBlocks);
+                Mod.instance?.blockConfig.changeBlocks(newBlocks);
+              }}
+            />
           }) }
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

@@ -5,18 +5,19 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Pencil from 'mdi-material-ui/pencil';
 import IconButton from "@mui/material/IconButton";
-import MachineParamEditModal from "../modal/block/MachineParamEditModal";
 import {Block} from "../../mod/element/Block";
 import TextField from "@mui/material/TextField";
 import Mod from "../../mod/loader/Mod";
 import SelectBlockType from "../../mod/component/SelectBlockType";
 import SelectItemModal from "../modal/SelectItemModal";
 import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
-import EditBlockParamModal from "../modal/block/EditBlockParamModal";
+import {Delete} from "mdi-material-ui";
+import DeleteConfirmModal from "../modal/DeleteConfirmModal";
 
 
-const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
+const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void,onDelete:()=>void}) => {
   const [isItemOpen, setIsItemOpen] = React.useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
 
   const itemImagUrl = ItemConfigUtil.GetItem(props.row.itemName,props.row.itemModId,Mod.instance.itemConfig.items)?.imageUrl;
   const itemNameText = ItemConfigUtil.GetItem(props.row.itemName,props.row.itemModId,Mod.instance.itemConfig.items)?.name;
@@ -67,11 +68,11 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
       </TableCell>
 
       <TableCell>
-        {/*
-        TODO ブロックパラメーターの編集モーダルを完成させる（現在はベルトコンベアと機械だけ）
-        <IconButton aria-label='expand row' size='small' onClick={() => setIsOpen(true)}>
+        <IconButton aria-label='expand row' size='small'>
           <Pencil/>
         </IconButton>
+        {/*
+        TODO ブロックパラメーターの編集モーダルを完成させる（現在はベルトコンベアと機械だけ）
         <EditBlockParamModal
           isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param} type={props.row.type}
           onSubmit={param => {
@@ -81,6 +82,14 @@ const BlockTableRow = (props: { row: Block ,onEdit:(block: Block) => void}) => {
           }} />*/}
 
       </TableCell>
+
+      <TableCell>
+        <IconButton aria-label='expand row' size='small' onClick={()=>{setIsDeleteOpen(true)}}><Delete/></IconButton>
+      </TableCell>
+      <DeleteConfirmModal isOpen={isDeleteOpen} onClose={()=>{setIsDeleteOpen(false)}} onDelete={()=>{
+        props.onDelete()
+        setIsDeleteOpen(false)
+      }}></DeleteConfirmModal>
 
       <TableCell />
 

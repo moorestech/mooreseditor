@@ -9,6 +9,7 @@ import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import CraftRecipeEditModal from "../modal/CraftRecipeEditModal";
 
 
+//TODO ここのレンダリングに時間がかかかるので最適化する
 const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<Item>,onSubmit:(recipe:CraftRecipe)=>void }) => {
   const resultItemName = props.recipe.ResultItem.ItemName??"";
   const resultModId = props.recipe.ResultItem.ItemModId??"";

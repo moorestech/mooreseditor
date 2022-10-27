@@ -9,6 +9,7 @@ import {ItemConfigUtil} from "../../mod/util/ItemConfigUtil";
 import CraftRecipeEditModal from "../modal/CraftRecipeEditModal";
 import {Delete} from "mdi-material-ui";
 import DeleteConfirmModal from "../modal/DeleteConfirmModal";
+import Tooltip from "@mui/material/Tooltip";
 
 
 //TODO ここのレンダリングに時間がかかかるので最適化する
@@ -23,9 +24,9 @@ const CraftRecipeTableRow = (props: { recipe:CraftRecipe ,items : ReadonlyArray<
 
   return (
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-
+ 
       <TableCell>
-        <img src={resultItem?.imageUrl} alt={resultItem?.name} width={40} height={40} />
+        <Tooltip arrow title={resultItem?.name??""} placement='top'  sx={{p:0}}><img src={resultItem?.imageUrl} alt={resultItem?.name} width={40} height={40} /></Tooltip>
       </TableCell>
 
       <TableCell align='left'></TableCell>

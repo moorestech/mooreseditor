@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -11,33 +11,30 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 
 // ** Icons Imports
-import IconButton from "@mui/material/IconButton";
-import Plus from 'mdi-material-ui/Plus';
-import OreTableRow from "./OreTableRow";
+import IconButton from '@mui/material/IconButton'
+import Plus from 'mdi-material-ui/Plus'
+import OreTableRow from './OreTableRow'
 
-const createData = (name : string,maxStacks : number) => {
+const createData = (name: string, maxStacks: number) => {
   return {
     name,
-    maxStacks,
+    maxStacks
   }
 }
-
-
 
 const rows = [
   createData('Iron Ingot', 100),
   createData('Iron Ingot', 100),
   createData('Iron Ingot', 100),
-  createData('Iron Ingot', 100),
+  createData('Iron Ingot', 100)
 ]
 
 function OreTable() {
-  const [copiedRow, setRows] = useState<{name: string, maxStacks: number}[]>(rows);
+  const [copiedRow, setRows] = useState<{ name: string; maxStacks: number }[]>(rows)
 
   return (
     <TableContainer component={Paper}>
       <Table aria-label='collapsible table'>
-
         <TableHead>
           <TableRow>
             <TableCell>Icon</TableCell>
@@ -51,27 +48,28 @@ function OreTable() {
         </TableHead>
 
         <TableBody>
-          { copiedRow.map(row => {
+          {copiedRow.map(row => {
             return <OreTableRow key={row.name} row={row} />
-          }) }
+          })}
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell>
-              <IconButton aria-label='expand row' size='small' onClick={() => {
-                const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159));
-                setRows(addedRow);
-              }}>
+              <IconButton
+                aria-label='expand row'
+                size='small'
+                onClick={() => {
+                  const addedRow = copiedRow.concat(createData('Frozen yoghurt ' + copiedRow.length, 159))
+                  setRows(addedRow)
+                }}
+              >
                 <Plus />
               </IconButton>
             </TableCell>
           </TableRow>
-
         </TableBody>
-
       </Table>
     </TableContainer>
   )
 }
-
 
 export default OreTable

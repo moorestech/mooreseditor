@@ -17,14 +17,14 @@ import { Settings } from 'src/@core/context/settingsContext'
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
-import Button from "@mui/material/Button";
-import EfaOpenDirectory from "../../../easyFileAccessor/EfaOpenDirectory";
-import Mod from "../../../mod/loader/Mod";
-import ModMeta from "../../../mod/loader/ModMeta";
-import ItemConfig from "../../../mod/loader/ItemConfig";
-import {BlockConfig} from "../../../mod/loader/BlockConfig";
-import {CraftRecipeConfig} from "../../../mod/loader/CraftRecipeConfig";
-import {MachineRecipeConfig} from "../../../mod/loader/MachineRecipeConfig";
+import Button from '@mui/material/Button'
+import EfaOpenDirectory from '../../../easyFileAccessor/EfaOpenDirectory'
+import Mod from '../../../mod/loader/Mod'
+import ModMeta from '../../../mod/loader/ModMeta'
+import ItemConfig from '../../../mod/loader/ItemConfig'
+import { BlockConfig } from '../../../mod/loader/BlockConfig'
+import { CraftRecipeConfig } from '../../../mod/loader/CraftRecipeConfig'
+import { MachineRecipeConfig } from '../../../mod/loader/MachineRecipeConfig'
 
 interface Props {
   hidden: boolean
@@ -33,22 +33,27 @@ interface Props {
   saveSettings: (values: Settings) => void
 }
 
-async function OpenProject(){
+async function OpenProject() {
   try {
-    const dirHandle = await EfaOpenDirectory();
-    const metaFile = await dirHandle.getFileHandle("modMeta.json");
-    const modMeta = await ModMeta.CreateModMeta(metaFile);
+    const dirHandle = await EfaOpenDirectory()
+    const metaFile = await dirHandle.getFileHandle('modMeta.json')
+    const modMeta = await ModMeta.CreateModMeta(metaFile)
 
-    const itemConfigFile = await dirHandle.getFileHandle("config/item.json");
-    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile,dirHandle,modMeta.mergedId);
-    const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle("config/block.json"));
-    const craftConfig = await CraftRecipeConfig.CreateCraftRecipeConfig(await dirHandle.getFileHandle("config/craftRecipe.json"),itemConfig.items);
-    const machineConfig = await MachineRecipeConfig.CreateMachineRecipeConfig(await dirHandle.getFileHandle("config/machineRecipe.json"));
+    const itemConfigFile = await dirHandle.getFileHandle('config/item.json')
+    const itemConfig = await ItemConfig.CreateItemConfig(itemConfigFile, dirHandle, modMeta.mergedId)
+    const blockConfig = await BlockConfig.CreateBlockConfig(await dirHandle.getFileHandle('config/block.json'))
+    const craftConfig = await CraftRecipeConfig.CreateCraftRecipeConfig(
+      await dirHandle.getFileHandle('config/craftRecipe.json'),
+      itemConfig.items
+    )
+    const machineConfig = await MachineRecipeConfig.CreateMachineRecipeConfig(
+      await dirHandle.getFileHandle('config/machineRecipe.json')
+    )
 
     //Modクラスは作られた時点でイベントが発火されるので、このままでOK
-    new Mod(modMeta, itemConfig,blockConfig,craftConfig,machineConfig);
-  }catch (e) {
-    console.log(e);
+    new Mod(modMeta, itemConfig, blockConfig, craftConfig, machineConfig)
+  } catch (e) {
+    console.log(e)
   }
 }
 
@@ -62,7 +67,6 @@ const AppBarContent = (props: Props) => {
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-
         <Button size='small' variant='contained' onClick={OpenProject}>
           Open Project
         </Button>

@@ -14,17 +14,13 @@ const FooterContent = () => {
       <Typography sx={{ mr: 2 }}></Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          <Link
-            target='_blank' href='https://twitter.com/sakastudio_'>
+          <Link target='_blank' href='https://twitter.com/sakastudio_'>
             Twitter
           </Link>
           <Link target='_blank' href='https://discord.gg/XrR9fwwfsb'>
             Discord
           </Link>
-          <Link
-            target='_blank'
-            href='https://moorestech.github.io/moorestech_doc/'
-          >
+          <Link target='_blank' href='https://moorestech.github.io/moorestech_doc/'>
             Documentation
           </Link>
         </Box>

@@ -1,13 +1,13 @@
-import {Item} from "./Item";
-
 export class CraftRecipe {
-  public get ResultItem() : CraftResultItem {return this._resultItem;}
-  private _resultItem : CraftResultItem;
-  public readonly Items : CraftRecipeItem[];
+  public get ResultItem(): CraftResultItem {
+    return this._resultItem
+  }
+  private _resultItem: CraftResultItem
+  public readonly Items: CraftRecipeItem[]
 
-  constructor(resultItem : CraftResultItem, items : CraftRecipeItem[]) {
-    this._resultItem = resultItem;
-    this.Items = items;
+  constructor(resultItem: CraftResultItem, items: CraftRecipeItem[]) {
+    this._resultItem = resultItem
+    this.Items = items
   }
 
   /**
@@ -15,24 +15,24 @@ export class CraftRecipe {
    * @param craftResultItem
    * @constructor
    */
-  public SetResultItem(craftResultItem : CraftResultItem) : void {
-    this._resultItem = craftResultItem;
+  public SetResultItem(craftResultItem: CraftResultItem): void {
+    this._resultItem = craftResultItem
   }
 
-  Copy() : CraftRecipe {
-    const items : CraftRecipeItem[] = [];
+  Copy(): CraftRecipe {
+    const items: CraftRecipeItem[] = []
     for (const item of this.Items) {
-      items.push(item.Copy());
+      items.push(item.Copy())
     }
 
-    return new CraftRecipe(this.ResultItem.Copy(),items);
+    return new CraftRecipe(this.ResultItem.Copy(), items)
   }
 }
 
-export class CraftRecipeItem{
-  public readonly ItemName : string | undefined;
-  public readonly ItemModId : string | undefined;
-  public readonly Count : number;
+export class CraftRecipeItem {
+  public readonly ItemName: string | undefined
+  public readonly ItemModId: string | undefined
+  public readonly Count: number
 
   /**
    * クラフトレシピのアイテムを作成する
@@ -42,29 +42,29 @@ export class CraftRecipeItem{
    * @param itemModId
    * @param count
    */
-  constructor(itemName : string | undefined,itemModId : string | undefined,count : number) {
-    this.ItemName = itemName;
-    this.ItemModId = itemModId;
-    this.Count = count;
+  constructor(itemName: string | undefined, itemModId: string | undefined, count: number) {
+    this.ItemName = itemName
+    this.ItemModId = itemModId
+    this.Count = count
   }
 
   Copy() {
-    return new CraftRecipeItem(this.ItemName,this.ItemModId,this.Count);
+    return new CraftRecipeItem(this.ItemName, this.ItemModId, this.Count)
   }
 }
 
-export class CraftResultItem{
-  public readonly ItemName : string | undefined;
-  public readonly ItemModId : string | undefined;
-  public readonly Count : number;
+export class CraftResultItem {
+  public readonly ItemName: string | undefined
+  public readonly ItemModId: string | undefined
+  public readonly Count: number
 
-  constructor(itemName : string | undefined,itemModId : string | undefined,count : number) {
-    this.ItemName = itemName;
-    this.ItemModId = itemModId;
-    this.Count = count;
+  constructor(itemName: string | undefined, itemModId: string | undefined, count: number) {
+    this.ItemName = itemName
+    this.ItemModId = itemModId
+    this.Count = count
   }
 
   Copy() {
-    return new CraftResultItem(this.ItemName,this.ItemModId,this.Count);
+    return new CraftResultItem(this.ItemName, this.ItemModId, this.Count)
   }
 }

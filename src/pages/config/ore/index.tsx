@@ -1,9 +1,7 @@
-import OreTable from "src/views/tables/OreTable";
+import OreTable from 'src/views/tables/OreTable'
 
 const OrePage = () => {
-  return (
-    <OreTable></OreTable>
-  )
+  return <OreTable></OreTable>
 }
 
 export default OrePage

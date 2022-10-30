@@ -1,4 +1,4 @@
-import MachineRecipeTable from "../../../views/tables/MachineRecipeTable";
+import MachineRecipeTable from '../../../views/tables/MachineRecipeTable'
 
 const MachinePage = () => {
   return (

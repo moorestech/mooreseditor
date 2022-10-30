@@ -1,7 +1,5 @@
 const QuestPage = () => {
-  return (
-    <p></p>
-  )
+  return <p></p>
 }
 
 export default QuestPage

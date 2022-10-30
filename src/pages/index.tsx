@@ -12,11 +12,11 @@ import MuiTab, { TabProps } from '@mui/material/Tab'
 
 import CubeOutline from 'mdi-material-ui/CubeOutline'
 import 'react-datepicker/dist/react-datepicker.css'
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import Mod from "../mod/loader/Mod";
-import ModMeta from "../mod/loader/ModMeta";
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import Mod from '../mod/loader/Mod'
+import ModMeta from '../mod/loader/ModMeta'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -36,7 +36,7 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-let modMeta:ModMeta;
+let modMeta: ModMeta
 const Dashboard = () => {
   const [tabValue, setTabValue] = useState<string>('basic')
   const [id, setId] = useState<string>(Mod.instance ? Mod.instance.meta.id : '')
@@ -49,16 +49,14 @@ const Dashboard = () => {
     setTabValue(newValue)
   }
 
-  Mod.onModUpdate.subscribe((mod) => {
-    setId(mod.meta.id);
-    setAuthor(mod.meta.author);
-    setName(mod.meta.name);
-    setVersion(mod.meta.version);
-    setDescription(mod.meta.description);
-    modMeta = mod.meta;
-  });
-
-
+  Mod.onModUpdate.subscribe(mod => {
+    setId(mod.meta.id)
+    setAuthor(mod.meta.author)
+    setName(mod.meta.name)
+    setVersion(mod.meta.version)
+    setDescription(mod.meta.description)
+    modMeta = mod.meta
+  })
 
   return (
     <Card>
@@ -83,25 +81,34 @@ const Dashboard = () => {
           <CardContent>
             <form>
               <Grid container spacing={7}>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Id' disabled={true} value={id} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth label='Author' disabled={true} value={author} />
+                </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Id' disabled={true} value={id}/>
+                  <TextField
+                    fullWidth
+                    label='Name'
+                    value={name}
+                    onChange={e => {
+                      setName(e.target.value)
+                      modMeta?.changeName(e.target.value)
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Author' disabled={true} value={author}/>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Name' value={name} onChange={e => {
-                    setName(e.target.value);
-                    modMeta?.changeName(e.target.value);
-                  }}  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth label='Version' value={version} onChange={e => {
-                    setVersion(e.target.value);
-                    modMeta?.changeVersion(e.target.value);
-                  }}/>
+                  <TextField
+                    fullWidth
+                    label='Version'
+                    value={version}
+                    onChange={e => {
+                      setVersion(e.target.value)
+                      modMeta?.changeVersion(e.target.value)
+                    }}
+                  />
                 </Grid>
 
                 <Grid item xs={12} sx={{ marginTop: 4.8 }}>
@@ -112,8 +119,8 @@ const Dashboard = () => {
                     minRows={2}
                     value={description}
                     onChange={e => {
-                      setDescription(e.target.value);
-                      modMeta?.changeDescription(e.target.value);
+                      setDescription(e.target.value)
+                      modMeta?.changeDescription(e.target.value)
                     }}
                   />
                 </Grid>

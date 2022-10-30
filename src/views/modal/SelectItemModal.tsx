@@ -4,23 +4,14 @@ import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
 import Typography from '@mui/material/Typography'
 import DialogContent from '@mui/material/DialogContent'
-import Mod from "../../mod/loader/Mod";
-import Tooltip from "@mui/material/Tooltip";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import {Item} from "../../mod/element/Item";
-import {IconButton} from "@mui/material";
-import ItemCard from "./ItemCard";
+import Mod from '../../mod/loader/Mod'
+import { Item } from '../../mod/element/Item'
+import ItemCard from './ItemCard'
 
-
-const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect : (item : Item) => void}) => {
-
-
+const SelectItemModal = (props: { isOpen: boolean; onClose: () => void; onSelect: (item: Item) => void }) => {
   const renderItems = () => {
     return Mod.instance?.itemConfig.items.map(item => {
-      return (
-        <ItemCard key={item.name} itemName={item.name} url={item.imageUrl} onClick={() => props.onSelect(item)} />
-      )
+      return <ItemCard key={item.name} itemName={item.name} url={item.imageUrl} onClick={() => props.onSelect(item)} />
     })
   }
 
@@ -31,15 +22,13 @@ const SelectItemModal = (props: { isOpen:boolean, onClose: () => void ,onSelect 
       maxWidth='md'
       scroll='body'
       onClose={() => props.onClose()}
-      onBackdropClick={() =>  props.onClose()}
+      onBackdropClick={() => props.onClose()}
       open={props.isOpen}
     >
-      <DialogContent sx={{ px:15,py:15 }}>
+      <DialogContent sx={{ px: 15, py: 15 }}>
         <Grid container spacing={6}>
-          <Grid item sm={12} sx={{ textAlign: 'center' }} >
-            <Typography variant='h4'>
-              Select Item
-            </Typography>
+          <Grid item sm={12} sx={{ textAlign: 'center' }}>
+            <Typography variant='h4'>Select Item</Typography>
           </Grid>
         </Grid>
 

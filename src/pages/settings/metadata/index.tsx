@@ -1,7 +1,5 @@
 const MetadataSetting = () => {
-  return (
-    <p></p>
-  )
+  return <p></p>
 }
 
 export default MetadataSetting

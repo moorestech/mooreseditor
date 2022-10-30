@@ -1,90 +1,93 @@
-import {Item} from "../element/Item";
-import {EfaFileHandle} from "../../easyFileAccessor/EfaFIleHandle";
-import {CraftRecipe, CraftRecipeItem, CraftResultItem} from "../element/CraftRecipe";
-import {ItemConfigUtil} from "../util/ItemConfigUtil";
+import { Item } from '../element/Item'
+import { EfaFileHandle } from '../../easyFileAccessor/EfaFIleHandle'
+import { CraftRecipe, CraftRecipeItem, CraftResultItem } from '../element/CraftRecipe'
+import { ItemConfigUtil } from '../util/ItemConfigUtil'
 
 export class CraftRecipeConfig {
-
-  get CraftRecipes() : ReadonlyArray<CraftRecipe> {return this._craftRecipes;}
-  private _craftRecipes : CraftRecipe[];
-  private readonly craftConfigFileHandle: EfaFileHandle;
+  get CraftRecipes(): ReadonlyArray<CraftRecipe> {
+    return this._craftRecipes
+  }
+  private _craftRecipes: CraftRecipe[]
+  private readonly craftConfigFileHandle: EfaFileHandle
 
   //TODO 配列を直接セットする方式はよくないと思うが、配列をStateに使ったりするので一旦これでやってる もっといいやり方あったら教えてください
-  async changeRecipes(recipes : CraftRecipe[]) {
-    this._craftRecipes = recipes;
-    await this.save();
+  async changeRecipes(recipes: CraftRecipe[]) {
+    this._craftRecipes = recipes
+    await this.save()
   }
 
   async save() {
-    const json = [];
+    const json = []
     for (const craftRecipe of this._craftRecipes) {
-      const items = [];
+      const items = []
       for (const item of craftRecipe.Items) {
-        items.push({itemName : item.ItemName??null, modId : item.ItemModId??null, count : item.Count});
+        items.push({ itemName: item.ItemName ?? null, modId: item.ItemModId ?? null, count: item.Count })
       }
-      const result = {itemName : craftRecipe.ResultItem.ItemName, modId : craftRecipe.ResultItem.ItemModId, count : craftRecipe.ResultItem.Count}
+      const result = {
+        itemName: craftRecipe.ResultItem.ItemName,
+        modId: craftRecipe.ResultItem.ItemModId,
+        count: craftRecipe.ResultItem.Count
+      }
 
       const itemJson = {
         items: items,
-        result: result,
+        result: result
       }
-      json.push(itemJson);
+      json.push(itemJson)
     }
 
     console.log(json)
 
-    const writable = await this.craftConfigFileHandle.createWritable();
-    await writable.write(JSON.stringify(json,undefined,4));
-    await writable.close();
+    const writable = await this.craftConfigFileHandle.createWritable()
+    await writable.write(JSON.stringify(json, undefined, 4))
+    await writable.close()
   }
 
-
-
-
-
-  public static async CreateCraftRecipeConfig(configFile : EfaFileHandle,items : ReadonlyArray<Item>) : Promise<CraftRecipeConfig> {
-    const file = await configFile.getFile();
-    const text = await file.text();
-    const json = JSON.parse(text);
-    const craftRecipes : CraftRecipe[] = [];
+  public static async CreateCraftRecipeConfig(
+    configFile: EfaFileHandle,
+    items: ReadonlyArray<Item>
+  ): Promise<CraftRecipeConfig> {
+    const file = await configFile.getFile()
+    const text = await file.text()
+    const json = JSON.parse(text)
+    const craftRecipes: CraftRecipe[] = []
 
     //forループで全てのレシピを読み込む
     for (const recipe of json) {
       //結果アイテムの読み込み
-      const resultItem = ItemConfigUtil.GetItem(recipe.result.itemName,recipe.result.modId,items);
+      const resultItem = ItemConfigUtil.GetItem(recipe.result.itemName, recipe.result.modId, items)
       if (resultItem === undefined) {
-        throw new Error(recipe.result.itemName + " : " + recipe.result.modId + " is not found");
+        throw new Error(recipe.result.itemName + ' : ' + recipe.result.modId + ' is not found')
       }
-      const craftResultItem = new CraftResultItem(recipe.result.itemName,recipe.result.modId,recipe.result.count);
+      const craftResultItem = new CraftResultItem(recipe.result.itemName, recipe.result.modId, recipe.result.count)
 
       //レシピの読み込み
-      const craftRecipeItems : CraftRecipeItem[] = [];
+      const craftRecipeItems: CraftRecipeItem[] = []
       for (const itemJson of recipe.items) {
-        const itemName = itemJson.itemName;
-        const itemModId = itemJson.modId;
+        const itemName = itemJson.itemName
+        const itemModId = itemJson.modId
         if (itemName === null || itemModId === null) {
-          craftRecipeItems.push(new CraftRecipeItem(undefined,undefined,0));
-          continue;
+          craftRecipeItems.push(new CraftRecipeItem(undefined, undefined, 0))
+          continue
         }
 
-        const item = ItemConfigUtil.GetItem(itemName,itemModId,items);
+        const item = ItemConfigUtil.GetItem(itemName, itemModId, items)
         if (item === undefined) {
-          throw new Error(itemName + " : " + itemModId + " is not found");
+          throw new Error(itemName + ' : ' + itemModId + ' is not found')
         }
 
-        const count = itemJson.count;
-        craftRecipeItems.push(new CraftRecipeItem(itemName,itemModId,count));
+        const count = itemJson.count
+        craftRecipeItems.push(new CraftRecipeItem(itemName, itemModId, count))
       }
 
-      craftRecipes.push(new CraftRecipe(craftResultItem,craftRecipeItems));
+      craftRecipes.push(new CraftRecipe(craftResultItem, craftRecipeItems))
     }
 
-
-    return new CraftRecipeConfig(craftRecipes,configFile);
+    return new CraftRecipeConfig(craftRecipes, configFile)
   }
 
-  private constructor(recipes : CraftRecipe[],configFile : EfaFileHandle) {
-    this._craftRecipes = recipes;
-    this.craftConfigFileHandle = configFile;
+  private constructor(recipes: CraftRecipe[], configFile: EfaFileHandle) {
+    this._craftRecipes = recipes
+    this.craftConfigFileHandle = configFile
   }
 }

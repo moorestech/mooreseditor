@@ -3,7 +3,6 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
-import Pencil from 'mdi-material-ui/pencil'
 import IconButton from '@mui/material/IconButton'
 import { Block } from '../../mod/element/Block'
 import TextField from '@mui/material/TextField'
@@ -13,6 +12,7 @@ import SelectItemModal from '../modal/SelectItemModal'
 import { ItemConfigUtil } from '../../mod/util/ItemConfigUtil'
 import { Delete } from 'mdi-material-ui'
 import DeleteConfirmModal from '../modal/DeleteConfirmModal'
+import {Pencil} from "mdi-material-ui/light";
 
 const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDelete: () => void }) => {
   const [isItemOpen, setIsItemOpen] = React.useState(false)

@@ -20,7 +20,7 @@ const FooterContent = () => {
           <Link target='_blank' href='https://discord.gg/XrR9fwwfsb'>
             Discord
           </Link>
-          <Link target='_blank' href='https://moorestech.github.io/moorestech_doc/'>
+          <Link target='_blank' href='https://doc.moores.tech/'>
             Documentation
           </Link>
         </Box>

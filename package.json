@@ -36,7 +36,7 @@
     "themeselection"
   ],
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev  -p 3010",
     "build": "next build",
     "start": "next start",
     "export": "next export",

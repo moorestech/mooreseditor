@@ -28,16 +28,16 @@ export default class ModMeta {
   }
 
   async changeName(name: string) {
-    await this.save()
     this._name = name
+    await this.save()
   }
   async changeVersion(version: string) {
-    await this.save()
     this._version = version
+    await this.save()
   }
   async changeDescription(description: string) {
-    await this.save()
     this._description = description
+    await this.save()
   }
   async save() {
     const json = {

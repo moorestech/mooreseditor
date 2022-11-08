@@ -40,7 +40,7 @@ const CreateItemModal = (props: {
               error={nameIsDuplicateError || isEmptyError}
               fullWidth
               label='Name'
-              placeholder='Input Slot'
+              placeholder='Item Name'
               type={'text'}
               autoFocus={true}
               onChange={event => {

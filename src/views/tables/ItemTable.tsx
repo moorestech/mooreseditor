@@ -14,7 +14,7 @@ import TableContainer from '@mui/material/TableContainer'
 import IconButton from '@mui/material/IconButton'
 import Plus from 'mdi-material-ui/Plus'
 import ItemTableRow from './ItemTableRow'
-import { DefaultItemIconUrl, Item } from '../../mod/element/Item'
+import {Item, NoneItemIconUrl} from '../../mod/element/Item'
 import Mod from '../../mod/loader/Mod'
 import CreateItemModal from '../modal/CreateItemModal'
 
@@ -73,7 +73,7 @@ function ItemTable() {
                   setCreateModalOpen(false)
                 }}
                 onSubmit={async (itemName, maxStack) => {
-                  const addedRow = itemRows.concat(new Item(modId, itemName, maxStack, DefaultItemIconUrl, ''))
+                  const addedRow = itemRows.concat(new Item(modId, itemName, maxStack, NoneItemIconUrl, ''))
                   await Mod.instance.itemConfig.changeItems(addedRow)
                   setItemRows(addedRow)
                 }}

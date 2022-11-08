@@ -1,4 +1,4 @@
-import { DefaultItemIconUrl, Item } from '../element/Item'
+import {Item, NoneItemIconUrl} from '../element/Item'
 import { EfaFileHandle } from '../../easyFileAccessor/EfaFIleHandle'
 import { EfaDirectoryHandle } from '../../easyFileAccessor/EfaDirectoryHandle'
 
@@ -78,7 +78,7 @@ export default class ItemConfig {
       const name = itemJson.name
       const maxStacks = itemJson.maxStacks
       const imagePath: string = itemJson.imagePath
-      let imageUrl = DefaultItemIconUrl
+      let imageUrl = NoneItemIconUrl
       try {
         const iconArray = await (await (await modRootDir.getFileHandle(imagePath)).getFile()).arrayBuffer()
         imageUrl = URL.createObjectURL(new Blob([iconArray], { type: 'image/png' }))

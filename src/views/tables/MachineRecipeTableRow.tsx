@@ -27,7 +27,7 @@ const MachineRecipeTableRow = (props: { blockName: string; recipe: MachineRecipe
       </TableCell>
 
       <TableCell>
-        {props.recipe.InputItems.map((recipe, index) => {
+        {props.recipe.OutputItems.map((recipe, index) => {
           const itemName = recipe.ItemName ?? ''
           const url = ItemConfigUtil.GetItem(itemName, recipe.ItemName ?? '', props.items)?.imageUrl ?? NoneItemIconUrl
 

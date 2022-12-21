@@ -34,7 +34,7 @@ const CraftRecipeTableRow = (props: {
         </Tooltip>
       </TableCell>
 
-      <TableCell align='left'></TableCell>
+      <TableCell align='left'>{resultItem?.name ?? ''}</TableCell>
 
       <TableCell>
         <IconButton

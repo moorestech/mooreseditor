@@ -17,6 +17,7 @@ import {Pencil} from "mdi-material-ui/light";
 const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDelete: () => void }) => {
   const [isItemOpen, setIsItemOpen] = React.useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
+  const [blockName, setBlockName] = React.useState(props.row.name)
 
   const itemImagUrl = ItemConfigUtil.GetItem(
     props.row.itemName,
@@ -37,19 +38,20 @@ const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDe
           label={'Block Name'}
           type={'text'}
           size={'small'}
-          value={props.row.name}
+          value={blockName}
           onFocus={e => e.target.select()}
-          onChange={e => {
-            const name = e.target.value
-            const newBlock = new Block(
-              name,
+          onBlur={() => {
+            props.onEdit(new Block(
+              blockName,
               props.row.type,
               props.row.itemModId,
               props.row.itemName,
               props.row.modelTransform,
               props.row.param
-            )
-            props.onEdit(newBlock)
+            ))
+          }}
+          onChange={e => {
+            setBlockName(e.target.value)
           }}
         />
       </TableCell>

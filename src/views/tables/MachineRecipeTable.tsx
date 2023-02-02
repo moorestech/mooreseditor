@@ -48,10 +48,12 @@ function MachineRecipeTable() {
 
         <TableBody>
           {machineRecipes.map((recipe, index) => {
-            //TODO 今後BlockIDは削除されるが、それまでの繋ぎとして使っている BlockIDは0番が空気になっているので、実施の値に＋１されているため、-1する
-            const name = Mod.instance?.blockConfig.blocks[recipe.BlockId-1].name ?? ''
 
-            return <MachineRecipeTableRow key={index} blockName={name} recipe={recipe} items={items} />
+            const blockConfig = Mod.instance?.blockConfig.GetBlock(recipe.Name,recipe.ModId)
+            if (blockConfig !== undefined){
+              return <MachineRecipeTableRow key={index} blockName={blockConfig.name} recipe={recipe} items={items} />
+            }
+
           })}
 
           <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>

@@ -1,5 +1,6 @@
 export class MachineRecipe {
-  public readonly BlockId: number
+  public readonly ModId: string
+  public readonly Name: string
   public readonly Time: number
   public readonly InputItems: MachineRecipeInputItem[]
   public readonly OutputItems: MachineRecipeOutputItem[]
@@ -7,13 +8,15 @@ export class MachineRecipe {
   constructor(
     inputItems: MachineRecipeInputItem[],
     outputItems: MachineRecipeOutputItem[],
-    blockId: number,
+    modId: string,
+    name: string,
     time: number
   ) {
     this.InputItems = inputItems
     this.OutputItems = outputItems
-    this.BlockId = blockId
     this.Time = time
+    this.ModId = modId
+    this.Name = name
   }
 }
 

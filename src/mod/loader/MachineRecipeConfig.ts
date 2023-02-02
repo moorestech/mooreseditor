@@ -36,10 +36,11 @@ export class MachineRecipeConfig {
           new MachineRecipeOutputItem(outputItem.itemName, outputItem.modId, outputItem.count, outputItem.percent)
         )
       }
-      const blockId = recipe.BlockID
+      const blockName = recipe.blockName
+      const blockModId = recipe.blockModId
       const time = recipe.time
 
-      machineRecipes.push(new MachineRecipe(inputItems, outputItems, blockId, time))
+      machineRecipes.push(new MachineRecipe(inputItems, outputItems,blockModId,blockName, time))
     }
 
     return new MachineRecipeConfig(machineRecipes, configFile)

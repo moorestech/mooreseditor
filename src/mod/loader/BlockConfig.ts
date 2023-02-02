@@ -48,6 +48,10 @@ export class BlockConfig {
     await writable.close()
   }
 
+  public GetBlock(blockName: string,blockModId: string): Block | undefined {
+    return this._blocks.find((block) => block.name === blockName && block.itemModId === blockModId)
+  }
+
   public static async CreateBlockConfig(configFile: EfaFileHandle): Promise<BlockConfig> {
     const file = await configFile.getFile()
     const text = await file.text()
@@ -67,9 +71,9 @@ export class BlockConfig {
         const rot = blockJson.modelTransform.rotation
         const scale = blockJson.modelTransform.scale
 
-        const posVec = new Vector3(pos[0] ?? 0, pos[1] ?? 0, pos[2] ?? 0)
-        const rotVec = new Vector3(rot[0] ?? 0, rot[1] ?? 0, rot[2] ?? 0)
-        const scaleVec = new Vector3(scale[0] ?? 1, scale[1] ?? 1, scale[2] ?? 1)
+        const posVec = new Vector3(pos.x ?? 0, pos.y ?? 0, pos.z ?? 0)
+        const rotVec = new Vector3(rot.x ?? 0, rot.y ?? 0, rot.z ?? 0)
+        const scaleVec = new Vector3(scale.x ?? 1, scale.y ?? 1, scale.z ?? 1)
         modelTransform = new Transform(posVec, rotVec, scaleVec)
       }
 

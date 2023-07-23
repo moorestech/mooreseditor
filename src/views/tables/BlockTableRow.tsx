@@ -13,10 +13,12 @@ import { ItemConfigUtil } from '../../mod/util/ItemConfigUtil'
 import { Delete } from 'mdi-material-ui'
 import DeleteConfirmModal from '../modal/DeleteConfirmModal'
 import {Pencil} from "mdi-material-ui/light";
+import EditBlockParamModal from '../modal/block/EditBlockParamModal'
 
 const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDelete: () => void }) => {
   const [isItemOpen, setIsItemOpen] = React.useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
+  const [isEditOpen, setIsEditOpen] = React.useState(false)
   const [blockName, setBlockName] = React.useState(props.row.name)
 
   const itemImagUrl = ItemConfigUtil.GetItem(
@@ -109,18 +111,17 @@ const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDe
       </TableCell>
 
       <TableCell>
-        <IconButton aria-label='expand row' size='small'>
+        <IconButton aria-label='expand row' size='small' onClick={() => setIsEditOpen(true)}>
           <Pencil />
         </IconButton>
-        {/*
-        TODO ブロックパラメーターの編集モーダルを完成させる（現在はベルトコンベアと機械だけ）
         <EditBlockParamModal
-          isOpen={isOpen} onClose={() => {setIsOpen(false)}} param={props.row.param} type={props.row.type}
-          onSubmit={param => {
+          isOpen={isEditOpen} onClose={() => {setIsEditOpen(false)}} param={props.row.param} type={props.row.type}
+          onSubmit={(param) => {
             const newBlock = new Block(props.row.name,props.row.type,props.row.itemModId,props.row.itemName,props.row.modelTransform,param);
             props.onEdit(newBlock);
-            setIsOpen(false)
-          }} />*/}
+            setIsEditOpen(false)
+          }}
+        />
       </TableCell>
 
       <TableCell>

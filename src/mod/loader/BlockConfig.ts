@@ -10,7 +10,11 @@ export const DefaultBlockType: ReadonlyArray<string> = [
   'Miner',
   'Generator',
   'ElectricPole',
-  'Chest'
+  'Chest',
+  'GearMachine',
+  'GearMiner',
+  'GearGenerator',
+  'GearEnergyTransformer',
 ]
 
 export class BlockConfig {

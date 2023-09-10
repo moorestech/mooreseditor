@@ -53,11 +53,14 @@ export class CraftRecipeConfig {
     const craftRecipes: CraftRecipe[] = []
 
     //forループで全てのレシピを読み込む
+    let i = 0;
     for (const recipe of json) {
+      i++;
+
       //結果アイテムの読み込み
       const resultItem = ItemConfigUtil.GetItem(recipe.result.itemName, recipe.result.modId, items)
       if (resultItem === undefined) {
-        throw new Error(recipe.result.itemName + ' : ' + recipe.result.modId + ' is not found')
+        throw new Error("レシピの結果アイテムがありませんでした。 index: " + i + ' : ' + recipe.result.modId + ' is not found')
       }
       const craftResultItem = new CraftResultItem(recipe.result.itemName, recipe.result.modId, recipe.result.count)
 

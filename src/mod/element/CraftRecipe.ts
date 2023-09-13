@@ -33,6 +33,7 @@ export class CraftRecipeItem {
   public readonly ItemName: string | undefined
   public readonly ItemModId: string | undefined
   public readonly Count: number
+  public readonly IsRemain: boolean
 
   /**
    * クラフトレシピのアイテムを作成する
@@ -41,15 +42,17 @@ export class CraftRecipeItem {
    * @param itemName
    * @param itemModId
    * @param count
+   * @param isRemain
    */
-  constructor(itemName: string | undefined, itemModId: string | undefined, count: number) {
+  constructor(itemName: string | undefined, itemModId: string | undefined, count: number, isRemain: boolean) {
     this.ItemName = itemName
     this.ItemModId = itemModId
     this.Count = count
+    this.IsRemain = isRemain
   }
 
   Copy() {
-    return new CraftRecipeItem(this.ItemName, this.ItemModId, this.Count)
+    return new CraftRecipeItem(this.ItemName, this.ItemModId, this.Count, this.IsRemain)
   }
 }
 

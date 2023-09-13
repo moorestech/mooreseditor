@@ -27,7 +27,7 @@ function CraftRecipeTable() {
     //仮のレシピを作成する
     const craftRecipes: CraftRecipeItem[] = []
     for (let i = 0; i < 9; i++) {
-      craftRecipes.push(new CraftRecipeItem(undefined, undefined, 0))
+      craftRecipes.push(new CraftRecipeItem(undefined, undefined, 0,false))
     }
 
     return new CraftRecipe(new CraftResultItem(undefined, undefined, 0), craftRecipes)

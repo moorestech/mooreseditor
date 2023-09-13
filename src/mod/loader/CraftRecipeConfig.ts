@@ -21,12 +21,12 @@ export class CraftRecipeConfig {
     for (const craftRecipe of this._craftRecipes) {
       const items = []
       for (const item of craftRecipe.Items) {
-        items.push({ itemName: item.ItemName ?? null, modId: item.ItemModId ?? null, count: item.Count })
+        items.push({ itemName: item.ItemName ?? null, modId: item.ItemModId ?? null, count: item.Count, isRemain: item.IsRemain })
       }
       const result = {
         itemName: craftRecipe.ResultItem.ItemName,
         modId: craftRecipe.ResultItem.ItemModId,
-        count: craftRecipe.ResultItem.Count
+        count: craftRecipe.ResultItem.Count,
       }
 
       const itemJson = {
@@ -70,7 +70,7 @@ export class CraftRecipeConfig {
         const itemName = itemJson.itemName
         const itemModId = itemJson.modId
         if (itemName === null || itemModId === null) {
-          craftRecipeItems.push(new CraftRecipeItem(undefined, undefined, 0))
+          craftRecipeItems.push(new CraftRecipeItem(undefined, undefined, 0,false))
           continue
         }
 
@@ -80,7 +80,9 @@ export class CraftRecipeConfig {
         }
 
         const count = itemJson.count
-        craftRecipeItems.push(new CraftRecipeItem(itemName, itemModId, count))
+        const isRemain = itemJson.isRemain
+        console.log(itemName + ' : ' + itemModId + ' : ' + count + ' : ' + isRemain)
+        craftRecipeItems.push(new CraftRecipeItem(itemName, itemModId, count,isRemain))
       }
 
       craftRecipes.push(new CraftRecipe(craftResultItem, craftRecipeItems))

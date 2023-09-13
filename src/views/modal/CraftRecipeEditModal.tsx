@@ -51,12 +51,12 @@ const CraftRecipeEditModal = (props: {
 
   const changeRecipeItemCount = (index: number, count: number) => {
     const oldItem = recipe.Items[index]
-    recipe.Items[index] = new CraftRecipeItem(oldItem.ItemName, oldItem.ItemModId, count)
+    recipe.Items[index] = new CraftRecipeItem(oldItem.ItemName, oldItem.ItemModId, count, oldItem.IsRemain)
     setRecipe(recipe.Copy())
   }
 
   const deleteItem = (index: number) => {
-    recipe.Items[index] = new CraftRecipeItem(undefined, undefined, 0)
+    recipe.Items[index] = new CraftRecipeItem(undefined, undefined, 0,false)
     setRecipe(recipe.Copy())
   }
 
@@ -349,7 +349,7 @@ const CraftRecipeEditModal = (props: {
           onSelect={item => {
             let count = recipe.Items[recipeEditingItemIndex].Count
             if (count === 0) count = 1
-            recipe.Items[recipeEditingItemIndex] = new CraftRecipeItem(item.name, item.modId, count)
+            recipe.Items[recipeEditingItemIndex] = new CraftRecipeItem(item.name, item.modId, count,false)
 
             setRecipe(recipe)
             setRecipeEditingItemIndex(closeStateEditModalIndex)

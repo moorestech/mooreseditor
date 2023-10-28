@@ -38,6 +38,8 @@ export class BlockConfig {
         type: block.type,
         itemModId: block.itemModId,
         itemName: block.itemName,
+        width: block.width,
+        height: block.height,
         param: block.param,
         modelTransform: block.modelTransform
       }
@@ -67,6 +69,8 @@ export class BlockConfig {
       const type = blockJson.type
       const itemModId = blockJson.itemModId
       const itemName = blockJson.itemName
+      const width = blockJson.width
+      const height = blockJson.height
       const param = blockJson.param
 
       let modelTransform = new Transform(Vector3.zero, Vector3.zero, Vector3.one)
@@ -81,7 +85,7 @@ export class BlockConfig {
         modelTransform = new Transform(posVec, rotVec, scaleVec)
       }
 
-      const block = new Block(name, type, itemModId, itemName, modelTransform, param)
+      const block = new Block(name, type, itemModId, itemName,width,height, modelTransform, param)
 
       blocks.push(block)
     }

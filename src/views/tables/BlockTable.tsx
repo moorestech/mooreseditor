@@ -75,6 +75,7 @@ function BlockTable() {
                       'block',
                       '',
                       '',
+                      1,1,
                       new Transform(Vector3.zero, Vector3.zero, Vector3.one),
                       {}
                     )

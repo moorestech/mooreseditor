@@ -46,6 +46,7 @@ const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDe
               props.row.type,
               props.row.itemModId,
               props.row.itemName,
+              props.row.width,props.row.height,
               props.row.modelTransform,
               props.row.param
             ))
@@ -68,6 +69,7 @@ const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDe
                 type,
                 props.row.itemModId,
                 props.row.itemName,
+                props.row.width,props.row.height,
                 props.row.modelTransform,
                 props.row.param
               )
@@ -97,6 +99,7 @@ const BlockTableRow = (props: { row: Block; onEdit: (block: Block) => void; onDe
                 props.row.type,
                 itemModId,
                 itemName,
+                props.row.width,props.row.height,
                 props.row.modelTransform,
                 props.row.param
               )

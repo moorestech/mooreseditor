@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="">
+      <change beforePath="$PROJECT_DIR$/.next/cache/webpack/client-development/1.pack" beforeDir="false" afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/1.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack.old" beforeDir="false" afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack.old" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.next/cache/webpack/server-development/0.pack" beforeDir="false" afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/0.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.next/cache/webpack/server-development/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/index.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/.npmrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/app/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/app/page.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/next-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/next.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/public/circles.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/public/next.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/public/turborepo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/public/vercel.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/docs/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/app/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/app/page.module.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/next-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/next.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/public/circles.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/public/next.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/public/turborepo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/public/vercel.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/apps/web/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/eslint-config-custom/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/eslint-config-custom/library.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/eslint-config-custom/next.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/eslint-config-custom/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/eslint-config-custom/react-internal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/tsconfig/base.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/tsconfig/nextjs.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/tsconfig/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/tsconfig/react-library.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/card.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/turbo/generators/config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/packages/ui/turbo/generators/templates/component.hbs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/pnpm-workspace.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_/turbo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.idea/typescript-version.iml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.idea/typescript-version.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/.prettierrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/.prettierrc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/LICENCE" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/LICENCE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/asset/craft_icon.afdesign" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/asset/craft_icon.afdesign" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/asset/ingot_icon.afdesign" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/asset/ingot_icon.afdesign" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/next-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/next-env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/next.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/next.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/3.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/4.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/5.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/6.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/7.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/avatars/8.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/avatars/8.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/analog-clock.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/analog-clock.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/background-user.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/background-user.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/glass-house.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/glass-house.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/iPhone-11-pro.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/iPhone-11-pro.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/logo-aviato.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/logo-aviato.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/logo-bitbank.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/logo-bitbank.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/logo-zipcar.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/logo-zipcar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/paper-boat.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/paper-boat.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/paypal.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/paypal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/cards/watch-on-hand.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/cards/watch-on-hand.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/favicon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/icon/craft_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/icon/craft_icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/icon/ingot_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/icon/ingot_icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/american-bank.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/american-bank.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/aws.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/aws.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/citi-bank.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/citi-bank.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/digital-ocean.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/digital-ocean.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/github.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/github.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/google.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/google.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/gumroad.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/gumroad.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/iron ingot.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/iron ingot.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/mastercard-label.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/mastercard-label.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/slack.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/slack.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/logos/stripe.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/logos/stripe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/chart.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/chart.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/materio-pro-banner.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/materio-pro-banner.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/paypal.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/paypal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/triangle-dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/triangle-dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/triangle-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/triangle-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/misc/trophy.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/misc/trophy.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/moorestech_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/moorestech_logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/none_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/none_icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/401.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/401.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/404.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/404.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/500.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/500.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/auth-v1-mask-dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/auth-v1-mask-dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/auth-v1-mask-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/auth-v1-mask-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/auth-v1-tree-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/auth-v1-tree-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/auth-v1-tree.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/auth-v1-tree.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/misc-mask-dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/misc-mask-dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/misc-mask-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/misc-mask-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/pose-m-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/pose-m-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/tree-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/tree-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/tree-3.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/tree-3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/images/pages/tree.png" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/images/pages/tree.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/public/vercel.svg" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/public/vercel.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/components/card-statistics/card-stats-vertical/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/components/card-statistics/card-stats-vertical/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/components/card-statistics/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/components/card-statistics/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/components/react-apexcharts/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/components/react-apexcharts/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/components/scroll-to-top/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/components/scroll-to-top/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/context/settingsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/context/settingsContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/hooks/useSettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/hooks/useSettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/BlankLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/BlankLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/VerticalLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/VerticalLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/shared-components/ModeToggler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/shared-components/ModeToggler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/shared-components/NotificationDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/shared-components/NotificationDropdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/shared-components/UserDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/shared-components/UserDropdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/shared-components/footer/FooterContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/shared-components/footer/FooterContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/shared-components/footer/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/shared-components/footer/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/appBar/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/appBar/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/Drawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/Drawer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/VerticalNavHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/VerticalNavHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/VerticalNavItems.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/VerticalNavItems.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/VerticalNavLink.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/VerticalNavLink.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/VerticalNavSectionTitle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/VerticalNavSectionTitle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/components/vertical/navigation/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/components/vertical/navigation/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/layouts/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/layouts/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/styles/libs/react-apexcharts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/styles/libs/react-apexcharts/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/styles/libs/react-datepicker/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/styles/libs/react-datepicker/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/ThemeComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/ThemeComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/ThemeOptions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/ThemeOptions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/breakpoints/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/breakpoints/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/globalStyles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/globalStyles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/accordion.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/accordion.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/alerts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/alerts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/avatars.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/avatars.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/backdrop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/backdrop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/button.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/button.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/card.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/card.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/chip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/chip.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/dateTimePicker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/dateTimePicker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/dialog.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/dialog.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/divider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/divider.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/input.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/input.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/link.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/link.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/list.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/list.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/menu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/menu.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/pagination.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/pagination.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/paper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/paper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/popover.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/popover.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/rating.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/rating.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/select.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/select.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/snackbar.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/snackbar.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/switches.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/switches.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/table.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/tabs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/tabs.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/timeline.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/toggleButton.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/toggleButton.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/tooltip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/tooltip.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/overrides/typography.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/overrides/typography.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/palette/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/palette/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/shadows/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/shadows/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/spacing/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/spacing/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/theme/typography/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/theme/typography/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/utils/create-emotion-cache.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/utils/create-emotion-cache.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/@core/utils/hex-to-rgba.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/@core/utils/hex-to-rgba.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/configs/themeConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/configs/themeConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/easyFileAccessor/EfaDirectoryHandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/easyFileAccessor/EfaDirectoryHandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/easyFileAccessor/EfaFIleHandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/easyFileAccessor/EfaFIleHandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/easyFileAccessor/EfaHandle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/easyFileAccessor/EfaHandle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/easyFileAccessor/EfaOpenDirectory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/easyFileAccessor/EfaOpenDirectory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/layouts/UserLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/layouts/UserLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/layouts/components/UpgradeToProButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/layouts/components/UpgradeToProButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/layouts/components/UserIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/layouts/components/UserIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/layouts/components/vertical/AppBarContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/layouts/components/vertical/AppBarContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/component/SelectBlockType.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/component/SelectBlockType.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/Block.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/Block.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/CraftRecipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/CraftRecipe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/Item.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/Item.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/MachineRecipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/MachineRecipe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/Transform.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/Transform.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/element/Vector3.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/element/Vector3.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/BlockConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/BlockConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/CraftRecipeConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/CraftRecipeConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/ItemConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/ItemConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/MachineRecipeConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/MachineRecipeConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/Mod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/Mod.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/loader/ModMeta.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/loader/ModMeta.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/mod/util/ItemConfigUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/mod/util/ItemConfigUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/navigation/vertical/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/navigation/vertical/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/401.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/401.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/404.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/404.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/500.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/500.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/_document.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/_document.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/account-settings/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/account-settings/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/cards/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/cards/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/block/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/block/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/craftRecipe/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/craftRecipe/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/item/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/item/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/machineRecipe/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/machineRecipe/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/ore/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/ore/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/config/quest/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/config/quest/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/form-layouts/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/form-layouts/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/icons/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/icons/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/pages/error/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/pages/error/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/pages/login/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/pages/login/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/pages/register/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/pages/register/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/settings/metadata/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/settings/metadata/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/tables/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/tables/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/pages/typography/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/pages/typography/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/account-settings/TabAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/account-settings/TabAccount.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/account-settings/TabInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/account-settings/TabInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/account-settings/TabSecurity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/account-settings/TabSecurity.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardAppleWatch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardAppleWatch.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardFacebook.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardFacebook.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardHorizontalRatings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardHorizontalRatings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardImgTop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardImgTop.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardInfluencer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardInfluencer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardLinkedIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardLinkedIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardMembership.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardMembership.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardMobile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardMobile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardNavigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardNavigationCenter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardNavigationCenter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardSupport.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardSupport.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardTwitter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardTwitter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardUser.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardUser.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardVerticalRatings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardVerticalRatings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/cards/CardWithCollapse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/cards/CardWithCollapse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/DepositWithdraw.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/DepositWithdraw.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/SalesByCountries.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/SalesByCountries.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/StatisticsCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/StatisticsCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/Table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/Table.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/TotalEarning.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/TotalEarning.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/Trophy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/Trophy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/dashboard/WeeklyOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/dashboard/WeeklyOverview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/form-layouts/FormLayoutsAlignment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/form-layouts/FormLayoutsAlignment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/form-layouts/FormLayoutsBasic.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/form-layouts/FormLayoutsBasic.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/form-layouts/FormLayoutsIcons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/form-layouts/FormLayoutsIcons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/form-layouts/FormLayoutsSeparator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/form-layouts/FormLayoutsSeparator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/CraftRecipeEditModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/CraftRecipeEditModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/CreateItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/CreateItemModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/DeleteConfirmModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/DeleteConfirmModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/ItemCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/ItemCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/SelectItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/SelectItemModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/block/BeltConveyorParamEditModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/block/BeltConveyorParamEditModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/block/EditBlockParamModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/block/EditBlockParamModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/modal/block/MachineParamEditModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/modal/block/MachineParamEditModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/pages/auth/FooterIllustration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/pages/auth/FooterIllustration.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/pages/misc/FooterIllustrations.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/pages/misc/FooterIllustrations.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/BlockTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/BlockTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/BlockTableRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/BlockTableRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/CraftRecipeTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/CraftRecipeTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/CraftRecipeTableRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/CraftRecipeTableRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/ItemTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/ItemTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/ItemTableRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/ItemTableRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/MachineRecipeTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/MachineRecipeTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/MachineRecipeTableRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/MachineRecipeTableRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/OreTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/OreTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/OreTableRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/OreTableRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableBasic.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableBasic.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableCollapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableCollapsible.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableCustomized.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableCustomized.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableDense.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableDense.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableSpanning.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableSpanning.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/tables/TableStickyHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/tables/TableStickyHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/typography/TypographyHeadings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/typography/TypographyHeadings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/src/views/typography/TypographyTexts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/src/views/typography/TypographyTexts.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/styles/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/tsconfig.jsx.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/tsconfig.jsx.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/old/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/apps/old/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2S8Tsl115Zj3shGaFzv2nClYALf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/apps/docs/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="アプリケーションレベル" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="デフォルトタスク">
+      <changelist id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="" />
+      <created>1688527416668</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1688527416668</updated>
+      <workItem from="1688527418525" duration="3331000" />
+      <workItem from="1689729986420" duration="600000" />
+      <workItem from="1698512069706" duration="3209000" />
+      <workItem from="1698809346358" duration="3497000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

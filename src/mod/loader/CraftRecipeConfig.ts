@@ -30,8 +30,8 @@ export class CraftRecipeConfig {
       }
 
       const itemJson = {
-        items: items,
-        result: result
+        requiredItems: items,
+        resultItem: result
       }
       json.push(itemJson)
     }

@@ -10,7 +10,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import {AppShell, MantineProvider, Burger, ColorSchemeScript} from "@mantine/core";
+import {AppShell, MantineProvider, Burger, ColorSchemeScript, Table, Input} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -43,6 +43,24 @@ export default function App() {
 
             <AppShell.Main>
               <Outlet />
+              <Table>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Element position</Table.Th>
+                    <Table.Th>Element name</Table.Th>
+                    <Table.Th>Symbol</Table.Th>
+                    <Table.Th>Atomic mass</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  <Table.Tr key="a">
+                    <Table.Td>a</Table.Td>
+                    <Table.Td>2</Table.Td>
+                    <Table.Td><Input variant="unstyled" placeholder="Input component" style={{ width: '50px' }}/></Table.Td>
+                    <Table.Td>4</Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+              </Table>
             </AppShell.Main>
           </AppShell>
           <ScrollRestoration />

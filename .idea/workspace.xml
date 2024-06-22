@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/JsonSchemaLoader.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/schema/block.json" beforeDir="false" afterPath="$PROJECT_DIR$/schema/block.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +53,7 @@
     "nodejs_package_manager_path": "npm",
     "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/apps/docs/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/packages/ui/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -60,6 +62,9 @@
       <recent name="$PROJECT_DIR$/apps/mooreseditor/app/schema" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/apps/mooreseditor/schema" />
+      <recent name="$PROJECT_DIR$/apps/mooreseditor" />
       <recent name="$PROJECT_DIR$/apps/mooreseditor/app" />
       <recent name="$PROJECT_DIR$/apps" />
     </key>
@@ -100,6 +105,7 @@
       <workItem from="1718770268580" duration="1480000" />
       <workItem from="1719058604947" duration="690000" />
       <workItem from="1719059300569" duration="4031000" />
+      <workItem from="1719063673058" duration="4266000" />
     </task>
     <task id="LOCAL-00001" summary="テーブルの追加">
       <option name="closed" value="true" />

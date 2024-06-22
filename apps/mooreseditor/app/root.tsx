@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react";
 import {AppShell, MantineProvider, Burger, ColorSchemeScript, Table, Input} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
-import {JsonSchemaLoader} from "~/JsonSchemaLoader";
+import {ParseSchema} from "~/ParseSchema";
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
@@ -20,9 +20,8 @@ export const links: LinksFunction = () => [
 export default function App() {
 
   const [opened, { toggle }] = useDisclosure(false);
-  JsonSchemaLoader.loadtest();
 
-
+  ParseSchema.Parse();
 
   return (
     <html lang="en">

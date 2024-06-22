@@ -12,12 +12,18 @@ import {
 } from "@remix-run/react";
 import {AppShell, MantineProvider, Burger, ColorSchemeScript, Table, Input} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
+import {JsonSchemaLoader} from "~/JsonSchemaLoader";
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 export default function App() {
-  const [opened, { toggle }] = useDisclosure(false)
+
+  const [opened, { toggle }] = useDisclosure(false);
+  JsonSchemaLoader.loadtest();
+
+
+
   return (
     <html lang="en">
       <head>

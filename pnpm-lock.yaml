@@ -85,12 +85,18 @@ importers:
       isbot:
         specifier: ^3.8.0
         version: 3.8.0
+      jsonschema:
+        specifier: ^1.4.1
+        version: 1.4.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      remix-typedjson:
+        specifier: ^0.4.1
+        version: 0.4.1(@remix-run/react@2.9.2)(@remix-run/server-runtime@2.9.2)(react@18.3.1)
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.9.2
@@ -5293,7 +5299,7 @@ packages:
     peerDependencies:
       eslint-plugin-import: '>=1.4.0'
     dependencies:
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@2.7.1)(eslint@7.32.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.57.0)
     dev: true
 
   /eslint-import-resolver-node@0.3.7:
@@ -7635,6 +7641,10 @@ packages:
       graceful-fs: 4.2.11
     dev: true
 
+  /jsonschema@1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
+    dev: false
+
   /jsx-ast-utils@3.3.3:
     resolution: {integrity: sha512-fYQHZTZ8jSfmWZ0iyzfwiU4WDX4HpHbMCZ3gPlWYiCl3BoeOTsqKBqnTVfH2rYT7eP5c3sVbeSPHnnJOaTrWiw==}
     engines: {node: '>=4.0'}
@@ -9842,6 +9852,18 @@ packages:
       mdast-util-to-hast: 12.3.0
       unified: 10.1.2
     dev: true
+
+  /remix-typedjson@0.4.1(@remix-run/react@2.9.2)(@remix-run/server-runtime@2.9.2)(react@18.3.1):
+    resolution: {integrity: sha512-AL6LdNajqce1Exy6aB1bD6GYMk90S6H31e8kDCi6jLgBi4K82Ph604lqGGzalswaPPYckYK+NZzgvhWEY7JCDw==}
+    peerDependencies:
+      '@remix-run/react': ^1.16.0 || ^2.0
+      '@remix-run/server-runtime': ^1.16.0 || ^2.0
+      react: ^17.0.2 || ^18.0.0
+    dependencies:
+      '@remix-run/react': 2.9.2(react-dom@18.3.1)(react@18.3.1)(typescript@5.5.2)
+      '@remix-run/server-runtime': 2.9.2(typescript@5.5.2)
+      react: 18.3.1
+    dev: false
 
   /require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}

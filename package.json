@@ -7,8 +7,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.2",
     "tsconfig": "workspace:*",
     "turbo": "latest"
   },

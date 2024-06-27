@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "itemId": "df24b028-6df7-edb3-bf80-4d455e949218",
+      "name": "iron ingot",
+      "imagePath": "assets/items/iron ingot.png",
+      "maxStack": 50
+    },
+    {
+      "itemId": "6eb65497-4a7f-f1c1-478d-832788252c0d",
+      "name": "iron ore",
+      "imagePath": "assets/items/iron ore.png",
+      "maxStack": 20
+    },
+    {
+      "itemId": "14e4c934-b65f-d3e4-a162-b6ba7ad82cd4",
+      "name": "iron ore powder",
+      "imagePath": "assets/items/iron ore powder.png",
+      "maxStack": 20
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useOutletContext } from "@remix-run/react";
+import { FromSchema } from "json-schema-to-ts";
 import { useLayoutEffect, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { SchemaTable } from "~/components/SchemaTable";
@@ -21,6 +22,7 @@ export default function Schema() {
     schema,
     validator
   } = useTypedLoaderData()
+  type SchemaType = FromSchema<typeof schema>
   const { master } = useOutletContext<{
     master: ReturnType<typeof useMasterDirectory>
   }>()
@@ -32,7 +34,7 @@ export default function Schema() {
     })
   }, [master.state])
   return (
-    <SchemaTable
+    <SchemaTable<SchemaType>
       schemaId={schemaId}
       schema={schema}
       values={values}

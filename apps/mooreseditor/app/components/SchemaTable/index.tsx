@@ -2,7 +2,7 @@ import { ActionIcon, Group, Table } from "@mantine/core"
 import { HiDotsHorizontal } from 'react-icons/hi'
 import { BsPlusLg } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
-import { Validator } from "jsonschema";
+import { Schema, Validator } from "jsonschema";
 import { useState } from "react";
 import { IntInput } from "./IntInput";
 import { BooleanInput } from "./BooleanInput";
@@ -12,24 +12,24 @@ import { VectorInput } from "./VectorInput";
 import { ArrayInput } from "./ArrayInput";
 import { NumberInput } from "./NumberInput";
 
-interface Props {
-  schema: any;
+interface Props<T> {
+  schema: Schema;
   schemaId: string;
   validator: Validator;
-  values: any[];
+  values: T[];
   onSave(values: any[]): void
 }
 
-export const SchemaTable = ({
+export function SchemaTable<T>({
   values,
   schema,
   schemaId,
   validator,
   onSave,
-}: Props) => {
+}: Props<T>) {
   // schemaの直下にはarrayがあるので、それを取得
-  const [containerListField] = listFields(schema.properties)
-  const containerList = schema.properties[containerListField]
+  const [containerListField] = listFields(schema.properties!)
+  const containerList = schema.properties![containerListField]
 
   const commonFields = listCommonFields(containerList.items.properties)
 

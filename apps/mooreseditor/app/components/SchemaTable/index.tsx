@@ -94,7 +94,6 @@ export const SchemaTable = ({
               <Table.Td key={commonField}>
                 {(() => {
                   const propertySchema = containerList.items.properties[commonField]
-                  console.log(propertySchema)
                   switch(propertySchema.type){
                     case 'integer':
                       return <IntInput value={newValue[commonField]} />

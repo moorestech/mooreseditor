@@ -1,5 +1,5 @@
 import { Stack } from "@mantine/core"
-import { ObjectSchema } from "~/types/schema";
+import { ObjectSchema } from "~/schema";
 import { PrimitiveTypeInput } from "./PrimitiveTypeInput";
 
 interface Props {
@@ -15,7 +15,6 @@ export const ObjectInput = ({
   propertySchema,
   onChange,
 }: Props) => {
-  console.log(propertySchema)
   if(!propertySchema.properties) return
   return (
     <Stack gap='xs'>

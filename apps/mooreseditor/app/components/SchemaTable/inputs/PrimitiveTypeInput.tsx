@@ -5,7 +5,7 @@ import { StringInput } from "./StringInput"
 import { EnumInput } from "./EnumInput"
 import { VectorInput } from "./VectorInput"
 import { ArrayInput } from "./ArrayInput"
-import { DataSchema } from "~/types/schema"
+import { DataSchema } from "~/schema"
 
 interface Props {
   showLabel?: boolean;
@@ -20,36 +20,35 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
   const props = {
     label,
     value: value ?? (propertySchema && propertySchema['default']) ?? '',
-    onChange,
   }
   if('enum' in propertySchema){
-    return <EnumInput {...props} data={propertySchema.enum.map(value => String(value))} />
+    return <EnumInput {...props} data={propertySchema.enum.map(value => String(value))} onChange={onChange} />
   }else{
     switch (propertySchema.type) {
       case 'integer':
-        return <IntInput {...props}  />
+        return <IntInput {...props} w={160} />
       case 'number':
-        return <NumberInput {...props} />
+        return <NumberInput {...props} w={160} onChange={onChange} />
       case 'boolean':
-        return <BooleanInput {...props} />
+        return <BooleanInput {...props} onChange={onChange} />
       case 'string':
-        return <StringInput {...props} />
+        return <StringInput {...props} w={160} onChange={e => onChange(e.currentTarget.value)} />
       case 'array':
         switch (propertySchema.pattern) {
           case '@vector2':
-            return <VectorInput dimensions={2} step={1} {...props} />
+            return <VectorInput dimensions={2} step={1} {...props} onChange={onChange} />
           case '@vector3':
-            return <VectorInput dimensions={3} step={1} {...props} />
+            return <VectorInput dimensions={3} step={1} {...props} onChange={onChange} />
           case '@vector4':
-            return <VectorInput dimensions={4} step={1} {...props} />
+            return <VectorInput dimensions={4} step={1} {...props} onChange={onChange} />
           case '@vector2Int':
-            return <VectorInput dimensions={2} step={1} {...props} />
+            return <VectorInput dimensions={2} step={1} {...props} onChange={onChange} />
           case '@vector3Int':
-            return <VectorInput dimensions={3} step={1} {...props} />
+            return <VectorInput dimensions={3} step={1} {...props} onChange={onChange} />
           case '@vector4Int':
-            return <VectorInput dimensions={4} step={1} {...props} />
+            return <VectorInput dimensions={4} step={1} {...props} onChange={onChange} />
           default:
-            return <ArrayInput value={value ?? []} label={label} onChange={(values) => onChange(values)} />
+            return <ArrayInput value={value ?? []} label={label} onChange={(values: any[]) => onChange(values)} />
         }
       default:
         null

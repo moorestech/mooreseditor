@@ -1,0 +1,90 @@
+export type Schema = ObjectSchema | StringSchema | IntegerSchema | FloatSchema | BooleanSchema | ArraySchema | Conditional;
+export type DataSchema = ObjectSchema | StringSchema | IntegerSchema | FloatSchema | BooleanSchema | ArraySchema;
+
+export type Combine = {
+  oneOf?: Array<Schema>;
+  allOf?: Array<Schema>;
+  anyOf?: Array<Schema>;
+}
+
+export type Conditional = {
+  if: Schema;
+  then: Schema;
+  else: Schema;
+}
+
+export type Properties = Record<string, Schema> & {
+  required?: Array<string>;
+}
+
+export interface ObjectSchema {
+  type: 'object';
+  properties: Properties;
+}
+
+export interface StringSchema {
+  type: 'string';
+  enum?: Array<string>;
+}
+
+export interface IntegerSchema {
+  type: 'integer';
+  enum?: Array<number>;
+}
+
+export interface FloatSchema {
+  type: 'number';
+  enum?: Array<number>;
+}
+
+export interface BooleanSchema {
+  type: 'boolean';
+}
+
+export interface ArraySchema {
+  type: 'array';
+  pattern: string;
+  items: Schema;
+}
+
+export const findPrimitiveFields = (schema: Schema) => {
+  if('properties' in schema){
+    return Array.from(Object.keys(schema.properties)).filter(prop => {
+      if(prop == 'required') return false
+      const propSchema = schema.properties[prop]
+      if(['object', 'array'].indexOf(propSchema.type) >= 0){
+        return false
+      }else if(['if', 'then', 'else'].findIndex(prop => prop in propSchema) >= 0){
+        return false
+      }else if(['oneOf', 'allOf', 'anyOf'].findIndex(prop => prop in propSchema) >= 0){
+        return false
+      }
+      return true
+    })
+  }
+}
+
+export const findNonPrimitiveFields = <T>(schema: Schema, row: T) => {
+  if('properties' in schema){
+    const required = schema.properties.required
+    return Array.from(Object.keys(schema.properties)).filter(prop => {
+      if(prop == 'required') return false
+      const propSchema = schema.properties[prop]
+      if(['object', 'array'].indexOf(propSchema.type) > -1){
+        return true
+      }else if('oneOf' in propSchema){
+        return propSchema.oneOf.find(condSchema => {
+          if(!('if' in condSchema)){
+            throw new Error('oneOfの中にはifプロパティを持つ要素が入らなければなりません')
+          }
+          return Object.keys(condSchema.if.properties).every(prop => {
+            const value = row[prop]
+            const constValue = condSchema.if.properties[prop].const
+            return value === constValue
+          })
+        })
+      }
+      return false
+    })
+  }
+}

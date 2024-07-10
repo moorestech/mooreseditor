@@ -9,6 +9,6 @@ interface Props {
 
 export const EnumInput = ({ label, value, data, onChange = (_) => {} }: Props) => {
   return (
-    <Select label={label} data={data} value={value} onChange={onChange} />
+    <Select label={label} data={data} value={value} onChange={onChange} w={160} />
   )
 }

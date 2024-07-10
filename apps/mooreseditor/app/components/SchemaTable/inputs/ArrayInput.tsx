@@ -21,9 +21,9 @@ export const ArrayInput = ({
   return (
     <Stack gap='xs'>
       {value.map(eachValue => (
-        <NumberInput {...props} value={eachValue} />
+        <NumberInput {...props} value={eachValue} w={160} />
       ))}
-      <Button leftSection={<BsPlusLg />} onClick={add}>追加</Button>
+      <Button leftSection={<BsPlusLg />} onClick={add} w={160}>追加</Button>
     </Stack>
   )
 }

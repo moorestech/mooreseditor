@@ -1,13 +1,14 @@
 import { Select } from "@mantine/core"
 
 interface Props {
+  label: string;
   value: string;
   data: string[];
   onChange?(value: string | null): void;
 }
 
-export const EnumInput = ({ value, data, onChange = (_) => {} }: Props) => {
+export const EnumInput = ({ label, value, data, onChange = (_) => {} }: Props) => {
   return (
-    <Select data={data} value={value} onChange={onChange} />
+    <Select label={label} data={data} value={value} onChange={onChange} />
   )
 }

@@ -1,8 +1,8 @@
-import { Input } from "@mantine/core"
+import { TextInput } from "@mantine/core"
 import { ComponentProps } from "react"
 
-export const StringInput = (props: ComponentProps<typeof Input>) => {
+export const StringInput = (props: ComponentProps<typeof TextInput>) => {
   return (
-    <Input {...props} />
+    <TextInput {...props} />
   )
 }

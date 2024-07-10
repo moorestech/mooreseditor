@@ -2,18 +2,14 @@ import { ActionIcon, Group, Table } from "@mantine/core"
 import { HiDotsHorizontal } from 'react-icons/hi'
 import { BsPlusLg } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
-import { Schema, Validator } from "jsonschema";
+import { Validator } from "jsonschema";
+import { Schema, DataSchema, ArraySchema } from "~/types/schema";
 import { useState } from "react";
-import { IntInput } from "./IntInput";
-import { BooleanInput } from "./BooleanInput";
-import { StringInput } from "./StringInput";
-import { EnumInput } from "./EnumInput";
-import { VectorInput } from "./VectorInput";
-import { ArrayInput } from "./ArrayInput";
-import { NumberInput } from "./NumberInput";
+import { PrimitiveTypeInput } from "./PrimitiveTypeInput";
+import { ObjectInput } from "./ObjectInput";
 
 interface Props<T> {
-  schema: Schema;
+  schema: DataSchema;
   schemaId: string;
   validator: Validator;
   values: T[];
@@ -28,8 +24,15 @@ export function SchemaTable<T>({
   onSave,
 }: Props<T>) {
   // schemaの直下にはarrayがあるので、それを取得
+  if(schema.type != 'object') return
   const [containerListField] = listFields(schema.properties!)
-  const containerList = schema.properties![containerListField]
+  const containerList = schema.properties![containerListField] as ArraySchema
+
+  if(!containerList.items || containerList.items instanceof Array) return null
+  if(!('properties' in containerList.items)) return null // 一旦oneOf/allOf/anyOfには非対応
+  if(!containerList.items.properties || containerList.items.properties instanceof Array) return null
+
+  const properties = containerList.items.properties
 
   const commonFields = listCommonFields(containerList.items.properties)
 
@@ -90,44 +93,27 @@ export function SchemaTable<T>({
             </Table.Tr>
           ))}
           <Table.Tr>
-            {commonFields.map((commonField: string) => (
-              <Table.Td key={commonField}>
-                {(() => {
-                  const propertySchema = containerList.items.properties[commonField]
-                  switch(propertySchema.type){
-                    case 'integer':
-                      return <IntInput value={newValue[commonField]} />
-                    case 'number':
-                      return <NumberInput value={newValue[commonField]} />
-                    case 'boolean':
-                      return <BooleanInput value={newValue[commonField]} />
-                    case 'string':
-                      return <StringInput value={newValue[commonField]} />
-                    case 'enum':
-                      return <EnumInput value={newValue[commonField]} data={propertySchema.enum} />
-                    case 'array':
-                      switch(propertySchema.pattern){
-                        case '@vector2':
-                          return <VectorInput dimensions={2} value={newValue[commonField]} step={1} />
-                        case '@vector3':
-                          return <VectorInput dimensions={3} value={newValue[commonField]} step={1} />
-                        case '@vector4':
-                          return <VectorInput dimensions={4} value={newValue[commonField]} step={1} />
-                        case '@vector2Int':
-                          return <VectorInput dimensions={2} value={newValue[commonField]} step={1} />
-                        case '@vector3Int':
-                          return <VectorInput dimensions={3} value={newValue[commonField]} step={1} />
-                        case '@vector4Int':
-                          return <VectorInput dimensions={4} value={newValue[commonField]} step={1} />
-                        default:
-                          return <ArrayInput value={newValue[commonField] ?? []} onChange={(values) => setNewValue(values)} />
-                      }
-                    case 'array':
-                    case 'object':
-                  }
-                })()}
-              </Table.Td>
-            ))}
+            {commonFields.map((commonField: string) => {
+              const propertySchema = properties[commonField] as Schema
+              if('type' in propertySchema){
+                switch(propertySchema.type){
+                  default:
+                    return (
+                      <Table.Td key={commonField}>
+                        <PrimitiveTypeInput value={newValue[commonField]} property={commonField} propertySchema={propertySchema} onChange={(value) => setNewValue({...newValue, [commonField]: value})} />
+                      </Table.Td>
+                    )
+                  case 'object':
+                    return (
+                      <Table.Td key={commonField}>
+                      <ObjectInput value={newValue[commonField]} property={commonField} propertySchema={propertySchema} onChange={(value) => setNewValue({...newValue, [commonField]: value})} />
+                      </Table.Td>
+                    )
+                }
+              }else{
+                return null
+              }
+            })}
             <Table.Td>
               <ActionIcon variant='outline' onClick={() => addValue()}>
                 <BsPlusLg />

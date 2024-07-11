@@ -17,13 +17,15 @@
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
     "@types/filesystem": "^0.0.36",
+    "@types/uuid": "^10.0.0",
     "isbot": "^3.8.0",
     "json-schema-to-ts": "^3.1.0",
     "jsonschema": "^1.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
-    "remix-typedjson": "^0.4.1"
+    "remix-typedjson": "^0.4.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.2",

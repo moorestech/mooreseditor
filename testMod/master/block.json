@@ -8,11 +8,29 @@
         "paramA": "example string",
         "paramB": 42
       },
-      "arrayTest": ["item1", "item2"],
-      "objectTest": {},
-      "vector2Test": [1.0, 2.0],
-      "vector3IntTest": [1, 2, 3],
-      "vector4Test": [1.0, 2.0, 3.0, 4.0],
+      "arrayTest": [
+        "item1",
+        "item2"
+      ],
+      "objectTest": {
+        "key1": "aaa",
+        "key2": 1238
+      },
+      "vector2Test": [
+        1,
+        2
+      ],
+      "vector3IntTest": [
+        1,
+        2,
+        3
+      ],
+      "vector4Test": [
+        1,
+        2,
+        3,
+        4
+      ],
       "boolTest": true,
       "intTest": 100,
       "floatTest": 10.5
@@ -22,17 +40,40 @@
       "itemId": "df24b028-6df7-edb3-bf80-4d455e949218",
       "blockType": "TypeB",
       "blockParam": {
-        "paramA": false,
+        "paramA": true,
         "paramB": 3.14
       },
-      "arrayTest": ["item3", "item4"],
+      "arrayTest": [
+        "item3",
+        "item4"
+      ],
       "objectTest": {},
-      "vector2Test": [3.0, 4.0],
-      "vector3IntTest": [4, 5, 6],
-      "vector4Test": [4.0, 5.0, 6.0, 7.0],
+      "vector2Test": [
+        3,
+        4
+      ],
+      "vector3IntTest": [
+        4,
+        5,
+        6
+      ],
+      "vector4Test": [
+        4,
+        5,
+        6,
+        7
+      ],
       "boolTest": false,
       "intTest": 200,
       "floatTest": 20.5
+    },
+    {
+      "blockId": "b6a269f8-9a27-4762-ae6a-0541817a6bda",
+      "blockType": "TypeA",
+      "blockParam": {
+        "paramB": 3,
+        "paramA": true
+      }
     }
   ]
 }

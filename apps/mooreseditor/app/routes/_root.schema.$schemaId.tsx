@@ -11,6 +11,7 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
   const { schemaId } = params;
   return typedjson({
     schemaId,
+    schemaIds: Array.from(Object.keys(schemaConfig.schemas)),
     schema: schemaConfig.schemas[schemaId!].schema,
     validator: schemaConfig.validator,
   })
@@ -19,6 +20,7 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
 export default function Schema() {
   const {
     schemaId,
+    schemaIds,
     schema,
     validator
   } = useTypedLoaderData()
@@ -28,6 +30,7 @@ export default function Schema() {
   }>()
   const [values, setValues] = useState({ data: [] })
   useLayoutEffect(() => {
+    master.loadAllMasterData(schemaIds)
     master.openMaster(schemaId).then((values: any | undefined) => {
       if(!values) return
       setValues(values)

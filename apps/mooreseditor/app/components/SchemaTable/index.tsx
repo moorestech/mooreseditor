@@ -1,6 +1,6 @@
 import { Table } from "@mantine/core"
 import { Validator } from "jsonschema";
-import { DataSchema, ArraySchema, findPrimitiveFields, ObjectSchema } from "~/schema";
+import { DataSchema, ArraySchema, findPrimitivePropNames, ObjectSchema } from "~/schema";
 import { SchemaTableRow } from "./SchemaTableRow";
 import { SchemaTableRowForm } from "./SchemaTableRowForm";
 import { useEffect, useState } from "react";
@@ -38,17 +38,13 @@ export function SchemaTable<T>({
     onSave({ ...values, data: values.data.filter((_, i) => index !== i) })
   }
 
-  useEffect(() => {
-
-  })
-
   return (
     <Table.ScrollContainer minWidth={500} type='native'>
       <Table>
         <Table.Thead>
           <Table.Tr>
             <Table.Th />
-            {findPrimitiveFields(containerList.items).map((commonField: string) => (
+            {findPrimitivePropNames(containerList.items).map((commonField: string) => (
               <Table.Th key={commonField}>{commonField}</Table.Th>
             ))}
           </Table.Tr>

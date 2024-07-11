@@ -11,7 +11,6 @@ interface Props {
 
 export const ObjectInput = ({
   value,
-  property,
   propertySchema,
   onChange,
 }: Props) => {

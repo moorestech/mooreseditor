@@ -2,7 +2,7 @@ import { ActionIcon, Group, List, Table } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks";
 import { IoChevronDown, IoChevronForward } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md"
-import { findNonPrimitiveFields, findPrimitiveFields, ObjectSchema, Schema } from "~/schema";
+import { findNonPrimitivePropNames, findPrimitivePropNames, getPropSchema, ObjectSchema, Schema } from "~/schema";
 
 interface Props {
   schema: ObjectSchema;
@@ -17,9 +17,9 @@ export function SchemaTableRow({
   onEdit,
   onDelete,
 }: Props) {
-  const [isOpen, {toggle}] = useDisclosure(false)
-  const commonFields = findPrimitiveFields(schema)
-  const uncommonFields = findNonPrimitiveFields(schema, row)
+  const [isOpen, { toggle }] = useDisclosure(false)
+  const commonFields = findPrimitivePropNames(schema)
+  const uncommonFields = findNonPrimitivePropNames(schema, row)
   return (
     <>
       <Table.Tr>
@@ -32,7 +32,15 @@ export function SchemaTableRow({
         </Table.Td>
         {commonFields.map((commonField: string) => (
           <Table.Td key={commonField}>
-            {row[commonField]}
+            {(() => {
+              const propSchema = getPropSchema(schema, commonField, row)
+              switch (propSchema.type) {
+                case 'boolean':
+                  return row[commonField] ? '☑' : '❎️'
+                default:
+                  return row[commonField]
+              }
+            })()}
           </Table.Td>
         ))}
         <Table.Td>
@@ -55,8 +63,8 @@ export function SchemaTableRow({
                 <Table.Thead>
                   <Table.Tr>
                     {uncommonFields.map((uncommonField: string) => {
-                      const propertySchema = schema.properties[uncommonField] as Schema
-                      if(!('type' in propertySchema)) return null
+                      const propertySchema = getPropSchema(schema, uncommonField, row)
+                      if (!('type' in propertySchema)) return null
                       return (
                         <Table.Th key={uncommonField}>
                           {uncommonField}
@@ -68,15 +76,16 @@ export function SchemaTableRow({
                 <Table.Tbody>
                   <Table.Tr>
                     {uncommonFields.map((uncommonField: string) => {
-                      const propertySchema = schema.properties[uncommonField] as Schema
-                      if('type' in propertySchema){
-                        switch(propertySchema.type){
+                      const propertySchema = getPropSchema(schema, uncommonField, row)
+                      console.log(propertySchema)
+                      if ('type' in propertySchema) {
+                        switch (propertySchema.type) {
                           case 'array':
                             return (
                               <Table.Td key={uncommonField}>
                                 <List>
-                                  {(row[uncommonField] ?? []).map((value: any) => (
-                                    <List.Item>
+                                  {(row[uncommonField] ?? []).map((value: any, i: number) => (
+                                    <List.Item key={i}>
                                       {String(value)}
                                     </List.Item>
                                   ))}
@@ -89,7 +98,7 @@ export function SchemaTableRow({
                                 <Table>
                                   <Table.Tbody>
                                     {Object.entries(row[uncommonField] ?? {}).map(([key, value]) => (
-                                      <Table.Tr>
+                                      <Table.Tr key={key}>
                                         <Table.Th>{key}</Table.Th>
                                         <Table.Td>{String(value)}</Table.Td>
                                       </Table.Tr>
@@ -105,7 +114,7 @@ export function SchemaTableRow({
                               </Table.Td>
                             )
                         }
-                      }else{
+                      } else {
                         return null
                       }
                     })}

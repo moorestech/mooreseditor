@@ -6,8 +6,8 @@ import { PrimitiveTypeInput } from "./PrimitiveTypeInput";
 
 type Props = ComponentProps<typeof NumberInput> & {
   propertySchema: ArraySchema,
-  value: any[],
-  onChange(value: any[]): void;
+  value: any,
+  onChange(value: any): void;
 }
 
 export const ArrayInput = ({
@@ -21,12 +21,13 @@ export const ArrayInput = ({
       ''
     ])
   }
+  console.log(propertySchema)
   return (
     <Stack gap='xs'>
-      {value.map((eachValue, i) => {
+      {value.map((eachValue: any, i: number) => {
         return <PrimitiveTypeInput propertySchema={propertySchema.items as DataSchema} value={eachValue} onChange={(newValue) => {
           onChange([
-            ...value.map((v, j) => i === j ? newValue : v)
+            ...value.map((v: any, j: number) => i === j ? newValue : v)
           ])
         }} />
       })}

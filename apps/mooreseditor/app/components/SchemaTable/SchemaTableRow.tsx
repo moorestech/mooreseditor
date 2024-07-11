@@ -1,6 +1,5 @@
-import { ActionIcon, Group, Table } from "@mantine/core"
+import { ActionIcon, Group, List, Table } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks";
-import { HiDotsHorizontal } from "react-icons/hi"
 import { IoChevronDown, IoChevronForward } from "react-icons/io5";
 import { MdDelete, MdEdit } from "react-icons/md"
 import { findNonPrimitiveFields, findPrimitiveFields, ObjectSchema, Schema } from "~/schema";
@@ -72,10 +71,16 @@ export function SchemaTableRow({
                       const propertySchema = schema.properties[uncommonField] as Schema
                       if('type' in propertySchema){
                         switch(propertySchema.type){
-                          default:
+                          case 'array':
                             return (
                               <Table.Td key={uncommonField}>
-                                {row[uncommonField]}
+                                <List>
+                                  {(row[uncommonField] ?? []).map((value: any) => (
+                                    <List.Item>
+                                      {String(value)}
+                                    </List.Item>
+                                  ))}
+                                </List>
                               </Table.Td>
                             )
                           case 'object':
@@ -91,6 +96,12 @@ export function SchemaTableRow({
                                     ))}
                                   </Table.Tbody>
                                 </Table>
+                              </Table.Td>
+                            )
+                          default:
+                            return (
+                              <Table.Td key={uncommonField}>
+                                {row[uncommonField]}
                               </Table.Td>
                             )
                         }

@@ -9,7 +9,7 @@ import { DataSchema } from "~/schema"
 
 interface Props {
   showLabel?: boolean;
-  property: string;
+  property?: string;
   propertySchema: DataSchema;
   value: unknown;
   onChange(value: unknown): void;

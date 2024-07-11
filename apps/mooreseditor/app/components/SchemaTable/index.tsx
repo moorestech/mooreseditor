@@ -9,8 +9,8 @@ interface Props<T> {
   schema: DataSchema;
   schemaId: string;
   validator: Validator;
-  values: T[];
-  onSave(values: any[]): void
+  values: { data: T[] };
+  onSave(values: any): void
 }
 
 export function SchemaTable<T>({
@@ -29,13 +29,13 @@ export function SchemaTable<T>({
   if (!containerList.items.properties || containerList.items.properties instanceof Array) return null
 
   const addRow = (newValue: any) => {
-    onSave([...values, newValue])
+    onSave({ ...values, data: [...values.data, newValue] })
   }
   const updateRow = (index: number, newValue: any) => {
-    onSave(values.map((value, i) => index === i ? newValue : value))
+    onSave({ ...values, data: values.data.map((value, i) => index === i ? newValue : value) })
   }
   const deleteRow = (index: number) => {
-    onSave(values.filter((_, i) => index !== i))
+    onSave({ ...values, data: values.data.filter((_, i) => index !== i) })
   }
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export function SchemaTable<T>({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {values.map((value, i) => (
+          {values.data.map((value, i) => (
             <SchemaTableRowWrapper key={i} schema={containerList.items as ObjectSchema} row={value} onSubmit={(value) => updateRow(i, value)} onDelete={() => deleteRow(i)} />
           ))}
           <SchemaTableRowForm schema={containerList.items as ObjectSchema} onSubmit={(value) => addRow(value)} />

@@ -26,13 +26,13 @@ export default function Schema() {
   const { master } = useOutletContext<{
     master: ReturnType<typeof useMasterDirectory>
   }>()
-  const [values, setValues] = useState([])
+  const [values, setValues] = useState({ data: [] })
   useLayoutEffect(() => {
     master.openMaster(schemaId).then((values: any | undefined) => {
       if(!values) return
       setValues(values)
     })
-  }, [master.state])
+  }, [master.state, schemaId])
   return (
     <SchemaTable<SchemaType>
       schemaId={schemaId}

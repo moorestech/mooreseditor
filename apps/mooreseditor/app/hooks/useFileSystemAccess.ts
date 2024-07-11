@@ -16,9 +16,9 @@ export const useFileSystemAccess = () => {
     if(!dirHandleRef.current) return
     return dirHandleRef.current?.entries()
   }
-  const changeDirectory = async (baseDirHandle: FileSystemDirectoryHandle, dirName: string, opts: FileSystemGetDirectoryOptions) => {
+  const changeDirectory = async (dirName: string, opts: FileSystemGetDirectoryOptions) => {
     setState("unloaded")
-    const dirHandle = await baseDirHandle.getDirectoryHandle(dirName, opts)
+    const dirHandle = await dirHandleRef.current.getDirectoryHandle(dirName, opts)
     dirHandleRef.current = dirHandle
     setState("loaded")
   }

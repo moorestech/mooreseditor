@@ -1,79 +1,15 @@
 {
   "data": [
     {
-      "blockId": "d5ff2e8c-c44f-548d-1b81-278e2443f086",
-      "itemId": "14e4c934-b65f-d3e4-a162-b6ba7ad82cd4",
-      "blockType": "TypeA",
-      "blockParam": {
-        "paramA": "example string",
-        "paramB": 42
-      },
-      "arrayTest": [
-        "item1",
-        "item2"
-      ],
-      "objectTest": {
-        "key1": "aaa",
-        "key2": 1238
-      },
-      "vector2Test": [
-        1,
-        2
-      ],
-      "vector3IntTest": [
-        1,
-        2,
-        3
-      ],
-      "vector4Test": [
-        1,
-        2,
-        3,
-        4
-      ],
-      "boolTest": true,
-      "intTest": 100,
-      "floatTest": 10.5
+      "blockId": "47b7607e-020c-471c-a3ad-34560ad77797"
     },
     {
-      "blockId": "256c922d-237e-f84c-9639-2ea4553b7f44",
-      "itemId": "df24b028-6df7-edb3-bf80-4d455e949218",
-      "blockType": "TypeB",
-      "blockParam": {
-        "paramA": true,
-        "paramB": 3.14
-      },
-      "arrayTest": [
-        "item3",
-        "item4"
-      ],
-      "objectTest": {},
-      "vector2Test": [
-        3,
-        4
-      ],
-      "vector3IntTest": [
-        4,
-        5,
-        6
-      ],
-      "vector4Test": [
-        4,
-        5,
-        6,
-        7
-      ],
-      "boolTest": false,
-      "intTest": 200,
-      "floatTest": 20.5
+      "itemId": "172387a7-19b4-43a1-9180-e9376a8cb2bb",
+      "blockId": "a6cb17e1-c665-4767-b39e-04d67b7e76c8"
     },
     {
-      "blockId": "b6a269f8-9a27-4762-ae6a-0541817a6bda",
-      "blockType": "TypeA",
-      "blockParam": {
-        "paramB": 3,
-        "paramA": true
-      }
+      "itemId": "aff3445f-0784-4a0f-8ebd-ed81bb6383a1",
+      "blockId": "18fc32cb-4409-45d0-a74a-d9a2c86ff8ae"
     }
   ]
 }

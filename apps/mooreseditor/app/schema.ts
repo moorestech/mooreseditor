@@ -53,9 +53,11 @@ export const findPrimitivePropNames = (schema: Schema) => {
   if('properties' in schema){
     return Array.from(Object.keys(schema.properties)).filter(prop => {
       if(prop == 'required') return false
-      const propSchema = schema.properties[prop]
-      if(['object', 'array'].indexOf(propSchema.type) >= 0){
+      const propSchema = schema.properties[prop] as DataSchema
+      if(propSchema.type === 'object') {
         return false
+      }else if(propSchema.type === 'array'){
+        return ['@vector2', '@vector3', '@vector4', '@vector2Int', '@vector3Int', '@vector4Int'].indexOf(propSchema.pattern) >= 0
       }else if(['if', 'then', 'else'].findIndex(prop => prop in propSchema) >= 0){
         return false
       }else if(['oneOf', 'allOf', 'anyOf'].findIndex(prop => prop in propSchema) >= 0){
@@ -68,14 +70,15 @@ export const findPrimitivePropNames = (schema: Schema) => {
 
 export const findNonPrimitivePropNames = <T>(schema: Schema, row: T) => {
   if('properties' in schema){
-    const required = schema.properties.required
     return Array.from(Object.keys(schema.properties)).filter(prop => {
       if(prop == 'required') return false
-      const propSchema = schema.properties[prop]
-      if(['object', 'array'].indexOf(propSchema.type) > -1){
+      const propSchema = schema.properties[prop] as DataSchema
+      if(propSchema.type === 'object') {
         return true
+      }else if(propSchema.type === 'array'){
+        return ['@vector2', '@vector3', '@vector4', '@vector2Int', '@vector3Int', '@vector4Int'].indexOf(propSchema.pattern) < 0
       }else if('oneOf' in propSchema){
-        const found = propSchema.oneOf.find(condSchema => {
+        const found = propSchema.oneOf.find((condSchema: Schema) => {
           if(!('if' in condSchema)){
             throw new Error('oneOfの中にはifプロパティを持つ要素が入らなければなりません')
           }

@@ -1,4 +1,4 @@
-import { Flex, NumberInput, Stack } from "@mantine/core"
+import { Flex, Group, NumberInput, Stack } from "@mantine/core"
 import { ComponentProps } from "react"
 import { FormWrapper } from '~/components/FormWrapper'
 
@@ -17,22 +17,20 @@ export const VectorInput = ({
 }: Props) => {
   return (
     <FormWrapper label={label}>
-      <Stack gap='xs'>
-        <Flex direction={dimensions <= 2 ? 'row' : 'column'} gap='xs'>
-        {new Array(dimensions).fill(null).map((_, i) => (
-          <NumberInput
-            key={i}
-            {...props}
-            label={['x', 'y', 'z', 'w'][i]}
-            w={dimensions <= 2 ? 80 : 160}
-            value={value[i]}
-            onChange={(newValue: string | number) => {
-              onChange(value.map((v, j)=> j == i ? Number(newValue) : v))
-            }}
-          />
-        ))}
-        </Flex>
-      </Stack>
+      <Group gap='xs' styles={{ root: { flexWrap: 'nowrap' } }} w={100 * dimensions}>
+      {new Array(dimensions).fill(null).map((_, i) => (
+        <NumberInput
+          key={i}
+          {...props}
+          label={['x', 'y', 'z', 'w'][i]}
+          value={value[i]}
+          style={{ root: { flexGrow: 1 } }}
+          onChange={(newValue: string | number) => {
+            onChange(value.map((v, j)=> j == i ? Number(newValue) : v))
+          }}
+        />
+      ))}
+      </Group>
     </FormWrapper>
   )
 }

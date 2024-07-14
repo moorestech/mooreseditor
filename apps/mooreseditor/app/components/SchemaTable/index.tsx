@@ -1,14 +1,14 @@
 import { Table } from "@mantine/core"
-import { Validator } from "jsonschema";
 import { DataSchema, ArraySchema, findPrimitivePropNames, ObjectSchema } from "~/schema";
 import { SchemaTableRow } from "./SchemaTableRow";
 import { SchemaTableRowForm } from "./SchemaTableRowForm";
 import { useEffect, useState } from "react";
+import { Ajv, ErrorObject } from "ajv";
 
 interface Props<T> {
   schema: DataSchema;
   schemaId: string;
-  validator: Validator;
+  validator: Ajv;
   values: { data: T[] };
   onSave(values: any): void
 }
@@ -38,6 +38,16 @@ export function SchemaTable<T>({
     onSave({ ...values, data: values.data.filter((_, i) => index !== i) })
   }
 
+  const [errors, setErrors] = useState<Array<ErrorObject>>([])
+
+  useEffect(() => {
+    console.log(validator)
+    if(validator && values){
+      validator.validate(`/${schemaId}`, values)
+      setErrors(validator.errors)
+    }
+  }, [values, schema])
+
   return (
     <Table.ScrollContainer minWidth={500} type='native'>
       <Table>
@@ -51,9 +61,19 @@ export function SchemaTable<T>({
         </Table.Thead>
         <Table.Tbody>
           {values.data.map((value, i) => (
-            <SchemaTableRowWrapper key={i} schema={containerList.items as ObjectSchema} row={value} onSubmit={(value) => updateRow(i, value)} onDelete={() => deleteRow(i)} />
+            <SchemaTableRowWrapper
+              key={i}
+              schema={containerList.items as ObjectSchema}
+              row={value}
+              onSubmit={(value) => updateRow(i, value)}
+              onDelete={() => deleteRow(i)}
+              errors={errors ? errors.filter(error => error.dataPath === `.data[${i}]`) : []}
+            />
           ))}
-          <SchemaTableRowForm schema={containerList.items as ObjectSchema} onSubmit={(value) => addRow(value)} />
+          <SchemaTableRowForm
+            schema={containerList.items as ObjectSchema}
+            onSubmit={(value) => addRow(value)}
+          />
         </Table.Tbody>
       </Table>
     </Table.ScrollContainer>
@@ -63,22 +83,23 @@ export function SchemaTable<T>({
 interface SchemaTableRowWrapperProps {
   schema: ObjectSchema;
   row: any;
+  errors: Array<ErrorObject>;
   onSubmit(row: any): void;
   onDelete(): void;
 }
 
-const SchemaTableRowWrapper = ({ onSubmit, ...props }: SchemaTableRowWrapperProps) => {
+const SchemaTableRowWrapper = ({ onSubmit, errors, ...props }: SchemaTableRowWrapperProps) => {
   const [isEditing, setIsEditing] = useState(false)
   if (isEditing) {
     return (
-      <SchemaTableRowForm {...props} onSubmit={(newValue) => {
+      <SchemaTableRowForm {...props} errors={errors} onSubmit={(newValue) => {
         setIsEditing(false)
         onSubmit(newValue)
       }} />
     )
   } else {
     return (
-      <SchemaTableRow {...props} onEdit={() => setIsEditing(true)} />
+      <SchemaTableRow {...props} errors={errors} onEdit={() => setIsEditing(true)} />
     )
   }
 }

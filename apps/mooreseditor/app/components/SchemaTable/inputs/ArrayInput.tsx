@@ -21,7 +21,6 @@ export const ArrayInput = ({
       ''
     ])
   }
-  console.log(propertySchema)
   return (
     <Stack gap='xs'>
       {value.map((eachValue: any, i: number) => {

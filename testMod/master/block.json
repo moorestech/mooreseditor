@@ -1,15 +1,18 @@
 {
   "data": [
     {
-      "blockId": "47b7607e-020c-471c-a3ad-34560ad77797"
+      "itemId": "f768bef6-e5a7-4b81-9ebb-618ff3ef8cb9",
+      "blockType": "TypeA",
+      "floatTest": 0,
+      "intTest": 0,
+      "blockId": "37638172-ba0d-49a8-b34f-346b3bb0735e"
     },
     {
-      "itemId": "172387a7-19b4-43a1-9180-e9376a8cb2bb",
-      "blockId": "a6cb17e1-c665-4767-b39e-04d67b7e76c8"
+      "itemId": "1133d5b9-dc31-43f8-9045-d4e9f3575857",
+      "blockId": "98eb09ea-61d4-483c-bdd9-83b2d4c68b74"
     },
     {
-      "itemId": "aff3445f-0784-4a0f-8ebd-ed81bb6383a1",
-      "blockId": "18fc32cb-4409-45d0-a74a-d9a2c86ff8ae"
+      "blockId": "af055d0f-ada8-47e2-95d3-976153008995"
     }
   ]
 }

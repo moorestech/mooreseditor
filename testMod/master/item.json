@@ -2,11 +2,12 @@
   "data": [
     {
       "name": "a",
-      "itemId": "aff3445f-0784-4a0f-8ebd-ed81bb6383a1"
+      "itemId": "1133d5b9-dc31-43f8-9045-d4e9f3575857"
     },
     {
       "name": "b",
-      "itemId": "f768bef6-e5a7-4b81-9ebb-618ff3ef8cb9"
+      "itemId": "60df0d7f-83cd-4d7a-a633-f06a34a57f42",
+      "maxStack": 4
     }
   ]
 }

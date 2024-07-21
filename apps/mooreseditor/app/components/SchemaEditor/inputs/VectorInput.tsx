@@ -1,4 +1,4 @@
-import { Flex, Group, NumberInput, Stack } from "@mantine/core"
+import { Group, NumberInput } from "@mantine/core"
 import { ComponentProps } from "react"
 import { FormWrapper } from '~/components/FormWrapper'
 
@@ -12,9 +12,9 @@ export const VectorInput = ({
   label,
   dimensions,
   onChange,
-  value,
   ...props
 }: Props) => {
+  const value = props.value ? props.value : new Array(dimensions).fill(null)
   return (
     <FormWrapper label={label}>
       <Group gap='xs' styles={{ root: { flexWrap: 'nowrap' } }} w={100 * dimensions}>

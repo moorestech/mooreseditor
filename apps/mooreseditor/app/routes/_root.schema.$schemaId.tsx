@@ -1,9 +1,8 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useOutletContext } from "@remix-run/react";
-import { FromSchema } from "json-schema-to-ts";
 import { useLayoutEffect, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { SchemaTable } from "~/components/SchemaTable";
+import { SchemaEditor } from "~/components/SchemaEditor";
 import { useMasterDirectory } from "~/hooks/useMasterDirectory";
 import schemaConfig from '~/schema/_config'
 
@@ -19,7 +18,6 @@ export default function Schema() {
     schemaId,
   } = useTypedLoaderData()
   const schema = schemaConfig.schemas[schemaId]!.schema
-  type SchemaType = FromSchema<typeof schema>
   const { master } = useOutletContext<{
     master: ReturnType<typeof useMasterDirectory>
   }>()
@@ -32,11 +30,9 @@ export default function Schema() {
     })
   }, [master.state, schemaId])
   return (
-    <SchemaTable<SchemaType>
-      schemaId={schemaId}
+    <SchemaEditor
       schema={schema}
-      values={values}
-      validator={schemaConfig.validator}
+      value={values}
       onSave={async (values: any) => {
         await master.saveMaster(schemaId, values)
         setValues(values)

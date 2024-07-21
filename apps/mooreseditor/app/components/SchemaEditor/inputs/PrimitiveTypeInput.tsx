@@ -23,7 +23,7 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
   const label = showLabel ? property : undefined
   const props = {
     label,
-    value: value ?? (propertySchema && propertySchema['default']) ?? '',
+    value: value ?? (propertySchema && 'default' in propertySchema ? propertySchema['default'] : undefined),
   }
   if ('enum' in propertySchema) {
     return <EnumInput {...props} data={propertySchema.enum.map(value => String(value))} onChange={onChange} />

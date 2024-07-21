@@ -12,7 +12,7 @@ type Props = ComponentProps<typeof NumberInput> & {
 
 export const ArrayInput = ({
   propertySchema,
-  value,
+  value = [],
   onChange,
 }: Props) => {
   const add = () => {

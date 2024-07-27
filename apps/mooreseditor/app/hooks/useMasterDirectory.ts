@@ -1,17 +1,20 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { useFileSystemAccess } from "./useFileSystemAccess"
 
 export const useMasterDirectory = () => {
   const fileSystem = useFileSystemAccess()
   const loadedMasterData = useRef<any>({})
+  const [state, setState] = useState<"unloaded" | "loaded">("unloaded")
   const selectDirectory = async () => {
+    setState("unloaded")
     await fileSystem.selectDirectory()
     const fileHandle = await fileSystem.openFile('modMeta.json')
     if(!fileHandle){
       alert('modMeta.jsonが見つかりませんでした')
       return
     }
-    fileSystem.changeDirectory('master', { create: true })
+    await fileSystem.changeDirectory('master', { create: true })
+    setState("loaded")
   }
   const openMaster = async (schemaId: string): Promise<any | undefined> => {
     const fileHandle = await fileSystem.openFile(`${schemaId}.json`)
@@ -23,10 +26,7 @@ export const useMasterDirectory = () => {
   }
   const saveMaster = async (schemaId: string, contents: any): Promise<void> => {
     const fileHandle = await fileSystem.openFile(`${schemaId}.json`)
-    const file = await fileHandle?.createWritable()
-    if(!file) return
-    await file.write(JSON.stringify(contents, null, 2))
-    await file.close()
+    await fileSystem.saveFile(fileHandle, JSON.stringify(contents, null, 2))
     loadedMasterData.current[schemaId] = contents
   }
   const loadAllMasterData = async (schemaIds: Array<string>) => {
@@ -38,7 +38,7 @@ export const useMasterDirectory = () => {
     return loadedMasterData.current[schemaId]
   }
   return {
-    state: fileSystem.state,
+    state,
     selectDirectory,
     openMaster,
     saveMaster,

@@ -1,0 +1,10 @@
+{
+  "data": [
+    {
+      "name": "石2",
+      "maxStack": 1,
+      "imagePath": "asset/item/stone.png",
+      "itemId": "7363a3a3-dc26-4101-bd71-832ee92d4b3b"
+    }
+  ]
+}

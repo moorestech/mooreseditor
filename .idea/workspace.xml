@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/JsonSchemaLoader.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/schema/block.json" beforeDir="false" afterPath="$PROJECT_DIR$/schema/block.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2S8Tsl115Zj3shGaFzv2nClYALf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "feature/to-remix",
+    "last_opened_file_path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/apps/mooreseditor/app/schema",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/packages/ui/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/mooreseditor/app/schema" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/apps/mooreseditor/schema" />
+      <recent name="$PROJECT_DIR$/apps/mooreseditor" />
+      <recent name="$PROJECT_DIR$/apps/mooreseditor/app" />
+      <recent name="$PROJECT_DIR$/apps" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="アプリケーションレベル" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="デフォルトタスク">
+      <changelist id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="" />
+      <created>1688527416668</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1688527416668</updated>
+      <workItem from="1688527418525" duration="3331000" />
+      <workItem from="1689729986420" duration="600000" />
+      <workItem from="1698512069706" duration="3209000" />
+      <workItem from="1698809346358" duration="3497000" />
+      <workItem from="1718758452301" duration="99000" />
+      <workItem from="1718758584659" duration="502000" />
+      <workItem from="1718770268580" duration="1480000" />
+      <workItem from="1719058604947" duration="690000" />
+      <workItem from="1719059300569" duration="4031000" />
+      <workItem from="1719063673058" duration="4266000" />
+    </task>
+    <task id="LOCAL-00001" summary="テーブルの追加">
+      <option name="closed" value="true" />
+      <created>1718772224077</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718772224077</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="テーブルの追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="テーブルの追加" />
+  </component>
+</project>

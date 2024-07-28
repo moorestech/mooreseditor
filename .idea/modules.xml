@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/typescript-version.iml" filepath="$PROJECT_DIR$/.idea/typescript-version.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mooreseditor.iml" filepath="$PROJECT_DIR$/.idea/mooreseditor.iml" />
     </modules>
   </component>
 </project>

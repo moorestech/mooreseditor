@@ -1,0 +1,42 @@
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { useOutletContext } from "@remix-run/react";
+import { useLayoutEffect, useState } from "react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { SchemaEditor } from "~/components/SchemaEditor";
+import { useMasterDirectory } from "~/hooks/useMasterDirectory";
+import schemaConfig from '~/schema/_config'
+
+export const loader = ({ params }: LoaderFunctionArgs) => {
+  const { schemaId } = params;
+  return typedjson({
+    schemaId,
+  })
+}
+
+export default function Schema() {
+  const {
+    schemaId,
+  } = useTypedLoaderData()
+  const schema = schemaConfig.schemas[schemaId]!.schema
+  const { master } = useOutletContext<{
+    master: ReturnType<typeof useMasterDirectory>
+  }>()
+  const [values, setValues] = useState({ data: [] })
+  useLayoutEffect(() => {
+    master.loadAllMasterData(Array.from(Object.keys(schemaConfig.schemas)))
+    master.openMaster(schemaId).then((values: any | undefined) => {
+      if(!values) return
+      setValues(values)
+    })
+  }, [master.state, schemaId])
+  return (
+    <SchemaEditor
+      schema={schema}
+      value={values}
+      onSave={async (values: any) => {
+        await master.saveMaster(schemaId, values)
+        setValues(values)
+      }}
+    />
+  )
+}

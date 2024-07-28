@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "taskCompletionType": "inInventoryItem",
+      "summary": "石を集めて石器を作ろう",
+      "fireSkitType": "backgroundSkit",
+      "fireSkitName": "木3個",
+      "challengeId": "45f74367-7690-41f1-916c-5195efcc1709",
+      "taskParam": {
+        "itemId": null,
+        "itemCount": 3
+      },
+      "tutorials": [
+        {
+          "tutorialType": "mapObjectPin",
+          "tutorialParam": {
+            "mapObjectType": "vanilla:Pebble",
+            "pinText": "左クリックで石を採掘"
+          }
+        }
+      ]
+    }
+  ]
+}

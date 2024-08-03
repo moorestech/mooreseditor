@@ -3,7 +3,7 @@
   "type": "object",
   "required": ["data"],
   "properties": {
-    "data": {
+    "challenges": {
       "type": "array",
       "items": {
         "type": "object",
@@ -17,7 +17,7 @@
           "prevId": {
             "type": "string",
             "format": "uuid",
-            "foreignKey": "challenges:challengeId:summary"
+            "foreignKey": "challenges:challenges:challengeId:summary"
           },
           "summary": {
             "type": "string",
@@ -52,7 +52,7 @@
                     "itemId": {
                       "type": "string",
                       "format": "uuid",
-                      "foreignKey": "items:itemId:name"
+                      "foreignKey": "items:items:itemId:name"
                     }
                   }
                 }
@@ -70,7 +70,7 @@
                     "itemId": {
                       "type": "string",
                       "format": "uuid",
-                      "foreignKey": "items:itemId:name"
+                      "foreignKey": "items:items:itemId:name"
                     },
                     "itemCount": {
                       "type": "integer",
@@ -109,7 +109,7 @@
                         "properties": {
                           "mapObjectType": {
                             "type": "string",
-                            "foreignKey": "mapObjects:mapObjectType:mapObjectType"
+                            "foreignKey": "mapObjects:mapObjects:mapObjectType:mapObjectType"
                           },
                           "pinText": {
                             "type": "string",

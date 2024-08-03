@@ -2,7 +2,7 @@
   "$id": "mapObjects",
   "type": "object",
   "properties": {
-    "data": {
+    "mapObjects": {
       "type": "array",
       "required": ["type", "hp", "earnItemHps", "earnItems", "miningTools"],
       "items": {
@@ -33,7 +33,7 @@
                 "itemId": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:items:itemId:name"
                 },
                 "minCount": {
                   "type": "integer",
@@ -55,7 +55,7 @@
                 "toolItemModId": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:items:itemId:name"
                 },
                 "damage": {
                   "type": "integer",

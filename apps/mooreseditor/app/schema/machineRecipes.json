@@ -4,7 +4,7 @@
   "required": ["data"],
   "properties": {
 
-    "data": {
+    "machineRecipes": {
       "type": "array",
       "items": {
         "type": "object",
@@ -13,7 +13,7 @@
           "blockId": {
             "type": "string",
             "format": "uuid",
-            "foreignKey": "blocks:blockId:name"
+            "foreignKey": "blocks:blocks:blockId:name"
           },
           "time": {
             "type": "number",
@@ -28,7 +28,7 @@
                 "itemId": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:items:itemId:name"
                 },
                 "count": {
                   "type": "integer",
@@ -46,7 +46,7 @@
                 "itemId": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:items:itemId:name"
                 },
                 "count": {
                   "type": "integer",

@@ -4,7 +4,7 @@
 
   "required": [ "data" ],
   "properties": {
-    "data": {
+    "craftRecipes": {
       "type": "array",
       "items": {
         "type": "object",
@@ -20,7 +20,7 @@
               "itemId": {
                 "type": "string",
                 "format": "uuid",
-                "foreignKey": "items:itemId:name"
+                "foreignKey": "items:items:itemId:name"
               },
               "count": {
                 "type": "integer",
@@ -38,7 +38,7 @@
                 "itemId": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:items:itemId:name"
                 },
                 "count": {
                   "type": "integer",

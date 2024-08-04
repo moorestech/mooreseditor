@@ -7,12 +7,14 @@ import { PrimitiveTypeInput } from "./PrimitiveTypeInput";
 type Props = ComponentProps<typeof NumberInput> & {
   propertySchema: ArraySchema,
   value: any,
+  defaultValue?: any,
   onChange(value: any): void;
 }
 
 export const ArrayInput = ({
   propertySchema,
-  value = [],
+  value,
+  defaultValue,
   onChange,
 }: Props) => {
   const add = () => {
@@ -21,6 +23,12 @@ export const ArrayInput = ({
       ''
     ])
   }
+
+  if (!value && defaultValue) {
+    onChange(defaultValue as any);
+  }
+  value = value ? value : []
+
   return (
     <Stack gap='xs'>
       {value.map((eachValue: any, i: number) => {

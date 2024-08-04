@@ -15,11 +15,12 @@ export const VectorInput = ({
   onChange,
   ...props
 }: Props) => {
-  const value = props.value ? props.value : new Array(dimensions).fill(null)
 
   if (!props.value && props.defaultValue) {
     onChange(props.defaultValue);
   }
+
+  const value = props.value ? props.value : new Array(dimensions).fill(null)
 
   return (
     <FormWrapper label={label}>

@@ -47,12 +47,20 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
     switch (propertySchema.type) {
       case 'integer':
         return <IntInput {...props} w={160} onChange={onChange} />
+      
       case 'number':
         return <NumberInput {...props} w={160} onChange={onChange} />
+
       case 'boolean':
         return <BooleanInput {...props} onChange={onChange} />
+
       case 'string':
+        // TODO このデフォルト値はStringInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
+        if (!props.value && props.defaultValue) {
+          onChange(props.defaultValue as string);
+        }
         return <StringInput {...props} w={160} onChange={e => onChange(e.currentTarget.value)} />
+
       case 'array':
         switch (propertySchema.pattern) {
           case '@vector2':

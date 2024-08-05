@@ -68,7 +68,7 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
           case '@vector4Int':
             return <VectorInput dimensions={4} step={1} {...props} onChange={onChange} />
           default:
-            return <ArrayInput propertySchema={propertySchema} value={value ?? []} label={label} onChange={(values: any) => onChange(values)} />
+            return <ArrayInput propertySchema={propertySchema} value={value} label={label} onChange={(values: any) => onChange(values)} />
         }
       default:
         null

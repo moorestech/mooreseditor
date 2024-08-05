@@ -14,7 +14,6 @@ type Props = ComponentProps<typeof NumberInput> & {
 export const ArrayInput = ({
   propertySchema,
   value,
-  defaultValue,
   onChange,
 }: Props) => {
   const add = () => {
@@ -24,8 +23,8 @@ export const ArrayInput = ({
     ])
   }
 
-  if (!value && defaultValue) {
-    onChange(defaultValue as any);
+  if (!value && propertySchema.default) {
+    onChange(propertySchema.default as any);
   }
   value = value ? value : []
 

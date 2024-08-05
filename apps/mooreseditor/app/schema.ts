@@ -53,26 +53,31 @@ export interface StringSchema {
   format?: string;
   foreignKey?: string;
   enum?: Array<string>;
+  default?: string;
 }
 
 export interface IntegerSchema {
   type: 'integer';
   enum?: Array<number>;
+  default?: number;
 }
 
 export interface FloatSchema {
   type: 'number';
   enum?: Array<number>;
+  default?: number;
 }
 
 export interface BooleanSchema {
   type: 'boolean';
+  default?: boolean;
 }
 
 export interface ArraySchema {
   type: 'array';
   pattern?: string;
   items: Schema;
+  default?: Array<any>;
 }
 
 export const isArraySchema = (schema: Schema): schema is ArraySchema => {

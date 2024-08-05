@@ -34,8 +34,8 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
     return <ForeignKeyInput
       {...props}
       data={(context.master.getEntries(schemaId))?.data.map((row: any) => ({
-        value: row[idPropName],
-        label: row[labelPropName]
+        value: row[idPropName] ?? "IDが未設定",
+        label: row[labelPropName] ?? row[idPropName] ?? "IDが未設定",
       }))}
       onChange={onChange}
     />

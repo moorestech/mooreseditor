@@ -1,4 +1,4 @@
-import { getPropSchema, isArraySchema, isObjectArraySchema, isObjectSchema, isPrimitiveSchema, Schema } from "~/schema"
+import { getPropSchema, isArraySchema, isObjectArraySchema, isObjectSchema, isDefaultOpen, isPrimitiveSchema, Schema } from "~/schema"
 import { SchemaTable } from "./SchemaTable";
 import { Box, Group, List, Stack, Text } from "@mantine/core";
 import { Summary } from "./Summary";
@@ -53,7 +53,7 @@ export function SchemaEditor({
             }
           } else {
             return (
-              <Summary isOpenByDefault={false} label={propName}>
+              <Summary isOpenByDefault={isDefaultOpen(schema)} label={propName}>
                 <SchemaEditor
                   schema={propSchema}
                   value={value && value[propName]}

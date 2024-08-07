@@ -1,9 +1,9 @@
 import {useMasterDirectory} from "~/hooks/useMasterDirectory";
 import {useForeignKeySystem} from "~/hooks/useForeignKeySystem";
 
-export const editorContext=() => {
+export const useEditorContext=() => {
     const masterDirectory = useMasterDirectory();
-    const foreignKeySystem = useForeignKeySystem();
+    const foreignKeySystem = useForeignKeySystem(masterDirectory);
 
     return {
         masterDirectory,

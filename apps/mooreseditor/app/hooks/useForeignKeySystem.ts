@@ -1,7 +1,6 @@
 import {useMasterDirectory} from "./useMasterDirectory";
 
-export const useForeignKeySystem = () => {
-    const masterDirectory = useMasterDirectory()
+export const useForeignKeySystem = (master: ReturnType<typeof useMasterDirectory>) => {
 
     const parseForeignKey = (foreignKey: string): [schemaId:string, idPropName:string, labelPropName:string] => {
         const [schemaId, idPropName, labelPropName] = foreignKey.split(':')
@@ -11,7 +10,7 @@ export const useForeignKeySystem = () => {
     const getForeignTable = (foreignKey: string): any  => {
         const [schemaId, idPropName, labelPropName] = parseForeignKey(foreignKey)
 
-        return (masterDirectory.getEntries(schemaId))?.data.map((row: any) => ({
+        return (master.getEntries(schemaId))?.data.map((row: any) => ({
             value: row[idPropName],
             label: row[labelPropName]
         }))

@@ -1,5 +1,14 @@
 import { ActionIcon, Collapse, Group, Stack, Table } from "@mantine/core"
-import { DataSchema, findNonPrimitivePropNames, findPrimitivePropNames, getPropSchema, ObjectArraySchema, ObjectSchema, StringSchema } from "~/schema"
+import {
+    DataSchema,
+    findNonPrimitivePropNames,
+    findPrimitivePropNames,
+    getPropSchema,
+    isDefaultOpen,
+    ObjectArraySchema,
+    ObjectSchema,
+    StringSchema
+} from "~/schema"
 import { Value } from "./Value";
 import { Summary } from "./Summary";
 import { SchemaEditor } from ".";
@@ -159,7 +168,7 @@ function SchemaRow({
           <Collapse in={isOpen}>
             <Stack p={'xs'}>
               {Object.entries(nonPrimitiveFields).map(([propName, propSchema]: [string, DataSchema]) => {
-                return <Summary isOpenByDefault={false} label={propName}>
+                return <Summary isOpenByDefault={isDefaultOpen(schema)} label={propName}>
                   <SchemaEditor
                     schema={propSchema}
                     value={value[propName]}

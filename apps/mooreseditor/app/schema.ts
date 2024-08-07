@@ -28,10 +28,23 @@ export interface ObjectSchema {
   type: 'object';
   properties: Properties;
   required?: Array<string>;
+  isDefaultOpen?: boolean;
 }
 
 export const isObjectSchema = (schema: Schema): schema is ObjectSchema => {
   return schema instanceof Object && 'type' in schema && schema.type === 'object'
+}
+
+export const isDefaultOpen = (schema: Schema): boolean => {
+  if (isObjectSchema(schema)) {
+    return schema.isDefaultOpen ?? false
+  }
+
+  if (isArraySchema(schema)) {
+    return schema.isDefaultOpen ?? false
+  }
+
+    return false
 }
 
 export type ObjectArraySchema = {
@@ -78,6 +91,7 @@ export interface ArraySchema {
   pattern?: string;
   items: Schema;
   default?: Array<any>;
+  isDefaultOpen?: boolean;
 }
 
 export const isArraySchema = (schema: Schema): schema is ArraySchema => {

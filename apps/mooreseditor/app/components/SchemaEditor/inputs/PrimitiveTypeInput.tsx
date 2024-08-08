@@ -8,7 +8,7 @@ import { ArrayInput } from "./ArrayInput"
 import { DataSchema } from "~/schema"
 import { ForeignKeyInput } from "./ForeignKeyInput"
 import { useOutletContext } from "@remix-run/react"
-import { useMasterDirectory } from "~/hooks/useMasterDirectory"
+import {useEditorContext} from "~/hooks/useEditorContext";
 
 interface Props {
   showLabel?: boolean;
@@ -19,7 +19,8 @@ interface Props {
 }
 
 export function PrimitiveTypeInput({ showLabel = false, property, propertySchema, value, onChange }: Props) {
-  const context = useOutletContext<{ master: ReturnType<typeof useMasterDirectory> }>()
+  const { context } = useOutletContext<{ context: ReturnType<typeof useEditorContext> }>()
+  const master = context.masterDirectory;
   const label = showLabel ? property : undefined
 
   const defaultValue = propertySchema && 'default' in propertySchema ? propertySchema['default'] : undefined;
@@ -37,7 +38,7 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
     const [schemaId, idPropName, labelPropName] = propertySchema.foreignKey.split(':')
     return <ForeignKeyInput
       {...props}
-      data={(context.master.getEntries(schemaId))?.data.map((row: any) => ({
+      data={(master.getEntries(schemaId))?.data.map((row: any) => ({
         value: row[idPropName] ?? "IDが未設定",
         label: row[labelPropName] ?? row[idPropName] ?? "IDが未設定",
       }))}

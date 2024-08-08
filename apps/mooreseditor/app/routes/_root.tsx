@@ -2,8 +2,8 @@ import { AppShell, Burger, Button, Group, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link, Outlet } from "@remix-run/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { useMasterDirectory } from "~/hooks/useMasterDirectory";
 import schemaConfig from '~/schema/_config'
+import {useEditorContext} from "~/hooks/useEditorContext";
 
 export const loader = () => {
   return typedjson({
@@ -14,7 +14,7 @@ export const loader = () => {
 export default function RootLayout() {
   const { schemas } = useTypedLoaderData()
   const [opened, { toggle }] = useDisclosure(false);
-  const master = useMasterDirectory()
+  const context = useEditorContext();
   return (
     <AppShell
       header={{ height: 60 }}
@@ -27,7 +27,7 @@ export default function RootLayout() {
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <div>Logo</div>
           </Group>
-          <Button onClick={() => master.selectDirectory()}>Open</Button>
+          <Button onClick={() => context.masterDirectory.selectDirectory()}>Open</Button>
         </Group>
       </AppShell.Header>
 
@@ -38,7 +38,7 @@ export default function RootLayout() {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Outlet context={{ master }} />
+        <Outlet context={{ context }} />
       </AppShell.Main>
     </AppShell>
 

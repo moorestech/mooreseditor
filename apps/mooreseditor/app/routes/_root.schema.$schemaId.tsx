@@ -14,12 +14,12 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
 }
 
 export default function Schema() {
-  const {
-    schemaId,
-  } = useTypedLoaderData()
-  const schema = schemaConfig.schemas[schemaId]!.schema
   const { context } = useOutletContext<{ context: ReturnType<typeof useEditorContext> }>()
   const master = context.masterDirectory;
+
+  const { schemaId,} = useTypedLoaderData()
+
+  const schema = schemaConfig.schemas[schemaId]!.schema
 
   const [values, setValues] = useState({ data: [] })
   useLayoutEffect(() => {
@@ -29,8 +29,10 @@ export default function Schema() {
       setValues(values)
     })
   }, [master.state, schemaId])
+
   return (
     <SchemaEditor
+      key={schemaId}
       schema={schema}
       value={values}
       onSave={async (values: any) => {

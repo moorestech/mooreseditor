@@ -17,7 +17,6 @@ export const useForeignKeySystem = (master: ReturnType<typeof useMasterDirectory
     }
 
     const getForeignValue = (foreignKey: string, id: any): any => {
-        return null;
         const table = getForeignTable(foreignKey)
         for (const row of table) {
             if (row.value === id) {

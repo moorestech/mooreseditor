@@ -1,7 +1,7 @@
 import { DataSchema } from "~/schema";
 import {useOutletContext} from "@remix-run/react";
-import {useMasterDirectory} from "~/hooks/useMasterDirectory";
 import {useForeignKeySystem} from "~/hooks/useForeignKeySystem";
+import {useEditorContext} from "~/hooks/useEditorContext";
 
 interface Props {
   schema: DataSchema;
@@ -13,10 +13,11 @@ export function Value({
   value
 }: Props) {
 
-  const context = useOutletContext<{foreign: ReturnType<typeof useForeignKeySystem> }>()
+  const { context } = useOutletContext<{ context: ReturnType<typeof useEditorContext> }>()
+  const foreignKeySystem = context.foreignKeySystem;
 
   if ('foreignKey' in schema) {
-    value = context.foreign.getForeignValue(schema.foreignKey, value);
+    value = foreignKeySystem.getForeignValue(schema.foreignKey, value);
   }
 
   switch(schema.type){

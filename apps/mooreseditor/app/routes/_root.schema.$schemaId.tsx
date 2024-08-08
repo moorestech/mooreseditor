@@ -3,8 +3,8 @@ import { useOutletContext } from "@remix-run/react";
 import { useLayoutEffect, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { SchemaEditor } from "~/components/SchemaEditor";
-import { useMasterDirectory } from "~/hooks/useMasterDirectory";
 import schemaConfig from '~/schema/_config'
+import {useEditorContext} from "~/hooks/useEditorContext";
 
 export const loader = ({ params }: LoaderFunctionArgs) => {
   const { schemaId } = params;
@@ -18,9 +18,9 @@ export default function Schema() {
     schemaId,
   } = useTypedLoaderData()
   const schema = schemaConfig.schemas[schemaId]!.schema
-  const { master } = useOutletContext<{
-    master: ReturnType<typeof useMasterDirectory>
-  }>()
+  const { context } = useOutletContext<{ context: ReturnType<typeof useEditorContext> }>()
+  const master = context.masterDirectory;
+
   const [values, setValues] = useState({ data: [] })
   useLayoutEffect(() => {
     master.loadAllMasterData(Array.from(Object.keys(schemaConfig.schemas)))

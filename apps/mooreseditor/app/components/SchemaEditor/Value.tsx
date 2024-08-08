@@ -22,11 +22,19 @@ export function Value({
 
   switch(schema.type){
     case 'string':
+      if (schema.format === 'uuid') {
+        // 最初の5文字と...で表示
+        return <>{value?.toString().slice(0, 5)}...</>
+      }
+      return <>{value}</>
+
     case 'number':
     case 'integer':
       return <>{value}</>
+
     case 'boolean':
       return <>{value ? "✔" : "❎️"}</>
+    
     case 'array':
       return <>{value instanceof Array && value.join(',')}</>
   }

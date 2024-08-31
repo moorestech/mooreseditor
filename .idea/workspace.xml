@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加" />
+    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加">
+      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/_config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/app/_config.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,10 +57,10 @@
       <recent name="$PROJECT_DIR$/apps/mooreseditor/app/schema" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/mooreseditor/app" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/apps/mooreseditor/schema" />
       <recent name="$PROJECT_DIR$/apps/mooreseditor" />
-      <recent name="$PROJECT_DIR$/apps/mooreseditor/app" />
       <recent name="$PROJECT_DIR$/apps" />
     </key>
   </component>

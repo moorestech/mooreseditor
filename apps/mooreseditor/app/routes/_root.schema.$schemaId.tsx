@@ -3,7 +3,7 @@ import { useOutletContext } from "@remix-run/react";
 import { useLayoutEffect, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { SchemaEditor } from "~/components/SchemaEditor";
-import schemaConfig from '~/schema/_config'
+import schemaConfig from '~/_config'
 import {useEditorContext} from "~/hooks/useEditorContext";
 
 export const loader = ({ params }: LoaderFunctionArgs) => {

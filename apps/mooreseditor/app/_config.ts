@@ -1,12 +1,12 @@
-import blocks from './blocks.json';
-import items from './items.json';
-import challenge from './challenges.json';
-import craftRecipes from './craftRecipes.json';
-import mapObjects from './mapObjects.json';
-import machineRecipes from './machineRecipes.json';
-import inputConnects from './ref/inventoryConnects.json';
-import blockConnectInfo from './ref/blockConnectInfo.json';
-import modelTransform from './ref/modelTransform.json';
+import blocks from './schema/blocks.json';
+import items from './schema/items.json';
+import challenge from './schema/challenges.json';
+import craftRecipes from './schema/craftRecipes.json';
+import mapObjects from './schema/mapObjects.json';
+import machineRecipes from './schema/machineRecipes.json';
+import inputConnects from './schema/ref/inventoryConnects.json';
+import blockConnectInfo from './schema/ref/blockConnectInfo.json';
+import modelTransform from './schema/ref/modelTransform.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
 

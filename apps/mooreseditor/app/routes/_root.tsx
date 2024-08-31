@@ -2,7 +2,7 @@ import { AppShell, Burger, Button, Group, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link, Outlet } from "@remix-run/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import schemaConfig from '~/schema/_config'
+import schemaConfig from '~/_config'
 import {useEditorContext} from "~/hooks/useEditorContext";
 
 export const loader = () => {

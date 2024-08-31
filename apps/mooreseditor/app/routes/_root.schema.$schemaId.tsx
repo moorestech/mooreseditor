@@ -32,7 +32,6 @@ export default function Schema() {
 
   return (
     <SchemaEditor
-      key={schemaId}
       schema={schema}
       value={values}
       onSave={async (values: any) => {

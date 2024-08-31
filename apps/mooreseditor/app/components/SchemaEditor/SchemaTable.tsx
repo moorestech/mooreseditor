@@ -14,7 +14,7 @@ import { Summary } from "./Summary";
 import { SchemaEditor } from ".";
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { MdCheck, MdDelete, MdEdit } from "react-icons/md";
 import { PrimitiveTypeInput } from "./inputs/PrimitiveTypeInput";
 import { v4 as uuid } from 'uuid';
@@ -108,10 +108,12 @@ function SchemaRow({
   onAdd = () => { },
   onDelete = () => { },
 }: RowProps) {
-  const primitiveFields = findPrimitivePropNames(schema)
-  const nonPrimitiveFields = findNonPrimitivePropNames(schema, value)
-  const [isOpen, { toggle }] = useDisclosure(false)
-  const [isEditing, setIsEditing] = useState(false)
+  const primitiveFields = findPrimitivePropNames(schema);
+  const nonPrimitiveFields = findNonPrimitivePropNames(schema, value);
+  const [isOpen, { toggle }] = useDisclosure(false);
+  const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {setIsEditing(false);}, [schema]);
+
   return (
     <>
       <Table.Tr>

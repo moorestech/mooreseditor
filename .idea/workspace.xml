@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/JsonSchemaLoader.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/app/root.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/app/schema/block.json" beforeDir="false" afterPath="$PROJECT_DIR$/schema/block.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mooreseditor/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="b4634a67-7343-401c-9c75-d31d6291aee4" name="変更" comment="テーブルの追加" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +36,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "feature/to-remix",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/apps/mooreseditor/app/schema",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -53,7 +46,7 @@
     "nodejs_package_manager_path": "npm",
     "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/packages/ui/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/katsumi.sato/WebstormProjects/mooreseditor/packages/eslint-config-custom/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

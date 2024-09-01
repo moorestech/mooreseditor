@@ -11,8 +11,8 @@ export const useForeignKeySystem = (master: ReturnType<typeof useMasterDirectory
         const [schemaId, idPropName, labelPropName] = parseForeignKey(foreignKey)
 
         return (master.getEntries(schemaId))?.data.map((row: any) => ({
-            value: row[idPropName] ?? "value " + idPropName + "が未設定",
-            label: row[labelPropName] ?? row[idPropName] ?? "labelが未設定",
+            value: row[idPropName] ?? ("value " + idPropName + "が未設定 foreignKey "+foreignKey + Math.random()),
+            label: row[labelPropName] ?? row[idPropName] ?? "labelが未設定 foreignKey "+foreignKey,
         }))
     }
 

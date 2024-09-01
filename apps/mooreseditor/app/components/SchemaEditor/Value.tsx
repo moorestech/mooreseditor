@@ -23,6 +23,9 @@ export function Value({
   switch(schema.type){
     case 'string':
       if (schema.format === 'uuid') {
+        if ('foreignKey' in schema) {
+          return  value; // 外部キーの場合はそのまま表示
+        }
         // 最初の5文字と...で表示
         return <>{value?.toString().slice(0, 5)}...</>
       }

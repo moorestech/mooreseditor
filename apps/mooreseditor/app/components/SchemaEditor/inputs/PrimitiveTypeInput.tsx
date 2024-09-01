@@ -44,25 +44,25 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
   } else {
     switch (propertySchema.type) {
       case 'integer':
-        if (!props.value && props.defaultValue) {// TODO このデフォルト値はIntegerInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
+        if (props.value == undefined && props.defaultValue) {// TODO このデフォルト値はIntegerInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
           onChange(props.defaultValue as number);
         }
         return <IntInput {...props} w={160} onChange={onChange} />
 
       case 'number':
-        if (!props.value && props.defaultValue) {// TODO このデフォルト値はNumberInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
+        if (props.value == undefined && props.defaultValue) {// TODO このデフォルト値はNumberInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
           onChange(props.defaultValue as number);
         }
         return <NumberInput {...props} w={160} onChange={onChange} />
 
       case 'boolean':
-        if (!props.value && props.defaultValue) {// TODO このデフォルト値はBooleanInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
+        if (props.value == undefined && props.defaultValue) {// TODO このデフォルト値はBooleanInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
           onChange(props.defaultValue as boolean);
         }
         return <BooleanInput {...props} onChange={onChange} />
 
       case 'string':
-        if (!props.value && props.defaultValue) {// TODO このデフォルト値はStringInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
+        if (props.value == undefined && props.defaultValue) {// TODO このデフォルト値はStringInputの中に入れたいがやり方が良くわからないのでとりあえずここに書いておく
           onChange(props.defaultValue as string);
         }
         return <StringInput {...props} w={160} onChange={e => onChange(e.currentTarget.value)} />

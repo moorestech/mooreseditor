@@ -6,7 +6,6 @@ import mapObjects from './schema/mapObjects.json';
 import machineRecipes from './schema/machineRecipes.json';
 import inputConnects from './schema/ref/inventoryConnects.json';
 import blockConnectInfo from './schema/ref/blockConnectInfo.json';
-import modelTransform from './schema/ref/modelTransform.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
 
@@ -20,7 +19,6 @@ refResolver.addSchema(machineRecipes)
 
 refResolver.addSchema(inputConnects)
 refResolver.addSchema(blockConnectInfo)
-refResolver.addSchema(modelTransform)
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addSchema(refResolver.getDerefSchema('blocks'), '/blocks')

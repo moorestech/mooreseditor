@@ -4,7 +4,8 @@ import challenge from './schema/challenges.json';
 import craftRecipes from './schema/craftRecipes.json';
 import mapObjects from './schema/mapObjects.json';
 import machineRecipes from './schema/machineRecipes.json';
-import inputConnects from './schema/ref/inventoryConnects.json';
+import inventoryConnects from './schema/ref/inventoryConnects.json';
+import gearConnects from './schema/ref/gearConnects.json';
 import blockConnectInfo from './schema/ref/blockConnectInfo.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
@@ -17,7 +18,8 @@ refResolver.addSchema(craftRecipes)
 refResolver.addSchema(mapObjects)
 refResolver.addSchema(machineRecipes)
 
-refResolver.addSchema(inputConnects)
+refResolver.addSchema(inventoryConnects)
+refResolver.addSchema(gearConnects)
 refResolver.addSchema(blockConnectInfo)
 
 const ajv = new Ajv({ allErrors: true })

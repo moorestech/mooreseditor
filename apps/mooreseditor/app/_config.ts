@@ -7,6 +7,7 @@ import machineRecipes from './schema/machineRecipes.json';
 import inventoryConnects from './schema/ref/inventoryConnects.json';
 import gearConnects from './schema/ref/gearConnects.json';
 import blockConnectInfo from './schema/ref/blockConnectInfo.json';
+import mineSettings from './schema/ref/mineSettings.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
 
@@ -21,6 +22,7 @@ refResolver.addSchema(machineRecipes)
 refResolver.addSchema(inventoryConnects)
 refResolver.addSchema(gearConnects)
 refResolver.addSchema(blockConnectInfo)
+refResolver.addSchema(mineSettings)
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addSchema(refResolver.getDerefSchema('blocks'), '/blocks')

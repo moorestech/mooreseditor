@@ -1,18 +1,16 @@
 {
   "$id": "machineRecipes",
   "type": "object",
-  "required": ["data"],
   "isDefaultOpen": true,
 
   "properties": {
 
     "data": {
       "type": "array",
-      "overrideCodeGeneratePropertyName": "MachineRecipeElement",
+      "overrideCodeGeneratePropertyName": "MachineRecipeMasterElement",
 
       "items": {
         "type": "object",
-        "required": ["blockId", "time", "input", "output"],
         "properties": {
 
           "machineRecipeGuid": {
@@ -24,7 +22,7 @@
           "blockGuid": {
             "type": "string",
             "format": "uuid",
-            "foreignKey": "blocks:blockId:name"
+            "foreignKey": "blocks:blockGuid:name"
           },
           "time": {
             "type": "number",
@@ -34,12 +32,11 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["itemId", "count"],
               "properties": {
                 "itemGuid": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:itemGuid:name"
                 },
                 "count": {
                   "type": "integer",
@@ -52,12 +49,11 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["itemId", "count"],
               "properties": {
                 "itemGuid": {
                   "type": "string",
                   "format": "uuid",
-                  "foreignKey": "items:itemId:name"
+                  "foreignKey": "items:itemGuid:name"
                 },
                 "count": {
                   "type": "integer",

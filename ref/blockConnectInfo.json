@@ -6,7 +6,6 @@
 
   "items": {
     "type": "object",
-    "required": ["connectType","offset", "directions","connectOption"],
 
     "properties": {
 
@@ -31,6 +30,7 @@
 
       "directions": {
         "type": "array",
+        "optional": true,
         "items": {
           "type": "array",
           "pattern": "@vector3Int",
@@ -55,7 +55,48 @@
             },
             "then": {
               "type": "object",
+              "optional": true,
               "properties": {
+                "inventoryOptions" :{
+                  "type": "array",
+                  "optional": true,
+                  
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      
+                      "inventoryConnectOptionType": {
+                        "type": "string",
+                        "enum": ["CraftChainerCrafter"]
+                      },
+                      
+                      "inventoryConnectOptionParam": {
+                        "oneOf": [
+                          {
+                            "if": {
+                              "properties": {
+                                "inventoryConnectOptionType": { "const": "CraftChainerCrafter" }
+                              }
+                            },
+                            "then": {
+                              "type": "object",
+                              "properties": {
+
+                                "connectType": {
+                                  "type": "string",
+                                  "enum": ["Network", "Factory"]
+                                }
+                              }
+                            }
+                            
+                          }
+                        ]
+                      }
+                      
+                    }
+                  }
+                  
+                }
               }
             }
           },
@@ -72,15 +113,8 @@
 
                 "isReverse": {
                   "type": "boolean",
-                  "default": false
-                },
-                "onlySpecifiedTypes": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "default": true
                 }
-
               }
             }
           }

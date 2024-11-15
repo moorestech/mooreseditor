@@ -11,12 +11,12 @@ git fetch schema
 ## コミットをVanillaSchemaにpush
 
 ```sh
-git subtree push --prefix=apps/mooreseditor/app/schema schema main 
+git subtree push --prefix=apps/mooreseditor/app/schema --squash  schema main 
 ```
 
 ## VanillaSchemaからpull
 ```sh
-git subtree pull --prefix=apps/mooreseditor/app/schema schema main 
+git subtree pull --prefix=apps/mooreseditor/app/schema --squash schema main 
 ```
 
 

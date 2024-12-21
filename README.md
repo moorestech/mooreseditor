@@ -12,7 +12,7 @@ git subtree add --prefix=apps/mooreseditor/app/schema --squash schema main
 ## コミットをVanillaSchemaにpush
 
 ```sh
-git subtree push --prefix=apps/mooreseditor/app/schema --squash  schema main 
+git subtree push --prefix=apps/mooreseditor/app/schema schema main 
 ```
 
 ## VanillaSchemaからpull

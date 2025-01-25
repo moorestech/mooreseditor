@@ -27,8 +27,17 @@ properties:
       enum:
       - None
       - BackgroundSkit
-      # TODO ↓ ここおかしい、変換スクリプトチェック
     - key: playSkitParam
+      switch: playSkitType
+      cases:
+      - when: None
+        type: object
+        properties: []
+      - when: BackgroundSkit
+        type: object
+        properties:
+        - key: fireSkitName
+          type: string
     - key: taskCompletionType
       type: string
       default: createItem

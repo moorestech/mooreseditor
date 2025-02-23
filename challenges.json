@@ -35,6 +35,30 @@
             "default": "New Challenge summary"
           },
 
+          "displayInChallengeList" :{
+            "type": "boolean",
+            "default": false,
+            "optional": true
+          },
+
+          "displayInChallengeListPosition": {
+            "type": "array",
+            "pattern": "@vector2",
+            "items": {
+              "type": "number"
+            },
+            "default": [0,0],
+            "optional": true
+          },
+
+
+          "displayInChallengeListIconItemGuid": {
+            "type": "string",
+            "format": "uuid",
+            "foreignKey": "items:itemGuid:name",
+            "optional": true
+          },
+
           "playSkitType": {
             "type": "string",
             "default": "createItem",
@@ -72,7 +96,6 @@
               }
             ]
           },
-
 
           "taskCompletionType": {
             "type": "string",
@@ -229,23 +252,23 @@
             }
           },
 
-          "cleardActions": {
+          "clearedActions": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
 
-                "cleardActionType": {
+                "clearedActionType": {
                   "type": "string",
-                  "enum": ["unlockRecipe"]
+                  "enum": ["unlockCraftRecipe"]
                 },
 
-                "cleardActionParam": {
+                "clearedActionParam": {
                   "oneOf": [
                     {
                       "if": {
                         "properties": {
-                          "tutorialType": { "const": "unlockRecipe" }
+                          "clearedActionType": { "const": "unlockCraftRecipe" }
                         }
                       },
                       "then": {

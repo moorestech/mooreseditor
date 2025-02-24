@@ -4,6 +4,7 @@ import challenge from './schema/challenges.json';
 import craftRecipes from './schema/craftRecipes.json';
 import mapObjects from './schema/mapObjects.json';
 import machineRecipes from './schema/machineRecipes.json';
+import schemaSample from './schema/schemaSample.json';
 import inventoryConnects from './schema/ref/inventoryConnects.json';
 import gearConnects from './schema/ref/gearConnects.json';
 import blockConnectInfo from './schema/ref/blockConnectInfo.json';
@@ -19,6 +20,7 @@ refResolver.addSchema(challenge)
 refResolver.addSchema(craftRecipes)
 refResolver.addSchema(mapObjects)
 refResolver.addSchema(machineRecipes)
+refResolver.addSchema(schemaSample)
 
 refResolver.addSchema(inventoryConnects)
 refResolver.addSchema(gearConnects)
@@ -33,6 +35,7 @@ ajv.addSchema(refResolver.getDerefSchema('craftRecipes'), '/craftRecipes')
 ajv.addSchema(refResolver.getDerefSchema('challenges'), '/challenges')
 ajv.addSchema(refResolver.getDerefSchema('mapObjects'), '/mapObjects')
 ajv.addSchema(refResolver.getDerefSchema('machineRecipes'), '/machineRecipes')
+ajv.addSchema(refResolver.getDerefSchema('schemaSample'), '/schemaSample')
 
 export default {
   validator: ajv,
@@ -60,6 +63,10 @@ export default {
     challenges: {
       name: 'Challenges',
       schema: refResolver.getDerefSchema('challenges')
+    },
+    schemaSample: {
+      name: 'サンプル',
+      schema: refResolver.getDerefSchema('schemaSample')
     },
   }
 }

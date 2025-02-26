@@ -7,14 +7,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "prettier": "^3.3.2",
-    "tsconfig": "workspace:*",
+    "eslint": "^9.17.0",
+    "prettier": "^3.2.5",
+    "@mooreseditor/typescript-config": "workspace:*",
+    "@mooreseditor/eslint-config": "workspace:*",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.6.10",
-  "name": "_",
-  "dependencies": {
-    "typescript-json-schema": "^0.64.0"
-  }
+  "packageManager": "pnpm@9.15.0",
+  "name": "_"
 }

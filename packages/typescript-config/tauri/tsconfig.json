@@ -1,0 +1,11 @@
+{
+  "display": "Tauri",
+  "extends": "../base",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true
+  }
+}

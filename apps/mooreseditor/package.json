@@ -1,47 +1,31 @@
 {
-  "name": "mooreseditor",
+  "name": "@mooreseditor/mooreseditor",
   "private": true,
-  "sideEffects": false,
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "remix vite:build",
-    "dev": "remix vite:dev",
-    "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
+    "dev": "vite",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "format": "prettier **/*.{ts,tsx} --write; eslint --fix --cache --cache-location ./node_modules/.cache/eslint",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
   },
   "dependencies": {
-    "@mantine/core": "^7.10.2",
-    "@mantine/hooks": "^7.10.2",
-    "@remix-run/css-bundle": "^2.9.2",
-    "@remix-run/node": "^2.9.2",
-    "@remix-run/react": "^2.9.2",
-    "@remix-run/serve": "^2.9.2",
-    "@types/filesystem": "^0.0.36",
-    "@types/uuid": "^10.0.0",
-    "ajv": "6",
-    "isbot": "^3.8.0",
-    "json-schema-ref-resolver": "^1.0.1",
-    "json-schema-to-ts": "^3.1.0",
-    "jsonschema": "^1.4.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.2.1",
-    "remix-typedjson": "^0.4.1",
-    "uuid": "^10.0.0",
-    "@netlify/functions": "^2.6.0",
-    "@netlify/remix-adapter": "^2.3.1",
-    "vite": "^5.0.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.9.2",
-    "@remix-run/eslint-config": "^2.9.2",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.5.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "@mooreseditor/eslint-config": "workspace:*",
+    "@mooreseditor/typescript-config": "workspace:*",
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3"
   }
 }

@@ -1,0 +1,29 @@
+{
+  "name": "@mooreseditor/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.mjs"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.4",
+    "@remix-run/eslint-config": "^2.15.2",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "@vercel/style-guide": "^5.2.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "^2.3.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-turbo": "^2.3.3",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^15.14.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.18.1"
+  }
+}

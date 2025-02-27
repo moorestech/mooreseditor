@@ -10,6 +10,7 @@ import gearConnects from './schema/ref/gearConnects.json';
 import blockConnectInfo from './schema/ref/blockConnectInfo.json';
 import mineSettings from './schema/ref/mineSettings.json';
 import mapObjectMineSettings from './schema/ref/mapObjectMineSettings.json';
+import fluidInventoryConnects from './schema/ref/fluidInventoryConnects.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
 
@@ -27,6 +28,7 @@ refResolver.addSchema(gearConnects)
 refResolver.addSchema(blockConnectInfo)
 refResolver.addSchema(mineSettings)
 refResolver.addSchema(mapObjectMineSettings)
+refResolver.addSchema(fluidInventoryConnects)
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addSchema(refResolver.getDerefSchema('blocks'), '/blocks')

@@ -31,5 +31,15 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "tauri": {
+    "allowlist": {
+      "fs": {
+        "all": true
+      },
+      "dialog": {
+        "all": true
+      }
+    }
   }
 }

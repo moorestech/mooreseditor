@@ -4,6 +4,7 @@ import challenge from './schema/challenges.json';
 import craftRecipes from './schema/craftRecipes.json';
 import mapObjects from './schema/mapObjects.json';
 import machineRecipes from './schema/machineRecipes.json';
+import fluids from './schema/fluids.json';
 import schemaSample from './schema/schemaSample.json';
 import inventoryConnects from './schema/ref/inventoryConnects.json';
 import gearConnects from './schema/ref/gearConnects.json';
@@ -21,6 +22,7 @@ refResolver.addSchema(challenge)
 refResolver.addSchema(craftRecipes)
 refResolver.addSchema(mapObjects)
 refResolver.addSchema(machineRecipes)
+refResolver.addSchema(fluids)
 refResolver.addSchema(schemaSample)
 
 refResolver.addSchema(inventoryConnects)
@@ -37,6 +39,7 @@ ajv.addSchema(refResolver.getDerefSchema('craftRecipes'), '/craftRecipes')
 ajv.addSchema(refResolver.getDerefSchema('challenges'), '/challenges')
 ajv.addSchema(refResolver.getDerefSchema('mapObjects'), '/mapObjects')
 ajv.addSchema(refResolver.getDerefSchema('machineRecipes'), '/machineRecipes')
+ajv.addSchema(refResolver.getDerefSchema('fluids'), '/fluids')
 ajv.addSchema(refResolver.getDerefSchema('schemaSample'), '/schemaSample')
 
 export default {
@@ -65,6 +68,10 @@ export default {
     challenges: {
       name: 'Challenges',
       schema: refResolver.getDerefSchema('challenges')
+    },
+    fluids: {
+      name: 'Fluids',
+      schema: refResolver.getDerefSchema('fluids')
     },
     schemaSample: {
       name: 'サンプル',

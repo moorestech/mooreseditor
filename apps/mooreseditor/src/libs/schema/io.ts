@@ -1,6 +1,5 @@
-import { parseDocument } from 'yaml';
-import * as fs from 'node:fs';
+import YAML from 'yaml';
 
 export function loadYamlString(yaml: string) {
-  return parseDocument(yaml)
+  return YAML.parse(yaml)
 }

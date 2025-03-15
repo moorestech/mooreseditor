@@ -2,6 +2,7 @@ export type RefString = string;
 
 export interface ObjectSchema {
   type: 'object';
+  openedByDefault?: boolean;
   properties?: Array<ObjectPropertySchema>;
   ref?: string;
 }
@@ -12,9 +13,10 @@ export type ObjectPropertySchema = Schema & {
 
 export interface ArraySchema {
   type: 'array';
-  items: Schema;
+  items: ValueSchema;
   minLength?: number;
   maxLength?: number;
+  openedByDefault?: boolean;
 }
 
 export interface StringSchema {
@@ -118,6 +120,6 @@ export type Schema = |
   ValueSchema |
   SwitchSchema;
 
-export type SchemaContainer = Schema & {
+export type SchemaContainer = ObjectSchema & {
   id: string;
 }

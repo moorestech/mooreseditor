@@ -1,54 +1,74 @@
-import { useState } from "react";
-
-import { invoke } from "@tauri-apps/api/core";
+import { Suspense, useMemo, useState } from "react";
+import * as path from '@tauri-apps/api/path';
+import { open } from '@tauri-apps/plugin-dialog';
+import { readDir, readTextFile } from '@tauri-apps/plugin-fs';
 
 import reactLogo from "./assets/react.svg";
 import "./App.css";
+import { loadYamlString } from "./libs/schema/io";
+import { AppShell, Button, Group, NavLink } from "@mantine/core";
+import { MasterTable } from "./components/MasterTable";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [projectDir, setProjectDir] = useState<string | null>(null);
+  const [schemas, setSchemas] = useState([]);
+  const [selectedSchemaId, setSelectedSchemaId] = useState<string | null>(null);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  const selectedSchema = useMemo(() => {
+    return schemas.find(schema => schema.id === selectedSchemaId)
+  }, [schemas, selectedSchemaId])
+
+  async function openSchemaDir() {
+    const openedDir = await open({ directory: true })
+    const entryList = await readDir(openedDir)
+    setSchemas(await Promise.all(
+      entryList
+        .filter(entry => entry.isFile)
+        .map(entry => entry.name)
+        .map(async fileName => {
+          const filePath = await path.join(openedDir, fileName)
+          const fileContent = await readTextFile(filePath)
+          return loadYamlString(fileContent)
+        })
+    ))
+  }
+
+  async function openProjectDir() {
+    const openedDir = await open({ directory: true })
+    const fileNameList = await readDir(await path.join(openedDir, 'schemas'))
+    setProjectDir(openedDir)
   }
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-      
-      <button>open</button>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <AppShell
+      header={{ height: 64 }}
+      navbar={{
+        width: 264,
+        breakpoint: 'xs'
+      }}
+    >
+      <AppShell.Header>
+        <Group justify='right'>
+          <Button onClick={openSchemaDir}>Open Schema</Button>
+          <Button onClick={openProjectDir}>Open Project</Button>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Navbar>
+        {schemas.map(schema => (
+          <NavLink
+            key={schema.id}
+            label={schema.id}
+            active={schema.id === selectedSchemaId}
+            onClick={() => setSelectedSchemaId(schema.id)}
+          />
+        ))}
+      </AppShell.Navbar>
+      <AppShell.Main>
+        {selectedSchema && (
+          <MasterTable schema={selectedSchema} />
+        )}
+      </AppShell.Main>
+    </AppShell>
   );
 }
 

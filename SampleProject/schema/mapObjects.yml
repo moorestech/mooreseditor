@@ -1,5 +1,6 @@
 id: mapObjects
 type: object
+isMasterSchema: true
 isDefaultOpen: true
 properties:
 - key: data

@@ -1,5 +1,6 @@
 id: blocks
 type: object
+isMasterSchema: true
 isDefaultOpen: true
 defineInterface:
 

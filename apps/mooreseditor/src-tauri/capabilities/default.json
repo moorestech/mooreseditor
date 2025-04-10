@@ -4,6 +4,13 @@
   "description": "Capability for the main window",
   "windows": ["main"],
   "permissions": [
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        { "path": "$DOCUMENT/mooreseditor/SampleProject/master" },
+        { "path": "$DOCUMENT/mooreseditor/SampleProject/master/**" }
+      ]
+    },
     "core:default",
     "opener:default",
     "dialog:allow-open",

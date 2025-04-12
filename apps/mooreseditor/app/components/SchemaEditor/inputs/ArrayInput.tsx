@@ -137,6 +137,15 @@ export const ArrayInput = ({
               <BsArrowDown size={14} />
             </ActionIcon>
           </div>
+          <ActionIcon
+            color="red"
+            variant="subtle"
+            onClick={() => remove(i)}
+            style={{ padding: '8px' }}
+            title="削除"
+          >
+            <BsTrash />
+          </ActionIcon>
           <div style={{ flex: 1 }}>
             <PrimitiveTypeInput
               propertySchema={propertySchema.items as DataSchema}
@@ -148,15 +157,6 @@ export const ArrayInput = ({
               }}
             />
           </div>
-          <Button
-            color="red"
-            variant="subtle"
-            onClick={() => remove(i)}
-            style={{ padding: '8px' }}
-            title="削除"
-          >
-            <BsTrash />
-          </Button>
         </Group>
       ))}
       <Button leftSection={<BsPlusLg />} onClick={add} w={160}>追加</Button>

@@ -289,7 +289,7 @@ function SchemaRow({
           <Collapse in={isOpen}>
             <Stack p={'xs'}>
               {Object.entries(nonPrimitiveFields).map(([propName, propSchema]: [string, DataSchema]) => {
-                return <Summary key={propName} isOpenByDefault={isDefaultOpen(schema)} label={propName}>
+                return <Summary key={propName} isOpenByDefault={isDefaultOpen(propSchema)} label={propName}>
                   <SchemaEditor
                     schema={propSchema}
                     value={value[propName]}

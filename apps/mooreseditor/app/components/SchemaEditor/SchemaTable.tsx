@@ -13,6 +13,7 @@ import { Value } from "./Value";
 import { Summary } from "./Summary";
 import { SchemaEditor } from ".";
 import { BsChevronDown, BsChevronRight } from "react-icons/bs";
+import { BsArrowUp, BsArrowDown, BsGripVertical } from "react-icons/bs";
 import { useDisclosure } from "@mantine/hooks";
 import {useEffect, useState} from "react";
 import { MdCheck, MdDelete, MdEdit } from "react-icons/md";
@@ -35,6 +36,34 @@ export function SchemaTable({
   }
   const primitive = findPrimitivePropNames(schema.items)
   const [newRow, setNewRow] = useState({})
+  
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
+  
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+  
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDropIndex(index);
+  };
+  
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    
+    if (draggedIndex !== null && dropIndex !== null && draggedIndex !== dropIndex) {
+      const newItems = [...value];
+      const [draggedItem] = newItems.splice(draggedIndex, 1);
+      newItems.splice(dropIndex, 0, draggedItem);
+      
+      onSave(newItems);
+    }
+    
+    setDraggedIndex(null);
+    setDropIndex(null);
+  };
+  
   return (
     <Table>
       <Table.Thead>
@@ -47,8 +76,16 @@ export function SchemaTable({
         {value.map((row, i: number) => {
           return (
             <SchemaRow
+              key={i}
               schema={schema.items}
               value={row}
+              index={i}
+              totalRows={value.length}
+              isDragging={draggedIndex === i}
+              isDropTarget={dropIndex === i}
+              onDragStart={() => handleDragStart(i)}
+              onDragOver={(e: React.DragEvent) => handleDragOver(e, i)}
+              onDrop={handleDrop}
               onSave={(newValue: any) => {
                 onSave([
                   ...value.map((eachValue: any, j: number) => {
@@ -57,6 +94,26 @@ export function SchemaTable({
                 ])
               }}
               onDelete={() => onSave(value.filter((_, j: number) => i != j))}
+              onMoveUp={() => {
+                if (i <= 0) return;
+                
+                const newValue = [...value];
+                const temp = newValue[i];
+                newValue[i] = newValue[i - 1];
+                newValue[i - 1] = temp;
+                
+                onSave(newValue);
+              }}
+              onMoveDown={() => {
+                if (i >= value.length - 1) return;
+                
+                const newValue = [...value];
+                const temp = newValue[i];
+                newValue[i] = newValue[i + 1];
+                newValue[i + 1] = temp;
+                
+                onSave(newValue);
+              }}
             />
           )
         })}
@@ -95,40 +152,79 @@ interface RowProps {
   schema: ObjectSchema;
   value: Record<string, unknown>;
   isNew?: boolean;
+  index?: number;
+  totalRows?: number;
+  isDragging?: boolean;
+  isDropTarget?: boolean;
+  onDragStart?(): void;
+  onDragOver?(e: React.DragEvent): void;
+  onDrop?(e: React.DragEvent): void;
   onSave?(values: any): void;
   onAdd?(): void;
   onDelete?(): void;
+  onMoveUp?(): void;
+  onMoveDown?(): void;
 }
 
 function SchemaRow({
   schema,
   value,
   isNew = false,
+  index = 0,
+  totalRows = 0,
+  isDragging = false,
+  isDropTarget = false,
+  onDragStart = () => { },
+  onDragOver = () => { },
+  onDrop = () => { },
   onSave = () => { },
   onAdd = () => { },
   onDelete = () => { },
+  onMoveUp = () => { },
+  onMoveDown = () => { },
 }: RowProps) {
-  const primitiveFields = findPrimitivePropNames(schema);
-  const nonPrimitiveFields = findNonPrimitivePropNames(schema, value);
+  const primitiveFields = findPrimitivePropNames(schema) as Record<string, DataSchema>;
+  const nonPrimitiveFields = findNonPrimitivePropNames(schema, value) as Record<string, DataSchema>;
   const [isOpen, { toggle }] = useDisclosure(false);
   const [isEditing, setIsEditing] = useState(false);
   useEffect(() => {setIsEditing(false);}, [schema]);
 
   return (
     <>
-      <Table.Tr>
+      <Table.Tr
+        draggable={!isNew}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        style={{
+          backgroundColor: isDragging ? '#f1f3f5' : 'transparent',
+          border: isDropTarget ? '1px dashed #228be6' : '1px solid transparent',
+        }}
+      >
         <Table.Td>
-          <ActionIcon size='xs' onClick={toggle}>
-            {isOpen ? (
-              <BsChevronDown />
-            ) : (
-              <BsChevronRight />
-            )}
-          </ActionIcon>
+          <Group gap="xs">
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              size='xs'
+              style={{ cursor: 'grab' }}
+              title="ドラッグして並べ替え"
+              className="drag-handle"
+            >
+              <BsGripVertical />
+            </ActionIcon>
+            <ActionIcon size='xs' onClick={toggle}>
+              {isOpen ? (
+                <BsChevronDown />
+              ) : (
+                <BsChevronRight />
+              )}
+            </ActionIcon>
+          </Group>
         </Table.Td>
         {Object.entries(primitiveFields).map(([propName, propSchema]: [string, DataSchema]) => {
           return (
-            <Table.Td>
+            <Table.Td key={propName}>
               {(isEditing || isNew) ? (
                 <PrimitiveTypeInput
                   property={propName}
@@ -154,10 +250,33 @@ function SchemaRow({
             </ActionIcon>
           ) : (
             <Group wrap='nowrap'>
-              <ActionIcon onClick={() => setIsEditing(true)}>
+              {!isNew && (
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <ActionIcon
+                      size="xs"
+                      onClick={onMoveUp}
+                      disabled={index === 0}
+                      title="上に移動"
+                      style={{ marginBottom: '2px' }}
+                    >
+                      <BsArrowUp size={14} />
+                    </ActionIcon>
+                    <ActionIcon
+                      size="xs"
+                      onClick={onMoveDown}
+                      disabled={index === totalRows - 1}
+                      title="下に移動"
+                    >
+                      <BsArrowDown size={14} />
+                    </ActionIcon>
+                  </div>
+                </>
+              )}
+              <ActionIcon onClick={() => setIsEditing(true)} title="編集">
                 <MdEdit />
               </ActionIcon>
-              <ActionIcon onClick={onDelete}>
+              <ActionIcon onClick={onDelete} title="削除">
                 <MdDelete />
               </ActionIcon>
             </Group>
@@ -166,11 +285,11 @@ function SchemaRow({
       </Table.Tr>
       <Table.Tr p={0}>
         <Table.Td p={0}></Table.Td>
-        <Table.Td p={0} colSpan={primitiveFields.length + 1}>
+        <Table.Td p={0} colSpan={Object.keys(primitiveFields).length + 1}>
           <Collapse in={isOpen}>
             <Stack p={'xs'}>
               {Object.entries(nonPrimitiveFields).map(([propName, propSchema]: [string, DataSchema]) => {
-                return <Summary isOpenByDefault={isDefaultOpen(schema)} label={propName}>
+                return <Summary key={propName} isOpenByDefault={isDefaultOpen(schema)} label={propName}>
                   <SchemaEditor
                     schema={propSchema}
                     value={value[propName]}

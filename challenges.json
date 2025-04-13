@@ -20,8 +20,7 @@
           
           "initialUnlocked": {
             "type": "boolean",
-            "default": true,
-            "optional": true,
+            "default": false,
             "$memo": "チャレンジが初期状態でアンロックされているかどうか"
           },
 
@@ -280,6 +279,7 @@
                       },
                       "then": {
                         "type": "object",
+                        "isDefaultOpen": true,
                         "properties": {
 
                           "unlockRecipeGuids": {
@@ -303,6 +303,7 @@
                       },
                       "then": {
                         "type": "object",
+                        "isDefaultOpen": true,
                         "properties": {
 
                           "unlockItemGuids": {
@@ -327,6 +328,7 @@
                       },
                       "then": {
                         "type": "object",
+                        "isDefaultOpen": true,
                         "properties": {
 
                           "unlockChallengeGuids": {

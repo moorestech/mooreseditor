@@ -195,3 +195,99 @@ export const transformErrors = (errors: Array<ErrorObject>) => {
   }
   return transformedErrors
 }
+
+/**
+ * スキーマ定義に基づいてデータ内の空のオブジェクト/配列を補完する関数
+ * @param schema スキーマ定義
+ * @param data 対象データ
+ * @returns 補完後のデータ
+ */
+export const ensureEmptyStructures = (schema: Schema, data: any): any => {
+  if (isObjectSchema(schema)) {
+    // データが null や undefined の場合は空オブジェクトを返す
+    if (data === null || data === undefined) {
+      data = {};
+    }
+    // データがオブジェクトでない場合はそのまま返す（エラー処理は別途検討）
+    if (typeof data !== 'object' || Array.isArray(data)) {
+      console.warn("Schema is object, but data is not an object:", data);
+      return data; // もしくは {} を返すか、エラーを投げるか
+    }
+
+    const result: Record<string, any> = { ...data }; // 元のデータをコピー
+
+    for (const propName in schema.properties) {
+      // getPropSchema を使って、条件分岐 (oneOf) も考慮したプロパティスキーマを取得
+      // row データとして現在の result を渡す
+      const propSchema = getPropSchema(schema, propName, result);
+
+      // propSchema が null (oneOf で条件に合致しなかった場合など) はスキップ
+      if (!propSchema) continue;
+
+      const dataValue = result[propName];
+
+      if (isObjectSchema(propSchema)) {
+        // プロパティがオブジェクト型の場合
+        if (dataValue === null || dataValue === undefined) {
+          // データが存在しなければ空オブジェクトで補完
+          result[propName] = {};
+        } else {
+          // データが存在すれば再帰的に処理
+          result[propName] = ensureEmptyStructures(propSchema, dataValue);
+        }
+      } else if (isArraySchema(propSchema) && !isObjectArraySchema(propSchema) && !propSchema.pattern?.startsWith('@vector')) {
+        // プロパティがプリミティブ配列型の場合 (Vector以外)
+        if (dataValue === null || dataValue === undefined) {
+          // データが存在しなければ空配列で補完
+          result[propName] = [];
+        }
+        // 配列の中身はプリミティブなので再帰処理は不要
+        // (もし配列の要素がオブジェクト/配列の場合は isObjectArraySchema で処理される)
+      } else if (isObjectArraySchema(propSchema)) {
+         // プロパティがオブジェクト配列型の場合
+         if (dataValue === null || dataValue === undefined) {
+           // データが存在しなければ空配列で補完
+           result[propName] = [];
+         } else if (Array.isArray(dataValue)) {
+           // データが配列なら、各要素を再帰的に処理
+           result[propName] = dataValue.map(item => ensureEmptyStructures(propSchema.items, item));
+         }
+         // データが配列でない場合はそのまま（エラー処理は別途検討）
+      }
+      // プリミティブ型や Vector 型の場合は、データが存在すればそのまま result に含まれているので何もしない
+      // データが存在しない場合も、ここでは補完しない (デフォルト値の補完は別の責務)
+    }
+    return result;
+
+  } else if (isArraySchema(schema) && !isObjectArraySchema(schema) && !schema.pattern?.startsWith('@vector')) {
+    // スキーマがプリミティブ配列型の場合 (Vector以外)
+    // データが null や undefined の場合は空配列を返す
+    if (data === null || data === undefined) {
+      return [];
+    }
+    // データが配列でない場合はそのまま返す
+    if (!Array.isArray(data)) {
+      console.warn("Schema is array, but data is not an array:", data);
+      return data;
+    }
+    // 中身はプリミティブなのでそのまま返す
+    return data;
+
+  } else if (isObjectArraySchema(schema)) {
+    // スキーマがオブジェクト配列型の場合
+    // データが null や undefined の場合は空配列を返す
+    if (data === null || data === undefined) {
+      return [];
+    }
+    // データが配列でない場合はそのまま返す
+    if (!Array.isArray(data)) {
+      console.warn("Schema is object array, but data is not an array:", data);
+      return data;
+    }
+    // 各要素を再帰的に処理
+    return data.map(item => ensureEmptyStructures(schema.items, item));
+  }
+
+  // オブジェクト型、配列型以外はデータをそのまま返す
+  return data;
+};

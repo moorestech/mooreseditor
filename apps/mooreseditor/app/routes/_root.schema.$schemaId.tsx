@@ -4,7 +4,9 @@ import { useLayoutEffect, useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { SchemaEditor } from "~/components/SchemaEditor";
 import schemaConfig from '~/_config'
-import {useEditorContext} from "~/hooks/useEditorContext";
+import { useEditorContext } from "~/hooks/useEditorContext";
+import { ensureEmptyStructures } from "~/schema"; // ensureEmptyStructures のみインポート
+import type { Schema } from "~/schema"; // Schema は type としてインポート
 
 export const loader = ({ params }: LoaderFunctionArgs) => {
   const { schemaId } = params;
@@ -19,7 +21,8 @@ export default function Schema() {
 
   const { schemaId,} = useTypedLoaderData()
 
-  const schema = schemaConfig.schemas[schemaId]!.schema
+  // schemaId を schemaConfig.schemas のキーの型にキャスト
+  const schema = schemaConfig.schemas[schemaId as keyof typeof schemaConfig.schemas]!.schema
 
   const [values, setValues] = useState({ data: [] })
   useLayoutEffect(() => {
@@ -35,8 +38,10 @@ export default function Schema() {
       schema={schema}
       value={values}
       onSave={async (values: any) => {
-        await master.saveMaster(schemaId, values)
-        setValues(values)
+        // スキーマに基づいて空のオブジェクト/配列を補完
+        const validatedValues = ensureEmptyStructures(schema as Schema, values); // schema を Schema 型として渡す
+        await master.saveMaster(schemaId, validatedValues);
+        setValues(validatedValues); // 補完後の値で状態を更新
       }}
     />
   )

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import { ActionIcon, Text } from "@mantine/core";
+import { IconGripVertical } from "@tabler/icons-react";
 import {
   DndContext,
   closestCenter,
@@ -15,10 +15,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ActionIcon, Text } from "@mantine/core";
-import { IconGripVertical } from "@tabler/icons-react";
-
-import type { DragEndEvent } from "@dnd-kit/core";
+import React, { useState, useEffect } from "react";
 
 interface DataTableViewProps {
   fileData: Array<Record<string, any>>;
@@ -91,8 +88,8 @@ function SortableRow({
         }}
         {...listeners}
       >
-        <ActionIcon color="#FFFFF">
-          <IconGripVertical size={16} color="black" />
+        <ActionIcon>
+          <IconGripVertical size={16} />
         </ActionIcon>
       </div>
       {allKeys.map((key, colIndex) => (
@@ -106,7 +103,7 @@ function SortableRow({
             textAlign: "left",
           }}
         >
-          {row[key]}
+          {row[key] || "-"}
         </Text>
       ))}
     </div>
@@ -120,11 +117,17 @@ function DataTableView({
   setEditData,
   onRowsReordered,
 }: DataTableViewProps) {
-  const [rows, setRows] = useState<Array<Record<string, any>>>(fileData);
+  const [rows, setRows] = useState<Array<Record<string, any>>>([]);
+  const [allKeys, setAllKeys] = useState<string[]>([]);
 
-  const allKeys = Array.from(
-    new Set(fileData.flatMap((item) => Object.keys(item)))
-  );
+  useEffect(() => {
+    if (fileData.length > 0) {
+      setRows(fileData);
+      setAllKeys(
+        Array.from(new Set(fileData.flatMap((item) => Object.keys(item))))
+      );
+    }
+  }, [fileData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -133,14 +136,15 @@ function DataTableView({
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (event: {
+    active: { id: number };
+    over: { id: number } | null;
+  }) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = rows.findIndex(
-        (_, index) => index === Number(active.id)
-      );
-      const newIndex = rows.findIndex((_, index) => index === Number(over.id));
+      const oldIndex = rows.findIndex((_, index) => index === active.id);
+      const newIndex = rows.findIndex((_, index) => index === over.id);
       const newOrder = arrayMove(rows, oldIndex, newIndex);
       setRows(newOrder);
       onRowsReordered(newOrder);
@@ -161,20 +165,19 @@ function DataTableView({
       <div
         style={{
           display: "flex",
-          marginBottom: "32px",
+          marginBottom: "16px",
+          fontWeight: 700,
           fontSize: "16px",
           color: "#2D2D2D",
-          borderBottom: "1px solid #EDEDED",
         }}
       >
         {allKeys.map((key, index) => (
           <Text
             key={index}
             style={{
-              padding: "8px 32px",
+              padding: "0 8px",
               flex: 1,
               textAlign: "left",
-              fontWeight: "bold",
             }}
           >
             {key}

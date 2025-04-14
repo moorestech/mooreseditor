@@ -98,27 +98,28 @@ function App() {
     <MantineProvider theme={theme}>
       <AppShell
         header={{ height: 64 }}
-        navbar={{
-          width: 194,
-          breakpoint: "xs",
-        }}
         style={{
-          marginLeft: "375px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start", 
+          gap: "16px", 
           padding: "16px",
           overflowX: "auto",
-          display: "flex",
-          gap: "16px",
         }}
       >
-        <Sidebar
-          menuToFileMap={menuToFileMap}
-          selectedFile={selectedFile}
-          loadFileData={loadFileData}
-          openProjectDir={openProjectDir}
-        />
-        {columns.map((column, columnIndex) => (
-          <div key={columnIndex}>
+        <div style={{ flexShrink: 0, width: "200px" }}>
+          <Sidebar
+            menuToFileMap={menuToFileMap}
+            selectedFile={selectedFile}
+            loadFileData={loadFileData}
+            openProjectDir={openProjectDir}
+          />
+        </div>
+
+        <div style={{ flexShrink: 0, width: "200px" }}>
+          {columns.map((column, columnIndex) => (
             <DataSidebar
+              key={columnIndex}
               fileData={column.data}
               selectedData={selectedData}
               setSelectedData={(data) => {
@@ -126,9 +127,10 @@ function App() {
                 loadFileData(data.name as string, columnIndex + 1);
               }}
             />
-          </div>
-        ))}
-        <ScrollArea>
+          ))}
+        </div>
+
+        <ScrollArea style={{ flex: 1 }}>
           <DataTableView
             fileData={fileData}
             selectedData={selectedData}
@@ -136,7 +138,12 @@ function App() {
             setEditData={setEditData}
           />
         </ScrollArea>
-        {editData && <EditView editData={editData} setEditData={setEditData} />}
+
+        {editData && (
+          <div style={{ flexShrink: 0, width: "300px" }}>
+            <EditView editData={editData} setEditData={setEditData} />
+          </div>
+        )}
       </AppShell>
     </MantineProvider>
   );

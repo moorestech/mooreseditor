@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import {
   DndContext,
@@ -15,8 +15,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Table, ActionIcon } from "@mantine/core";
+import { ActionIcon, Text } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
+
+import type { DragEndEvent } from "@dnd-kit/core";
 
 interface DataTableViewProps {
   fileData: Array<Record<string, any>>;
@@ -51,15 +53,26 @@ function SortableRow({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: "default",
+    position: "relative",
+    width: "100%",
+    height: "48px",
+    marginBottom: "8px",
     background:
       selectedData === row
-        ? "linear-gradient(180deg, #EE722F -2.7%, #FFAD49 100%)"
-        : "none",
+        ? "linear-gradient(90deg, #EE722F -2.7%, #FFAD49 100%)"
+        : "#FFFFFF",
+    border: "1px solid #EE722F",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    cursor: "pointer",
+    boxShadow:
+      selectedData === row ? "0px 0px 4px rgba(0, 0, 0, 0.25)" : "none",
   };
 
   return (
-    <Table.Tr
+    <div
       ref={setNodeRef}
       style={style}
       {...attributes}
@@ -68,32 +81,34 @@ function SortableRow({
         setEditData(row);
       }}
     >
-      <Table.Td
+      <div
         style={{
-          padding: "8px",
-          textAlign: "center",
+          padding: "0 8px",
           cursor: "grab",
+          display: "flex",
+          alignItems: "center",
         }}
         {...listeners}
       >
         <ActionIcon>
           <IconGripVertical size={16} />
         </ActionIcon>
-      </Table.Td>
+      </div>
       {allKeys.map((key, colIndex) => (
-        <Table.Td
+        <Text
           key={colIndex}
           style={{
-            padding: "8px",
-            textAlign: "left",
+            padding: "0 8px",
             fontSize: "14px",
-            color: "#2D2D2D",
+            color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+            flex: 1,
+            textAlign: "left",
           }}
         >
           {row[key]}
-        </Table.Td>
+        </Text>
       ))}
-    </Table.Tr>
+    </div>
   );
 }
 
@@ -117,15 +132,14 @@ function DataTableView({
     })
   );
 
-  const handleDragEnd = (event: {
-    active: { id: number };
-    over: { id: number } | null;
-  }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = rows.findIndex((_, index) => index === active.id);
-      const newIndex = rows.findIndex((_, index) => index === over.id);
+      const oldIndex = rows.findIndex(
+        (_, index) => index === Number(active.id)
+      );
+      const newIndex = rows.findIndex((_, index) => index === Number(over.id));
       const newOrder = arrayMove(rows, oldIndex, newIndex);
       setRows(newOrder);
       onRowsReordered(newOrder);
@@ -144,60 +158,45 @@ function DataTableView({
         overflowY: "auto",
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          marginBottom: "16px",
+          fontWeight: 700,
+          fontSize: "16px",
+          color: "#2D2D2D",
+        }}
+      >
+        {allKeys.map((key, index) => (
+          <Text
+            key={index}
+            style={{
+              padding: "0 8px",
+              flex: 1,
+              textAlign: "left",
+            }}
+          >
+            {key}
+          </Text>
+        ))}
+      </div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={rows.map((_, index) => index)}>
-          <Table striped highlightOnHover withBorder>
-            <thead
-              style={{
-                borderBottom: "2px solid #E2E2E2",
-              }}
-            >
-              <Table.Tr>
-                <Table.Th
-                  style={{
-                    padding: "8px",
-                    textAlign: "center",
-                    fontWeight: 700,
-                    fontSize: "14px",
-                    color: "#2D2D2D",
-                  }}
-                >
-                  Drag
-                </Table.Th>
-                {allKeys.map((key) => (
-                  <Table.Th
-                    key={key}
-                    style={{
-                      padding: "8px",
-                      textAlign: "left",
-                      fontWeight: 700,
-                      fontSize: "14px",
-                      color: "#2D2D2D",
-                    }}
-                  >
-                    {key}
-                  </Table.Th>
-                ))}
-              </Table.Tr>
-            </thead>
-            <tbody>
-              {rows.map((row, rowIndex) => (
-                <SortableRow
-                  key={rowIndex}
-                  row={row}
-                  rowIndex={rowIndex}
-                  allKeys={allKeys}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                  setEditData={setEditData}
-                />
-              ))}
-            </tbody>
-          </Table>
+          {rows.map((row, rowIndex) => (
+            <SortableRow
+              key={rowIndex}
+              row={row}
+              rowIndex={rowIndex}
+              allKeys={allKeys}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              setEditData={setEditData}
+            />
+          ))}
         </SortableContext>
       </DndContext>
     </div>

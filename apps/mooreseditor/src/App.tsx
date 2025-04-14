@@ -53,28 +53,42 @@ function App() {
   }
 
   async function loadFileData(menuItem: string, columnIndex: number = 0) {
-    if (!projectDir) return;
+    if (!projectDir) {
+      console.error("Project directory is not set.");
+      return;
+    }
 
     const fileName = menuToFileMap[menuItem];
-    if (!fileName) return;
+    if (!fileName) {
+      console.error(`No file mapping found for menu item: ${menuItem}`);
+      return;
+    }
 
     try {
       const filePath = await path.join(projectDir, "master", fileName);
       const contents = await readTextFile(filePath);
       const jsonData = JSON.parse(contents);
 
+      if (!jsonData || !Array.isArray(jsonData.data)) {
+        console.error(`Invalid data format in file: ${fileName}`);
+        console.log("Loaded data:", jsonData);
+        return;
+      }
+
       if (columnIndex === 0) {
-        setColumns([{ title: menuItem, data: jsonData.data || [] }]);
+        setColumns([{ title: menuItem, data: jsonData.data }]);
       } else {
         const newColumns = columns.slice(0, columnIndex + 1);
-        newColumns.push({ title: menuItem, data: jsonData.data || [] });
+        newColumns.push({ title: menuItem, data: jsonData.data });
         setColumns(newColumns);
       }
 
       setSelectedFile(menuItem);
-      setFileData(jsonData.data || []);
+      setFileData(jsonData.data);
       setSelectedData(null);
       setEditData(null);
+
+      console.log(`Successfully loaded data for ${menuItem}:`, jsonData.data);
     } catch (error) {
       console.error(`Error loading file data for ${menuItem}:`, error);
     }

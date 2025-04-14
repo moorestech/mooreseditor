@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   DndContext,
   closestCenter,
@@ -93,19 +94,20 @@ function SortableRow({
         </ActionIcon>
       </div>
       {allKeys.map((key, colIndex) => (
-        <Text
-          key={colIndex}
-          style={{
-            padding: "0 8px",
-            fontSize: "14px",
-            color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
-            flex: 1,
-            textAlign: "left",
-          }}
-        >
-          {row[key] || "-"}
-        </Text>
-      ))}
+  <Text
+    key={colIndex}
+    style={{
+      padding: "0 8px",
+      fontSize: "14px",
+      color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+      flex: 1,
+      textAlign: "left",
+    }}
+  >
+    {/* オブジェクトの場合は JSON.stringify で文字列化 */}
+    {typeof row[key] === "object" ? JSON.stringify(row[key]) : row[key] || "-"}
+  </Text>
+))}
     </div>
   );
 }

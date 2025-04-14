@@ -113,3 +113,15 @@ mooreseditor/
 ### 型システム
 - TypeScriptインターフェースとタイプの広範な使用
 - ジェネリック型を使用した再利用可能なコンポーネント
+
+## JavaScriptの挙動に関する注意点
+
+### Falsy値の処理
+- JavaScriptでは、`false`、`0`、`""`（空文字列）、`null`、`undefined`、`NaN`は「falsy」値として扱われる
+- 条件式（例：`if (value)`）では、これらの値はすべて`false`と評価される
+- これにより、特にboolean型のデフォルト値が`false`の場合に意図しない動作が発生する可能性がある
+
+### デフォルト値の安全な処理
+- boolean型のデフォルト値を処理する際は、`value ? true : false`や`!!value`のような評価ではなく、`value !== undefined`のような明示的な存在チェックを使用する
+- 例：`if (props.value == undefined && props.defaultValue !== undefined)`のように、値が未定義かつデフォルト値が存在する（`undefined`でない）場合にのみデフォルト値を適用する
+- 配列型のデフォルト値（Vector型など）を処理する際は、`Array.isArray(defaultValue)`を使用して配列であることを確認する

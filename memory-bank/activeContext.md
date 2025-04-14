@@ -13,6 +13,10 @@
   - `techContext.md`の作成
   - `activeContext.md`の作成（本ファイル）
   - `progress.md`の作成（予定）
+- boolean型デフォルト値の修正（2025/4/14）
+  - JavaScriptのfalsy値の扱いによる問題を修正
+  - `PrimitiveTypeInput.tsx`のデフォルト値処理ロジックを改善
+  - boolean型とVector型のデフォルト値が正しく適用されるように修正
 
 ## 次のステップ
 1. **プロジェクトの詳細調査**

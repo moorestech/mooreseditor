@@ -1,5 +1,4 @@
-import { ActionIcon, Text } from "@mantine/core";
-import { IconGripVertical } from "@tabler/icons-react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -15,7 +14,8 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useState, useEffect } from "react";
+import { ActionIcon, Text } from "@mantine/core";
+import { IconGripVertical } from "@tabler/icons-react";
 
 interface DataTableViewProps {
   fileData: Array<Record<string, any>>;

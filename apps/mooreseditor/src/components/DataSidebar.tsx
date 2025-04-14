@@ -16,7 +16,7 @@ function DataSidebar({
       style={{
         position: "absolute",
         width: "194px",
-        height: "full",
+        height: "100vh",
         left: "230px",
         top: "16px",
         background: "#FFFFFF",

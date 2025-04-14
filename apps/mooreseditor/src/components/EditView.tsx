@@ -14,7 +14,7 @@ function EditView({ editData, setEditData }: EditViewProps) {
     <div
       style={{
         minWidth: "400px",
-        height: "800px",
+        height: "100vh",
         background: "#FFFFFF",
         borderRadius: "8px",
         padding: "16px",

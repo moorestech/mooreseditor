@@ -13,9 +13,9 @@ function renderCell(value: any): JSX.Element | string {
       <Table>
         <tbody>
           {value.map((item, index) => (
-            <tr key={index}>
-              <td>{renderCell(item)}</td>
-            </tr>
+            <Table.Tr key={index}>
+              <Table.Td>{renderCell(item)}</Table.Td>
+            </Table.Tr>
           ))}
         </tbody>
       </Table>
@@ -25,10 +25,10 @@ function renderCell(value: any): JSX.Element | string {
       <Table>
         <tbody>
           {Object.entries(value).map(([key, val]) => (
-            <tr key={key}>
-              <td style={{ fontWeight: "bold" }}>{key}</td>
-              <td>{renderCell(val)}</td>
-            </tr>
+            <Table.Tr key={key}>
+              <Table.Td style={{ fontWeight: "bold" }}>{key}</Table.Td>
+              <Table.Td>{renderCell(val)}</Table.Td>
+            </Table.Tr>
           ))}
         </tbody>
       </Table>
@@ -66,9 +66,9 @@ function DataTableView({
             borderBottom: "2px solid #E2E2E2",
           }}
         >
-          <tr>
+          <Table.Tr>
             {allKeys.map((key) => (
-              <th
+              <Table.Th
                 key={key}
                 style={{
                   padding: "8px",
@@ -79,17 +79,20 @@ function DataTableView({
                 }}
               >
                 {key}
-              </th>
+              </Table.Th>
             ))}
-          </tr>
+          </Table.Tr>
         </thead>
         <tbody>
           {fileData.map((row, rowIndex) => (
-            <tr
+            <Table.Tr
               key={rowIndex}
               style={{
                 cursor: "pointer",
-                background: selectedData === row ? "#FFF4E5" : "#FFFFFF",
+                background:
+                  selectedData === row
+                    ? "linear-gradient(180deg, #EE722F -2.7%, #FFAD49 100%)"
+                    : " none",
               }}
               onClick={() => {
                 setSelectedData(row);
@@ -97,7 +100,7 @@ function DataTableView({
               }}
             >
               {allKeys.map((key, colIndex) => (
-                <td
+                <Table.Td
                   key={colIndex}
                   style={{
                     padding: "8px",
@@ -107,9 +110,9 @@ function DataTableView({
                   }}
                 >
                   {renderCell(row[key])}
-                </td>
+                </Table.Td>
               ))}
-            </tr>
+            </Table.Tr>
           ))}
         </tbody>
       </Table>

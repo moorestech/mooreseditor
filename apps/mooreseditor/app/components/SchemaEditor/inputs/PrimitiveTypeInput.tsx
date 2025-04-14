@@ -75,19 +75,43 @@ export function PrimitiveTypeInput({ showLabel = false, property, propertySchema
 
       case 'array':
         switch (propertySchema.pattern) {
-          case '@vector2':
-            // VectorInput likely uses NumberInput internally, pass baseProps
+          case '@vector2': {
+            // Apply default value if value is undefined and defaultValue is a valid array
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={2} step={1} {...baseProps} onChange={onChange} />
-          case '@vector3':
+          }
+          case '@vector3': {
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={3} step={1} {...baseProps} onChange={onChange} />
-          case '@vector4':
+          }
+          case '@vector4': {
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={4} step={1} {...baseProps} onChange={onChange} />
-          case '@vector2Int':
+          }
+          case '@vector2Int': {
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={2} step={1} {...baseProps} onChange={onChange} />
-          case '@vector3Int':
+          }
+          case '@vector3Int': {
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={3} step={1} {...baseProps} onChange={onChange} />
-          case '@vector4Int':
+          }
+          case '@vector4Int': {
+            if (baseProps.value === undefined && defaultValue !== undefined && Array.isArray(defaultValue)) {
+              onChange(defaultValue);
+            }
             return <VectorInput dimensions={4} step={1} {...baseProps} onChange={onChange} />
+          }
           default:
             return <ArrayInput propertySchema={propertySchema} value={value} label={label} onChange={(values: any) => onChange(values)} />
         }

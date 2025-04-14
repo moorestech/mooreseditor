@@ -89,7 +89,7 @@ function App() {
           breakpoint: "xs",
         }}
         style={{
-          marginLeft: "450px",
+          marginLeft: "375px",
           padding: "16px",
           overflowX: "auto",
           display: "flex",

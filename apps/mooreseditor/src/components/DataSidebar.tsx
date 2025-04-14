@@ -17,13 +17,13 @@ function DataSidebar({
         position: "absolute",
         width: "194px",
         height: "100vh",
-        left: "230px",
-        top: "16px",
+        left: "212px",
+        top: "32px",
         background: "#FFFFFF",
-        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-        borderRadius: "8px",
+        borderTop: "1px solid #E2E2E2",
         padding: "16px",
         overflowY: "auto",
+        borderRight: "1px solid #EDEDED",
       }}
     >
       {fileData.map((item, index) => (

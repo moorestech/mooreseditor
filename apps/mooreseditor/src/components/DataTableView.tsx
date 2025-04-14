@@ -153,20 +153,17 @@ function DataTableView({
         width: "100%",
         height: "100vh",
         background: "#FFFFFF",
-        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-        borderRadius: "8px",
-        padding: "16px",
         overflowY: "auto",
+        marginTop: "16px",
+        borderTop: "1px solid #E2E2E2",
       }}
     >
       <div
         style={{
           display: "flex",
-          marginBottom: "16px",
-          fontWeight: 700,
+          marginBottom: "32px",
           fontSize: "16px",
           color: "#2D2D2D",
-          borderTop: "1px solid #EDEDED",
           borderBottom: "1px solid #EDEDED",
         }}
       >
@@ -174,9 +171,10 @@ function DataTableView({
           <Text
             key={index}
             style={{
-              padding: "0 8px",
+              padding: "8px 32px",
               flex: 1,
               textAlign: "left",
+              fontWeight: "bold",
             }}
           >
             {key}

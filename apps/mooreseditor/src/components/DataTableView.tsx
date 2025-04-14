@@ -15,8 +15,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ActionIcon, Text } from "@mantine/core";
+import { Checkbox, ActionIcon, Text } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
+
+import type { DragEndEvent } from "@dnd-kit/core";
 
 interface DataTableViewProps {
   fileData: Array<Record<string, any>>;
@@ -43,10 +45,9 @@ function SortableRow({
   setSelectedData,
   setEditData,
 }: SortableRowProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: rowIndex,
-    });
+  const { attributes, setNodeRef, transform, transition } = useSortable({
+    id: rowIndex,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -73,7 +74,7 @@ function SortableRow({
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={style as React.CSSProperties}
       {...attributes}
       onClick={() => {
         setSelectedData(row);
@@ -83,31 +84,40 @@ function SortableRow({
       <div
         style={{
           padding: "0 8px",
-          cursor: "grab",
           display: "flex",
           alignItems: "center",
         }}
-        {...listeners}
       >
-        <ActionIcon>
+        <ActionIcon
+          style={{
+            background: selectedData === row ? "none" : "#FFFFFF",
+            color: "#000000",
+          }}
+        >
           <IconGripVertical size={16} />
         </ActionIcon>
+        <Checkbox
+          style={{
+            marginLeft: "8px",
+          }}
+        />
       </div>
       {allKeys.map((key, colIndex) => (
-  <Text
-    key={colIndex}
-    style={{
-      padding: "0 8px",
-      fontSize: "14px",
-      color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
-      flex: 1,
-      textAlign: "left",
-    }}
-  >
-    {/* オブジェクトの場合は JSON.stringify で文字列化 */}
-    {typeof row[key] === "object" ? JSON.stringify(row[key]) : row[key] || "-"}
-  </Text>
-))}
+        <Text
+          key={colIndex}
+          style={{
+            padding: "0 8px",
+            fontSize: "14px",
+            color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+            flex: 1,
+            textAlign: "left",
+          }}
+        >
+          {typeof row[key] === "object"
+            ? JSON.stringify(row[key])
+            : row[key] || "-"}
+        </Text>
+      ))}
     </div>
   );
 }
@@ -138,15 +148,14 @@ function DataTableView({
     })
   );
 
-  const handleDragEnd = (event: {
-    active: { id: number };
-    over: { id: number } | null;
-  }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = rows.findIndex((_, index) => index === active.id);
-      const newIndex = rows.findIndex((_, index) => index === over.id);
+      const oldIndex = rows.findIndex(
+        (_, index) => index === Number(active.id)
+      );
+      const newIndex = rows.findIndex((_, index) => index === Number(over.id));
       const newOrder = arrayMove(rows, oldIndex, newIndex);
       setRows(newOrder);
       onRowsReordered(newOrder);

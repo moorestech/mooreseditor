@@ -10,10 +10,10 @@ import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
+import DataSidebar from "./components/DataSidebar";
 import DataTableView from "./components/DataTableView";
 import EditView from "./components/EditView";
 import Sidebar from "./components/Sidebar";
-import DataSidebar from "./components/DataSidebar";
 
 const theme = createTheme({
   primaryColor: "orange",

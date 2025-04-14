@@ -75,7 +75,7 @@ function Sidebar({
               fontSize: "16px",
               lineHeight: "19px",
               cursor: "pointer",
-              marginBottom: "16px",
+              marginBottom: "20px",
               background:
                 selectedFile === menuItem
                   ? "linear-gradient(90deg, #EE722F -2.7%, #FFAD49 100%)"

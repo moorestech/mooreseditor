@@ -69,6 +69,7 @@ function SortableRow({
     cursor: "pointer",
     boxShadow:
       selectedData === row ? "0px 0px 4px rgba(0, 0, 0, 0.25)" : "none",
+    whiteSpace: "nowrap",
   };
 
   return (
@@ -90,8 +91,8 @@ function SortableRow({
         }}
         {...listeners}
       >
-        <ActionIcon>
-          <IconGripVertical size={16} />
+        <ActionIcon color="#FFFFF">
+          <IconGripVertical size={16} color="black" />
         </ActionIcon>
       </div>
       {allKeys.map((key, colIndex) => (
@@ -165,6 +166,8 @@ function DataTableView({
           fontWeight: 700,
           fontSize: "16px",
           color: "#2D2D2D",
+          borderTop: "1px solid #EDEDED",
+          borderBottom: "1px solid #EDEDED",
         }}
       >
         {allKeys.map((key, index) => (

@@ -13,12 +13,14 @@ function EditView({ editData, setEditData }: EditViewProps) {
   return (
     <div
       style={{
-        paddingTop: "53px",
+        marginTop: "16px",
+        borderTop: "1px solid #E2E2E2",
+        borderLeft: "1px solid #E2E2E2",
+        paddingTop: "52px",
+        paddingLeft: "27px",
         minWidth: "400px",
         height: "100vh",
         background: "#FFFFFF",
-        borderRadius: "8px",
-        padding: "16px",
         overflowY: "auto",
       }}
     >

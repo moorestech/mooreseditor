@@ -115,7 +115,6 @@ function App() {
             openProjectDir={openProjectDir}
           />
         </div>
-
         <div style={{ flexShrink: 0, width: "200px" }}>
           {columns.map((column, columnIndex) => (
             <DataSidebar
@@ -129,7 +128,6 @@ function App() {
             />
           ))}
         </div>
-
         <ScrollArea style={{ flex: 1 }}>
           <DataTableView
             fileData={fileData}
@@ -141,7 +139,6 @@ function App() {
             }}
           />
         </ScrollArea>
-
         {editData && (
           <div style={{ flexShrink: 0, width: "300px" }}>
             <EditView editData={editData} setEditData={setEditData} />

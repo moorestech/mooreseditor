@@ -1,4 +1,4 @@
-import { Button, Text } from "@mantine/core";
+import { Button, Divider, Text } from "@mantine/core";
 
 import { MoorestechIcon } from "./MoorestechIcon";
 
@@ -8,7 +8,6 @@ interface SidebarProps {
   loadFileData: (menuItem: string) => void;
   openProjectDir: () => void;
 }
-
 function Sidebar({
   menuToFileMap,
   selectedFile,
@@ -35,7 +34,7 @@ function Sidebar({
           display: "flex",
           alignItems: "center",
           position: "absolute",
-          top: "31px",
+          top: "15px",
         }}
       >
         <MoorestechIcon />
@@ -53,11 +52,10 @@ function Sidebar({
       <Button
         style={{
           display: "block",
-          margin: "0 auto",
+          margin: "54px auto 0",
           width: "154px",
           height: "32px",
           bottom: "16px",
-          marginTop: "71px",
           background: "#EE722F",
           borderRadius: "8px",
           color: "#FFFFFF",
@@ -66,7 +64,15 @@ function Sidebar({
       >
         File Open
       </Button>
-      <div style={{ marginTop: "28px" }}>
+      <Divider />
+      <div
+        style={{
+          marginTop: "28px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
         {Object.keys(menuToFileMap).map((menuItem, index) => (
           <Text
             key={index}
@@ -75,7 +81,6 @@ function Sidebar({
               fontSize: "16px",
               lineHeight: "19px",
               cursor: "pointer",
-              marginBottom: "20px",
               background:
                 selectedFile === menuItem
                   ? "linear-gradient(90deg, #EE722F -2.7%, #FFAD49 100%)"

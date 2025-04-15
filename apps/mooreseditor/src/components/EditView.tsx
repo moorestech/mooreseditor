@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Text, TextInput } from "@mantine/core";
 
 interface EditViewProps {
   editData: any;
@@ -13,6 +13,7 @@ function EditView({ editData, setEditData }: EditViewProps) {
   return (
     <div
       style={{
+        paddingTop: "53px",
         minWidth: "400px",
         height: "100vh",
         background: "#FFFFFF",
@@ -22,17 +23,28 @@ function EditView({ editData, setEditData }: EditViewProps) {
       }}
     >
       {Object.entries(editData).map(([key, value]) => (
-        <div key={key} style={{ marginBottom: "16px" }}>
-          <Text style={{ fontWeight: 700, marginBottom: "8px" }}>{key}</Text>
-          <input
-            type="text"
+        <div
+          key={key}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "16px",
+            gap: "16px",
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: 700,
+              minWidth: "120px",
+            }}
+          >
+            {key}
+          </Text>
+          <TextInput
             value={String(value)}
             onChange={(e) => handleEditFieldChange(key, e.target.value)}
             style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #EDEDED",
+              flex: 1,
             }}
           />
         </div>

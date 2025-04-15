@@ -83,7 +83,7 @@ function SortableRow({
       {...listeners}
       onDoubleClick={(e) => {
         e.stopPropagation();
-        setEditData(row);
+        setSelectedData(row);
       }}
     >
       <div
@@ -139,7 +139,7 @@ function SortableRow({
           color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
           marginRight: "8px",
         }}
-        onClick={(e) => {
+        onDoubleClick={(e) => {
           e.stopPropagation();
           setEditData(row);
         }}

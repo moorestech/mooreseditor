@@ -101,9 +101,9 @@ function App() {
         style={{
           display: "flex",
           flexDirection: "row",
-          alignItems: "flex-start", 
-          gap: "16px", 
-          padding: "16px",
+          alignItems: "flex-start",
+          gap: "3px",
+          paddingTop: "16px",
           overflowX: "auto",
         }}
       >
@@ -136,6 +136,9 @@ function App() {
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setEditData={setEditData}
+            onRowsReordered={function (): void {
+              throw new Error("Function not implemented.");
+            }}
           />
         </ScrollArea>
 

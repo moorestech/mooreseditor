@@ -40,7 +40,6 @@ interface SortableRowProps {
   setSelectedData: (data: Record<string, any>) => void;
   setEditData: (data: Record<string, any>) => void;
 }
-
 function SortableRow({
   row,
   rowIndex,
@@ -49,9 +48,10 @@ function SortableRow({
   setSelectedData,
   setEditData,
 }: SortableRowProps) {
-  const { attributes, setNodeRef, transform, transition } = useSortable({
-    id: rowIndex,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: rowIndex,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -80,8 +80,9 @@ function SortableRow({
       ref={setNodeRef}
       style={style as React.CSSProperties}
       {...attributes}
-      onClick={() => {
-        setSelectedData(row);
+      {...listeners}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
         setEditData(row);
       }}
     >
@@ -96,6 +97,7 @@ function SortableRow({
           style={{
             background: selectedData === row ? "none" : "#FFFFFF",
             color: "#000000",
+            cursor: "grab",
           }}
         >
           <IconGripVertical size={16} />
@@ -137,6 +139,10 @@ function SortableRow({
           color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
           marginRight: "8px",
         }}
+        onClick={(e) => {
+          e.stopPropagation();
+          setEditData(row);
+        }}
       >
         <IconChevronRight size={16} />
       </ActionIcon>
@@ -174,10 +180,8 @@ function DataTableView({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = rows.findIndex(
-        (_, index) => index === Number(active.id)
-      );
-      const newIndex = rows.findIndex((_, index) => index === Number(over.id));
+      const oldIndex = rows.findIndex((_, index) => index === active.id);
+      const newIndex = rows.findIndex((_, index) => index === over.id);
       const newOrder = arrayMove(rows, oldIndex, newIndex);
       setRows(newOrder);
       onRowsReordered(newOrder);

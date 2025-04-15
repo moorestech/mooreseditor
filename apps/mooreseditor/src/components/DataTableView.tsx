@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Checkbox, ActionIcon, Text } from "@mantine/core";
-import { IconGripVertical } from "@tabler/icons-react";
+import { IconChevronRight, IconGripVertical } from "@tabler/icons-react";
 
 import type { DragEndEvent } from "@dnd-kit/core";
 
@@ -118,6 +118,15 @@ function SortableRow({
             : row[key] || "-"}
         </Text>
       ))}
+      <ActionIcon
+        style={{
+          backgroundColor: "transparent",
+          color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+          marginRight: "8px",
+        }}
+      >
+        <IconChevronRight size={16} />
+      </ActionIcon>
     </div>
   );
 }

@@ -100,7 +100,15 @@ function SortableRow({
             cursor: "grab",
           }}
         >
-          <IconGripVertical size={16} />
+          <IconGripVertical size={20} />
+        </ActionIcon>
+        <ActionIcon
+          style={{
+            margin: "8px",
+            backgroundColor: "transparent",
+          }}
+        >
+          <Checkbox />
         </ActionIcon>
         <ActionIcon
           style={{
@@ -109,13 +117,8 @@ function SortableRow({
             marginRight: "8px",
           }}
         >
-          <IconStack2 size={16} />
+          <IconStack2 size={20} />
         </ActionIcon>
-        <Checkbox
-          style={{
-            marginLeft: "8px",
-          }}
-        />
       </div>
       {allKeys.map((key, colIndex) => (
         <Text
@@ -144,7 +147,7 @@ function SortableRow({
           setEditData(row);
         }}
       >
-        <IconChevronRight size={16} />
+        <IconChevronRight size={20} />
       </ActionIcon>
     </div>
   );

@@ -59,7 +59,7 @@ function DataSidebar({
               marginRight: "8px",
             }}
           >
-            <IconStack2 size={16} />
+            <IconStack2 size={20} />
           </ActionIcon>
           <Text
             style={{
@@ -78,7 +78,7 @@ function DataSidebar({
               color: selectedData === item ? "#FFFFFF" : "#2D2D2D",
             }}
           >
-            <IconChevronRight size={16} />
+            <IconChevronRight size={20} />
           </ActionIcon>
         </div>
       ))}

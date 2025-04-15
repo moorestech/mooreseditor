@@ -1,4 +1,5 @@
-import { Text } from "@mantine/core";
+import { Text, ActionIcon } from "@mantine/core";
+import { IconChevronRight, IconStack2 } from "@tabler/icons-react";
 
 interface DataSidebarProps {
   fileData: any[];
@@ -41,8 +42,9 @@ function DataSidebar({
             borderRadius: "8px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
             cursor: "pointer",
+            padding: "0 8px",
             boxShadow:
               selectedData === item
                 ? "0px 0px 4px rgba(0, 0, 0, 0.25)"
@@ -50,16 +52,34 @@ function DataSidebar({
           }}
           onClick={() => setSelectedData(item)}
         >
+          <ActionIcon
+            style={{
+              backgroundColor: "transparent",
+              color: selectedData === item ? "#FFFFFF" : "#2D2D2D",
+              marginRight: "8px",
+            }}
+          >
+            <IconStack2 size={16} />
+          </ActionIcon>
           <Text
             style={{
               fontWeight: 700,
               fontSize: "16px",
               lineHeight: "19px",
               color: selectedData === item ? "#FFFFFF" : "#2D2D2D",
+              flex: 1,
             }}
           >
             {item.name || `Item ${index + 1}`}
           </Text>
+          <ActionIcon
+            style={{
+              backgroundColor: "transparent",
+              color: selectedData === item ? "#FFFFFF" : "#2D2D2D",
+            }}
+          >
+            <IconChevronRight size={16} />
+          </ActionIcon>
         </div>
       ))}
     </div>

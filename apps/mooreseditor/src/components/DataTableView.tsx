@@ -16,7 +16,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Checkbox, ActionIcon, Text } from "@mantine/core";
-import { IconChevronRight, IconGripVertical } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconGripVertical,
+  IconStack2,
+} from "@tabler/icons-react";
 
 import type { DragEndEvent } from "@dnd-kit/core";
 
@@ -95,6 +99,15 @@ function SortableRow({
           }}
         >
           <IconGripVertical size={16} />
+        </ActionIcon>
+        <ActionIcon
+          style={{
+            backgroundColor: "transparent",
+            color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+            marginRight: "8px",
+          }}
+        >
+          <IconStack2 size={16} />
         </ActionIcon>
         <Checkbox
           style={{
@@ -196,6 +209,7 @@ function DataTableView({
           <Text
             key={index}
             style={{
+              fontWeight: 700,
               padding: "0 8px",
               flex: 1,
               textAlign: "left",

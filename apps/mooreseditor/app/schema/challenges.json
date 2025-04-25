@@ -23,7 +23,7 @@
             "default": false,
             "$memo": "チャレンジが初期状態でアンロックされているかどうか"
           },
-
+          
           "unlockAllPreviousChallengeComplete": {
             "type": "boolean",
             "default": true,
@@ -267,7 +267,7 @@
             }
           },
 
-          "startActions": {
+          "startedActions": {
             "$ref" : "challengeAction"
           },
           "clearedActions": {

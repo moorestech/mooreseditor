@@ -12,6 +12,7 @@ import blockConnectInfo from './schema/ref/blockConnectInfo.json';
 import mineSettings from './schema/ref/mineSettings.json';
 import mapObjectMineSettings from './schema/ref/mapObjectMineSettings.json';
 import fluidInventoryConnects from './schema/ref/fluidInventoryConnects.json';
+import challengeAction from './schema/ref/challengeAction.json';
 import { RefResolver } from 'json-schema-ref-resolver'
 import Ajv from 'ajv';
 
@@ -31,6 +32,7 @@ refResolver.addSchema(blockConnectInfo)
 refResolver.addSchema(mineSettings)
 refResolver.addSchema(mapObjectMineSettings)
 refResolver.addSchema(fluidInventoryConnects)
+refResolver.addSchema(challengeAction)
 
 const ajv = new Ajv({ allErrors: true })
 ajv.addSchema(refResolver.getDerefSchema('blocks'), '/blocks')

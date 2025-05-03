@@ -22,15 +22,15 @@ const theme = createTheme({
 
 function App() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
+  const [schemaDir, setSchemaDir] = useState<string | null>(null); // スキーマディレクトリを記憶
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
     {}
   );
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [fileData, setFileData] = useState<any[]>([]);
+  const [columns, setColumns] = useState<Column[]>([]);
   const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
-  const [columns, setColumns] = useState<Column[]>([]);
 
   async function openProjectDir() {
     setLoading(true);
@@ -55,7 +55,6 @@ function App() {
         console.error(
           "Invalid or missing schemaPath in mooreseditor.config.yml"
         );
-        console.log("Parsed configData:", configData);
         setLoading(false);
         return;
       }
@@ -65,12 +64,17 @@ function App() {
         configData.schemaPath
       );
 
+      setSchemaDir(resolvedSchemaPath); // スキーマディレクトリを記憶
+
       const files = await readDir(resolvedSchemaPath, { recursive: false });
       const yamlFiles: Record<string, string> = {};
 
       for (const file of files) {
         if (file.name && file.name.endsWith(".yml")) {
-          yamlFiles[file.name.replace(".yml", "")] = file.path;
+          yamlFiles[file.name.replace(".yml", "")] = await path.join(
+            resolvedSchemaPath,
+            file.name
+          );
         }
       }
 
@@ -80,6 +84,7 @@ function App() {
         return;
       }
 
+      console.log("Menu to File Map:", yamlFiles); // デバッグ用
       setMenuToFileMap(yamlFiles);
 
       setColumns([
@@ -96,13 +101,16 @@ function App() {
   }
 
   async function loadFileData(menuItem: string, columnIndex: number = 0) {
-    if (!menuToFileMap[menuItem]) {
-      console.error(`No file mapping found for menu item: ${menuItem}`);
+    console.log("Selected menu item:", menuItem);
+
+    if (!schemaDir) {
+      console.error("Schema directory is not set.");
       return;
     }
 
     try {
-      const yamlFilePath = menuToFileMap[menuItem];
+      // スキーマディレクトリから対応する YAML ファイルを読み込む
+      const yamlFilePath = await path.join(schemaDir, `${menuItem}.yml`);
       const yamlContents = await readTextFile(yamlFilePath);
 
       const yamlData = parseYaml(yamlContents);
@@ -112,26 +120,25 @@ function App() {
         return;
       }
 
-      if (yamlData.id) {
-        const jsonFilePath = await path.join(
-          projectDir!,
-          "master",
-          `${yamlData.id}.json`
-        );
-        const jsonContents = await readTextFile(jsonFilePath);
-        const jsonData = JSON.parse(jsonContents);
+      // JSON データを ./master ディレクトリから同じファイル名で参照
+      const jsonFilePath = await path.join(
+        projectDir!,
+        "master",
+        `${menuItem}.json`
+      );
+      const jsonContents = await readTextFile(jsonFilePath);
+      const jsonData = JSON.parse(jsonContents);
 
-        if (!jsonData || !Array.isArray(jsonData.data)) {
-          console.error(`Invalid JSON format in file: ${yamlData.id}.json`);
-          return;
-        }
-
-        const newColumns = [
-          ...columns.slice(0, columnIndex + 1),
-          { title: menuItem, data: jsonData.data },
-        ];
-        setColumns(newColumns);
+      if (!jsonData || !Array.isArray(jsonData.data)) {
+        console.error(`Invalid JSON format in file: ${menuItem}.json`);
+        return;
       }
+
+      const newColumns = [
+        ...columns.slice(0, columnIndex + 1),
+        { title: menuItem, data: jsonData.data },
+      ];
+      setColumns(newColumns);
 
       setSelectedFile(menuItem);
       setSelectedData(null);
@@ -141,12 +148,23 @@ function App() {
     }
   }
 
+  function handleDataSelection(data: any, columnIndex: number) {
+    if (data && data.children) {
+      const newColumns = [
+        ...columns.slice(0, columnIndex + 1),
+        { title: data.name, data: data.children },
+      ];
+      setColumns(newColumns);
+    } else {
+      setSelectedData(data);
+    }
+  }
+
   function parseYaml(yamlText: string): any {
     try {
       return YAML.parse(yamlText);
     } catch (error) {
       console.error("Error parsing YAML:", error);
-      console.log("YAML Text:", yamlText);
       return null;
     }
   }
@@ -180,14 +198,14 @@ function App() {
               selectedData={selectedData}
               setSelectedData={(data) => {
                 setSelectedData(data);
-                loadFileData(data.name as string, columnIndex + 1);
+                handleDataSelection(data, columnIndex);
               }}
             />
           ))}
         </div>
         <ScrollArea style={{ flex: 1 }}>
           <DataTableView
-            fileData={fileData}
+            fileData={selectedData?.data || []}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setEditData={setEditData}

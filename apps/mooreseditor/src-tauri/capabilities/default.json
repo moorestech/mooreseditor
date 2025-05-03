@@ -6,6 +6,7 @@
   "permissions": [
     {
       "identifier": "fs:scope",
+      "allow": ["$DOCUMENT/**/*", "$HOME/**/*"],
       "deny": []
     },
     "core:default",

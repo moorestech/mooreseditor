@@ -1,4 +1,4 @@
-import { Button, Group, NumberInput, Stack, ActionIcon } from "@mantine/core"
+import { Button, Group, NumberInput, Stack, ActionIcon, Text } from "@mantine/core"
 import { ComponentProps, useState, useRef } from "react"
 import { BsPlusLg } from "react-icons/bs"
 import { BsTrash } from "react-icons/bs"
@@ -105,6 +105,10 @@ export const ArrayInput = ({
             backgroundColor: draggedIndex === i ? '#f1f3f5' : 'transparent',
           }}
         >
+          {/* 要素番号を表示 */}
+          <Text size="sm" c="dimmed" w={20} ta="right" style={{ marginRight: '4px', alignSelf: 'center' }}>
+            {i + 1}.
+          </Text>
           <ActionIcon
             variant="subtle"
             color="gray"

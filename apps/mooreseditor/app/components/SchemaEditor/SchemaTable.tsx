@@ -68,9 +68,11 @@ export function SchemaTable({
     <Table>
       <Table.Thead>
         <Table.Th></Table.Th>
+        <Table.Th></Table.Th>
         {Object.keys(primitive).map(primitiveField => (
-          <Table.Th>{primitiveField}</Table.Th>
+          <Table.Th key={primitiveField}>{primitiveField}</Table.Th>
         ))}
+        <Table.Th></Table.Th> {/* アクションボタン用の列 */}
       </Table.Thead>
       <Table.Tbody>
         {value.map((row, i: number) => {
@@ -201,18 +203,21 @@ function SchemaRow({
           border: isDropTarget ? '1px dashed #228be6' : '1px solid transparent',
         }}
       >
+        <Table.Td>{isNew ? '' : index}</Table.Td>
         <Table.Td>
           <Group gap="xs">
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size='xs'
-              style={{ cursor: 'grab' }}
-              title="ドラッグして並べ替え"
-              className="drag-handle"
-            >
-              <BsGripVertical />
-            </ActionIcon>
+            {!isNew && (
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size='xs'
+                style={{ cursor: 'grab' }}
+                title="ドラッグして並べ替え"
+                className="drag-handle"
+              >
+                <BsGripVertical />
+              </ActionIcon>
+            )}
             <ActionIcon size='xs' onClick={toggle}>
               {isOpen ? (
                 <BsChevronDown />
@@ -285,6 +290,7 @@ function SchemaRow({
       </Table.Tr>
       <Table.Tr p={0}>
         <Table.Td p={0}></Table.Td>
+        {/* index列と展開ボタン列を除いたprimitiveFieldsの数 + アクションボタン列 = primitiveFields.length + 1 */}
         <Table.Td p={0} colSpan={Object.keys(primitiveFields).length + 1}>
           <Collapse in={isOpen}>
             <Stack p={'xs'}>

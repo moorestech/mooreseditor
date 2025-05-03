@@ -22,7 +22,7 @@ const theme = createTheme({
 
 function App() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
-  const [schemaDir, setSchemaDir] = useState<string | null>(null); // スキーマディレクトリを記憶
+  const [schemaDir, setSchemaDir] = useState<string | null>(null);
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
     {}
   );
@@ -64,7 +64,7 @@ function App() {
         configData.schemaPath
       );
 
-      setSchemaDir(resolvedSchemaPath); // スキーマディレクトリを記憶
+      setSchemaDir(resolvedSchemaPath);
 
       const files = await readDir(resolvedSchemaPath, { recursive: false });
       const yamlFiles: Record<string, string> = {};
@@ -84,7 +84,7 @@ function App() {
         return;
       }
 
-      console.log("Menu to File Map:", yamlFiles); // デバッグ用
+      console.log("Menu to File Map:", yamlFiles);
       setMenuToFileMap(yamlFiles);
 
       setColumns([
@@ -109,7 +109,7 @@ function App() {
     }
 
     try {
-      // スキーマディレクトリから対応する YAML ファイルを読み込む
+      // NOTE: スキーマディレクトリから対応する YAML ファイルを読み込む
       const yamlFilePath = await path.join(schemaDir, `${menuItem}.yml`);
       const yamlContents = await readTextFile(yamlFilePath);
 
@@ -120,7 +120,7 @@ function App() {
         return;
       }
 
-      // JSON データを ./master ディレクトリから同じファイル名で参照
+      // NOTE: JSON データを ./master ディレクトリから同じファイル名で参照
       const jsonFilePath = await path.join(
         projectDir!,
         "master",
@@ -141,6 +141,7 @@ function App() {
       setColumns(newColumns);
 
       setSelectedFile(menuItem);
+      // NOTE: データの初期化
       setSelectedData(null);
       setEditData(null);
     } catch (error) {
@@ -149,15 +150,8 @@ function App() {
   }
 
   function handleDataSelection(data: any, columnIndex: number) {
-    if (data && data.children) {
-      const newColumns = [
-        ...columns.slice(0, columnIndex + 1),
-        { title: data.name, data: data.children },
-      ];
-      setColumns(newColumns);
-    } else {
-      setSelectedData(data);
-    }
+    console.log("Selected data:", data);
+    setSelectedData(data);
   }
 
   function parseYaml(yamlText: string): any {
@@ -197,7 +191,6 @@ function App() {
               fileData={column.data}
               selectedData={selectedData}
               setSelectedData={(data) => {
-                setSelectedData(data);
                 handleDataSelection(data, columnIndex);
               }}
             />
@@ -205,12 +198,12 @@ function App() {
         </div>
         <ScrollArea style={{ flex: 1 }}>
           <DataTableView
-            fileData={selectedData?.data || []}
+            fileData={selectedData ? [selectedData] : []}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setEditData={setEditData}
-            onRowsReordered={function (): void {
-              throw new Error("Function not implemented.");
+            onRowsReordered={(newOrder) => {
+              console.log("Rows reordered:", newOrder);
             }}
           />
         </ScrollArea>

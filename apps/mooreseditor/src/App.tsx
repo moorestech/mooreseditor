@@ -8,7 +8,8 @@ import {
 } from "@mantine/core";
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
+import YAML from "yaml";
 
 import DataSidebar from "./components/DataSidebar";
 import DataTableView from "./components/DataTableView";
@@ -21,6 +22,9 @@ const theme = createTheme({
 
 function App() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
+  const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
+    {}
+  );
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileData, setFileData] = useState<any[]>([]);
   const [selectedData, setSelectedData] = useState<any | null>(null);
@@ -28,23 +32,62 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState<Column[]>([]);
 
-  const menuToFileMap: Record<string, string> = {
-    Item: "items.json",
-    Block: "blocks.json",
-    MapObjects: "mapObjects.json",
-    MachineRecipes: "machineRecipes.json",
-    Challenges: "challenges.json",
-  };
-
   async function openProjectDir() {
     setLoading(true);
     try {
       const openedDir = await open({ directory: true });
       if (!openedDir) {
+        console.error("No directory selected.");
         setLoading(false);
         return;
       }
+
       setProjectDir(openedDir as string);
+
+      const configPath = await path.join(
+        openedDir as string,
+        "mooreseditor.config.yml"
+      );
+      const configContents = await readTextFile(configPath);
+
+      const configData = parseYaml(configContents);
+      if (!configData || !configData.schemaPath) {
+        console.error(
+          "Invalid or missing schemaPath in mooreseditor.config.yml"
+        );
+        console.log("Parsed configData:", configData);
+        setLoading(false);
+        return;
+      }
+
+      const resolvedSchemaPath = await path.resolve(
+        openedDir as string,
+        configData.schemaPath
+      );
+
+      const files = await readDir(resolvedSchemaPath, { recursive: false });
+      const yamlFiles: Record<string, string> = {};
+
+      for (const file of files) {
+        if (file.name && file.name.endsWith(".yml")) {
+          yamlFiles[file.name.replace(".yml", "")] = file.path;
+        }
+      }
+
+      if (Object.keys(yamlFiles).length === 0) {
+        console.error("No YAML files found in the schemaPath.");
+        setLoading(false);
+        return;
+      }
+
+      setMenuToFileMap(yamlFiles);
+
+      setColumns([
+        {
+          title: "Menu",
+          data: Object.keys(yamlFiles).map((name) => ({ name })),
+        },
+      ]);
     } catch (error) {
       console.error("Error opening project directory:", error);
     } finally {
@@ -53,44 +96,58 @@ function App() {
   }
 
   async function loadFileData(menuItem: string, columnIndex: number = 0) {
-    if (!projectDir) {
-      console.error("Project directory is not set.");
-      return;
-    }
-
-    const fileName = menuToFileMap[menuItem];
-    if (!fileName) {
+    if (!menuToFileMap[menuItem]) {
       console.error(`No file mapping found for menu item: ${menuItem}`);
       return;
     }
 
     try {
-      const filePath = await path.join(projectDir, "master", fileName);
-      const contents = await readTextFile(filePath);
-      const jsonData = JSON.parse(contents);
+      const yamlFilePath = menuToFileMap[menuItem];
+      const yamlContents = await readTextFile(yamlFilePath);
 
-      if (!jsonData || !Array.isArray(jsonData.data)) {
-        console.error(`Invalid data format in file: ${fileName}`);
-        console.log("Loaded data:", jsonData);
+      const yamlData = parseYaml(yamlContents);
+
+      if (!yamlData || typeof yamlData !== "object") {
+        console.error(`Invalid YAML format in file: ${menuItem}`);
         return;
       }
 
-      if (columnIndex === 0) {
-        setColumns([{ title: menuItem, data: jsonData.data }]);
-      } else {
-        const newColumns = columns.slice(0, columnIndex + 1);
-        newColumns.push({ title: menuItem, data: jsonData.data });
+      if (yamlData.id) {
+        const jsonFilePath = await path.join(
+          projectDir!,
+          "master",
+          `${yamlData.id}.json`
+        );
+        const jsonContents = await readTextFile(jsonFilePath);
+        const jsonData = JSON.parse(jsonContents);
+
+        if (!jsonData || !Array.isArray(jsonData.data)) {
+          console.error(`Invalid JSON format in file: ${yamlData.id}.json`);
+          return;
+        }
+
+        const newColumns = [
+          ...columns.slice(0, columnIndex + 1),
+          { title: menuItem, data: jsonData.data },
+        ];
         setColumns(newColumns);
       }
 
       setSelectedFile(menuItem);
-      setFileData(jsonData.data);
       setSelectedData(null);
       setEditData(null);
-
-      console.log(`Successfully loaded data for ${menuItem}:`, jsonData.data);
     } catch (error) {
       console.error(`Error loading file data for ${menuItem}:`, error);
+    }
+  }
+
+  function parseYaml(yamlText: string): any {
+    try {
+      return YAML.parse(yamlText);
+    } catch (error) {
+      console.error("Error parsing YAML:", error);
+      console.log("YAML Text:", yamlText);
+      return null;
     }
   }
 

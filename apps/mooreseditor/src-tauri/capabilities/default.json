@@ -6,10 +6,7 @@
   "permissions": [
     {
       "identifier": "fs:scope",
-      "allow": [
-        { "path": "$DOCUMENT/mooreseditor/SampleProject/master" },
-        { "path": "$DOCUMENT/mooreseditor/SampleProject/master/**" }
-      ]
+      "deny": []
     },
     "core:default",
     "opener:default",

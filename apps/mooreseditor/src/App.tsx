@@ -26,9 +26,9 @@ function App() {
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
     {}
   );
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [columns, setColumns] = useState<Column[]>([]);
   const [selectedData, setSelectedData] = useState<any | null>(null);
+  const [allData, setAllData] = useState<any[]>([]); // DataTableView に表示するすべてのデータ
   const [editData, setEditData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -109,18 +109,6 @@ function App() {
     }
 
     try {
-      // NOTE: スキーマディレクトリから対応する YAML ファイルを読み込む
-      const yamlFilePath = await path.join(schemaDir, `${menuItem}.yml`);
-      const yamlContents = await readTextFile(yamlFilePath);
-
-      const yamlData = parseYaml(yamlContents);
-
-      if (!yamlData || typeof yamlData !== "object") {
-        console.error(`Invalid YAML format in file: ${menuItem}`);
-        return;
-      }
-
-      // NOTE: JSON データを ./master ディレクトリから同じファイル名で参照
       const jsonFilePath = await path.join(
         projectDir!,
         "master",
@@ -140,10 +128,7 @@ function App() {
       ];
       setColumns(newColumns);
 
-      setSelectedFile(menuItem);
-      // NOTE: データの初期化
-      setSelectedData(null);
-      setEditData(null);
+      setAllData(jsonData.data); // DataTableView にすべてのデータを渡す
     } catch (error) {
       console.error(`Error loading file data for ${menuItem}:`, error);
     }
@@ -179,7 +164,7 @@ function App() {
         <div style={{ flexShrink: 0, width: "200px" }}>
           <Sidebar
             menuToFileMap={menuToFileMap}
-            selectedFile={selectedFile}
+            selectedFile={null}
             loadFileData={loadFileData}
             openProjectDir={openProjectDir}
           />
@@ -198,7 +183,7 @@ function App() {
         </div>
         <ScrollArea style={{ flex: 1 }}>
           <DataTableView
-            fileData={selectedData ? [selectedData] : []}
+            fileData={allData} // DataSidebar に表示されているすべてのデータを渡す
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setEditData={setEditData}

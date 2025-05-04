@@ -30,6 +30,7 @@ interface DataTableViewProps {
   setSelectedData: (data: Record<string, any>) => void;
   setEditData: (data: Record<string, any>) => void;
   onRowsReordered: (newOrder: Array<Record<string, any>>) => void;
+  onRowExpand?: (nestedData: any) => void;
 }
 
 interface SortableRowProps {
@@ -39,7 +40,9 @@ interface SortableRowProps {
   selectedData: Record<string, any> | null;
   setSelectedData: (data: Record<string, any>) => void;
   setEditData: (data: Record<string, any>) => void;
+  onRowExpand?: (nestedData: any) => void;
 }
+
 function SortableRow({
   row,
   rowIndex,
@@ -47,6 +50,7 @@ function SortableRow({
   selectedData,
   setSelectedData,
   setEditData,
+  onRowExpand,
 }: SortableRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -131,9 +135,30 @@ function SortableRow({
             textAlign: "left",
           }}
         >
-          {typeof row[key] === "object"
-            ? JSON.stringify(row[key])
-            : row[key] || "-"}
+          {typeof row[key] === "object" && row[key] !== null ? (
+            <>
+              {key}
+              {Array.isArray(row[key]) || Object.keys(row[key]).length > 0 ? (
+                <ActionIcon
+                  style={{
+                    marginLeft: "8px",
+                    backgroundColor: "transparent",
+                    color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+                  }}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    console.log("Nested data:", row[key]);
+
+                    onRowExpand?.(row[key]);
+                  }}
+                >
+                  <IconChevronRight size={16} />
+                </ActionIcon>
+              ) : null}
+            </>
+          ) : (
+            row[key] || "-"
+          )}
         </Text>
       ))}
       <ActionIcon
@@ -159,6 +184,7 @@ function DataTableView({
   setSelectedData,
   setEditData,
   onRowsReordered,
+  onRowExpand,
 }: DataTableViewProps) {
   const [rows, setRows] = useState<Array<Record<string, any>>>([]);
   const [allKeys, setAllKeys] = useState<string[]>([]);
@@ -241,6 +267,7 @@ function DataTableView({
               selectedData={selectedData}
               setSelectedData={setSelectedData}
               setEditData={setEditData}
+              onRowExpand={onRowExpand}
             />
           ))}
         </SortableContext>

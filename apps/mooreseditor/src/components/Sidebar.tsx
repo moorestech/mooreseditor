@@ -5,7 +5,7 @@ import { MoorestechIcon } from "./MoorestechIcon";
 interface SidebarProps {
   menuToFileMap: Record<string, string>;
   selectedFile: string | null;
-  loadFileData: (menuItem: string) => void;
+  loadFileData: (menuItem: string) => Promise<void>;
   openProjectDir: () => void;
 }
 function Sidebar({

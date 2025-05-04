@@ -27,8 +27,10 @@ function App() {
     {}
   );
   const [columns, setColumns] = useState<Column[]>([]);
+  const [nestedView, setNestedView] = useState<Record<string, any> | null>(
+    null
+  );
   const [selectedData, setSelectedData] = useState<any | null>(null);
-  const [allData, setAllData] = useState<any[]>([]); // DataTableView に表示するすべてのデータ
   const [editData, setEditData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -127,16 +129,16 @@ function App() {
         { title: menuItem, data: jsonData.data },
       ];
       setColumns(newColumns);
-
-      setAllData(jsonData.data); // DataTableView にすべてのデータを渡す
     } catch (error) {
       console.error(`Error loading file data for ${menuItem}:`, error);
     }
   }
 
-  function handleDataSelection(data: any, columnIndex: number) {
-    console.log("Selected data:", data);
-    setSelectedData(data);
+  function handleRowExpand(nestedData: any) {
+    if (typeof nestedData === "object" && nestedData !== null) {
+      console.log("Expanding nested data:", nestedData);
+      setNestedView(nestedData); 
+    }
   }
 
   function parseYaml(yamlText: string): any {
@@ -175,23 +177,38 @@ function App() {
               key={columnIndex}
               fileData={column.data}
               selectedData={selectedData}
-              setSelectedData={(data) => {
-                handleDataSelection(data, columnIndex);
-              }}
+              setSelectedData={setSelectedData}
             />
           ))}
         </div>
         <ScrollArea style={{ flex: 1 }}>
           <DataTableView
-            fileData={allData} // DataSidebar に表示されているすべてのデータを渡す
+            fileData={
+              columns.length > 0 ? columns[columns.length - 1].data : []
+            }
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setEditData={setEditData}
             onRowsReordered={(newOrder) => {
               console.log("Rows reordered:", newOrder);
             }}
+            onRowExpand={handleRowExpand}
           />
         </ScrollArea>
+        {nestedView && (
+          <ScrollArea style={{ flex: 1 }}>
+            <DataTableView
+              fileData={Array.isArray(nestedView) ? nestedView : [nestedView]}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              setEditData={setEditData}
+              onRowsReordered={(newOrder) => {
+                console.log("Rows reordered:", newOrder);
+              }}
+              onRowExpand={handleRowExpand}
+            />
+          </ScrollArea>
+        )}
         {editData && (
           <div style={{ flexShrink: 0, width: "300px" }}>
             <EditView editData={editData} setEditData={setEditData} />

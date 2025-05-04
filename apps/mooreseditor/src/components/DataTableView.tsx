@@ -136,26 +136,7 @@ function SortableRow({
           }}
         >
           {typeof row[key] === "object" && row[key] !== null ? (
-            <>
-              {key}
-              {Array.isArray(row[key]) || Object.keys(row[key]).length > 0 ? (
-                <ActionIcon
-                  style={{
-                    marginLeft: "8px",
-                    backgroundColor: "transparent",
-                    color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
-                  }}
-                  onDoubleClick={(e) => {
-                    e.stopPropagation();
-                    console.log("Nested data:", row[key]);
-
-                    onRowExpand?.(row[key]);
-                  }}
-                >
-                  <IconChevronRight size={16} />
-                </ActionIcon>
-              ) : null}
-            </>
+            <>{key}</>
           ) : (
             row[key] || "-"
           )}

@@ -1,14 +1,38 @@
+import { useEffect } from "react";
+
 import { Text, TextInput } from "@mantine/core";
 
 interface EditViewProps {
   editData: any;
   setEditData: (data: any) => void;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  onSave: (data: any) => void;
 }
 
-function EditView({ editData, setEditData }: EditViewProps) {
+function EditView({
+  editData,
+  setEditData,
+  setIsEditing,
+  onSave,
+}: EditViewProps) {
   function handleEditFieldChange(key: string, value: any) {
     setEditData({ ...editData, [key]: value });
+    setIsEditing(true);
   }
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        onSave(editData);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [editData, onSave]);
 
   function renderField(key: string, value: any) {
     if (typeof value === "object" && value !== null) {

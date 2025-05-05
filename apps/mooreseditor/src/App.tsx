@@ -6,6 +6,8 @@ import {
   createTheme,
   ScrollArea,
 } from "@mantine/core";
+import { save } from "@tauri-apps/plugin-dialog";
+import { writeTextFile } from "@tauri-apps/plugin-fs";
 
 import DataSidebar from "./components/DataSidebar";
 import DataTableView from "./components/DataTableView";
@@ -27,6 +29,28 @@ function App() {
   );
   const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  async function handleSave(data: any) {
+    try {
+      const filePath = await save({
+        filters: [
+          { name: "JSON Files", extensions: ["json"] },
+          { name: "All Files", extensions: ["*"] },
+        ],
+      });
+
+      if (filePath) {
+        await writeTextFile(filePath, JSON.stringify(data, null, 2));
+        console.log("データが保存されました:", filePath);
+        setIsEditing(false);
+      } else {
+        console.log("保存がキャンセルされました");
+      }
+    } catch (error) {
+      console.error("保存中にエラーが発生しました:", error);
+    }
+  }
 
   function handleRowExpand(nestedData: any) {
     if (typeof nestedData === "object" && nestedData !== null) {
@@ -54,6 +78,7 @@ function App() {
             selectedFile={null}
             loadFileData={(menuItem) => loadJsonFile(menuItem, projectDir)}
             openProjectDir={openProjectDir}
+            isEditing={isEditing}
           />
         </div>
         <div style={{ flexShrink: 0, width: "200px" }}>
@@ -96,7 +121,12 @@ function App() {
         )}
         {editData && (
           <div style={{ flexShrink: 0, width: "300px" }}>
-            <EditView editData={editData} setEditData={setEditData} />
+            <EditView
+              editData={editData}
+              setEditData={setEditData}
+              setIsEditing={setIsEditing}
+              onSave={handleSave}
+            />
           </div>
         )}
       </AppShell>

@@ -7,12 +7,15 @@ interface SidebarProps {
   selectedFile: string | null;
   loadFileData: (menuItem: string) => Promise<void>;
   openProjectDir: () => void;
+  isEditing: boolean;
 }
+
 function Sidebar({
   menuToFileMap,
   selectedFile,
   loadFileData,
   openProjectDir,
+  isEditing,
 }: SidebarProps) {
   return (
     <div
@@ -44,9 +47,10 @@ function Sidebar({
             fontSize: "20px",
             lineHeight: "24px",
             color: "#2D2D2D",
+            marginLeft: "8px",
           }}
         >
-          moorestech
+          moorestech {isEditing && "*"}
         </Text>
       </div>
       <Button

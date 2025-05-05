@@ -179,7 +179,6 @@ function App() {
           </div>
         ))}
 
-        {/* EditView */}
         {editData && (
           <div
             style={{

@@ -22,18 +22,20 @@ function EditView({
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.ctrlKey && event.key === "s") {
+      window.alert("Key pressed:", event.key);
+
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         onSave(editData);
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [editData, onSave]);
-
   function renderField(key: string, value: any) {
     if (typeof value === "object" && value !== null) {
       return (

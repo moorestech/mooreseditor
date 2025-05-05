@@ -6,8 +6,13 @@
   "permissions": [
     {
       "identifier": "fs:scope",
+      "all": true,
       "allow": ["$DOCUMENT/**/*", "$HOME/**/*"],
       "deny": []
+    },
+    {
+      "identifier": "dialog:allow-save",
+      "all": true
     },
     "core:default",
     "opener:default",

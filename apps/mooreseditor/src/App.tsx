@@ -21,6 +21,9 @@ const theme = createTheme({
 });
 
 function App() {
+  const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
+    null
+  );
   const { projectDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, loadJsonFile } = useJson();
 
@@ -33,20 +36,27 @@ function App() {
 
   async function handleSave(data: any) {
     try {
-      const filePath = await save({
-        filters: [
-          { name: "JSON Files", extensions: ["json"] },
-          { name: "All Files", extensions: ["*"] },
-        ],
-      });
+      let filePath = lastSavedFilePath;
 
-      if (filePath) {
-        await writeTextFile(filePath, JSON.stringify(data, null, 2));
-        console.log("データが保存されました:", filePath);
-        setIsEditing(false);
-      } else {
-        console.log("保存がキャンセルされました");
+      if (!filePath) {
+        filePath = await save({
+          filters: [
+            { name: "JSON Files", extensions: ["json"] },
+            { name: "All Files", extensions: ["*"] },
+          ],
+        });
+
+        if (!filePath) {
+          console.log("保存がキャンセルされました");
+          return;
+        }
+
+        setLastSavedFilePath(filePath);
       }
+
+      await writeTextFile(filePath, JSON.stringify(data, null, 2));
+      console.log("データが保存されました:", filePath);
+      setIsEditing(false);
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);
     }

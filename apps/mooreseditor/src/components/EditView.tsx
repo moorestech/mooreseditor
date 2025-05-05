@@ -33,17 +33,15 @@ function EditView({ editData, setEditData, setIsEditing }: EditViewProps) {
         <div
           key={key}
           style={{
-            display: "inline-flex",
-            position: "relative",
-            height: "32px",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
             marginBottom: "16px",
             background: "linear-gradient(90deg, #EE722F -2.7%, #FFAD49 100%)",
             borderRadius: "8px",
-            alignItems: "center",
-            justifyContent: "space-between",
-            cursor: "pointer",
-            padding: "0 8px",
+            padding: "8px",
             boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
+            cursor: "pointer",
           }}
           onClick={() => handleExpandNestedObject(key, value, level)}
         >
@@ -83,6 +81,7 @@ function EditView({ editData, setEditData, setIsEditing }: EditViewProps) {
           key={key}
           style={{
             display: "flex",
+            flexDirection: "row",
             alignItems: "center",
             marginBottom: "16px",
             gap: "16px",

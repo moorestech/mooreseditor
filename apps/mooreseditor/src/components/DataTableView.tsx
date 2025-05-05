@@ -70,25 +70,25 @@ function DataTableView({
     }
   }
 
+  const columnWidth = 150;
+  const totalWidth = allKeys.length * columnWidth;
+
   return (
     <div
       style={{
-        padding: "16px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
         width: "100%",
-        height: "100vh",
-        background: "#FFFFFF",
-        overflowY: "auto",
-        marginTop: "16px",
-        borderTop: "1px solid #E2E2E2",
       }}
     >
       <div
         style={{
           display: "flex",
-          marginBottom: "16px",
           fontWeight: 700,
           fontSize: "16px",
           color: "#2D2D2D",
+          width: `${columnWidth}px`,
         }}
       >
         {allKeys.map((key, index) => (
@@ -97,8 +97,8 @@ function DataTableView({
             style={{
               fontWeight: 700,
               padding: "0 8px",
-              flex: 1,
-              textAlign: "left",
+              flexShrink: 0,
+              textAlign: "center",
             }}
           >
             {key}
@@ -112,19 +112,28 @@ function DataTableView({
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={rows.map((_, index) => index)}>
-          {rows.map((row, rowIndex) => (
-            <SortableRow
-              key={rowIndex}
-              row={row}
-              rowIndex={rowIndex}
-              allKeys={allKeys}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              setEditData={setEditData}
-              onRowExpand={onRowExpand}
-              handleDragEnd={handleDragEnd}
-            />
-          ))}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: `${totalWidth}px`,
+              overflowX: "auto",
+            }}
+          >
+            {rows.map((row, rowIndex) => (
+              <SortableRow
+                key={rowIndex}
+                row={row}
+                rowIndex={rowIndex}
+                allKeys={allKeys}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                setEditData={setEditData}
+                onRowExpand={onRowExpand}
+                handleDragEnd={handleDragEnd}
+              />
+            ))}
+          </div>
         </SortableContext>
       </DndContext>
     </div>

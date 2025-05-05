@@ -1,6 +1,12 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ActionIcon, Checkbox, Text } from "@mantine/core";
+import { IconChevronRight, IconStack2 } from "@tabler/icons-react";
+
+import DraggableActionIcon from "./DraggableActionIcon";
+
+import type { DragEndEvent } from "@dnd-kit/core";
+
 interface SortableRowProps {
   row: Record<string, any>;
   rowIndex: number;
@@ -10,11 +16,6 @@ interface SortableRowProps {
   setEditData: (data: any) => void;
   onRowExpand?: (row: any) => void;
 }
-import { IconChevronRight, IconStack2 } from "@tabler/icons-react";
-
-import DraggableActionIcon from "./DraggableActionIcon";
-
-import type { DragEndEvent } from "@dnd-kit/core";
 
 function SortableRow({
   row,
@@ -35,7 +36,7 @@ function SortableRow({
     transform: CSS.Transform.toString(transform),
     transition,
     position: "relative",
-    width: "100%",
+    width: "100%", // ボタンの幅を100%に設定
     height: "48px",
     marginBottom: "8px",
     background:
@@ -46,15 +47,18 @@ function SortableRow({
     borderRadius: "8px",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    cursor: "pointer",
-    boxShadow:
-      selectedData === row ? "0px 0px 4px rgba(0, 0, 0, 0.25)" : "none",
+    justifyContent: "flex-start",
     whiteSpace: "nowrap",
+    cursor: "pointer",
+    boxSizing: "border-box", // ボーダーを含めた幅を調整
+    boxShadow:
+      selectedData === row
+        ? "0px 0px 4px rgba(0, 0, 0, 0.25)"
+        : "0px 0px 4px none",
   };
 
   return (
-    <div
+    <button
       ref={setNodeRef}
       style={style as React.CSSProperties}
       {...attributes}
@@ -69,6 +73,7 @@ function SortableRow({
           padding: "0 8px",
           display: "flex",
           alignItems: "center",
+          width: "100%",
         }}
       >
         <DraggableActionIcon
@@ -93,38 +98,39 @@ function SortableRow({
         >
           <IconStack2 size={20} />
         </ActionIcon>
-      </div>
+        {allKeys.map((key, colIndex) => (
+          <Text
+            key={colIndex}
+            style={{
+              padding: "0 8px",
+              fontSize: "14px",
+              color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
+              flexShrink: 0,
+              textAlign: "center",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {typeof row[key] === "object" && row[key] !== null ? (
+              <>{key}</>
+            ) : (
+              row[key] || "-"
+            )}
+          </Text>
+        ))}
 
-      {allKeys.map((key, colIndex) => (
-        <Text
-          key={colIndex}
+        <ActionIcon
           style={{
-            padding: "0 8px",
-            fontSize: "14px",
+            backgroundColor: "transparent",
             color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
-            flex: 1,
-            textAlign: "left",
+            marginRight: "8px",
           }}
+          onClick={() => onRowExpand?.(row)}
         >
-          {typeof row[key] === "object" && row[key] !== null ? (
-            <>{key}</>
-          ) : (
-            row[key] || "-"
-          )}
-        </Text>
-      ))}
-
-      <ActionIcon
-        style={{
-          backgroundColor: "transparent",
-          color: selectedData === row ? "#FFFFFF" : "#2D2D2D",
-          marginRight: "8px",
-        }}
-        onClick={() => onRowExpand?.(row)}
-      >
-        <IconChevronRight size={20} />
-      </ActionIcon>
-    </div>
+          <IconChevronRight size={20} />
+        </ActionIcon>
+      </div>
+    </button>
   );
 }
+
 export default SortableRow;

@@ -27,9 +27,9 @@ function App() {
   const { projectDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, loadJsonFile } = useJson();
 
-  const [nestedView, setNestedView] = useState<Record<string, any> | null>(
-    null
-  );
+  const [nestedViews, setNestedViews] = useState<
+    Array<{ key: string; data: any }>
+  >([]);
   const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -64,8 +64,10 @@ function App() {
 
   function handleRowExpand(nestedData: any) {
     if (typeof nestedData === "object" && nestedData !== null) {
-      console.log("Expanding nested data:", nestedData);
-      setNestedView(nestedData);
+      setNestedViews((prev) => [
+        ...prev,
+        { key: "Nested Data", data: nestedData },
+      ]);
     }
   }
 
@@ -82,7 +84,17 @@ function App() {
           overflowX: "auto",
         }}
       >
-        <div style={{ flexShrink: 0, width: "200px" }}>
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
           <Sidebar
             menuToFileMap={menuToFileMap}
             selectedFile={null}
@@ -91,7 +103,19 @@ function App() {
             isEditing={isEditing}
           />
         </div>
-        <div style={{ flexShrink: 0, width: "200px" }}>
+
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            minWidth: "400px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
           {jsonData.map((column, columnIndex) => (
             <DataSidebar
               key={columnIndex}
@@ -101,7 +125,19 @@ function App() {
             />
           ))}
         </div>
-        <ScrollArea style={{ flex: 1 }}>
+
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            minWidth: "400px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
           <DataTableView
             fileData={
               jsonData.length > 0 ? jsonData[jsonData.length - 1].data : []
@@ -114,11 +150,24 @@ function App() {
             }}
             onRowExpand={handleRowExpand}
           />
-        </ScrollArea>
-        {nestedView && (
-          <ScrollArea style={{ flex: 1 }}>
+        </div>
+
+        {nestedViews.map((view, index) => (
+          <div
+            key={index}
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
+          >
             <DataTableView
-              fileData={Array.isArray(nestedView) ? nestedView : [nestedView]}
+              fileData={Array.isArray(view.data) ? view.data : [view.data]}
               selectedData={selectedData}
               setSelectedData={setSelectedData}
               setEditData={setEditData}
@@ -127,10 +176,23 @@ function App() {
               }}
               onRowExpand={handleRowExpand}
             />
-          </ScrollArea>
-        )}
+          </div>
+        ))}
+
+        {/* EditView */}
         {editData && (
-          <div style={{ flexShrink: 0, width: "300px" }}>
+          <div
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
+          >
             <EditView
               editData={editData}
               setEditData={setEditData}

@@ -1,74 +1,207 @@
-import { Suspense, useMemo, useState } from "react";
-import * as path from '@tauri-apps/api/path';
-import { open } from '@tauri-apps/plugin-dialog';
-import { readDir, readTextFile } from '@tauri-apps/plugin-fs';
+import { useState } from "react";
 
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import { loadYamlString } from "./libs/schema/io";
-import { AppShell, Button, Group, NavLink } from "@mantine/core";
-import { MasterTable } from "./components/MasterTable";
+import {
+  AppShell,
+  MantineProvider,
+  createTheme,
+  ScrollArea,
+} from "@mantine/core";
+import { save } from "@tauri-apps/plugin-dialog";
+import { writeTextFile } from "@tauri-apps/plugin-fs";
+
+import DataSidebar from "./components/DataSidebar";
+import DataTableView from "./components/DataTableView";
+import EditView from "./components/EditView";
+import Sidebar from "./components/Sidebar";
+import { useJson } from "./hooks/useJson";
+import { useProject } from "./hooks/useProject";
+
+const theme = createTheme({
+  primaryColor: "orange",
+});
 
 function App() {
-  const [projectDir, setProjectDir] = useState<string | null>(null);
-  const [schemas, setSchemas] = useState([]);
-  const [selectedSchemaId, setSelectedSchemaId] = useState<string | null>(null);
+  const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
+    null
+  );
+  const { projectDir, menuToFileMap, openProjectDir } = useProject();
+  const { jsonData, loadJsonFile } = useJson();
 
-  const selectedSchema = useMemo(() => {
-    return schemas.find(schema => schema.id === selectedSchemaId)
-  }, [schemas, selectedSchemaId])
+  const [nestedViews, setNestedViews] = useState<
+    Array<{ key: string; data: any }>
+  >([]);
+  const [selectedData, setSelectedData] = useState<any | null>(null);
+  const [editData, setEditData] = useState<any | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  async function openSchemaDir() {
-    const openedDir = await open({ directory: true })
-    const entryList = await readDir(openedDir)
-    setSchemas(await Promise.all(
-      entryList
-        .filter(entry => entry.isFile)
-        .map(entry => entry.name)
-        .map(async fileName => {
-          const filePath = await path.join(openedDir, fileName)
-          const fileContent = await readTextFile(filePath)
-          return loadYamlString(fileContent)
-        })
-    ))
+  async function handleSave(data: any) {
+    try {
+      let filePath = lastSavedFilePath;
+
+      if (!filePath) {
+        filePath = await save({
+          filters: [
+            { name: "JSON Files", extensions: ["json"] },
+            { name: "All Files", extensions: ["*"] },
+          ],
+        });
+
+        if (!filePath) {
+          console.log("保存がキャンセルされました");
+          return;
+        }
+
+        setLastSavedFilePath(filePath);
+      }
+
+      await writeTextFile(filePath, JSON.stringify(data, null, 2));
+      console.log("データが保存されました:", filePath);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("保存中にエラーが発生しました:", error);
+    }
   }
 
-  async function openProjectDir() {
-    const openedDir = await open({ directory: true })
-    const fileNameList = await readDir(await path.join(openedDir, 'schemas'))
-    setProjectDir(openedDir)
+  function handleRowExpand(nestedData: any) {
+    if (typeof nestedData === "object" && nestedData !== null) {
+      setNestedViews((prev) => [
+        ...prev,
+        { key: "Nested Data", data: nestedData },
+      ]);
+    }
   }
 
   return (
-    <AppShell
-      header={{ height: 64 }}
-      navbar={{
-        width: 264,
-        breakpoint: 'xs'
-      }}
-    >
-      <AppShell.Header>
-        <Group justify='right'>
-          <Button onClick={openSchemaDir}>Open Schema</Button>
-          <Button onClick={openProjectDir}>Open Project</Button>
-        </Group>
-      </AppShell.Header>
-      <AppShell.Navbar>
-        {schemas.map(schema => (
-          <NavLink
-            key={schema.id}
-            label={schema.id}
-            active={schema.id === selectedSchemaId}
-            onClick={() => setSelectedSchemaId(schema.id)}
+    <MantineProvider theme={theme}>
+      <AppShell
+        header={{ height: 64 }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          gap: "3px",
+          paddingTop: "16px",
+          overflowX: "auto",
+        }}
+      >
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
+          <Sidebar
+            menuToFileMap={menuToFileMap}
+            selectedFile={null}
+            loadFileData={(menuItem) => loadJsonFile(menuItem, projectDir)}
+            openProjectDir={openProjectDir}
+            isEditing={isEditing}
           />
+        </div>
+
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            minWidth: "400px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
+          {jsonData.map((column, columnIndex) => (
+            <DataSidebar
+              key={columnIndex}
+              fileData={column.data}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+            />
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: "16px",
+            borderTop: "1px solid #E2E2E2",
+            borderLeft: "1px solid #E2E2E2",
+            paddingTop: "16px",
+            paddingLeft: "16px",
+            minWidth: "400px",
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
+          <DataTableView
+            fileData={
+              jsonData.length > 0 ? jsonData[jsonData.length - 1].data : []
+            }
+            selectedData={selectedData}
+            setSelectedData={setSelectedData}
+            setEditData={setEditData}
+            onRowsReordered={(newOrder) => {
+              console.log("Rows reordered:", newOrder);
+            }}
+            onRowExpand={handleRowExpand}
+          />
+        </div>
+
+        {nestedViews.map((view, index) => (
+          <div
+            key={index}
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
+          >
+            <DataTableView
+              fileData={Array.isArray(view.data) ? view.data : [view.data]}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              setEditData={setEditData}
+              onRowsReordered={(newOrder) => {
+                console.log("Rows reordered:", newOrder);
+              }}
+              onRowExpand={handleRowExpand}
+            />
+          </div>
         ))}
-      </AppShell.Navbar>
-      <AppShell.Main>
-        {selectedSchema && (
-          <MasterTable schema={selectedSchema} />
+
+        {editData && (
+          <div
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
+          >
+            <EditView
+              editData={editData}
+              setEditData={setEditData}
+              setIsEditing={setIsEditing}
+              onSave={handleSave}
+            />
+          </div>
         )}
-      </AppShell.Main>
-    </AppShell>
+      </AppShell>
+    </MantineProvider>
   );
 }
 

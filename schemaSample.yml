@@ -1,4 +1,5 @@
 id: schemaSample
+# サンプル
 type: object
 isDefaultOpen: true
 properties:

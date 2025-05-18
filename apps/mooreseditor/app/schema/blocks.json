@@ -11,6 +11,18 @@
               },
               "outputSlotCount": {
                   "type": "integer"
+              },
+              "inputFluidSlotCount": {
+                  "type": "integer"
+              },
+              "outputFluidSlotCount": {
+                  "type": "integer"
+              },
+              "fluidContainerCapacity": {
+                  "type": "number"
+              },
+              "fluidContainerCount": {
+                  "type": "integer"
               }
           }
       },
@@ -197,12 +209,24 @@
                       "type": "integer",
                       "default": 1
                     },
+                    "inputFluidSlotCount": {
+                      "type": "integer"
+                    },
+                    "outputFluidSlotCount": {
+                      "type": "integer"
+                    },
                     "requiredPower": {
                       "type": "number",
                       "default": 5
                     },
                     "inventoryConnectors": {
                       "$ref": "inventoryConnects"
+                    },
+                    "fluidContainerCapacity": {
+                        "type": "number"
+                    },
+                    "fluidContainerCount": {
+                        "type": "integer"
                     }
                   }
                 }
@@ -377,6 +401,12 @@
                       "type": "integer",
                       "default": 1
                     },
+                    "inputFluidSlotCount": {
+                      "type": "integer"
+                    },
+                    "outputFluidSlotCount": {
+                      "type": "integer"
+                    },
                     "teethCount": {
                       "type": "integer",
                       "default": 10
@@ -394,6 +424,12 @@
                     },
                     "gear": {
                       "$ref": "gear"
+                    },
+                    "fluidContainerCapacity": {
+                        "type": "number"
+                    },
+                    "fluidContainerCount": {
+                        "type": "integer"
                     }
                   }
                 }

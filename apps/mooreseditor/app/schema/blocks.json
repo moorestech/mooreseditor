@@ -19,10 +19,12 @@
                   "type": "integer"
               },
               "fluidContainerCapacity": {
-                  "type": "number"
+                  "type": "number",
+                  "default": 0
               },
               "fluidContainerCount": {
-                  "type": "integer"
+                  "type": "integer",
+                  "default": 0
               }
           }
       },
@@ -223,10 +225,12 @@
                       "$ref": "inventoryConnects"
                     },
                     "fluidContainerCapacity": {
-                        "type": "number"
+                        "type": "number",
+                        "default": 0
                     },
                     "fluidContainerCount": {
-                        "type": "integer"
+                        "type": "integer",
+                        "default": 0
                     }
                   }
                 }
@@ -426,10 +430,12 @@
                       "$ref": "gear"
                     },
                     "fluidContainerCapacity": {
-                        "type": "number"
+                        "type": "number",
+                        "default": 0
                     },
                     "fluidContainerCount": {
-                        "type": "integer"
+                        "type": "integer",
+                        "default": 0
                     }
                   }
                 }

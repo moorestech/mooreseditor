@@ -851,17 +851,20 @@
               "upBlockGuid": {
                 "type": "string",
                 "format": "uuid",
-                "foreignKey": "blocks:blockGuid:name"
+                "foreignKey": "blocks:blockGuid:name",
+                "optional": true
               },
               "horizontalBlockGuid": {
                 "type": "string",
                 "format": "uuid",
-                "foreignKey": "blocks:blockGuid:name"
+                "foreignKey": "blocks:blockGuid:name",
+                "optional": true
               },
               "downBlockGuid": {
                 "type": "string",
                 "format": "uuid",
-                "foreignKey": "blocks:blockGuid:name"
+                "foreignKey": "blocks:blockGuid:name",
+                "optional": true
               }
             }
           }

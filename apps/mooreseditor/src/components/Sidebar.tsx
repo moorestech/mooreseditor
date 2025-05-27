@@ -2,6 +2,8 @@ import { Button, Divider, Text } from "@mantine/core";
 
 import { MoorestechIcon } from "./MoorestechIcon";
 
+const isTauri = Boolean((window as any).__TAURI_IPC__);
+
 interface SidebarProps {
   menuToFileMap: Record<string, string>;
   selectedFile: string | null;
@@ -66,7 +68,7 @@ function Sidebar({
         }}
         onClick={openProjectDir}
       >
-        File Open
+        {isTauri ? "File Open" : "Load Test Data"}
       </Button>
       <Divider />
       <div

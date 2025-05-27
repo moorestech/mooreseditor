@@ -3,6 +3,8 @@ import { useState } from "react";
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
+
+const isTauri = Boolean((window as any).__TAURI_IPC__);
 import YAML from "yaml";
 
 export function useProject() {
@@ -16,6 +18,28 @@ export function useProject() {
   async function openProjectDir() {
     setLoading(true);
     try {
+      if (!isTauri) {
+        const devFiles = [
+          "blocks",
+          "challenges",
+          "craftRecipes",
+          "items",
+          "machineRecipes",
+          "mapObjects",
+        ];
+
+        const yamlFiles: Record<string, string> = {};
+        devFiles.forEach((f) => {
+          yamlFiles[f] = `/test-data/schema/${f}.yml`;
+        });
+
+        setMenuToFileMap(yamlFiles);
+        setProjectDir("/test-data");
+        setSchemaDir("/test-data/schema");
+        setLoading(false);
+        return;
+      }
+
       const openedDir = await open({ directory: true });
       if (!openedDir) {
         console.error("No directory selected.");

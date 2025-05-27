@@ -4,7 +4,8 @@ import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
-import { getSampleFileList } from "../utils/devFileSystem";
+
+import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
 
 const isDev = import.meta.env.DEV;
 
@@ -77,22 +78,31 @@ export function useProject() {
     }
   }
 
-  function loadSampleProjectData() {
+  async function loadSampleProjectData() {
     if (!isDev) return;
     
     setLoading(true);
     try {
       setProjectDir("SampleProject");
+      setSchemaDir("SampleProject/schema");
       
-      const sampleFiles = getSampleFileList();
+      const schemaFiles = getSampleSchemaList();
       const menuMap: Record<string, string> = {};
       
-      sampleFiles.forEach(fileName => {
-        menuMap[fileName] = fileName; // Use the key as both the menu item and identifier
-      });
+      for (const schemaName of schemaFiles) {
+        try {
+          const schemaContent = await getSampleSchema(schemaName);
+          const schemaData = parseYaml(schemaContent);
+          if (schemaData && schemaData.id) {
+            menuMap[schemaData.id] = schemaData.id;
+          }
+        } catch (error) {
+          console.error(`Failed to load schema ${schemaName}:`, error);
+        }
+      }
       
       setMenuToFileMap(menuMap);
-      console.log("Sample project data loaded:", menuMap);
+      console.log("Sample project schema data loaded:", menuMap);
     } catch (error) {
       console.error("Error loading sample project data:", error);
     } finally {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   AppShell,
@@ -15,6 +15,8 @@ import EditView from "./components/EditView";
 import Sidebar from "./components/Sidebar";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
+
+const isTauri = Boolean((window as any).__TAURI_IPC__);
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -33,6 +35,20 @@ function App() {
   const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (import.meta.env.DEV && !isTauri) {
+      openProjectDir();
+    }
+  }, [openProjectDir]);
+
+  useEffect(() => {
+    if (import.meta.env.DEV && !isTauri && Object.keys(menuToFileMap).length) {
+      Object.keys(menuToFileMap).forEach((menuItem, index) => {
+        loadJsonFile(menuItem, projectDir, index);
+      });
+    }
+  }, [menuToFileMap]);
 
   async function handleSave(data: any) {
     try {

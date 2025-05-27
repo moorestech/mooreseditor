@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
+
+const isTauri = Boolean((window as any).__TAURI_IPC__);
 import YAML from "yaml";
+
+/**
+ * Resolve a file within the public directory considering the build base URL.
+ */
+function buildPublicPath(relativePath: string): string {
+  let base = import.meta.env.BASE_URL || "/";
+  if (!base.endsWith("/")) base += "/";
+  return `${base}${relativePath}`.replace(/\/+/g, "/");
+}
 
 export function useProject() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
@@ -13,9 +24,35 @@ export function useProject() {
   );
   const [loading, setLoading] = useState(false);
 
-  async function openProjectDir() {
+  /**
+   * Open the project directory. When running in the browser a set of bundled
+   * test files is loaded instead of showing a directory picker.
+   */
+  const openProjectDir = useCallback(async () => {
     setLoading(true);
     try {
+      if (!isTauri) {
+        const devFiles = [
+          "blocks",
+          "challenges",
+          "craftRecipes",
+          "items",
+          "machineRecipes",
+          "mapObjects",
+        ];
+
+        const yamlFiles: Record<string, string> = {};
+        devFiles.forEach((f) => {
+          yamlFiles[f] = buildPublicPath(`test-data/schema/${f}.yml`);
+        });
+
+        setMenuToFileMap(yamlFiles);
+        setProjectDir(buildPublicPath("test-data"));
+        setSchemaDir(buildPublicPath("test-data/schema"));
+        setLoading(false);
+        return;
+      }
+
       const openedDir = await open({ directory: true });
       if (!openedDir) {
         console.error("No directory selected.");
@@ -72,7 +109,7 @@ export function useProject() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   function parseYaml(yamlText: string): any {
     try {

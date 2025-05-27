@@ -5,6 +5,9 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
+const TEST_DATA_PATH = "/testMod/master";
+const isDev = import.meta.env.DEV;
+
 export function useProject() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
   const [schemaDir, setSchemaDir] = useState<string | null>(null);
@@ -47,7 +50,7 @@ export function useProject() {
 
       setSchemaDir(resolvedSchemaPath);
 
-      const files = await readDir(resolvedSchemaPath, { recursive: false });
+      const files = await readDir(resolvedSchemaPath);
       const yamlFiles: Record<string, string> = {};
 
       for (const file of files) {
@@ -74,6 +77,29 @@ export function useProject() {
     }
   }
 
+  async function loadTestData() {
+    if (!isDev) return;
+    
+    setLoading(true);
+    try {
+      setProjectDir("testMod");
+      
+      const testFiles = ["items", "blocks", "challenges", "craftRecipes", "machineRecipes", "mapObjects"];
+      const testMenuMap: Record<string, string> = {};
+      
+      testFiles.forEach(fileName => {
+        testMenuMap[fileName] = `${TEST_DATA_PATH}/${fileName}.json`;
+      });
+      
+      setMenuToFileMap(testMenuMap);
+      console.log("Test data loaded:", testMenuMap);
+    } catch (error) {
+      console.error("Error loading test data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function parseYaml(yamlText: string): any {
     try {
       return YAML.parse(yamlText);
@@ -89,5 +115,6 @@ export function useProject() {
     menuToFileMap,
     loading,
     openProjectDir,
+    loadTestData: isDev ? loadTestData : undefined,
   };
 }

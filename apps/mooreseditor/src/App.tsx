@@ -24,7 +24,7 @@ function App() {
   const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
     null
   );
-  const { projectDir, menuToFileMap, openProjectDir } = useProject();
+  const { projectDir, menuToFileMap, openProjectDir, loadTestData } = useProject();
   const { jsonData, loadJsonFile } = useJson();
 
   const [nestedViews, setNestedViews] = useState<
@@ -100,6 +100,7 @@ function App() {
             selectedFile={null}
             loadFileData={(menuItem) => loadJsonFile(menuItem, projectDir)}
             openProjectDir={openProjectDir}
+            loadTestData={loadTestData}
             isEditing={isEditing}
           />
         </div>

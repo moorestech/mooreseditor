@@ -3,6 +3,13 @@ import { useState } from "react";
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
+const isDev = import.meta.env.DEV;
+
+interface Column {
+  title: string;
+  data: any[];
+}
+
 export function useJson() {
   const [jsonData, setJsonData] = useState<Column[]>([]);
 
@@ -17,12 +24,21 @@ export function useJson() {
     }
 
     try {
-      const jsonFilePath = await path.join(
-        projectDir,
-        "master",
-        `${menuItem}.json`
-      );
-      const fileContents = await readTextFile(jsonFilePath);
+      let jsonFilePath: string;
+      let fileContents: string;
+      
+      if (isDev && projectDir === "testMod") {
+        jsonFilePath = `/home/ubuntu/repos/mooreseditor/testMod/master/${menuItem}.json`;
+        fileContents = await readTextFile(jsonFilePath);
+      } else {
+        jsonFilePath = await path.join(
+          projectDir,
+          "master",
+          `${menuItem}.json`
+        );
+        fileContents = await readTextFile(jsonFilePath);
+      }
+      
       const parsedData = JSON.parse(fileContents);
 
       if (!parsedData || !Array.isArray(parsedData.data)) {

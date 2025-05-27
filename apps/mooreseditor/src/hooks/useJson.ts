@@ -27,8 +27,8 @@ export function useJson() {
       let jsonFilePath: string;
       let fileContents: string;
       
-      if (isDev && projectDir === "testMod") {
-        jsonFilePath = `/home/ubuntu/repos/mooreseditor/testMod/master/${menuItem}.json`;
+      if (isDev && projectDir === "SampleProject") {
+        jsonFilePath = `/home/ubuntu/repos/mooreseditor/SampleProject/master/${menuItem}.json`;
         fileContents = await readTextFile(jsonFilePath);
       } else {
         jsonFilePath = await path.join(

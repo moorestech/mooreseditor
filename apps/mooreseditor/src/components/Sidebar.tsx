@@ -7,7 +7,6 @@ interface SidebarProps {
   selectedFile: string | null;
   loadFileData: (menuItem: string) => Promise<void>;
   openProjectDir: () => void;
-  loadTestData?: () => Promise<void>;
   isEditing: boolean;
 }
 
@@ -16,7 +15,6 @@ function Sidebar({
   selectedFile,
   loadFileData,
   openProjectDir,
-  loadTestData,
   isEditing,
 }: SidebarProps) {
   return (
@@ -70,22 +68,6 @@ function Sidebar({
       >
         File Open
       </Button>
-      {loadTestData && (
-        <Button
-          style={{
-            display: "block",
-            margin: "8px auto 0",
-            width: "154px",
-            height: "32px",
-            background: "#4CAF50",
-            borderRadius: "8px",
-            color: "#FFFFFF",
-          }}
-          onClick={loadTestData}
-        >
-          Load Test Data
-        </Button>
-      )}
       <Divider />
       <div
         style={{

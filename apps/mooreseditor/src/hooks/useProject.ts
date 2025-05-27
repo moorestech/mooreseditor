@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
-const TEST_DATA_PATH = "/testMod/master";
+const SAMPLE_PROJECT_PATH = "/home/ubuntu/repos/mooreseditor/SampleProject/master";
 const isDev = import.meta.env.DEV;
 
 export function useProject() {
@@ -77,28 +77,34 @@ export function useProject() {
     }
   }
 
-  async function loadTestData() {
+  async function loadSampleProjectData() {
     if (!isDev) return;
     
     setLoading(true);
     try {
-      setProjectDir("testMod");
+      setProjectDir("SampleProject");
       
       const testFiles = ["items", "blocks", "challenges", "craftRecipes", "machineRecipes", "mapObjects"];
       const testMenuMap: Record<string, string> = {};
       
       testFiles.forEach(fileName => {
-        testMenuMap[fileName] = `${TEST_DATA_PATH}/${fileName}.json`;
+        testMenuMap[fileName] = `${SAMPLE_PROJECT_PATH}/${fileName}.json`;
       });
       
       setMenuToFileMap(testMenuMap);
-      console.log("Test data loaded:", testMenuMap);
+      console.log("Sample project data loaded:", testMenuMap);
     } catch (error) {
-      console.error("Error loading test data:", error);
+      console.error("Error loading sample project data:", error);
     } finally {
       setLoading(false);
     }
   }
+  
+  useEffect(() => {
+    if (isDev) {
+      loadSampleProjectData();
+    }
+  }, []);
 
   function parseYaml(yamlText: string): any {
     try {
@@ -115,6 +121,5 @@ export function useProject() {
     menuToFileMap,
     loading,
     openProjectDir,
-    loadTestData: isDev ? loadTestData : undefined,
   };
 }

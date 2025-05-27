@@ -4,8 +4,8 @@ import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
+import { getSampleFileList } from "../utils/devFileSystem";
 
-const SAMPLE_PROJECT_PATH = "/home/ubuntu/repos/mooreseditor/SampleProject/master";
 const isDev = import.meta.env.DEV;
 
 export function useProject() {
@@ -77,22 +77,22 @@ export function useProject() {
     }
   }
 
-  async function loadSampleProjectData() {
+  function loadSampleProjectData() {
     if (!isDev) return;
     
     setLoading(true);
     try {
       setProjectDir("SampleProject");
       
-      const testFiles = ["items", "blocks", "challenges", "craftRecipes", "machineRecipes", "mapObjects"];
-      const testMenuMap: Record<string, string> = {};
+      const sampleFiles = getSampleFileList();
+      const menuMap: Record<string, string> = {};
       
-      testFiles.forEach(fileName => {
-        testMenuMap[fileName] = `${SAMPLE_PROJECT_PATH}/${fileName}.json`;
+      sampleFiles.forEach(fileName => {
+        menuMap[fileName] = fileName; // Use the key as both the menu item and identifier
       });
       
-      setMenuToFileMap(testMenuMap);
-      console.log("Sample project data loaded:", testMenuMap);
+      setMenuToFileMap(menuMap);
+      console.log("Sample project data loaded:", menuMap);
     } catch (error) {
       console.error("Error loading sample project data:", error);
     } finally {

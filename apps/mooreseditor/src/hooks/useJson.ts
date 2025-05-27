@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+import { getSampleJson } from "../utils/devFileSystem";
 
 const isDev = import.meta.env.DEV;
 
@@ -24,22 +25,23 @@ export function useJson() {
     }
 
     try {
-      let jsonFilePath: string;
-      let fileContents: string;
+      let parsedData;
       
       if (isDev && projectDir === "SampleProject") {
-        jsonFilePath = `/home/ubuntu/repos/mooreseditor/SampleProject/master/${menuItem}.json`;
-        fileContents = await readTextFile(jsonFilePath);
+        parsedData = await getSampleJson(menuItem);
+        if (!parsedData) {
+          console.error(`Sample JSON not found for: ${menuItem}`);
+          return;
+        }
       } else {
-        jsonFilePath = await path.join(
+        const jsonFilePath = await path.join(
           projectDir,
           "master",
           `${menuItem}.json`
         );
-        fileContents = await readTextFile(jsonFilePath);
+        const fileContents = await readTextFile(jsonFilePath);
+        parsedData = JSON.parse(fileContents);
       }
-      
-      const parsedData = JSON.parse(fileContents);
 
       if (!parsedData || !Array.isArray(parsedData.data)) {
         console.error(`Invalid JSON format in file: ${menuItem}.json`);

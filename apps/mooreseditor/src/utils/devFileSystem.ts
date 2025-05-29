@@ -15,8 +15,7 @@ export async function getSampleJson(name: string): Promise<any> {
     if (!response.ok) {
       throw new Error(`Failed to fetch ${name}.json: ${response.status}`);
     }
-    const content = await response.text();
-    const jsonData = JSON.parse(content);
+    const jsonData = await response.json();
     console.log(`Successfully loaded ${name}.json`);
     return jsonData;
   } catch (error) {

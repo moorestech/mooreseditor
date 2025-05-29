@@ -26,14 +26,6 @@ export async function getSampleJson(name: string): Promise<any> {
 }
 
 /**
- * 開発環境用: サンプルJSONファイルのリストを取得
- * @returns サンプルファイル名のリスト
- */
-export function getSampleFileList(): string[] {
-  return ['items', 'blocks', 'craftRecipes', 'machineRecipes', 'mapObjects', 'challenges', 'fluids'];
-}
-
-/**
  * 開発環境用: 特定のサンプルYAMLスキーマファイルを取得
  * @param name ファイル名（拡張子なし）
  * @returns YAMLデータ（文字列）
@@ -42,7 +34,7 @@ export async function getSampleSchema(name: string): Promise<string> {
   try {
     console.log(`Loading ${name}.yml for web environment`);
     
-    const response = await fetch(`/src/schema/${name}.yml`);
+    const response = await fetch(`/src/sample/schema/${name}.yml`);
     if (!response.ok) {
       throw new Error(`Failed to fetch ${name}.yml: ${response.status}`);
     }

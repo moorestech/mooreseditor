@@ -2,14 +2,11 @@ import { useState } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+
 import { getSampleJson } from "../utils/devFileSystem";
 
 const isDev = import.meta.env.DEV;
 
-interface Column {
-  title: string;
-  data: any[];
-}
 
 export function useJson() {
   const [jsonData, setJsonData] = useState<Column[]>([]);

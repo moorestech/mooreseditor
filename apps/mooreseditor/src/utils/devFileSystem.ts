@@ -8,20 +8,8 @@
  * @returns JSONデータ
  */
 export async function getSampleJson(name: string): Promise<any> {
-  try {
-    console.log(`Loading ${name}.json for web environment`);
-    
-    const response = await fetch(`/src/sample/master/${name}.json`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${name}.json: ${response.status}`);
-    }
-    const jsonData = await response.json();
-    console.log(`Successfully loaded ${name}.json`);
-    return jsonData;
-  } catch (error) {
-    console.error(`Failed to load ${name}.json:`, error);
-    throw error;
-  }
+  const content = await fetchFileContent(`/src/sample/master/${name}.json`);
+    return JSON.parse(content);
 }
 
 /**
@@ -30,20 +18,7 @@ export async function getSampleJson(name: string): Promise<any> {
  * @returns YAMLデータ（文字列）
  */
 export async function getSampleSchema(name: string): Promise<string> {
-  try {
-    console.log(`Loading ${name}.yml for web environment`);
-    
-    const response = await fetch(`/src/sample/schema/${name}.yml`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${name}.yml: ${response.status}`);
-    }
-    const content = await response.text();
-    console.log(`Successfully loaded ${name}.yml`);
-    return content;
-  } catch (error) {
-    console.error(`Failed to load ${name}.yml:`, error);
-    throw error;
-  }
+  return  await fetchFileContent(`/src/sample/schema/${name}.yml`);
 }
 
 /**
@@ -53,3 +28,18 @@ export async function getSampleSchema(name: string): Promise<string> {
 export function getSampleSchemaList(): string[] {
   return ['mapObjects', 'blocks', 'items'];
 }
+
+async function fetchFileContent(path: string): Promise<string> {
+  try {
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${path}: ${response.status}`);
+    }
+    return response.text();
+  } catch (error) {
+    console.error(`Failed to load ${name}.yml:`, error);
+    throw error;
+  }
+}
+
+

@@ -7,16 +7,20 @@
           "interfaceName": "IMachineParam",
           "properties": {
               "inputSlotCount": {
-                  "type": "integer"
+                  "type": "integer",
+                      "default": 0
               },
               "outputSlotCount": {
-                  "type": "integer"
+                  "type": "integer",
+                      "default": 0
               },
               "inputFluidSlotCount": {
-                  "type": "integer"
+                  "type": "integer",
+                  "default": 0
               },
               "outputFluidSlotCount": {
-                  "type": "integer"
+                  "type": "integer",
+                  "default": 0
               },
               "fluidContainerCapacity": {
                   "type": "number",
@@ -219,10 +223,12 @@
                       "$ref": "inventoryConnects"
                     },
                     "inputFluidSlotCount": {
-                      "type": "integer"
+                      "type": "integer",
+                      "default": 0
                     },
                     "outputFluidSlotCount": {
-                      "type": "integer"
+                      "type": "integer",
+                      "default": 0
                     },
                     "fluidContainerCapacity": {
                         "type": "number",
@@ -427,10 +433,12 @@
                       "$ref": "gear"
                     },
                     "inputFluidSlotCount": {
-                      "type": "integer"
+                      "type": "integer",
+                      "default": 0
                     },
                     "outputFluidSlotCount": {
-                      "type": "integer"
+                      "type": "integer",
+                      "default": 0
                     },
                     "fluidContainerCapacity": {
                         "type": "number",

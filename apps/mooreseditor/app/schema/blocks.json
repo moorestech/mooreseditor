@@ -203,6 +203,10 @@
                   ],
                   "type": "object",
                   "properties": {
+                    "requiredPower": {
+                      "type": "number",
+                      "default": 5
+                    },
                     "inputSlotCount": {
                       "type": "integer",
                       "default": 1
@@ -211,18 +215,14 @@
                       "type": "integer",
                       "default": 1
                     },
+                    "inventoryConnectors": {
+                      "$ref": "inventoryConnects"
+                    },
                     "inputFluidSlotCount": {
                       "type": "integer"
                     },
                     "outputFluidSlotCount": {
                       "type": "integer"
-                    },
-                    "requiredPower": {
-                      "type": "number",
-                      "default": 5
-                    },
-                    "inventoryConnectors": {
-                      "$ref": "inventoryConnects"
                     },
                     "fluidContainerCapacity": {
                         "type": "number",
@@ -231,6 +231,9 @@
                     "fluidContainerCount": {
                         "type": "integer",
                         "default": 0
+                    },
+                    "fluidInventoryConnectors": {
+                      "$ref": "fluidInventoryConnects"
                     }
                   }
                 }
@@ -405,11 +408,8 @@
                       "type": "integer",
                       "default": 1
                     },
-                    "inputFluidSlotCount": {
-                      "type": "integer"
-                    },
-                    "outputFluidSlotCount": {
-                      "type": "integer"
+                    "inventoryConnectors": {
+                      "$ref": "inventoryConnects"
                     },
                     "teethCount": {
                       "type": "integer",
@@ -423,11 +423,14 @@
                       "type": "number",
                       "default": 5
                     },
-                    "inventoryConnectors": {
-                      "$ref": "inventoryConnects"
-                    },
                     "gear": {
                       "$ref": "gear"
+                    },
+                    "inputFluidSlotCount": {
+                      "type": "integer"
+                    },
+                    "outputFluidSlotCount": {
+                      "type": "integer"
                     },
                     "fluidContainerCapacity": {
                         "type": "number",
@@ -436,6 +439,9 @@
                     "fluidContainerCount": {
                         "type": "integer",
                         "default": 0
+                    },
+                    "fluidInventoryConnectors": {
+                      "$ref": "fluidInventoryConnects"
                     }
                   }
                 }

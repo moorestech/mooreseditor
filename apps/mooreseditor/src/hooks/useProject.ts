@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
+
+import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
+
+const isDev = import.meta.env.DEV;
 
 export function useProject() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
@@ -47,7 +51,7 @@ export function useProject() {
 
       setSchemaDir(resolvedSchemaPath);
 
-      const files = await readDir(resolvedSchemaPath, { recursive: false });
+      const files = await readDir(resolvedSchemaPath);
       const yamlFiles: Record<string, string> = {};
 
       for (const file of files) {
@@ -73,6 +77,44 @@ export function useProject() {
       setLoading(false);
     }
   }
+
+  async function loadSampleProjectData() {
+    if (!isDev) return;
+    
+    setLoading(true);
+    try {
+      setProjectDir("SampleProject");
+      setSchemaDir("SampleProject/schema");
+      
+      const schemaFiles = getSampleSchemaList();
+      const menuMap: Record<string, string> = {};
+      
+      for (const schemaName of schemaFiles) {
+        try {
+          const schemaContent = await getSampleSchema(schemaName);
+          const schemaData = parseYaml(schemaContent);
+          if (schemaData && schemaData.id) {
+            menuMap[schemaData.id] = schemaData.id;
+          }
+        } catch (error) {
+          console.error(`Failed to load schema ${schemaName}:`, error);
+        }
+      }
+      
+      setMenuToFileMap(menuMap);
+      console.log("Sample project schema data loaded:", menuMap);
+    } catch (error) {
+      console.error("Error loading sample project data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  useEffect(() => {
+    if (isDev) {
+      loadSampleProjectData();
+    }
+  }, []);
 
   function parseYaml(yamlText: string): any {
     try {

@@ -14,7 +14,11 @@
                   "type": "integer",
                       "default": 0
               },
-              "innerTankCount": {
+              "inputTankCount": {
+                "type": "integer",
+                "default": 0
+              },
+              "outputTankCount": {
                 "type": "integer",
                 "default": 0
               },
@@ -214,7 +218,11 @@
                     "inventoryConnectors": {
                       "$ref": "inventoryConnects"
                     },
-                    "innerTankCount": {
+                    "inputTankCount": {
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "outputTankCount": {
                       "type": "integer",
                       "default": 0
                     },
@@ -416,7 +424,11 @@
                     "gear": {
                       "$ref": "gear"
                     },
-                    "innerTankCount": {
+                    "inputTankCount": {
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "outputTankCount": {
                       "type": "integer",
                       "default": 0
                     },

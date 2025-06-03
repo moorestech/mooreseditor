@@ -4,7 +4,6 @@ import {
   AppShell,
   MantineProvider,
   createTheme,
-  ScrollArea,
 } from "@mantine/core";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
@@ -12,9 +11,11 @@ import { writeTextFile } from "@tauri-apps/plugin-fs";
 import DataSidebar from "./components/DataSidebar";
 import DataTableView from "./components/DataTableView";
 import EditView from "./components/EditView";
+import FormView from "./components/FormView";
 import Sidebar from "./components/Sidebar";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
+import { useSchema } from "./hooks/useSchema";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -24,8 +25,9 @@ function App() {
   const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
     null
   );
-  const { projectDir, menuToFileMap, openProjectDir } = useProject();
-  const { jsonData, loadJsonFile } = useJson();
+  const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
+  const { jsonData, setJsonData, loadJsonFile } = useJson();
+  const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
     Array<{ key: string; data: any }>
@@ -33,6 +35,8 @@ function App() {
   const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
+  const [showFormView, setShowFormView] = useState(false);
 
   async function handleSave(data: any) {
     try {
@@ -179,7 +183,37 @@ function App() {
           </div>
         ))}
 
-        {editData && (
+        {showFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && (
+          <div
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
+            }}
+          >
+            <FormView
+              schema={schemas[selectedSchema]}
+              data={jsonData[jsonData.length - 1].data}
+              onDataChange={(newData) => {
+                const updatedJsonData = [...jsonData];
+                updatedJsonData[updatedJsonData.length - 1].data = newData;
+                setJsonData(updatedJsonData);
+                setIsEditing(true);
+              }}
+              onObjectArrayClick={(path, schema) => {
+                console.log("Object array clicked:", path, schema);
+                // TODO: Implement table view expansion for object arrays
+              }}
+            />
+          </div>
+        )}
+
+        {editData && !showFormView && (
           <div
             style={{
               marginTop: "16px",

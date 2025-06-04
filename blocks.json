@@ -3,52 +3,52 @@
   "type": "object",
   "isDefaultOpen": true,
   "defineInterface": [
-      {
-          "interfaceName": "IMachineParam",
-          "properties": {
-              "inputSlotCount": {
-                  "type": "integer",
-                      "default": 0
-              },
-              "outputSlotCount": {
-                  "type": "integer",
-                      "default": 0
-              },
-              "inputTankCount": {
-                "type": "integer",
-                "default": 0
-              },
-              "outputTankCount": {
-                "type": "integer",
-                "default": 0
-              },
-              "innerTankCapacity": {
-                "type": "number",
-                "default": 0
-              }
-          }
-      },
-      {
-          "interfaceName": "IChestParam",
-          "properties": {
-              "itemSlotCount": {
-                  "type": "integer"
-              }
-          }
-      },
-      {
-          "interfaceName": "IGearMachineParam",
-          "properties": {
-            "requireTorque": {
-              "type": "number",
-              "default": 1
-            },
-            "requiredRpm": {
-              "type": "number",
-              "default": 5
-            }
-          }
+    {
+      "interfaceName": "IMachineParam",
+      "properties": {
+        "inputSlotCount": {
+          "type": "integer",
+          "default": 0
+        },
+        "outputSlotCount": {
+          "type": "integer",
+          "default": 0
+        },
+        "inputTankCount": {
+          "type": "integer",
+          "default": 0
+        },
+        "outputTankCount": {
+          "type": "integer",
+          "default": 0
+        },
+        "innerTankCapacity": {
+          "type": "number",
+          "default": 0
+        }
       }
+    },
+    {
+      "interfaceName": "IChestParam",
+      "properties": {
+        "itemSlotCount": {
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "interfaceName": "IGearMachineParam",
+      "properties": {
+        "requireTorque": {
+          "type": "number",
+          "default": 1
+        },
+        "requiredRpm": {
+          "type": "number",
+          "default": 5
+        }
+      }
+    }
   ],
   "properties": {
     "data": {
@@ -79,6 +79,7 @@
               "Shaft",
               "GearMachine",
               "SimpleGearGenerator",
+              "SteamGearGenerator",
               "GearBeltConveyor",
               "GearMiner",
               "GearMapObjectMiner",
@@ -227,8 +228,8 @@
                       "default": 0
                     },
                     "innerTankCapacity": {
-                        "type": "number",
-                        "default": 0
+                      "type": "number",
+                      "default": 0
                     },
                     "fluidInventoryConnectors": {
                       "$ref": "fluidInventoryConnects"
@@ -465,12 +466,84 @@
                       "type": "number",
                       "default": 1
                     },
-                    "requireTorque": {
+                    "gear": {
+                      "$ref": "gear"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "blockType": {
+                      "const": "SteamGearGenerator"
+                    }
+                  }
+                },
+                "then": {
+                  "type": "object",
+                  "properties": {
+                    "teethCount": {
+                      "type": "integer",
+                      "default": 10
+                    },
+                    "generateMaxRpm": {
+                      "type": "number",
+                      "default": 5
+                    },
+                    "generateMaxTorque": {
                       "type": "number",
                       "default": 1
                     },
+                    "timeToMax": {
+                      "type": "number",
+                      "default": 30
+                    },
+                    "timeToMaxEasing": {
+                      "type": "string",
+                      "enum": [
+                        "Linear",
+                        "EaseInSine",
+                        "EaseOutSine",
+                        "EaseInCubic",
+                        "EaseOutCubic",
+                        "EaseInQuint",
+                        "EaseOutQuint",
+                        "EaseInCirc",
+                        "EaseOutCirc"
+                      ],
+                      "default": "EaseInSine"
+                    },
                     "gear": {
                       "$ref": "gear"
+                    },
+                    "fluidCapacity": {
+                      "type": "number",
+                      "default": 100
+                    },
+                    "requiredFluids": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fluidGuid": {
+                            "type": "string",
+                            "format": "uuid",
+                            "foreignKey": "fluids:fluidGuid:name"
+                          },
+                          "amount": {
+                            "type": "number",
+                            "default": 1
+                          },
+                          "consumptionTime": {
+                            "type": "number",
+                            "default": 1
+                          }
+                        }
+                      }
+                    },
+                    "fluidInventoryConnectors": {
+                      "$ref": "fluidInventoryConnects"
                     }
                   }
                 }
@@ -618,7 +691,7 @@
                     "teethCount": {"type": "integer", "default": 10},
                     "requireTorque": {"type": "number", "default": 1},
                     "requiredRpm": {"type": "number", "default": 5},
-                    
+
                     "itemSlotCount": {"type": "integer", "default": 3},
 
                     "miningAreaRange": {
@@ -737,7 +810,7 @@
                 },
                 "then": {
                   "type": "object",
-                  
+
                   "implementationInterface": [
                     "IChestParam"
                   ],
@@ -782,7 +855,7 @@
                       "default": 5
                     },
                     "itemSlotCount": {
-                        "type": "integer"
+                      "type": "integer"
                     },
                     "inventoryConnectors": {
                       "$ref": "inventoryConnects"

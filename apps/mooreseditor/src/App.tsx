@@ -9,12 +9,13 @@ import {
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
 
-import DataSidebar from "./components/DataSidebar";
-import DataTableView from "./components/DataTableView";
 import EditView from "./components/EditView";
+import FormView from "./components/FormView";
 import Sidebar from "./components/Sidebar";
+import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
+import { useSchema } from "./hooks/useSchema";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -24,15 +25,17 @@ function App() {
   const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
     null
   );
-  const { projectDir, menuToFileMap, openProjectDir } = useProject();
-  const { jsonData, loadJsonFile } = useJson();
+  const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
+  const { jsonData, setJsonData, loadJsonFile } = useJson();
+  const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
-    Array<{ key: string; data: any }>
+    Array<{ type: 'form' | 'table'; schema: any; data: any; path: string[] }>
   >([]);
-  const [selectedData, setSelectedData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
+  const [showFormView, setShowFormView] = useState(false);
 
   async function handleSave(data: any) {
     try {
@@ -98,59 +101,56 @@ function App() {
           <Sidebar
             menuToFileMap={menuToFileMap}
             selectedFile={null}
-            loadFileData={(menuItem) => loadJsonFile(menuItem, projectDir)}
+            loadFileData={async (menuItem) => {
+              await loadJsonFile(menuItem, projectDir);
+              await loadSchema(menuItem, schemaDir);
+              setSelectedSchema(menuItem);
+              setShowFormView(true);
+              setNestedViews([]);
+            }}
             openProjectDir={openProjectDir}
             isEditing={isEditing}
           />
         </div>
 
-        <div
-          style={{
-            marginTop: "16px",
-            borderTop: "1px solid #E2E2E2",
-            borderLeft: "1px solid #E2E2E2",
-            paddingTop: "16px",
-            paddingLeft: "16px",
-            minWidth: "400px",
-            height: "100vh",
-            overflowY: "auto",
-          }}
-        >
-          {jsonData.map((column, columnIndex) => (
-            <DataSidebar
-              key={columnIndex}
-              fileData={column.data}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-            />
-          ))}
-        </div>
-
-        <div
-          style={{
-            marginTop: "16px",
-            borderTop: "1px solid #E2E2E2",
-            borderLeft: "1px solid #E2E2E2",
-            paddingTop: "16px",
-            paddingLeft: "16px",
-            minWidth: "400px",
-            height: "100vh",
-            overflowY: "auto",
-          }}
-        >
-          <DataTableView
-            fileData={
-              jsonData.length > 0 ? jsonData[jsonData.length - 1].data : []
-            }
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
-            setEditData={setEditData}
-            onRowsReordered={(newOrder) => {
-              console.log("Rows reordered:", newOrder);
+        {showFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 ? (
+          <div
+            style={{
+              marginTop: "16px",
+              borderTop: "1px solid #E2E2E2",
+              borderLeft: "1px solid #E2E2E2",
+              paddingTop: "16px",
+              paddingLeft: "16px",
+              minWidth: "400px",
+              height: "100vh",
+              overflowY: "auto",
             }}
-            onRowExpand={handleRowExpand}
-          />
-        </div>
+          >
+            <FormView
+              schema={schemas[selectedSchema]}
+              data={{ data: jsonData[jsonData.length - 1].data }}
+              onDataChange={(newData) => {
+                const updatedJsonData = [...jsonData];
+                updatedJsonData[updatedJsonData.length - 1].data = newData.data;
+                setJsonData(updatedJsonData);
+                setIsEditing(true);
+              }}
+              onObjectArrayClick={(path, schema) => {
+                let dataAtPath = { data: jsonData[jsonData.length - 1].data };
+                for (const key of path) {
+                  dataAtPath = dataAtPath?.[key];
+                }
+                
+                setNestedViews([{
+                  type: 'table',
+                  schema: schema,
+                  data: dataAtPath || [],
+                  path: path
+                }]);
+              }}
+            />
+          </div>
+        ) : null}
 
         {nestedViews.map((view, index) => (
           <div
@@ -166,16 +166,57 @@ function App() {
               overflowY: "auto",
             }}
           >
-            <DataTableView
-              fileData={Array.isArray(view.data) ? view.data : [view.data]}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              setEditData={setEditData}
-              onRowsReordered={(newOrder) => {
-                console.log("Rows reordered:", newOrder);
-              }}
-              onRowExpand={handleRowExpand}
-            />
+            {view.type === 'table' ? (
+              <TableView
+                schema={view.schema}
+                data={view.data}
+                onRowSelect={(rowIndex) => {
+                  const selectedRowData = view.data[rowIndex];
+                  if (selectedRowData && view.schema.items?.type === 'object') {
+                    setNestedViews(prev => [
+                      ...prev.slice(0, index + 1),
+                      {
+                        type: 'form',
+                        schema: view.schema.items,
+                        data: selectedRowData,
+                        path: [...view.path, rowIndex.toString()]
+                      }
+                    ]);
+                  }
+                }}
+              />
+            ) : (
+              <FormView
+                schema={view.schema}
+                data={view.data}
+                onDataChange={(newData) => {
+                  const updatedJsonData = [...jsonData];
+                  let dataRef = { data: updatedJsonData[updatedJsonData.length - 1].data };
+                  for (let i = 0; i < view.path.length - 1; i++) {
+                    dataRef = dataRef[view.path[i]];
+                  }
+                  dataRef[view.path[view.path.length - 1]] = newData;
+                  setJsonData(updatedJsonData);
+                  setIsEditing(true);
+                }}
+                onObjectArrayClick={(subPath, schema) => {
+                  let dataAtPath = view.data;
+                  for (const key of subPath) {
+                    dataAtPath = dataAtPath?.[key];
+                  }
+                  
+                  setNestedViews(prev => [
+                    ...prev.slice(0, index + 1),
+                    {
+                      type: 'table',
+                      schema: schema,
+                      data: dataAtPath || [],
+                      path: [...view.path, ...subPath]
+                    }
+                  ]);
+                }}
+              />
+            )}
           </div>
         ))}
 

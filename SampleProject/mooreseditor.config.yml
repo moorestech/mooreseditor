@@ -1,6 +1,6 @@
 # 名前と説明は必須要素ではないが、とりあえず用意しています
 projectName: SampleProject
-projectDescrpiton: Description
+projectDescription: Description
 
 # スキーマのyamlファイルが入っているパス。相対パスは指定方法の一例
 schemaPath: "./schema"

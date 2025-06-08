@@ -7,6 +7,10 @@ import { getSampleJson } from "../utils/devFileSystem";
 
 const isDev = import.meta.env.DEV;
 
+interface Column {
+  title: string;
+  data: any[];
+}
 
 export function useJson() {
   const [jsonData, setJsonData] = useState<Column[]>([]);

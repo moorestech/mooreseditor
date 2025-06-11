@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   AppShell,
@@ -36,6 +36,17 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
   const [showFormView, setShowFormView] = useState(false);
+
+  useEffect(() => {
+    if (showFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && nestedViews.length === 0) {
+      setNestedViews([{
+        type: 'form',
+        schema: schemas[selectedSchema],
+        data: { data: jsonData[jsonData.length - 1].data },
+        path: []
+      }]);
+    }
+  }, [showFormView, selectedSchema, schemas, jsonData]);
 
   async function handleSave(data: any) {
     try {
@@ -113,44 +124,6 @@ function App() {
           />
         </div>
 
-        {showFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 ? (
-          <div
-            style={{
-              marginTop: "16px",
-              borderTop: "1px solid #E2E2E2",
-              borderLeft: "1px solid #E2E2E2",
-              paddingTop: "16px",
-              paddingLeft: "16px",
-              minWidth: "400px",
-              height: "100vh",
-              overflowY: "auto",
-            }}
-          >
-            <FormView
-              schema={schemas[selectedSchema]}
-              data={{ data: jsonData[jsonData.length - 1].data }}
-              onDataChange={(newData) => {
-                const updatedJsonData = [...jsonData];
-                updatedJsonData[updatedJsonData.length - 1].data = newData.data;
-                setJsonData(updatedJsonData);
-                setIsEditing(true);
-              }}
-              onObjectArrayClick={(path, schema) => {
-                let dataAtPath = { data: jsonData[jsonData.length - 1].data };
-                for (const key of path) {
-                  dataAtPath = dataAtPath?.[key];
-                }
-                
-                setNestedViews([{
-                  type: 'table',
-                  schema: schema,
-                  data: dataAtPath || [],
-                  path: path
-                }]);
-              }}
-            />
-          </div>
-        ) : null}
 
         {nestedViews.map((view, index) => (
           <div
@@ -190,14 +163,23 @@ function App() {
                 schema={view.schema}
                 data={view.data}
                 onDataChange={(newData) => {
-                  const updatedJsonData = [...jsonData];
-                  let dataRef = { data: updatedJsonData[updatedJsonData.length - 1].data };
-                  for (let i = 0; i < view.path.length - 1; i++) {
-                    dataRef = dataRef[view.path[i]];
+                  if (index === 0 && view.path.length === 0) {
+                    // Root FormView
+                    const updatedJsonData = [...jsonData];
+                    updatedJsonData[updatedJsonData.length - 1].data = newData.data;
+                    setJsonData(updatedJsonData);
+                    setIsEditing(true);
+                  } else {
+                    // Nested FormView
+                    const updatedJsonData = [...jsonData];
+                    let dataRef = { data: updatedJsonData[updatedJsonData.length - 1].data };
+                    for (let i = 0; i < view.path.length - 1; i++) {
+                      dataRef = dataRef[view.path[i]];
+                    }
+                    dataRef[view.path[view.path.length - 1]] = newData;
+                    setJsonData(updatedJsonData);
+                    setIsEditing(true);
                   }
-                  dataRef[view.path[view.path.length - 1]] = newData;
-                  setJsonData(updatedJsonData);
-                  setIsEditing(true);
                 }}
                 onObjectArrayClick={(subPath, schema) => {
                   let dataAtPath = view.data;
@@ -205,13 +187,18 @@ function App() {
                     dataAtPath = dataAtPath?.[key];
                   }
                   
+                  // For root FormView (index 0), use direct path
+                  const fullPath = index === 0 && view.path.length === 0 
+                    ? subPath 
+                    : [...view.path, ...subPath];
+                  
                   setNestedViews(prev => [
                     ...prev.slice(0, index + 1),
                     {
                       type: 'table',
                       schema: schema,
                       data: dataAtPath || [],
-                      path: [...view.path, ...subPath]
+                      path: fullPath
                     }
                   ]);
                 }}

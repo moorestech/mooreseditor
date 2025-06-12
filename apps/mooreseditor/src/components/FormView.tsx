@@ -8,33 +8,16 @@ import {
   Stack, 
   Group, 
   Text, 
-  Paper,
-  Title,
-  Divider,
-  Badge,
-  ActionIcon,
   Box,
   Grid,
-  Card,
   Textarea,
   Switch,
-  rem,
-  Tooltip,
-  Container
+  ActionIcon,
+  Flex
 } from '@mantine/core';
 import { 
   IconPlus, 
-  IconTrash, 
-  IconDatabase,
-  IconHash,
-  IconLetterT,
-  IconList,
-  IconCube,
-  IconVector,
-  IconToggleLeft,
-  IconBraces,
-  IconId,
-  IconCode
+  IconTrash
 } from '@tabler/icons-react';
 
 import type { Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, IntegerSchema, NumberSchema, BooleanSchema, SwitchSchema, ValueSchema } from '../libs/schema/types';
@@ -124,62 +107,6 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
         return null;
     };
 
-    const getTypeIcon = (type: string) => {
-        switch (type) {
-            case 'string':
-                return <IconLetterT size={16} />;
-            case 'uuid':
-                return <IconId size={16} />;
-            case 'enum':
-                return <IconList size={16} />;
-            case 'integer':
-            case 'number':
-                return <IconHash size={16} />;
-            case 'boolean':
-                return <IconToggleLeft size={16} />;
-            case 'vector2':
-            case 'vector2Int':
-            case 'vector3':
-            case 'vector3Int':
-            case 'vector4':
-            case 'vector4Int':
-                return <IconVector size={16} />;
-            case 'object':
-                return <IconCube size={16} />;
-            case 'array':
-                return <IconDatabase size={16} />;
-            default:
-                return <IconCode size={16} />;
-        }
-    };
-
-    const getTypeColor = (type: string) => {
-        switch (type) {
-            case 'string':
-            case 'uuid':
-                return 'blue';
-            case 'enum':
-                return 'cyan';
-            case 'integer':
-            case 'number':
-                return 'violet';
-            case 'boolean':
-                return 'green';
-            case 'vector2':
-            case 'vector2Int':
-            case 'vector3':
-            case 'vector3Int':
-            case 'vector4':
-            case 'vector4Int':
-                return 'orange';
-            case 'object':
-                return 'pink';
-            case 'array':
-                return 'grape';
-            default:
-                return 'gray';
-        }
-    };
 
     const renderPrimitiveInput = (schema: ValueSchema, value: any, onChange: (value: any) => void): React.ReactElement => {
         if (!('type' in schema)) {
@@ -216,7 +143,6 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                         onChange={(e) => onChange(e.currentTarget.value)}
                         placeholder="00000000-0000-0000-0000-000000000000"
                         style={{ fontFamily: 'monospace' }}
-                        leftSection={<IconId size={16} />}
                     />
                 );
             
@@ -263,111 +189,91 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                     <Switch
                         checked={value || false}
                         onChange={(e) => onChange(e.currentTarget.checked)}
-                        label={value ? "True" : "False"}
-                        size="md"
                     />
                 );
             
             case 'vector2':
             case 'vector2Int':
                 return (
-                    <Grid gutter="xs">
-                        <Grid.Col span={6}>
-                            <NumberInput
-                                label="X"
-                                value={value?.x || 0}
-                                onChange={(val) => onChange({ ...value, x: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <NumberInput
-                                label="Y"
-                                value={value?.y || 0}
-                                onChange={(val) => onChange({ ...value, y: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                    </Grid>
+                    <Group gap="xs">
+                        <NumberInput
+                            placeholder="X"
+                            value={value?.x || 0}
+                            onChange={(val) => onChange({ ...value, x: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 100 }}
+                        />
+                        <NumberInput
+                            placeholder="Y"
+                            value={value?.y || 0}
+                            onChange={(val) => onChange({ ...value, y: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 100 }}
+                        />
+                    </Group>
                 );
             
             case 'vector3':
             case 'vector3Int':
                 return (
-                    <Grid gutter="xs">
-                        <Grid.Col span={4}>
-                            <NumberInput
-                                label="X"
-                                value={value?.x || 0}
-                                onChange={(val) => onChange({ ...value, x: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                            <NumberInput
-                                label="Y"
-                                value={value?.y || 0}
-                                onChange={(val) => onChange({ ...value, y: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                            <NumberInput
-                                label="Z"
-                                value={value?.z || 0}
-                                onChange={(val) => onChange({ ...value, z: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                    </Grid>
+                    <Group gap="xs">
+                        <NumberInput
+                            placeholder="X"
+                            value={value?.x || 0}
+                            onChange={(val) => onChange({ ...value, x: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 80 }}
+                        />
+                        <NumberInput
+                            placeholder="Y"
+                            value={value?.y || 0}
+                            onChange={(val) => onChange({ ...value, y: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 80 }}
+                        />
+                        <NumberInput
+                            placeholder="Z"
+                            value={value?.z || 0}
+                            onChange={(val) => onChange({ ...value, z: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 80 }}
+                        />
+                    </Group>
                 );
             
             case 'vector4':
             case 'vector4Int':
                 return (
-                    <Grid gutter="xs">
-                        <Grid.Col span={3}>
-                            <NumberInput
-                                label="X"
-                                value={value?.x || 0}
-                                onChange={(val) => onChange({ ...value, x: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                            <NumberInput
-                                label="Y"
-                                value={value?.y || 0}
-                                onChange={(val) => onChange({ ...value, y: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                            <NumberInput
-                                label="Z"
-                                value={value?.z || 0}
-                                onChange={(val) => onChange({ ...value, z: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                            <NumberInput
-                                label="W"
-                                value={value?.w || 0}
-                                onChange={(val) => onChange({ ...value, w: val })}
-                                allowDecimal={!schema.type.includes('Int')}
-                                size="sm"
-                            />
-                        </Grid.Col>
-                    </Grid>
+                    <Group gap="xs">
+                        <NumberInput
+                            placeholder="X"
+                            value={value?.x || 0}
+                            onChange={(val) => onChange({ ...value, x: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 70 }}
+                        />
+                        <NumberInput
+                            placeholder="Y"
+                            value={value?.y || 0}
+                            onChange={(val) => onChange({ ...value, y: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 70 }}
+                        />
+                        <NumberInput
+                            placeholder="Z"
+                            value={value?.z || 0}
+                            onChange={(val) => onChange({ ...value, z: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 70 }}
+                        />
+                        <NumberInput
+                            placeholder="W"
+                            value={value?.w || 0}
+                            onChange={(val) => onChange({ ...value, w: val })}
+                            allowDecimal={!schema.type.includes('Int')}
+                            style={{ width: 70 }}
+                        />
+                    </Group>
                 );
             
             default:
@@ -390,24 +296,20 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
 
     if (isSwitchSchema(schema)) {
         return (
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Text c="dimmed" ta="center">Switch schemas are not yet supported</Text>
-            </Card>
+            <Text c="dimmed">Switch schemas are not yet supported</Text>
         );
     }
 
     if (!isValueSchema(schema)) {
         return (
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Text c="red" ta="center">Invalid schema</Text>
-            </Card>
+            <Text c="red">Invalid schema</Text>
         );
     }
 
     if (schema.type === 'object') {
         const objSchema = schema as ObjectSchema;
         return (
-            <Stack gap="md">
+            <Stack gap="sm">
                 {objSchema.properties?.map((property) => {
                     const propSchema = property as any;
                     const propertyKey = property.key;
@@ -421,20 +323,9 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                     }
                     
                     return (
-                        <Card key={propertyKey} shadow="xs" padding="md" radius="md" withBorder>
-                            <Stack gap="sm">
-                                <Group justify="space-between" align="center">
-                                    <Group gap="xs">
-                                        {getTypeIcon(propertySchema.type)}
-                                        <Title order={5}>{propertyKey}</Title>
-                                    </Group>
-                                    <Badge color={getTypeColor(propertySchema.type)} variant="light" size="sm">
-                                        {propertySchema.type}
-                                    </Badge>
-                                </Group>
-                                
-                                <Divider />
-                                
+                        <Flex key={propertyKey} align="center" gap="md">
+                            <Text style={{ minWidth: 120 }}>{propertyKey}</Text>
+                            <Box style={{ flex: 1 }}>
                                 {propertySchema.type === 'object' ? (
                                     <Box pl="md">
                                         <FormView
@@ -448,48 +339,37 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                                 ) : propertySchema.type === 'array' && propertySchema.items && 'type' in propertySchema.items && propertySchema.items.type === 'object' ? (
                                     <Button
                                         onClick={() => onObjectArrayClick?.([...path, propertyKey], propertySchema)}
-                                        variant="gradient"
-                                        gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
-                                        leftSection={<IconDatabase size={20} />}
-                                        fullWidth
-                                        size="md"
+                                        variant="light"
                                     >
-                                        Edit {propertyKey} (Object Array)
+                                        Edit {propertyKey}
                                     </Button>
                                 ) : propertySchema.type === 'array' && propertySchema.items && 'type' in propertySchema.items && isPrimitiveType(propertySchema.items.type) ? (
                                     <Stack gap="xs">
                                         {(data?.[propertyKey] || []).map((item: any, index: number) => (
-                                            <Paper key={index} p="xs" withBorder>
-                                                <Group gap="xs">
-                                                    <Text fw={500} size="sm" c="dimmed" style={{ minWidth: rem(30) }}>
-                                                        {index + 1}.
-                                                    </Text>
-                                                    <Box style={{ flex: 1 }}>
-                                                        {renderPrimitiveInput(
-                                                            propertySchema.items as ValueSchema,
-                                                            item,
-                                                            (value) => {
-                                                                const newArray = [...(data?.[propertyKey] || [])];
-                                                                newArray[index] = value;
-                                                                handleObjectPropertyChange(propertyKey, newArray);
-                                                            }
-                                                        )}
-                                                    </Box>
-                                                    <Tooltip label="Remove item">
-                                                        <ActionIcon
-                                                            color="red"
-                                                            variant="subtle"
-                                                            onClick={() => {
-                                                                const newArray = [...(data?.[propertyKey] || [])];
-                                                                newArray.splice(index, 1);
-                                                                handleObjectPropertyChange(propertyKey, newArray);
-                                                            }}
-                                                        >
-                                                            <IconTrash size={16} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </Group>
-                                            </Paper>
+                                            <Group key={index} gap="xs">
+                                                <Box style={{ flex: 1 }}>
+                                                    {renderPrimitiveInput(
+                                                        propertySchema.items as ValueSchema,
+                                                        item,
+                                                        (value) => {
+                                                            const newArray = [...(data?.[propertyKey] || [])];
+                                                            newArray[index] = value;
+                                                            handleObjectPropertyChange(propertyKey, newArray);
+                                                        }
+                                                    )}
+                                                </Box>
+                                                <ActionIcon
+                                                    color="red"
+                                                    variant="subtle"
+                                                    onClick={() => {
+                                                        const newArray = [...(data?.[propertyKey] || [])];
+                                                        newArray.splice(index, 1);
+                                                        handleObjectPropertyChange(propertyKey, newArray);
+                                                    }}
+                                                >
+                                                    <IconTrash size={16} />
+                                                </ActionIcon>
+                                            </Group>
                                         ))}
                                         <Button
                                             variant="light"
@@ -510,8 +390,8 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                                         handleObjectPropertyChange(propertyKey, value)
                                     )
                                 )}
-                            </Stack>
-                        </Card>
+                            </Box>
+                        </Flex>
                     );
                 })}
             </Stack>
@@ -520,64 +400,39 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
 
     if (schema.type === 'array' && schema.items && 'type' in schema.items && isPrimitiveType(schema.items.type)) {
         return (
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Stack gap="md">
-                    <Group justify="space-between">
-                        <Title order={4}>Array Items</Title>
-                        <Badge color="blue" variant="light">
-                            {schema.items.type} array
-                        </Badge>
-                    </Group>
-                    
-                    <Divider />
-                    
-                    <Stack gap="xs">
-                        {(data || []).map((item: any, index: number) => (
-                            <Paper key={index} p="xs" withBorder>
-                                <Group gap="xs">
-                                    <Text fw={500} size="sm" c="dimmed" style={{ minWidth: rem(30) }}>
-                                        {index + 1}.
-                                    </Text>
-                                    <Box style={{ flex: 1 }}>
-                                        {renderPrimitiveInput(schema.items as ValueSchema, item, (value) => handleArrayItemChange(index, value))}
-                                    </Box>
-                                    <Tooltip label="Remove item">
-                                        <ActionIcon
-                                            color="red"
-                                            variant="subtle"
-                                            onClick={() => removeArrayItem(index)}
-                                        >
-                                            <IconTrash size={16} />
-                                        </ActionIcon>
-                                    </Tooltip>
-                                </Group>
-                            </Paper>
-                        ))}
-                        <Button
-                            variant="light"
-                            leftSection={<IconPlus size={16} />}
-                            onClick={addArrayItem}
+            <Stack gap="xs">
+                {(data || []).map((item: any, index: number) => (
+                    <Group key={index} gap="xs">
+                        <Box style={{ flex: 1 }}>
+                            {renderPrimitiveInput(schema.items as ValueSchema, item, (value) => handleArrayItemChange(index, value))}
+                        </Box>
+                        <ActionIcon
+                            color="red"
+                            variant="subtle"
+                            onClick={() => removeArrayItem(index)}
                         >
-                            Add Item
-                        </Button>
-                    </Stack>
-                </Stack>
-            </Card>
+                            <IconTrash size={16} />
+                        </ActionIcon>
+                    </Group>
+                ))}
+                <Button
+                    variant="light"
+                    size="sm"
+                    leftSection={<IconPlus size={16} />}
+                    onClick={addArrayItem}
+                >
+                    Add Item
+                </Button>
+            </Stack>
         );
     }
 
     if (isPrimitiveType(schema.type)) {
-        return (
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-                {renderPrimitiveInput(schema, data, handlePrimitiveChange)}
-            </Card>
-        );
+        return renderPrimitiveInput(schema, data, handlePrimitiveChange);
     }
 
     return (
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Text c="dimmed" ta="center">Unsupported schema type: {schema.type}</Text>
-        </Card>
+        <Text c="dimmed">Unsupported schema type: {schema.type}</Text>
     );
 }
 

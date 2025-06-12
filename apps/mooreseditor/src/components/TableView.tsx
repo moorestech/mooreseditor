@@ -61,7 +61,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) =>
               <Table.Td>
                 <Button
                   size="xs"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     onRowSelect?.(index);
                   }}

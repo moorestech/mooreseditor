@@ -37,7 +37,7 @@ import {
   IconCode
 } from '@tabler/icons-react';
 
-import type { Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, IntegerSchema, NumberSchema, SwitchSchema, ValueSchema } from '../libs/schema/types';
+import type { Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, IntegerSchema, NumberSchema, BooleanSchema, SwitchSchema, ValueSchema } from '../libs/schema/types';
 
 interface FormViewProps {
     schema: Schema;

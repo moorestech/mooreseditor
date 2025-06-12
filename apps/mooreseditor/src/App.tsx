@@ -80,7 +80,7 @@ function App() {
     if (typeof nestedData === "object" && nestedData !== null) {
       setNestedViews((prev) => [
         ...prev,
-        { key: "Nested Data", data: nestedData },
+        { type: 'table' as const, schema: {}, data: nestedData, path: [] },
       ]);
     }
   }
@@ -172,7 +172,7 @@ function App() {
                   } else {
                     // Nested FormView
                     const updatedJsonData = [...jsonData];
-                    let dataRef = { data: updatedJsonData[updatedJsonData.length - 1].data };
+                    let dataRef: any = { data: updatedJsonData[updatedJsonData.length - 1].data };
                     for (let i = 0; i < view.path.length - 1; i++) {
                       dataRef = dataRef[view.path[i]];
                     }

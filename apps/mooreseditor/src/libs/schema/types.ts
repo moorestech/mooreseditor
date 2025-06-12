@@ -90,6 +90,12 @@ export interface Vector4Int {
   default?: [number, number, number, number];
 }
 
+export interface BooleanSchema {
+  type: 'boolean';
+  optional?: boolean;
+  default?: boolean;
+}
+
 export interface SwitchSchema {
   switch: string;
   cases: Array<{
@@ -103,6 +109,7 @@ export type PrimitiveSchema = |
   UuidSchema |
   IntegerSchema |
   NumberSchema |
+  BooleanSchema |
   Vector2 |
   Vector3 |
   Vector4 |
@@ -120,6 +127,6 @@ export type Schema = |
   ValueSchema |
   SwitchSchema;
 
-export type SchemaContainer = ObjectSchema & {
+export type SchemaContainer = ArraySchema & {
   id: string;
 }

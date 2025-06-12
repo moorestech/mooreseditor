@@ -89,24 +89,16 @@ function App() {
     <MantineProvider theme={theme}>
       <AppShell
         header={{ height: 64 }}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          gap: "3px",
-          paddingTop: "16px",
-          overflowX: "auto",
-        }}
+        padding={0}
       >
         <div
           style={{
-            marginTop: "16px",
-            borderTop: "1px solid #E2E2E2",
-            borderLeft: "1px solid #E2E2E2",
-            paddingTop: "16px",
-            paddingLeft: "16px",
+            display: "flex",
+            flexDirection: "row",
             height: "100vh",
-            overflowY: "auto",
+            overflow: "hidden",
+            padding: "16px",
+            gap: "16px",
           }}
         >
           <Sidebar
@@ -122,23 +114,28 @@ function App() {
             openProjectDir={openProjectDir}
             isEditing={isEditing}
           />
-        </div>
 
-
-        {nestedViews.map((view, index) => (
           <div
-            key={index}
             style={{
-              marginTop: "16px",
-              borderTop: "1px solid #E2E2E2",
-              borderLeft: "1px solid #E2E2E2",
-              paddingTop: "16px",
-              paddingLeft: "16px",
-              minWidth: "400px",
-              height: "100vh",
-              overflowY: "auto",
+              display: "flex",
+              flexDirection: "row",
+              flex: 1,
+              overflowX: "auto",
+              height: "100%",
             }}
           >
+            {nestedViews.map((view, index) => (
+              <div
+                key={index}
+                style={{
+                  borderRight: index < nestedViews.length - 1 ? "1px solid #E2E2E2" : "none",
+                  padding: "16px",
+                  minWidth: "400px",
+                  height: "100%",
+                  overflowY: "auto",
+                  flexShrink: 0,
+                }}
+              >
             {view.type === 'table' ? (
               <TableView
                 schema={view.schema}
@@ -204,30 +201,29 @@ function App() {
                 }}
               />
             )}
-          </div>
-        ))}
+              </div>
+            ))}
 
-        {editData && (
-          <div
-            style={{
-              marginTop: "16px",
-              borderTop: "1px solid #E2E2E2",
-              borderLeft: "1px solid #E2E2E2",
-              paddingTop: "16px",
-              paddingLeft: "16px",
-              minWidth: "400px",
-              height: "100vh",
-              overflowY: "auto",
-            }}
-          >
+            {editData && (
+              <div
+                style={{
+                  padding: "16px",
+                  minWidth: "400px",
+                  height: "100%",
+                  overflowY: "auto",
+                  flexShrink: 0,
+                }}
+              >
             <EditView
               editData={editData}
               setEditData={setEditData}
               setIsEditing={setIsEditing}
               onSave={handleSave}
             />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </AppShell>
     </MantineProvider>
   );

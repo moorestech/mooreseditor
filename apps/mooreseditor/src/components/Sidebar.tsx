@@ -20,24 +20,21 @@ function Sidebar({
   return (
     <div
       style={{
-        position: "absolute",
         width: "194px",
-        height: "100vh",
-        left: "16px",
-        top: "16px",
+        height: "100%",
         background: "#FFFFFF",
         boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
         padding: "16px",
         overflowY: "auto",
+        flexShrink: 0,
       }}
     >
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          position: "absolute",
-          top: "15px",
+          marginBottom: "16px",
         }}
       >
         <MoorestechIcon />
@@ -56,10 +53,9 @@ function Sidebar({
       <Button
         style={{
           display: "block",
-          margin: "54px auto 0",
+          margin: "16px auto",
           width: "154px",
           height: "32px",
-          bottom: "16px",
           background: "#EE722F",
           borderRadius: "8px",
           color: "#FFFFFF",

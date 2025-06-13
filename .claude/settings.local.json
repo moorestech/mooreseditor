@@ -15,7 +15,9 @@
       "mcp__playwright__browser_take_screenshot",
       "mcp__playwright__browser_wait_for",
       "Bash(kill:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_close"
     ],
     "deny": []
   }

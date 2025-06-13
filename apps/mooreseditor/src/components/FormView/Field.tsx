@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Box, Text, Flex, Button } from '@mantine/core';
 
-import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 import ArrayField from './ArrayField';
+import CollapsibleObject from './CollapsibleObject';
 import {
   StringInput,
   UuidInput,
@@ -16,6 +16,8 @@ import {
   Vector4Input
 } from './inputs';
 
+import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
+
 interface FieldProps {
     label: string;
     schema: Schema;
@@ -23,18 +25,36 @@ interface FieldProps {
     onDataChange: (value: any) => void;
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path: string[];
+    parentData?: any;
 }
 
-function Field({ label, schema, data, onDataChange, onObjectArrayClick, path }: FieldProps) {
+function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, parentData }: FieldProps) {
     const isSwitchSchema = (s: Schema): s is SwitchSchema => 'switch' in s;
     const isValueSchema = (s: Schema): s is ValueSchema => 'type' in s;
 
     if (isSwitchSchema(schema)) {
+        // Get the value of the switch field from parent data
+        const switchValue = parentData?.[schema.switch];
+        
+        // Find the matching case
+        const matchingCase = schema.cases?.find(c => c.when === switchValue);
+        
+        if (!matchingCase) {
+            // If no matching case, return empty
+            return null;
+        }
+        
+        // Render the schema for the matching case
         return (
-            <Flex align="center" gap="md">
-                {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
-                <Text c="dimmed">Switch schemas are not yet supported</Text>
-            </Flex>
+            <Field
+                label={label}
+                schema={matchingCase}
+                data={data}
+                onDataChange={onDataChange}
+                onObjectArrayClick={onObjectArrayClick}
+                path={path}
+                parentData={parentData}
+            />
         );
     }
 
@@ -49,21 +69,39 @@ function Field({ label, schema, data, onDataChange, onObjectArrayClick, path }: 
 
     // Handle object type recursively
     if (schema.type === 'object') {
-        // To avoid circular dependency, we'll import FormView dynamically
-        const FormView = require('./index').default;
+        // Use lazy loading to avoid circular dependency
+        const FormViewLazy = React.lazy(() => import('./index'));
+        
+        // If there's a label, use collapsible display
+        if (label) {
+            return (
+                <CollapsibleObject label={label} defaultExpanded={true}>
+                    <React.Suspense fallback={<Text c="dimmed">Loading...</Text>}>
+                        <FormViewLazy
+                            schema={schema}
+                            data={data}
+                            onDataChange={onDataChange}
+                            onObjectArrayClick={onObjectArrayClick}
+                            path={path}
+                            parentData={parentData}
+                        />
+                    </React.Suspense>
+                </CollapsibleObject>
+            );
+        }
+        
+        // No label means it's the root object, display directly
         return (
-            <Flex align="flex-start" gap="md">
-                {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
-                <Box style={{ flex: 1 }} pl={label ? "md" : 0}>
-                    <FormView
-                        schema={schema}
-                        data={data}
-                        onDataChange={onDataChange}
-                        onObjectArrayClick={onObjectArrayClick}
-                        path={path}
-                    />
-                </Box>
-            </Flex>
+            <React.Suspense fallback={<Text c="dimmed">Loading...</Text>}>
+                <FormViewLazy
+                    schema={schema}
+                    data={data}
+                    onDataChange={onDataChange}
+                    onObjectArrayClick={onObjectArrayClick}
+                    path={path}
+                    parentData={parentData}
+                />
+            </React.Suspense>
         );
     }
 

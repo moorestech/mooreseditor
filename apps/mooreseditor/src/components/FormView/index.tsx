@@ -2,8 +2,9 @@ import React from 'react';
 
 import { Stack } from '@mantine/core';
 
-import type { Schema, ObjectSchema } from '../../libs/schema/types';
 import Field from './Field';
+
+import type { Schema, ObjectSchema } from '../../libs/schema/types';
 
 interface FormViewProps {
     schema: Schema;
@@ -11,9 +12,10 @@ interface FormViewProps {
     onDataChange: (newData: any) => void;
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path?: string[];
+    parentData?: any;
 }
 
-function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }: FormViewProps) {
+function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData }: FormViewProps) {
     // Always treat the top-level as an object
     const handlePropertyChange = (key: string, value: any) => {
         onDataChange({
@@ -40,6 +42,7 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
                             onDataChange={(value) => handlePropertyChange(propertyKey, value)}
                             onObjectArrayClick={onObjectArrayClick}
                             path={[...path, propertyKey]}
+                            parentData={data}
                         />
                     );
                 })}
@@ -56,6 +59,7 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
             onDataChange={onDataChange}
             onObjectArrayClick={onObjectArrayClick}
             path={path}
+            parentData={parentData}
         />
     );
 }

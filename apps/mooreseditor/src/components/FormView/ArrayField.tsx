@@ -3,8 +3,9 @@ import React from 'react';
 import { Stack, Group, Box, Button, ActionIcon } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
 import Field from './Field';
+
+import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
 
 interface ArrayFieldProps {
     schema: ArraySchema;
@@ -90,6 +91,7 @@ function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
                             data={item}
                             onDataChange={(value) => handleItemChange(index, value)}
                             path={[index.toString()]}
+                            parentData={item}
                         />
                     </Box>
                     <ActionIcon

@@ -1,0 +1,171 @@
+{
+  "data": [
+    {
+      "companyInfo": {
+    "companyName": "TechVentures Inc.",
+    "foundedYear": 2019,
+    "isPublic": true,
+    "headquarters": {
+      "street": "123 Innovation Drive",
+      "city": "Tokyo",
+      "zipCode": "100-0001",
+      "country": "Japan"
+    }
+  },
+  "employees": [
+    {
+      "employeeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "firstName": "Hiroshi",
+      "lastName": "Tanaka",
+      "age": 32,
+      "department": "Engineering",
+      "position": "Senior Software Engineer",
+      "salary": 8500000,
+      "skills": ["JavaScript", "TypeScript", "React", "Node.js"],
+      "contactInfo": {
+        "email": "h.tanaka@techventures.com",
+        "phone": "+81-3-1234-5678",
+        "emergencyContact": {
+          "name": "Yuki Tanaka",
+          "relationship": "Spouse",
+          "phone": "+81-90-1234-5678"
+        }
+      }
+    },
+    {
+      "employeeId": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "age": 28,
+      "department": "Marketing",
+      "position": "Marketing Manager",
+      "skills": ["SEO", "Content Marketing", "Google Analytics", "Social Media"],
+      "contactInfo": {
+        "email": "s.johnson@techventures.com"
+      }
+    },
+    {
+      "employeeId": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+      "firstName": "Kenji",
+      "lastName": "Yamamoto",
+      "age": 45,
+      "department": "Finance",
+      "position": "CFO",
+      "salary": 15000000,
+      "skills": ["Financial Analysis", "Budgeting", "Risk Management"],
+      "contactInfo": {
+        "email": "k.yamamoto@techventures.com",
+        "phone": "+81-3-9876-5432"
+      }
+    }
+  ],
+  "projectData": {
+    "projects": [
+      {
+        "projectId": "d4e5f6a7-b8c9-0123-defa-456789012345",
+        "projectName": "Customer Portal Redesign",
+        "status": "InProgress",
+        "projectType": "Web",
+        "teamMembers": [
+          {
+            "employeeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "role": "Lead Developer",
+            "hoursPerWeek": 40
+          },
+          {
+            "employeeId": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+            "role": "UX Consultant",
+            "hoursPerWeek": 20
+          }
+        ],
+        "projectDetails": {
+          "framework": "Next.js",
+          "deploymentUrl": "https://portal.techventures.com",
+          "sslEnabled": true
+        }
+      },
+      {
+        "projectId": "e5f6a7b8-c9d0-1234-efab-567890123456",
+        "projectName": "Mobile Banking App",
+        "status": "Testing",
+        "projectType": "Mobile",
+        "teamMembers": [
+          {
+            "employeeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "role": "Technical Lead",
+            "hoursPerWeek": 30
+          }
+        ],
+        "projectDetails": {
+          "platforms": ["iOS", "Android"],
+          "minOSVersion": {
+            "ios": "14.0",
+            "android": "8.0"
+          }
+        }
+      },
+      {
+        "projectId": "f6a7b8c9-d0e1-2345-fabc-678901234567",
+        "projectName": "Internal API Gateway",
+        "status": "Planning",
+        "projectType": "API",
+        "teamMembers": [],
+        "projectDetails": {
+          "apiType": "REST",
+          "authentication": {
+            "method": "JWT",
+            "expirationTime": 3600
+          }
+        }
+      },
+      {
+        "projectId": "a7b8c9d0-e1f2-3456-abcd-789012345678",
+        "projectName": "Cloud Migration Phase 2",
+        "status": "Completed",
+        "projectType": "Infrastructure",
+        "teamMembers": [
+          {
+            "employeeId": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+            "role": "Budget Oversight",
+            "hoursPerWeek": 10
+          }
+        ],
+        "projectDetails": {
+          "cloudProvider": "AWS",
+          "services": ["EC2", "RDS", "S3", "CloudFront", "Lambda"],
+          "monthlyBudget": 50000
+        }
+      }
+    ]
+  },
+  "settings": {
+    "general": {
+      "theme": "dark",
+      "language": "ja",
+      "timezone": "Asia/Tokyo"
+    },
+    "notifications": {
+      "emailNotifications": true,
+      "pushNotifications": true,
+      "notificationPreferences": {
+        "projectUpdates": true,
+        "teamMessages": true,
+        "systemAlerts": false
+      }
+    },
+    "security": {
+      "twoFactorAuth": true,
+      "sessionTimeout": 60,
+      "ipWhitelist": ["192.168.1.0/24", "10.0.0.0/8"]
+    }
+  },
+  "metadata": {
+    "createdAt": "2024-01-15T09:00:00Z",
+    "updatedAt": "2024-12-13T14:30:00Z",
+    "version": "2.1.0",
+    "tags": ["production", "main-branch", "stable"],
+    "customFields": {}
+  }
+    }
+  ]
+}

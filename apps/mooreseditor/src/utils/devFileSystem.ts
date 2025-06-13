@@ -26,7 +26,7 @@ export async function getSampleSchema(name: string): Promise<string> {
  * @returns スキーマファイル名のリスト
  */
 export function getSampleSchemaList(): string[] {
-  return ['mapObjects', 'blocks', 'items'];
+  return ['mapObjects', 'blocks', 'items', 'objectSample'];
 }
 
 async function fetchFileContent(path: string): Promise<string> {

@@ -17,7 +17,8 @@
       "Bash(kill:*)",
       "Bash(npm run:*)",
       "mcp__playwright__browser_install",
-      "mcp__playwright__browser_close"
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_type"
     ],
     "deny": []
   }

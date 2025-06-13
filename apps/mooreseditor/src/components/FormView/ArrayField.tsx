@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 import { Stack, Group, Box, Button, ActionIcon } from '@mantine/core';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
@@ -13,29 +13,16 @@ interface ArrayFieldProps {
     onDataChange: (value: any[]) => void;
 }
 
-function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
+const ArrayField = memo(function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
     const arrayData = data || [];
 
-    const handleItemChange = (index: number, value: any) => {
+    const handleItemChange = useCallback((index: number, value: any) => {
         const newArray = [...arrayData];
         newArray[index] = value;
         onDataChange(newArray);
-    };
+    }, [arrayData, onDataChange]);
 
-    const addItem = () => {
-        const newArray = [...arrayData];
-        const defaultValue = getDefaultValue(schema.items);
-        newArray.push(defaultValue);
-        onDataChange(newArray);
-    };
-
-    const removeItem = (index: number) => {
-        const newArray = [...arrayData];
-        newArray.splice(index, 1);
-        onDataChange(newArray);
-    };
-
-    const getDefaultValue = (itemSchema: ValueSchema): any => {
+    const getDefaultValue = useCallback((itemSchema: ValueSchema): any => {
         if ('type' in itemSchema) {
             switch (itemSchema.type) {
                 case 'string':
@@ -78,7 +65,21 @@ function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
             }
         }
         return null;
-    };
+    }, []);
+
+    const addItem = useCallback(() => {
+        const newArray = [...arrayData];
+        const defaultValue = getDefaultValue(schema.items);
+        newArray.push(defaultValue);
+        onDataChange(newArray);
+    }, [arrayData, schema.items, getDefaultValue, onDataChange]);
+
+    const removeItem = useCallback((index: number) => {
+        const newArray = [...arrayData];
+        newArray.splice(index, 1);
+        onDataChange(newArray);
+    }, [arrayData, onDataChange]);
+
 
     return (
         <Stack gap="xs">
@@ -113,6 +114,6 @@ function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
             </Button>
         </Stack>
     );
-}
+});
 
 export default ArrayField;

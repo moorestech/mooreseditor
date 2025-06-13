@@ -1,16 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TextInput, Textarea } from '@mantine/core';
 import { FormInputProps } from './types';
 import type { StringSchema } from '../../../libs/schema/types';
+import { useDebouncedCallback } from '../../../hooks/useDebounce';
 
-export const StringInput: React.FC<FormInputProps<string>> = ({ value, onChange, schema }) => {
+export const StringInput: React.FC<FormInputProps<string>> = React.memo(({ value, onChange, schema }) => {
   const stringSchema = schema as StringSchema;
+  const [localValue, setLocalValue] = useState(value || '');
+  
+  // Update local value when prop changes
+  useEffect(() => {
+    setLocalValue(value || '');
+  }, [value]);
+  
+  // Debounce the onChange callback
+  const debouncedOnChange = useDebouncedCallback(
+    (newValue: string) => {
+      onChange(newValue);
+    },
+    300,
+    [onChange]
+  );
+  
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const newValue = e.currentTarget.value;
+    setLocalValue(newValue);
+    debouncedOnChange(newValue);
+  }, [debouncedOnChange]);
   
   if (stringSchema.default && stringSchema.default.length > 50) {
     return (
       <Textarea
-        value={value || ''}
-        onChange={(e) => onChange(e.currentTarget.value)}
+        value={localValue}
+        onChange={handleChange}
         placeholder={stringSchema.default}
         autosize
         minRows={2}
@@ -21,9 +43,9 @@ export const StringInput: React.FC<FormInputProps<string>> = ({ value, onChange,
   
   return (
     <TextInput
-      value={value || ''}
-      onChange={(e) => onChange(e.currentTarget.value)}
+      value={localValue}
+      onChange={handleChange}
       placeholder={stringSchema.default}
     />
   );
-};
+});

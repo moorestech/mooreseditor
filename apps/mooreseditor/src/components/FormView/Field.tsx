@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 import { Box, Text, Flex, Button } from '@mantine/core';
 
@@ -18,6 +18,9 @@ import {
 
 import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 
+// Move React.lazy outside to prevent re-creating on every render
+const FormViewLazy = React.lazy(() => import('./index'));
+
 interface FieldProps {
     label: string;
     schema: Schema;
@@ -28,7 +31,7 @@ interface FieldProps {
     parentData?: any;
 }
 
-function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, parentData }: FieldProps) {
+const Field = memo(function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, parentData }: FieldProps) {
     const isSwitchSchema = (s: Schema): s is SwitchSchema => 'switch' in s;
     const isValueSchema = (s: Schema): s is ValueSchema => 'type' in s;
 
@@ -69,9 +72,6 @@ function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, pa
 
     // Handle object type recursively
     if (schema.type === 'object') {
-        // Use lazy loading to avoid circular dependency
-        const FormViewLazy = React.lazy(() => import('./index'));
-        
         // If there's a label, use collapsible display
         if (label) {
             return (
@@ -109,11 +109,15 @@ function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, pa
     if (schema.type === 'array') {
         // Object arrays get a button to open in table view
         if (schema.items && 'type' in schema.items && schema.items.type === 'object') {
+            const handleObjectArrayClick = useCallback(() => {
+                onObjectArrayClick?.(path, schema);
+            }, [onObjectArrayClick, path, schema]);
+            
             return (
                 <Flex align="center" gap="md">
                     {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
                     <Button
-                        onClick={() => onObjectArrayClick?.(path, schema)}
+                        onClick={handleObjectArrayClick}
                         variant="light"
                     >
                         Edit {label}
@@ -162,7 +166,7 @@ function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, pa
             case 'vector4Int':
                 return <Vector4Input value={data} onChange={onDataChange} schema={schema} />;
             default:
-                return <Text c="dimmed" size="sm">Unsupported type: {schema.type}</Text>;
+                return <Text c="dimmed" size="sm">Unsupported type: {(schema as any).type}</Text>;
         }
     };
 
@@ -174,6 +178,6 @@ function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, pa
             </Box>
         </Flex>
     );
-}
+});
 
 export default Field;

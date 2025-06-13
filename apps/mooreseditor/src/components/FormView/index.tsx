@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 import { Stack } from '@mantine/core';
 
@@ -15,14 +15,14 @@ interface FormViewProps {
     parentData?: any;
 }
 
-function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData }: FormViewProps) {
+const FormView = memo(function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData }: FormViewProps) {
     // Always treat the top-level as an object
-    const handlePropertyChange = (key: string, value: any) => {
+    const handlePropertyChange = useCallback((key: string, value: any) => {
         onDataChange({
             ...data,
             [key]: value
         });
-    };
+    }, [data, onDataChange]);
 
     // Handle the case where schema is an object
     if ('type' in schema && schema.type === 'object') {
@@ -62,6 +62,6 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], p
             parentData={parentData}
         />
     );
-}
+});
 
 export default FormView;

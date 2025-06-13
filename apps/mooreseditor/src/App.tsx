@@ -4,7 +4,6 @@ import {
   AppShell,
   MantineProvider,
   createTheme,
-  ScrollArea,
 } from "@mantine/core";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
@@ -35,10 +34,10 @@ function App() {
   const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
-  const [showFormView, setShowFormView] = useState(false);
+  const [isShowFormView, setIsShowFormView] = useState(false);
 
   useEffect(() => {
-    if (showFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && nestedViews.length === 0) {
+    if (isShowFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && nestedViews.length === 0) {
       setNestedViews([{
         type: 'form',
         schema: schemas[selectedSchema],
@@ -46,7 +45,7 @@ function App() {
         path: []
       }]);
     }
-  }, [showFormView, selectedSchema, schemas, jsonData]);
+  }, [isShowFormView, selectedSchema, schemas, jsonData]);
 
   async function handleSave(data: any) {
     try {
@@ -76,14 +75,6 @@ function App() {
     }
   }
 
-  function handleRowExpand(nestedData: any) {
-    if (typeof nestedData === "object" && nestedData !== null) {
-      setNestedViews((prev) => [
-        ...prev,
-        { type: 'table' as const, schema: {}, data: nestedData, path: [] },
-      ]);
-    }
-  }
 
   return (
     <MantineProvider theme={theme}>
@@ -108,7 +99,7 @@ function App() {
               await loadJsonFile(menuItem, projectDir);
               await loadSchema(menuItem, schemaDir);
               setSelectedSchema(menuItem);
-              setShowFormView(true);
+              setIsShowFormView(true);
               setNestedViews([]);
             }}
             openProjectDir={openProjectDir}

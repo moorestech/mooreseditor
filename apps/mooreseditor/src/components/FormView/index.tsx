@@ -1,17 +1,11 @@
 import React from 'react';
 
 import { 
-  TextInput, 
-  NumberInput, 
-  Select, 
   Button, 
   Stack, 
   Group, 
   Text, 
   Box,
-  Grid,
-  Textarea,
-  Switch,
   ActionIcon,
   Flex
 } from '@mantine/core';
@@ -20,7 +14,18 @@ import {
   IconTrash
 } from '@tabler/icons-react';
 
-import type { Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, IntegerSchema, NumberSchema, BooleanSchema, SwitchSchema, ValueSchema } from '../libs/schema/types';
+import type { Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, IntegerSchema, NumberSchema, BooleanSchema, SwitchSchema, ValueSchema } from '../../libs/schema/types';
+import {
+  StringInput,
+  UuidInput,
+  EnumInput,
+  IntegerInput,
+  NumberInput,
+  BooleanInput,
+  Vector2Input,
+  Vector3Input,
+  Vector4Input
+} from './inputs';
 
 interface FormViewProps {
     schema: Schema;
@@ -115,166 +120,34 @@ function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [] }:
 
         switch (schema.type) {
             case 'string':
-                const stringSchema = schema as StringSchema;
-                if (stringSchema.default && stringSchema.default.length > 50) {
-                    return (
-                        <Textarea
-                            value={value || ''}
-                            onChange={(e) => onChange(e.currentTarget.value)}
-                            placeholder={stringSchema.default}
-                            autosize
-                            minRows={2}
-                            maxRows={4}
-                        />
-                    );
-                }
-                return (
-                    <TextInput
-                        value={value || ''}
-                        onChange={(e) => onChange(e.currentTarget.value)}
-                        placeholder={stringSchema.default}
-                    />
-                );
+                return <StringInput value={value} onChange={onChange} schema={schema} />;
 
             case 'uuid':
-                return (
-                    <TextInput
-                        value={value || ''}
-                        onChange={(e) => onChange(e.currentTarget.value)}
-                        placeholder="00000000-0000-0000-0000-000000000000"
-                        style={{ fontFamily: 'monospace' }}
-                    />
-                );
+                return <UuidInput value={value} onChange={onChange} schema={schema} />;
             
             case 'enum':
-                const enumSchema = schema as EnumSchema;
-                return (
-                    <Select
-                        data={enumSchema.options || []}
-                        value={value || enumSchema.default || ''}
-                        onChange={(val) => onChange(val)}
-                        placeholder="Select an option"
-                        searchable
-                    />
-                );
+                return <EnumInput value={value} onChange={onChange} schema={schema} />;
             
             case 'integer':
-                const intSchema = schema as IntegerSchema;
-                return (
-                    <NumberInput
-                        value={value || 0}
-                        onChange={(val) => onChange(val)}
-                        min={intSchema.min}
-                        max={intSchema.max}
-                        allowDecimal={false}
-                        thousandSeparator=","
-                    />
-                );
+                return <IntegerInput value={value} onChange={onChange} schema={schema} />;
             
             case 'number':
-                const numSchema = schema as NumberSchema;
-                return (
-                    <NumberInput
-                        value={value || 0}
-                        onChange={(val) => onChange(val)}
-                        min={numSchema.min}
-                        max={numSchema.max}
-                        decimalScale={2}
-                        thousandSeparator=","
-                    />
-                );
+                return <NumberInput value={value} onChange={onChange} schema={schema} />;
 
             case 'boolean':
-                return (
-                    <Switch
-                        checked={value || false}
-                        onChange={(e) => onChange(e.currentTarget.checked)}
-                    />
-                );
+                return <BooleanInput value={value} onChange={onChange} schema={schema} />;
             
             case 'vector2':
             case 'vector2Int':
-                return (
-                    <Group gap="xs">
-                        <NumberInput
-                            placeholder="X"
-                            value={value?.x || 0}
-                            onChange={(val) => onChange({ ...value, x: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 100 }}
-                        />
-                        <NumberInput
-                            placeholder="Y"
-                            value={value?.y || 0}
-                            onChange={(val) => onChange({ ...value, y: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 100 }}
-                        />
-                    </Group>
-                );
+                return <Vector2Input value={value} onChange={onChange} schema={schema} />;
             
             case 'vector3':
             case 'vector3Int':
-                return (
-                    <Group gap="xs">
-                        <NumberInput
-                            placeholder="X"
-                            value={value?.x || 0}
-                            onChange={(val) => onChange({ ...value, x: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 80 }}
-                        />
-                        <NumberInput
-                            placeholder="Y"
-                            value={value?.y || 0}
-                            onChange={(val) => onChange({ ...value, y: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 80 }}
-                        />
-                        <NumberInput
-                            placeholder="Z"
-                            value={value?.z || 0}
-                            onChange={(val) => onChange({ ...value, z: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 80 }}
-                        />
-                    </Group>
-                );
+                return <Vector3Input value={value} onChange={onChange} schema={schema} />;
             
             case 'vector4':
             case 'vector4Int':
-                return (
-                    <Group gap="xs">
-                        <NumberInput
-                            placeholder="X"
-                            value={value?.x || 0}
-                            onChange={(val) => onChange({ ...value, x: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 70 }}
-                        />
-                        <NumberInput
-                            placeholder="Y"
-                            value={value?.y || 0}
-                            onChange={(val) => onChange({ ...value, y: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 70 }}
-                        />
-                        <NumberInput
-                            placeholder="Z"
-                            value={value?.z || 0}
-                            onChange={(val) => onChange({ ...value, z: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 70 }}
-                        />
-                        <NumberInput
-                            placeholder="W"
-                            value={value?.w || 0}
-                            onChange={(val) => onChange({ ...value, w: val })}
-                            allowDecimal={!schema.type.includes('Int')}
-                            style={{ width: 70 }}
-                        />
-                    </Group>
-                );
+                return <Vector4Input value={value} onChange={onChange} schema={schema} />;
             
             default:
                 return <Text c="dimmed" size="sm">Unsupported type: {schema.type}</Text>;

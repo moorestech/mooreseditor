@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
@@ -73,6 +73,7 @@ export function useProject() {
       setMenuToFileMap(yamlFiles);
     } catch (error) {
       console.error("Error opening project directory:", error);
+      loadSampleProjectData();
     } finally {
       setLoading(false);
     }
@@ -110,12 +111,6 @@ export function useProject() {
     }
   }
   
-  useEffect(() => {
-    if (isDev) {
-      loadSampleProjectData();
-    }
-  }, []);
-
   function parseYaml(yamlText: string): any {
     try {
       return YAML.parse(yamlText);

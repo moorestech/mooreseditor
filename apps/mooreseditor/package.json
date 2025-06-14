@@ -10,7 +10,8 @@
     "format": "prettier **/*.{ts,tsx} --write; eslint --fix --cache --cache-location ./node_modules/.cache/eslint",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tauri-dev": "tauri dev"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

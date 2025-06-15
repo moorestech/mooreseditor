@@ -53,11 +53,17 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) =>
               style={{ cursor: onRowSelect ? 'pointer' : 'default' }}
             >
               <Table.Td>{index + 1}</Table.Td>
-              {columns.map(column => (
-                <Table.Td key={column.key}>
-                  {String(row[column.key] || '')}
-                </Table.Td>
-              ))}
+              {columns.map(column => {
+                const value = row[column.key];
+                const displayValue = column.type === 'uuid' && value
+                  ? `${String(value).slice(0, 4)}..`
+                  : String(value || '');
+                return (
+                  <Table.Td key={column.key}>
+                    {displayValue}
+                  </Table.Td>
+                );
+              })}
               <Table.Td>
                 <Button
                   size="xs"

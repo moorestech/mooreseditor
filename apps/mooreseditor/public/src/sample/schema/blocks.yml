@@ -29,8 +29,8 @@ properties:
     - key: name
       type: string
     - key: blockType
-      type: string
-      enum:
+      type: enum
+      options:
       - Block
       - BeltConveyor
       - Chest
@@ -85,8 +85,8 @@ properties:
           type: number
           default: 1
         - key: slopeType
-          type: string
-          enum:
+          type: enum
+          options:
           - Straight
           - Up
           - Down
@@ -258,8 +258,8 @@ properties:
           type: number
           default: 2
         - key: slopeType
-          type: string
-          enum:
+          type: enum
+          options:
           - Straight
           - Up
           - Down
@@ -283,8 +283,8 @@ properties:
           type: number
           default: 1
         - key: slopeType
-          type: string
-          enum:
+          type: enum
+          options:
           - Straight
           - Up
           - Down
@@ -348,8 +348,8 @@ properties:
           type: number
           default: 1
         - key: slopeType
-          type: string
-          enum:
+          type: enum
+          options:
           - Straight
           - Up
           - Down

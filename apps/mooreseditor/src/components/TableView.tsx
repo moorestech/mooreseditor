@@ -55,7 +55,8 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) =>
               <Table.Td>{index + 1}</Table.Td>
               {columns.map(column => {
                 const value = row[column.key];
-                const displayValue = column.type === 'uuid' && value
+                const columnSchema = column as any;
+                const displayValue = columnSchema.type === 'uuid' && value
                   ? `${String(value).slice(0, 4)}..`
                   : String(value || '');
                 return (

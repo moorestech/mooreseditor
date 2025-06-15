@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { SchemaContainer, Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, UuidSchema, IntegerSchema, NumberSchema, Vector2, Vector3, Vector4, Vector2Int, Vector3Int, Vector4Int, SwitchSchema } from './types';
+import type { SchemaContainer, Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, UuidSchema, IntegerSchema, NumberSchema, BooleanSchema, Vector2, Vector3, Vector4, Vector2Int, Vector3Int, Vector4Int, SwitchSchema } from './types';
 
 /**
  * Preprocesses schema containers to build a reference map for efficient lookups
@@ -67,6 +67,8 @@ function createSchemaTypeValidator(
       return createIntegerValidator(schema);
     case 'number':
       return createNumberValidator(schema);
+    case 'boolean':
+      return createBooleanValidator(schema);
     case 'vector2':
       return createVector2Validator(schema);
     case 'vector3':
@@ -98,13 +100,8 @@ function createObjectValidator(
     }
     
     // Use the referenced schema for validation
-    // We need to ensure the referenced schema is an object schema
-    if (!('type' in referencedSchema) || referencedSchema.type !== 'object') {
-      throw new Error(`Referenced schema with id "${schema.ref}" is not an object schema`);
-    }
-    
-    // Use the properties from the referenced schema
-    return createObjectValidator(referencedSchema as ObjectSchema, schemaMap);
+    // SchemaContainer is an ArraySchema, so we need to handle it differently
+    return createArrayValidator(referencedSchema, schemaMap);
   }
   
   if (!schema.properties || schema.properties.length === 0) {
@@ -148,7 +145,7 @@ function createStringValidator(schema: StringSchema): z.ZodType<any> {
   let stringValidator = z.string();
   
   if (schema.default !== undefined) {
-    stringValidator = stringValidator.default(schema.default);
+    stringValidator = stringValidator.default(schema.default) as unknown as z.ZodString;
   }
   
   return schema.optional ? stringValidator.optional() : stringValidator;
@@ -158,7 +155,7 @@ function createEnumValidator(schema: EnumSchema): z.ZodType<any> {
   let enumValidator = z.enum(schema.options as [string, ...string[]]);
   
   if (schema.default !== undefined) {
-    enumValidator = enumValidator.default(schema.default);
+    enumValidator = enumValidator.default(schema.default) as unknown as z.ZodEnum<[string, ...string[]]>;
   }
   
   return schema.optional ? enumValidator.optional() : enumValidator;
@@ -182,7 +179,7 @@ function createIntegerValidator(schema: IntegerSchema): z.ZodType<any> {
   }
   
   if (schema.default !== undefined) {
-    intValidator = intValidator.default(schema.default);
+    intValidator = intValidator.default(schema.default) as unknown as z.ZodNumber;
   }
   
   return schema.optional ? intValidator.optional() : intValidator;
@@ -200,17 +197,27 @@ function createNumberValidator(schema: NumberSchema): z.ZodType<any> {
   }
   
   if (schema.default !== undefined) {
-    numberValidator = numberValidator.default(schema.default);
+    numberValidator = numberValidator.default(schema.default) as unknown as z.ZodNumber;
   }
   
   return schema.optional ? numberValidator.optional() : numberValidator;
+}
+
+function createBooleanValidator(schema: BooleanSchema): z.ZodType<any> {
+  let booleanValidator = z.boolean();
+  
+  if (schema.default !== undefined) {
+    booleanValidator = booleanValidator.default(schema.default) as unknown as z.ZodBoolean;
+  }
+  
+  return schema.optional ? booleanValidator.optional() : booleanValidator;
 }
 
 function createVector2Validator(schema: Vector2): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number(), z.number()]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;
@@ -220,7 +227,7 @@ function createVector3Validator(schema: Vector3): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number(), z.number(), z.number()]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;
@@ -230,7 +237,7 @@ function createVector4Validator(schema: Vector4): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number(), z.number(), z.number(), z.number()]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;
@@ -240,7 +247,7 @@ function createVector2IntValidator(schema: Vector2Int): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number().int(), z.number().int()]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;
@@ -250,7 +257,7 @@ function createVector3IntValidator(schema: Vector3Int): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number().int(), z.number().int(), z.number().int()]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;
@@ -265,7 +272,7 @@ function createVector4IntValidator(schema: Vector4Int): z.ZodType<any> {
   ]);
   
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default);
+    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
   
   return schema.optional ? vectorValidator.optional() : vectorValidator;

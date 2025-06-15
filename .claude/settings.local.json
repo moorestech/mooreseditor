@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm run:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests",
+      "Bash(grep:*)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_wait_for",
+      "Bash(kill:*)",
+      "Bash(npm run:*)",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_type"
+    ],
+    "deny": []
+  }
+}

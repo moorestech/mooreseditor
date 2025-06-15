@@ -23,7 +23,7 @@ properties:
       - 0
       items:
         type: integer
-    - key: soundEffectTyp
+    - key: soundEffectType
       type: enum
       options:
       - tree

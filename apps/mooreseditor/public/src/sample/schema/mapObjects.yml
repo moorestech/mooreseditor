@@ -2,6 +2,9 @@ id: mapObjects
 type: object
 isDefaultOpen: true
 properties:
+- key: mapObjectName
+  type: string
+  default: mapObjectName2
 - key: data
   type: array
   overrideCodeGeneratePropertyName: MapObjectMasterElement

@@ -1,0 +1,41 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { NumberInput as MantineNumberInput } from '@mantine/core';
+import { FormInputProps } from './types';
+import type { NumberSchema } from '../../../libs/schema/types';
+import { useDebouncedCallback } from '../../../hooks/useDebounce';
+
+export const NumberInput: React.FC<FormInputProps<number>> = React.memo(({ value, onChange, schema }) => {
+  const numSchema = schema as NumberSchema;
+  const [localValue, setLocalValue] = useState(value || 0);
+  
+  // Update local value when prop changes
+  useEffect(() => {
+    setLocalValue(value || 0);
+  }, [value]);
+  
+  // Debounce the onChange callback
+  const debouncedOnChange = useDebouncedCallback(
+    (newValue: number) => {
+      onChange(newValue);
+    },
+    300,
+    [onChange]
+  );
+  
+  const handleChange = useCallback((val: number | string) => {
+    const numValue = val === '' ? 0 : Number(val);
+    setLocalValue(numValue);
+    debouncedOnChange(numValue);
+  }, [debouncedOnChange]);
+  
+  return (
+    <MantineNumberInput
+      value={localValue}
+      onChange={handleChange}
+      min={numSchema.min}
+      max={numSchema.max}
+      decimalScale={2}
+      thousandSeparator=","
+    />
+  );
+});

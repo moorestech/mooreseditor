@@ -66,8 +66,8 @@ function App() {
 
   async function handleSave(data: any) {
     try {
-      // Check if we have jsonData and a selected schema
-      if (!jsonData.length || !selectedSchema || !projectDir) {
+      // Check if we have jsonData and project directory
+      if (!jsonData.length || !projectDir) {
         console.error("保存に必要な情報が不足しています");
         return;
       }
@@ -75,33 +75,37 @@ function App() {
       // For development environment with sample project
       if (projectDir === "SampleProject") {
         console.log("サンプルプロジェクトのため、保存はスキップされました");
-        console.log(JSON.stringify(dataToSave, null, 2));
+        // Log all data for debugging
+        jsonData.forEach(column => {
+          console.log(`${column.title}:`, JSON.stringify({ data: column.data }, null, 2));
+        });
         setIsEditing(false);
         return;
       }
 
-      // Get the current data column
-      const currentColumn = jsonData[jsonData.length - 1];
-      if (!currentColumn) {
-        console.error("保存するデータが見つかりません");
-        return;
+      // Save all loaded JSON files
+      for (const column of jsonData) {
+        try {
+          // Build the JSON file path for each data column
+          const jsonFilePath = await path.join(
+            projectDir,
+            "master",
+            `${column.title}.json`
+          );
+
+          // Prepare the data in the original format
+          const dataToSave = {
+            data: column.data
+          };
+
+          // Save to the JSON file
+          await writeTextFile(jsonFilePath, JSON.stringify(dataToSave, null, 2));
+          console.log(`データが保存されました: ${jsonFilePath}`);
+        } catch (columnError) {
+          console.error(`${column.title}.json の保存中にエラーが発生しました:`, columnError);
+        }
       }
-
-      // Build the JSON file path
-      const jsonFilePath = await path.join(
-        projectDir,
-        "master",
-        `${selectedSchema}.json`
-      );
-
-      // Prepare the data in the original format
-      const dataToSave = {
-        data: currentColumn.data
-      };
-
-      // Save to the original JSON file
-      await writeTextFile(jsonFilePath, JSON.stringify(dataToSave, null, 2));
-      console.log("データが保存されました:", jsonFilePath);
+      
       setIsEditing(false);
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);

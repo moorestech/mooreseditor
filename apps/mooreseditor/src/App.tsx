@@ -5,8 +5,8 @@ import {
   MantineProvider,
   createTheme,
 } from "@mantine/core";
-import { save } from "@tauri-apps/plugin-dialog";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
+import * as path from "@tauri-apps/api/path";
 
 import EditView from "./components/EditView";
 import FormView from "./components/FormView";
@@ -21,9 +21,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const [lastSavedFilePath, setLastSavedFilePath] = useState<string | null>(
-    null
-  );
   const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile } = useJson();
   const { schemas, loadSchema } = useSchema();
@@ -47,28 +44,64 @@ function App() {
     }
   }, [isShowFormView, selectedSchema, schemas, jsonData]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl+S (Windows/Linux) or Cmd+S (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault(); // Prevent browser's save dialog
+        
+        if (isEditing && jsonData.length > 0) {
+          // Save the current jsonData
+          handleSave(jsonData);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isEditing, jsonData]);
+
   async function handleSave(data: any) {
     try {
-      let filePath = lastSavedFilePath;
-
-      if (!filePath) {
-        filePath = await save({
-          filters: [
-            { name: "JSON Files", extensions: ["json"] },
-            { name: "All Files", extensions: ["*"] },
-          ],
-        });
-
-        if (!filePath) {
-          console.log("保存がキャンセルされました");
-          return;
-        }
-
-        setLastSavedFilePath(filePath);
+      // Check if we have jsonData and a selected schema
+      if (!jsonData.length || !selectedSchema || !projectDir) {
+        console.error("保存に必要な情報が不足しています");
+        return;
       }
 
-      await writeTextFile(filePath, JSON.stringify(data, null, 2));
-      console.log("データが保存されました:", filePath);
+      // For development environment with sample project
+      if (projectDir === "SampleProject") {
+        console.log("サンプルプロジェクトのため、保存はスキップされました");
+        console.log(JSON.stringify(dataToSave, null, 2));
+        setIsEditing(false);
+        return;
+      }
+
+      // Get the current data column
+      const currentColumn = jsonData[jsonData.length - 1];
+      if (!currentColumn) {
+        console.error("保存するデータが見つかりません");
+        return;
+      }
+
+      // Build the JSON file path
+      const jsonFilePath = await path.join(
+        projectDir,
+        "master",
+        `${selectedSchema}.json`
+      );
+
+      // Prepare the data in the original format
+      const dataToSave = {
+        data: currentColumn.data
+      };
+
+      // Save to the original JSON file
+      await writeTextFile(jsonFilePath, JSON.stringify(dataToSave, null, 2));
+      console.log("データが保存されました:", jsonFilePath);
       setIsEditing(false);
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);

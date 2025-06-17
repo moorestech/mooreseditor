@@ -15,6 +15,7 @@ import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
+import { deepMerge } from "./utils/deepMerge";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -38,7 +39,7 @@ function App() {
       setNestedViews([{
         type: 'form',
         schema: schemas[selectedSchema],
-        data: { data: jsonData[jsonData.length - 1].data },
+        data: jsonData[jsonData.length - 1].data, // Pass the entire data object
         path: []
       }]);
     }
@@ -94,9 +95,7 @@ function App() {
           );
 
           // Prepare the data in the original format
-          const dataToSave = {
-            data: column.data
-          };
+          const dataToSave = column.data;
 
           // Save to the JSON file
           await writeTextFile(jsonFilePath, JSON.stringify(dataToSave, null, 2));
@@ -189,15 +188,21 @@ function App() {
                 data={view.data}
                 onDataChange={(newData) => {
                   if (index === 0 && view.path.length === 0) {
-                    // Root FormView
+                    // Root FormView - preserve the data array while updating other properties
                     const updatedJsonData = [...jsonData];
-                    updatedJsonData[updatedJsonData.length - 1].data = newData.data;
+                    const currentColumn = updatedJsonData[updatedJsonData.length - 1];
+                    
+                    // Deep merge the new data while preserving the existing data
+                    updatedJsonData[updatedJsonData.length - 1] = {
+                      ...currentColumn,
+                      data: deepMerge(currentColumn.data, newData)
+                    };
                     setJsonData(updatedJsonData);
                     setIsEditing(true);
                   } else {
                     // Nested FormView
                     const updatedJsonData = [...jsonData];
-                    let dataRef: any = { data: updatedJsonData[updatedJsonData.length - 1].data };
+                    let dataRef: any = updatedJsonData[updatedJsonData.length - 1].data;
                     for (let i = 0; i < view.path.length - 1; i++) {
                       dataRef = dataRef[view.path[i]];
                     }

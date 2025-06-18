@@ -185,7 +185,18 @@ function App() {
             ) : (
               <FormView
                 schema={view.schema}
-                data={view.data}
+                data={(() => {
+                  // Always get the latest data from jsonData
+                  if (index === 0 && view.path.length === 0) {
+                    return jsonData[jsonData.length - 1]?.data;
+                  } else {
+                    let dataRef: any = jsonData[jsonData.length - 1]?.data;
+                    for (const key of view.path) {
+                      dataRef = dataRef?.[key];
+                    }
+                    return dataRef;
+                  }
+                })()}
                 onDataChange={(newData) => {
                   if (index === 0 && view.path.length === 0) {
                     // Root FormView - preserve the data array while updating other properties

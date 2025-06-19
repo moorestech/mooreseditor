@@ -15,7 +15,6 @@ import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
-import { deepMerge } from "./utils/deepMerge";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -198,29 +197,35 @@ function App() {
                   }
                 })()}
                 onDataChange={(newData) => {
-                  if (index === 0 && view.path.length === 0) {
-                    // Root FormView - preserve the data array while updating other properties
-                    const updatedJsonData = [...jsonData];
-                    const currentColumn = updatedJsonData[updatedJsonData.length - 1];
-                    
-                    // Deep merge the new data while preserving the existing data
-                    updatedJsonData[updatedJsonData.length - 1] = {
-                      ...currentColumn,
-                      data: deepMerge(currentColumn.data, newData)
-                    };
-                    setJsonData(updatedJsonData);
-                    setIsEditing(true);
+                  // 統一的なデータ更新処理
+                  const updatedJsonData = [...jsonData];
+                  const lastItem = { ...updatedJsonData[updatedJsonData.length - 1] };
+                  
+                  if (view.path.length === 0) {
+                    // ルートレベルの場合、dataを直接置き換え
+                    lastItem.data = newData;
                   } else {
-                    // Nested FormView
-                    const updatedJsonData = [...jsonData];
-                    let dataRef: any = updatedJsonData[updatedJsonData.length - 1].data;
+                    // ネストされたデータの更新
+                    // イミュータブルに更新するために各レベルをコピー
+                    lastItem.data = { ...lastItem.data };
+                    let ref: any = lastItem.data;
+                    
+                    // パスの最後の要素以外を辿る
                     for (let i = 0; i < view.path.length - 1; i++) {
-                      dataRef = dataRef[view.path[i]];
+                      const key = view.path[i];
+                      ref[key] = Array.isArray(ref[key]) 
+                        ? [...ref[key]] 
+                        : { ...ref[key] };
+                      ref = ref[key];
                     }
-                    dataRef[view.path[view.path.length - 1]] = newData;
-                    setJsonData(updatedJsonData);
-                    setIsEditing(true);
+                    
+                    // 最後の要素を新しい値で更新
+                    ref[view.path[view.path.length - 1]] = newData;
                   }
+                  
+                  updatedJsonData[updatedJsonData.length - 1] = lastItem;
+                  setJsonData(updatedJsonData);
+                  setIsEditing(true);
                 }}
                 onObjectArrayClick={(subPath, schema) => {
                   let dataAtPath = view.data;

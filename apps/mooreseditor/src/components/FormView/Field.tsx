@@ -135,6 +135,7 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
                         schema={schema}
                         data={data}
                         onDataChange={onDataChange}
+                        path={path}
                     />
                 </Box>
             </Flex>

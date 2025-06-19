@@ -11,9 +11,10 @@ interface ArrayFieldProps {
     schema: ArraySchema;
     data: any[];
     onDataChange: (value: any[]) => void;
+    path: string[];
 }
 
-const ArrayField = memo(function ArrayField({ schema, data, onDataChange }: ArrayFieldProps) {
+const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path }: ArrayFieldProps) {
     const arrayData = data || [];
 
     const handleItemChange = useCallback((index: number, value: any) => {
@@ -91,8 +92,8 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange }: Arra
                             schema={schema.items as Schema}
                             data={item}
                             onDataChange={(value) => handleItemChange(index, value)}
-                            path={[index.toString()]}
-                            parentData={item}
+                            path={[...path, index.toString()]}
+                            parentData={arrayData}
                         />
                     </Box>
                     <ActionIcon

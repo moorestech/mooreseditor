@@ -29,8 +29,8 @@ properties:
     - key: name
       type: string
     - key: blockType
-      type: string
-      enum:
+      type: enum
+      options:
       - Block
       - BeltConveyor
       - Chest

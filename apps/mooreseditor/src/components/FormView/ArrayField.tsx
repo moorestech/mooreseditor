@@ -12,9 +12,11 @@ interface ArrayFieldProps {
     data: any[];
     onDataChange: (value: any[]) => void;
     path: string[];
+    rootData?: any;
+    arrayIndices?: Map<string, number>;
 }
 
-const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path }: ArrayFieldProps) {
+const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path, rootData, arrayIndices }: ArrayFieldProps) {
     const arrayData = data || [];
 
     const handleItemChange = useCallback((index: number, value: any) => {
@@ -84,18 +86,25 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path }
 
     return (
         <Stack gap="xs">
-            {arrayData.map((item, index) => (
-                <Group key={index} gap="xs">
-                    <Box style={{ flex: 1 }}>
-                        <Field
-                            label=""
-                            schema={schema.items as Schema}
-                            data={item}
-                            onDataChange={(value) => handleItemChange(index, value)}
-                            path={[...path, index.toString()]}
-                            parentData={arrayData}
-                        />
-                    </Box>
+            {arrayData.map((item, index) => {
+                // Create a new Map with the current array index
+                const updatedArrayIndices = new Map(arrayIndices || []);
+                updatedArrayIndices.set(path.join('/'), index);
+                
+                return (
+                    <Group key={index} gap="xs">
+                        <Box style={{ flex: 1 }}>
+                            <Field
+                                label=""
+                                schema={schema.items as Schema}
+                                data={item}
+                                onDataChange={(value) => handleItemChange(index, value)}
+                                path={[...path, index.toString()]}
+                                parentData={arrayData}
+                                rootData={rootData}
+                                arrayIndices={updatedArrayIndices}
+                            />
+                        </Box>
                     <ActionIcon
                         color="red"
                         variant="subtle"
@@ -104,7 +113,8 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path }
                         <IconTrash size={16} />
                     </ActionIcon>
                 </Group>
-            ))}
+                );
+            })}
             <Button
                 variant="light"
                 size="sm"

@@ -5,8 +5,8 @@ import {
   MantineProvider,
   createTheme,
 } from "@mantine/core";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
 import * as path from "@tauri-apps/api/path";
+import { writeTextFile } from "@tauri-apps/plugin-fs";
 
 import EditView from "./components/EditView";
 import FormView from "./components/FormView";
@@ -64,7 +64,7 @@ function App() {
     };
   }, [isEditing, jsonData]);
 
-  async function handleSave(data: any) {
+  async function handleSave(_data: any) {
     try {
       // Check if we have jsonData and project directory
       if (!jsonData.length || !projectDir) {
@@ -196,6 +196,8 @@ function App() {
                     return dataRef;
                   }
                 })()}
+                path={view.path}
+                rootData={jsonData[jsonData.length - 1]?.data}
                 onDataChange={(newData) => {
                   // 統一的なデータ更新処理
                   const updatedJsonData = [...jsonData];

@@ -13,9 +13,12 @@ interface FormViewProps {
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path?: string[];
     parentData?: any;
+    rootData?: any;
+    arrayIndices?: Map<string, number>;
 }
 
-const FormView = memo(function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData }: FormViewProps) {
+const FormView = memo(function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) {
+    
     // Always treat the top-level as an object
     const handlePropertyChange = useCallback((key: string, value: any) => {
         onDataChange({
@@ -43,6 +46,8 @@ const FormView = memo(function FormView({ schema, data, onDataChange, onObjectAr
                             onObjectArrayClick={onObjectArrayClick}
                             path={[...path, propertyKey]}
                             parentData={data}
+                            rootData={rootData || data}
+                            arrayIndices={arrayIndices}
                         />
                     );
                 })}
@@ -60,6 +65,8 @@ const FormView = memo(function FormView({ schema, data, onDataChange, onObjectAr
             onObjectArrayClick={onObjectArrayClick}
             path={path}
             parentData={parentData}
+            rootData={rootData || data}
+            arrayIndices={arrayIndices}
         />
     );
 });

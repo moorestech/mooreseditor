@@ -14,7 +14,7 @@ import Sidebar from "./components/Sidebar";
 import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
-import { useSchema } from "./hooks/useSchema";
+import { useSchemaWithRef } from "./hooks/useSchemaWithRef";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -23,7 +23,7 @@ const theme = createTheme({
 function App() {
   const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile } = useJson();
-  const { schemas, loadSchema } = useSchema();
+  const { schemas, loadSchema } = useSchemaWithRef();
 
   const [nestedViews, setNestedViews] = useState<
     Array<{ type: 'form' | 'table'; schema: any; data: any; path: string[] }>
@@ -186,7 +186,7 @@ function App() {
                 schema={view.schema}
                 data={(() => {
                   // Always get the latest data from jsonData
-                  if (index === 0 && view.path.length === 0) {
+                  if (view.path.length === 0) {
                     return jsonData[jsonData.length - 1]?.data;
                   } else {
                     let dataRef: any = jsonData[jsonData.length - 1]?.data;
@@ -229,16 +229,24 @@ function App() {
                   setJsonData(updatedJsonData);
                   setIsEditing(true);
                 }}
-                onObjectArrayClick={(subPath, schema) => {
-                  let dataAtPath = view.data;
-                  for (const key of subPath) {
+                onObjectArrayClick={(fullPath, schema) => {
+                  console.log('FormView onObjectArrayClick:', {
+                    fullPath,
+                    schema,
+                    viewData: view.data,
+                    viewPath: view.path,
+                    index
+                  });
+                  
+                  // Always get fresh data from jsonData to ensure consistency
+                  let dataAtPath: any = jsonData[jsonData.length - 1]?.data;
+                  
+                  // Navigate from the root data using the full path
+                  for (const key of fullPath) {
                     dataAtPath = dataAtPath?.[key];
                   }
                   
-                  // For root FormView (index 0), use direct path
-                  const fullPath = index === 0 && view.path.length === 0 
-                    ? subPath 
-                    : [...view.path, ...subPath];
+                  console.log('Data to display:', dataAtPath);
                   
                   setNestedViews(prev => [
                     ...prev.slice(0, index + 1),

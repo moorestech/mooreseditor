@@ -150,6 +150,7 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
                         schema={schema}
                         data={data}
                         onDataChange={onDataChange}
+                        onObjectArrayClick={onObjectArrayClick}
                         path={path}
                         rootData={rootData}
                         arrayIndices={arrayIndices}

@@ -11,12 +11,13 @@ interface ArrayFieldProps {
     schema: ArraySchema;
     data: any[];
     onDataChange: (value: any[]) => void;
+    onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path: string[];
     rootData?: any;
     arrayIndices?: Map<string, number>;
 }
 
-const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path, rootData, arrayIndices }: ArrayFieldProps) {
+const ArrayField = memo(function ArrayField({ schema, data, onDataChange, onObjectArrayClick, path, rootData, arrayIndices }: ArrayFieldProps) {
     const arrayData = data || [];
 
     const handleItemChange = useCallback((index: number, value: any) => {
@@ -99,6 +100,7 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, path, 
                                 schema={schema.items as Schema}
                                 data={item}
                                 onDataChange={(value) => handleItemChange(index, value)}
+                                onObjectArrayClick={onObjectArrayClick}
                                 path={[...path, index.toString()]}
                                 parentData={arrayData}
                                 rootData={rootData}

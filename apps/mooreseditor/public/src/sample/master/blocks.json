@@ -1,4 +1,12 @@
 {
+  "blockTypeTest": "Chest",
+  "blockTypeTestParam": {
+    "fuelItemSlotCount": 3,
+    "isInfinityPower": false,
+    "infinityPower": 0,
+    "fuelItems": [],
+    "itemGuid": "91458a7e-5eaa-47fd-b79e-8390af20bb84"
+  },
   "data": [
     {
       "initialUnlocked": true,
@@ -1110,52 +1118,5 @@
       "blockGuid": "68e7a3bf-f72f-4e64-9004-73bf74f61539",
       "blockPrefabAddressablesPath": "Vanilla/Block/itemshooter up"
     }
-  ],
-  "blockTypeTest": "Chest",
-  "blockTypeTestParam": {
-    "itemSlotCount": 2,
-    "inventoryConnectors": {
-      "outputConnects": [
-        {
-          "offset": [
-            0,
-            0,
-            0
-          ],
-          "connectType": "Inventory",
-          "directions": [
-            [
-              0,
-              1,
-              1
-            ]
-          ],
-          "connectOption": {}
-        }
-      ],
-      "inputConnects": [
-        {
-          "offset": [
-            0,
-            0,
-            0
-          ],
-          "connectType": "Inventory",
-          "directions": [
-            [
-              0,
-              0,
-              -1
-            ],
-            [
-              0,
-              -1,
-              -1
-            ]
-          ],
-          "connectOption": {}
-        }
-      ]
-    }
-  }
+  ]
 }

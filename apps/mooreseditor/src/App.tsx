@@ -8,7 +8,6 @@ import {
 import * as path from "@tauri-apps/api/path";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
 
-import EditView from "./components/EditView";
 import FormView from "./components/FormView";
 import Sidebar from "./components/Sidebar";
 import { TableView } from "./components/TableView";
@@ -28,7 +27,6 @@ function App() {
   const [nestedViews, setNestedViews] = useState<
     Array<{ type: 'form' | 'table'; schema: any; data: any; path: string[] }>
   >([]);
-  const [editData, setEditData] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
   const [isShowFormView, setIsShowFormView] = useState(false);
@@ -166,6 +164,37 @@ function App() {
               <TableView
                 schema={view.schema}
                 data={view.data}
+                onDataChange={(newData) => {
+                  console.log('TableView onDataChange:', { newData, viewPath: view.path });
+                  // Update the data through the same unified process
+                  const updatedJsonData = [...jsonData];
+                  const lastItem = { ...updatedJsonData[updatedJsonData.length - 1] };
+                  
+                  if (view.path.length === 0) {
+                    lastItem.data = newData;
+                  } else {
+                    // Deep copy for nested data
+                    lastItem.data = { ...lastItem.data };
+                    let ref: any = lastItem.data;
+                    
+                    // Navigate to the parent of the target
+                    for (let i = 0; i < view.path.length - 1; i++) {
+                      const key = view.path[i];
+                      ref[key] = Array.isArray(ref[key]) 
+                        ? [...ref[key]] 
+                        : { ...ref[key] };
+                      ref = ref[key];
+                    }
+                    
+                    // Update the final value
+                    ref[view.path[view.path.length - 1]] = newData;
+                  }
+                  
+                  updatedJsonData[updatedJsonData.length - 1] = lastItem;
+                  console.log('Setting new jsonData:', updatedJsonData);
+                  setJsonData(updatedJsonData);
+                  setIsEditing(true);
+                }}
                 onRowSelect={(rowIndex) => {
                   const selectedRowData = view.data[rowIndex];
                   if (selectedRowData && view.schema.items?.type === 'object') {
@@ -262,25 +291,6 @@ function App() {
             )}
               </div>
             ))}
-
-            {editData && (
-              <div
-                style={{
-                  padding: "16px",
-                  minWidth: "400px",
-                  height: "100%",
-                  overflowY: "auto",
-                  flexShrink: 0,
-                }}
-              >
-            <EditView
-              editData={editData}
-              setEditData={setEditData}
-              setIsEditing={setIsEditing}
-              onSave={handleSave}
-            />
-              </div>
-            )}
           </div>
         </div>
       </AppShell>

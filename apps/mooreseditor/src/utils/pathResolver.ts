@@ -74,7 +74,7 @@ function getDataAtPath(
     if (!current) return undefined;
 
     // Handle array notation
-    const arrayMatch = part.match(/^(.+)\[(\d+|\*)\]$/);
+    const arrayMatch = part.match(/^(.+)\[(\d+|\*|@)\]$/);
     if (arrayMatch) {
       const [, arrayName, indexPart] = arrayMatch;
       current = current[arrayName];
@@ -82,9 +82,11 @@ function getDataAtPath(
       if (!Array.isArray(current)) return undefined;
       
       fullPath.push(arrayName);
-      const index = indexPart === '*' 
+      const index = indexPart === '@' 
         ? arrayIndices?.get(fullPath.join('/')) ?? 0
-        : parseInt(indexPart, 10);
+        : indexPart === '*' 
+          ? arrayIndices?.get(fullPath.join('/')) ?? 0  // Keep for backward compatibility
+          : parseInt(indexPart, 10);
         
       current = current[index];
     } else {
@@ -120,7 +122,7 @@ function getValueByPath(
     if (!current) return undefined;
 
     // Handle array notation
-    const arrayMatch = part.match(/^(.+)\[(\d+|\*)\]$/);
+    const arrayMatch = part.match(/^(.+)\[(\d+|\*|@)\]$/);
     if (arrayMatch) {
       const [, arrayName, indexPart] = arrayMatch;
       current = current[arrayName];
@@ -128,9 +130,11 @@ function getValueByPath(
       if (!Array.isArray(current)) return undefined;
       
       fullPath.push(arrayName);
-      const index = indexPart === '*' 
+      const index = indexPart === '@' 
         ? arrayIndices?.get(fullPath.join('/')) ?? 0
-        : parseInt(indexPart, 10);
+        : indexPart === '*' 
+          ? arrayIndices?.get(fullPath.join('/')) ?? 0  // Keep for backward compatibility
+          : parseInt(indexPart, 10);
         
       current = current[index];
     } else {

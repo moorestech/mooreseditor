@@ -33,7 +33,10 @@
       "Bash(cp:*)",
       "Bash(rm:*)",
       "Bash(mv:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__playwright__browser_tab_new",
+      "mcp__playwright__browser_tab_select",
+      "mcp__playwright__browser_tab_close"
     ],
     "deny": []
   }

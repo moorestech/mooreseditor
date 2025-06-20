@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
-import { Table, Button, Stack, Group, Text } from "@mantine/core";
-import type { ArraySchema, ObjectSchema } from "../libs/schema/types";
+import React, { useMemo, useCallback } from "react";
+import { Table, Button, Stack, Group, Text, ActionIcon } from "@mantine/core";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import type { ArraySchema, ObjectSchema, ValueSchema } from "../libs/schema/types";
 
 interface Props {
   schema: ArraySchema;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) => {
+  const arrayData = data || [];
+  
   const columns = useMemo(() => {
     if (!schema.items || !('type' in schema.items) || schema.items.type !== 'object') {
       return [];
@@ -28,6 +31,72 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) =>
       return primitiveTypes.includes(propSchema.type);
     });
   }, [schema]);
+  
+  const getDefaultValue = useCallback((itemSchema: ValueSchema): any => {
+    if ('type' in itemSchema) {
+      switch (itemSchema.type) {
+        case 'string':
+          return itemSchema.default || '';
+        case 'uuid':
+          return '';
+        case 'enum':
+          return itemSchema.default || '';
+        case 'integer':
+          return itemSchema.default || 0;
+        case 'number':
+          return itemSchema.default || 0;
+        case 'boolean':
+          return itemSchema.default || false;
+        case 'vector2':
+        case 'vector2Int':
+          return { x: 0, y: 0 };
+        case 'vector3':
+        case 'vector3Int':
+          return { x: 0, y: 0, z: 0 };
+        case 'vector4':
+        case 'vector4Int':
+          return { x: 0, y: 0, z: 0, w: 0 };
+        case 'object': {
+          const obj: any = {};
+          if (itemSchema.properties) {
+            itemSchema.properties.forEach(prop => {
+              const { key, ...propSchema } = prop;
+              if ('type' in propSchema) {
+                obj[key] = getDefaultValue(propSchema as ValueSchema);
+              }
+            });
+          }
+          return obj;
+        }
+        case 'array':
+          return [];
+        default:
+          return null;
+      }
+    }
+    return null;
+  }, []);
+  
+  const addItem = useCallback(() => {
+    console.log('TableView addItem called', { data, schema, onDataChange: !!onDataChange });
+    if (onDataChange && schema.items) {
+      const currentArray = Array.isArray(data) ? data : [];
+      const newArray = [...currentArray];
+      const defaultValue = getDefaultValue(schema.items);
+      console.log('Adding item with default value:', defaultValue);
+      newArray.push(defaultValue);
+      onDataChange(newArray);
+    }
+  }, [data, schema.items, getDefaultValue, onDataChange]);
+  
+  const removeItem = useCallback((index: number) => {
+    if (onDataChange) {
+      const currentArray = Array.isArray(data) ? data : [];
+      const newArray = [...currentArray];
+      newArray.splice(index, 1);
+      onDataChange(newArray);
+    }
+  }, [data, onDataChange]);
   
   if (!Array.isArray(data)) {
     return <Text>Invalid data</Text>;
@@ -66,20 +135,45 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: Props) =>
                 );
               })}
               <Table.Td>
-                <Button
-                  size="xs"
-                  onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation();
-                    onRowSelect?.(index);
-                  }}
-                >
-                  Edit
-                </Button>
+                <Group gap="sm" wrap="nowrap">
+                  <Button
+                    size="xs"
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      onRowSelect?.(index);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  {onDataChange && (
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      size="sm"
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        removeItem(index);
+                      }}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  )}
+                </Group>
               </Table.Td>
             </Table.Tr>
           ))}
         </Table.Tbody>
       </Table>
+      {onDataChange && (
+        <Button
+          variant="light"
+          size="sm"
+          leftSection={<IconPlus size={16} />}
+          onClick={addItem}
+        >
+          Add Item
+        </Button>
+      )}
     </Stack>
   );
 };

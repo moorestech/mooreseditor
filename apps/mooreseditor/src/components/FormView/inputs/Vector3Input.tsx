@@ -1,39 +1,67 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Group, NumberInput } from '@mantine/core';
 import { FormInputProps } from './types';
+import { useDebouncedCallback } from '../../../hooks/useDebounce';
+import { arrayToVector3, vector3ToArray, isVectorArray, Vector3Object } from '../../../utils/vectorConverter';
 
-interface Vector3 {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export const Vector3Input: React.FC<FormInputProps<Vector3>> = ({ value, onChange, schema }) => {
+export const Vector3Input: React.FC<FormInputProps<Vector3Object | [number, number, number]>> = React.memo(({ value, onChange, schema }) => {
   const allowDecimal = !schema.type.includes('Int');
+  
+  // Convert array format to object format for display
+  const vectorObject = useMemo(() => {
+    if (isVectorArray(value)) {
+      return arrayToVector3(value as [number, number, number]);
+    }
+    return value as Vector3Object || { x: 0, y: 0, z: 0 };
+  }, [value]);
+  
+  const debouncedOnChange = useDebouncedCallback(
+    (newValue: Vector3Object) => {
+      // Convert back to array format for storage
+      onChange(vector3ToArray(newValue));
+    },
+    300,
+    [onChange]
+  );
+  
+  const handleXChange = useCallback((val: number | string) => {
+    const numValue = val === '' ? 0 : Number(val);
+    debouncedOnChange({ ...vectorObject, x: numValue });
+  }, [vectorObject, debouncedOnChange]);
+  
+  const handleYChange = useCallback((val: number | string) => {
+    const numValue = val === '' ? 0 : Number(val);
+    debouncedOnChange({ ...vectorObject, y: numValue });
+  }, [vectorObject, debouncedOnChange]);
+  
+  const handleZChange = useCallback((val: number | string) => {
+    const numValue = val === '' ? 0 : Number(val);
+    debouncedOnChange({ ...vectorObject, z: numValue });
+  }, [vectorObject, debouncedOnChange]);
   
   return (
     <Group gap="xs">
       <NumberInput
         placeholder="X"
-        value={value?.x || 0}
-        onChange={(val) => onChange({ ...value, x: val === '' ? 0 : Number(val) })}
+        value={vectorObject.x}
+        onChange={handleXChange}
         allowDecimal={allowDecimal}
         style={{ width: 80 }}
       />
       <NumberInput
         placeholder="Y"
-        value={value?.y || 0}
-        onChange={(val) => onChange({ ...value, y: val === '' ? 0 : Number(val) })}
+        value={vectorObject.y}
+        onChange={handleYChange}
         allowDecimal={allowDecimal}
         style={{ width: 80 }}
       />
       <NumberInput
         placeholder="Z"
-        value={value?.z || 0}
-        onChange={(val) => onChange({ ...value, z: val === '' ? 0 : Number(val) })}
+        value={vectorObject.z}
+        onChange={handleZChange}
         allowDecimal={allowDecimal}
         style={{ width: 80 }}
       />
     </Group>
   );
-};
+});

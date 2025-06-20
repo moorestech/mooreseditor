@@ -14,7 +14,7 @@ import Sidebar from "./components/Sidebar";
 import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
-import { useSchemaWithRef } from "./hooks/useSchemaWithRef";
+import { useSchema } from "./hooks/useSchema";
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -23,7 +23,7 @@ const theme = createTheme({
 function App() {
   const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile } = useJson();
-  const { schemas, loadSchema } = useSchemaWithRef();
+  const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
     Array<{ type: 'form' | 'table'; schema: any; data: any; path: string[] }>

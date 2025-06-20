@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import type { Schema } from "../../libs/schema/types";
-import type { UseSchemaWithRefReturn, SchemaDefinitions } from './types';
+import type { UseSchemaReturn, SchemaDefinitions } from './types';
 import { RefResolver } from './resolvers/RefResolver';
 import { ProductionLoader } from './loaders/ProductionLoader';
 import { DevelopmentLoader } from './loaders/DevelopmentLoader';
@@ -9,7 +9,7 @@ import type { SchemaLoader } from './loaders/SchemaLoader';
 /**
  * refをサポートしたスキーマ読み込みフック
  */
-export function useSchemaWithRef(): UseSchemaWithRefReturn {
+export function useSchema(): UseSchemaReturn {
   const [schemas, setSchemas] = useState<Record<string, Schema>>({});
   const [loading, setLoading] = useState(false);
 

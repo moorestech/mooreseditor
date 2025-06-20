@@ -29,9 +29,9 @@ export class SchemaLoadError extends Error {
 }
 
 /**
- * useSchemaWithRefフックの戻り値
+ * useSchemaフックの戻り値
  */
-export interface UseSchemaWithRefReturn {
+export interface UseSchemaReturn {
   schemas: Record<string, Schema>;
   loading: boolean;
   loadSchema: (schemaName: string, schemaDir: string | null) => Promise<Schema | null>;

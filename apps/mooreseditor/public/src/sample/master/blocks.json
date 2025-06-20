@@ -1110,5 +1110,6 @@
       "blockGuid": "68e7a3bf-f72f-4e64-9004-73bf74f61539",
       "blockPrefabAddressablesPath": "Vanilla/Block/itemshooter up"
     }
-  ]
+  ],
+  "blockTypeTest": "BeltConveyor"
 }

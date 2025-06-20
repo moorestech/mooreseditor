@@ -94,3 +94,27 @@ mcp__playwright__browser_console_messages でブラウザコンソールのメ�
 3. FormView/TableViewでの編集
 4. onDataChangeによる状態更新
 5. Ctrl+Sで全データを保存
+
+## コーディング規約
+
+### エラーハンドリング
+- 環境判定のためのif文は避け、try-catchパターンを使用する
+- 本番環境のコードを先に試し、失敗した場合に開発環境用のフォールバックを実行する
+- 例：
+  ```typescript
+  // 良い例
+  try {
+    // 本番環境のファイル読み込みを試行
+    const content = await readTextFile(filePath);
+  } catch (error) {
+    // 開発環境用のフォールバック
+    const content = await getSampleData();
+  }
+  
+  // 避けるべき例
+  if (isDev) {
+    const content = await getSampleData();
+  } else {
+    const content = await readTextFile(filePath);
+  }
+  ```

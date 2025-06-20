@@ -29,6 +29,43 @@ export function getSampleSchemaList(): string[] {
   return ['mapObjects', 'blocks', 'items', 'objectSample'];
 }
 
+/**
+ * 開発環境用: refスキーマファイルのリストを取得
+ * @returns refスキーマファイル名のリスト（拡張子なし）
+ */
+export function getSampleRefSchemaList(): string[] {
+  return [
+    'blockConnectInfo',
+    'inventoryConnects',
+    'gear',
+    'mineSettings',
+    'mapObjectMineSettings',
+    'fluidInventoryConnects'
+  ];
+}
+
+/**
+ * 開発環境用: すべてのサンプルスキーマファイル（refを含む）のマップを取得
+ * @returns スキーマパスとidのマップ
+ */
+export function getAllSampleSchemaMap(): Map<string, string> {
+  const schemaMap = new Map<string, string>();
+  
+  // メインスキーマ
+  const mainSchemas = getSampleSchemaList();
+  mainSchemas.forEach(schema => {
+    schemaMap.set(schema, schema);
+  });
+  
+  // refスキーマ
+  const refSchemas = getSampleRefSchemaList();
+  refSchemas.forEach(schema => {
+    schemaMap.set(`ref/${schema}`, schema);
+  });
+  
+  return schemaMap;
+}
+
 async function fetchFileContent(path: string): Promise<string> {
   try {
     const response = await fetch(path);
@@ -37,7 +74,7 @@ async function fetchFileContent(path: string): Promise<string> {
     }
     return response.text();
   } catch (error) {
-    console.error(`Failed to load ${name}.yml:`, error);
+    console.error(`Failed to load ${path}:`, error);
     throw error;
   }
 }

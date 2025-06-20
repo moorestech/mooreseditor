@@ -1,12 +1,10 @@
 import { useState, useCallback } from "react";
 import * as path from "@tauri-apps/api/path";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, readDir, BaseDirectory } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
 import type { Schema } from "../libs/schema/types";
-import { getSampleSchema } from "../utils/devFileSystem";
-
-const isDev = import.meta.env.DEV;
+import { getSampleSchema, getAllSampleSchemaMap } from "../utils/devFileSystem";
 
 // Manually resolve refs in our schema format
 function resolveRefs(obj: any, definitions: Record<string, any>): any {
@@ -56,42 +54,77 @@ export function useSchemaWithRef() {
       // Load all ref schemas into a definitions object
       const definitions: Record<string, any> = {};
 
-      const refSchemaFiles = [
-        { file: "blockConnectInfo", id: "blockConnectInfo" },
-        { file: "inventoryConnects", id: "inventoryConnects" },
-        { file: "gear", id: "gear" },  // Fixed: file should be "gear", not "gearConnects"
-        { file: "mineSettings", id: "mineSettings" },
-        { file: "mapObjectMineSettings", id: "mapObjectMineSettings" },
-        { file: "fluidInventoryConnects", id: "fluidInventoryConnects" }
-      ];
-
-      for (const { file, id } of refSchemaFiles) {
+      // Helper function to recursively scan directory for schema files
+      async function scanDirectory(dir: string): Promise<void> {
         try {
-          let content: string;
-          if (isDev && schemaDir === "SampleProject/schema") {
-            content = await getSampleSchema(`ref/${file}`);
-          } else {
-            const refDir = await path.join(schemaDir, "ref");
-            const filePath = await path.join(refDir, `${file}.yml`);
-            content = await readTextFile(filePath);
-          }
+          const entries = await readDir(dir);
           
-          const schema = YAML.parse(content);
-          // Store schema by its id
-          definitions[schema.id || id] = schema;
+          for (const entry of entries) {
+            if (!entry.name) continue;
+            
+            if (entry.isDirectory) {
+              // Recursively scan subdirectories
+              const subDir = await path.join(dir, entry.name);
+              await scanDirectory(subDir);
+            } else if (entry.name.endsWith('.yml')) {
+              try {
+                const filePath = await path.join(dir, entry.name);
+                const content = await readTextFile(filePath);
+                const schema = YAML.parse(content);
+                
+                // Use the id from the schema if available
+                if (schema.id) {
+                  definitions[schema.id] = schema;
+                  console.debug(`Loaded schema: ${schema.id} from ${filePath}`);
+                }
+              } catch (error) {
+                console.debug(`Failed to load schema ${entry.name}:`, error);
+              }
+            }
+          }
         } catch (error) {
-          console.warn(`Failed to load ref schema ${file}:`, error);
+          console.debug(`Failed to read directory ${dir}:`, error);
+        }
+      }
+
+      try {
+        // Try to load from the actual file system first
+        await scanDirectory(schemaDir);
+        
+        // If no definitions were loaded and schemaDir is the sample project,
+        // it might be running in dev mode where we can't access the file system
+        if (Object.keys(definitions).length === 0 && schemaDir === "SampleProject/schema") {
+          throw new Error("No schemas loaded from file system, falling back to dev mode");
+        }
+      } catch (error) {
+        // Fallback to dev mode sample schemas
+        console.debug("Loading sample schemas in dev mode");
+        const schemaMap = getAllSampleSchemaMap();
+        
+        for (const [schemaPath, schemaId] of schemaMap) {
+          try {
+            const content = await getSampleSchema(schemaPath);
+            const schema = YAML.parse(content);
+            if (schema.id) {
+              definitions[schema.id] = schema;
+            }
+          } catch (error) {
+            console.debug(`Sample schema ${schemaPath} not found`);
+          }
         }
       }
 
       // Load main schema
       let schemaContent: string;
       
-      if (isDev && schemaDir === "SampleProject/schema") {
-        schemaContent = await getSampleSchema(schemaName);
-      } else {
+      try {
+        // Try to load from the actual file system first
         const schemaFilePath = await path.join(schemaDir, `${schemaName}.yml`);
         schemaContent = await readTextFile(schemaFilePath);
+      } catch (error) {
+        // Fallback to dev mode sample schema
+        console.debug(`Loading sample schema for ${schemaName} in dev mode`);
+        schemaContent = await getSampleSchema(schemaName);
       }
       
       const schemaData = YAML.parse(schemaContent) as Schema;

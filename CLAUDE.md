@@ -7,13 +7,13 @@ mooreseditorは、JSONデータをスキーマに基づいて編集するため�
 
 ### 開発環境の起動
 ```bash
-npm run tauri dev
+pnpm run tauri dev
 ```
 
 ### リントとタイプチェック
 ```bash
-npm run lint
-npm run typecheck
+pnpm run lint
+pnpm run typecheck
 ```
 
 ## Playwrightを使ったデバッグ方法

@@ -1111,5 +1111,51 @@
       "blockPrefabAddressablesPath": "Vanilla/Block/itemshooter up"
     }
   ],
-  "blockTypeTest": "BeltConveyor"
+  "blockTypeTest": "Chest",
+  "blockTypeTestParam": {
+    "itemSlotCount": 2,
+    "inventoryConnectors": {
+      "outputConnects": [
+        {
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "connectType": "Inventory",
+          "directions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "connectOption": {}
+        }
+      ],
+      "inputConnects": [
+        {
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "connectType": "Inventory",
+          "directions": [
+            [
+              0,
+              0,
+              -1
+            ],
+            [
+              0,
+              -1,
+              -1
+            ]
+          ],
+          "connectOption": {}
+        }
+      ]
+    }
+  }
 }

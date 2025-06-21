@@ -54,8 +54,8 @@ describe('deepMerge', () => {
   })
 
   it('should handle null and undefined values', () => {
-    const obj1 = { a: 1, b: null, c: undefined }
-    const obj2 = { b: 2, c: 3, d: null }
+    const obj1 = { a: 1, b: null as any, c: undefined as any }
+    const obj2 = { b: 2, c: 3, d: null as any }
     
     const result = deepMerge(obj1, obj2)
     

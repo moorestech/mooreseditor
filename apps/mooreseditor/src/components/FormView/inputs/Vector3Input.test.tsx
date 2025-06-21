@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 describe('Vector3Input', () => {
   const defaultProps = {
-    value: [0, 0, 0],
+    value: [0, 0, 0] as [number, number, number],
     onChange: vi.fn(),
     schema: { type: 'array' as const, format: 'vector3' }
   }
@@ -192,7 +192,7 @@ describe('Vector3Input', () => {
 
   it('should handle very large numbers', () => {
     const onChange = vi.fn()
-    const largeVector = [1e10, -1e10, 1e15]
+    const largeVector: [number, number, number] = [1e10, -1e10, 1e15]
     render(<Vector3Input {...defaultProps} value={largeVector} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
@@ -281,7 +281,7 @@ describe('Vector3Input', () => {
   })
 
   it('should handle normalized vectors', () => {
-    const normalizedVector = [0.577, 0.577, 0.577] // Roughly normalized
+    const normalizedVector: [number, number, number] = [0.577, 0.577, 0.577] // Roughly normalized
     render(<Vector3Input {...defaultProps} value={normalizedVector} />)
     
     const inputs = screen.getAllByRole('textbox')

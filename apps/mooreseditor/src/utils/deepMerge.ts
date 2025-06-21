@@ -12,7 +12,13 @@ export function deepMerge(target: any, source: any): any {
   
   for (const key in source) {
     if (source.hasOwnProperty(key)) {
-      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (
+        source[key] && 
+        typeof source[key] === 'object' && 
+        !Array.isArray(source[key]) &&
+        !(source[key] instanceof Date) &&
+        source[key].constructor === Object
+      ) {
         result[key] = deepMerge(target[key], source[key]);
       } else {
         result[key] = source[key];

@@ -1,366 +1,252 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
-import { parseSchema, stringifySchema, loadSchemaFromString, saveSchemaToString } from './io'
-import type { Schema } from './types'
+import { loadYamlString } from './io'
 
 describe('io', () => {
-  const sampleSchema: Schema = {
-    type: 'object',
-    properties: {
-      name: { type: 'string' },
-      age: { type: 'integer', minimum: 0 },
-      email: { type: 'string', format: 'email' },
-      tags: { 
-        type: 'array', 
-        items: { type: 'string' } 
-      }
-    },
-    required: ['name', 'email']
-  }
-
-  describe('parseSchema', () => {
-    it('should parse valid JSON schema string', () => {
-      const jsonString = JSON.stringify(sampleSchema)
-      const parsed = parseSchema(jsonString)
+  describe('loadYamlString', () => {
+    it('should parse valid YAML string', () => {
+      const yamlString = `
+name: test
+value: 123
+enabled: true
+`
+      const parsed = loadYamlString(yamlString)
       
-      expect(parsed).toEqual(sampleSchema)
+      expect(parsed).toEqual({
+        name: 'test',
+        value: 123,
+        enabled: true
+      })
     })
 
-    it('should parse valid YAML schema string', () => {
+    it('should parse YAML with arrays', () => {
+      const yamlString = `
+items:
+  - apple
+  - banana
+  - orange
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed).toEqual({
+        items: ['apple', 'banana', 'orange']
+      })
+    })
+
+    it('should parse nested YAML objects', () => {
+      const yamlString = `
+user:
+  name: John
+  age: 30
+  address:
+    street: Main St
+    city: New York
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed).toEqual({
+        user: {
+          name: 'John',
+          age: 30,
+          address: {
+            street: 'Main St',
+            city: 'New York'
+          }
+        }
+      })
+    })
+
+    it('should parse empty YAML', () => {
+      const yamlString = ''
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed).toBeNull()
+    })
+
+    it('should parse YAML with schema-like structure', () => {
       const yamlString = `
 type: object
 properties:
-  name:
+  - key: name
     type: string
-  age:
+  - key: age
     type: integer
-    minimum: 0
-  email:
-    type: string
-    format: email
-  tags:
+    min: 0
+    max: 120
+  - key: tags
     type: array
     items:
       type: string
-required:
-  - name
-  - email
 `
-      const parsed = parseSchema(yamlString)
+      const parsed = loadYamlString(yamlString)
       
-      expect(parsed).toEqual(sampleSchema)
-    })
-
-    it('should handle schema with $ref', () => {
-      const schemaWithRef = `
-type: object
-properties:
-  user:
-    $ref: "#/definitions/User"
-definitions:
-  User:
-    type: object
-    properties:
-      name:
-        type: string
-`
-      const parsed = parseSchema(schemaWithRef)
-      
-      expect(parsed.type).toBe('object')
-      expect(parsed.properties?.user).toHaveProperty('$ref')
-    })
-
-    it('should throw error for invalid JSON', () => {
-      const invalidJson = '{ invalid json'
-      
-      expect(() => parseSchema(invalidJson)).toThrow()
-    })
-
-    it('should throw error for invalid YAML', () => {
-      const invalidYaml = `
-type: object
-properties:
-  - invalid yaml structure
-`
-      
-      expect(() => parseSchema(invalidYaml)).toThrow()
-    })
-
-    it('should parse schema with complex types', () => {
-      const complexSchema = `
-type: object
-properties:
-  id:
-    type: string
-    format: uuid
-  position:
-    type: array
-    format: vector3
-  settings:
-    type: object
-    additionalProperties: false
-    properties:
-      enabled:
-        type: boolean
-      value:
-        type: number
-        minimum: 0
-        maximum: 1
-`
-      const parsed = parseSchema(complexSchema)
-      
-      expect(parsed.properties?.id.format).toBe('uuid')
-      expect(parsed.properties?.position.format).toBe('vector3')
-      expect(parsed.properties?.settings.additionalProperties).toBe(false)
-    })
-
-    it('should handle empty string', () => {
-      expect(() => parseSchema('')).toThrow()
-    })
-
-    it('should parse schema with UI properties', () => {
-      const schemaWithUI = `
-type: object
-properties:
-  name:
-    type: string
-    ui:
-      label: "Full Name"
-      placeholder: "Enter your full name"
-      help: "First and last name"
-`
-      const parsed = parseSchema(schemaWithUI)
-      
-      expect(parsed.properties?.name.ui).toEqual({
-        label: 'Full Name',
-        placeholder: 'Enter your full name',
-        help: 'First and last name'
+      expect(parsed).toEqual({
+        type: 'object',
+        properties: [
+          { key: 'name', type: 'string' },
+          { key: 'age', type: 'integer', min: 0, max: 120 },
+          { 
+            key: 'tags', 
+            type: 'array',
+            items: { type: 'string' }
+          }
+        ]
       })
     })
-  })
 
-  describe('stringifySchema', () => {
-    it('should stringify schema to YAML format', () => {
-      const yamlString = stringifySchema(sampleSchema)
+    it('should parse YAML with null values', () => {
+      const yamlString = `
+name: test
+value: null
+optional: ~
+`
+      const parsed = loadYamlString(yamlString)
       
-      expect(yamlString).toContain('type: object')
-      expect(yamlString).toContain('name:')
-      expect(yamlString).toContain('type: string')
-      expect(yamlString).toContain('required:')
-      expect(yamlString).toContain('- name')
-      expect(yamlString).toContain('- email')
-    })
-
-    it('should handle nested schemas', () => {
-      const nestedSchema: Schema = {
-        type: 'object',
-        properties: {
-          user: {
-            type: 'object',
-            properties: {
-              profile: {
-                type: 'object',
-                properties: {
-                  bio: { type: 'string' }
-                }
-              }
-            }
-          }
-        }
-      }
-      
-      const yamlString = stringifySchema(nestedSchema)
-      
-      expect(yamlString).toContain('user:')
-      expect(yamlString).toContain('profile:')
-      expect(yamlString).toContain('bio:')
-    })
-
-    it('should preserve special properties', () => {
-      const schemaWithSpecial: Schema = {
-        type: 'object',
-        $id: 'https://example.com/schema',
-        $schema: 'http://json-schema.org/draft-07/schema#',
-        properties: {
-          ref: { $ref: '#/definitions/Something' }
-        }
-      }
-      
-      const yamlString = stringifySchema(schemaWithSpecial)
-      
-      expect(yamlString).toContain('$id:')
-      expect(yamlString).toContain('$schema:')
-      expect(yamlString).toContain('$ref:')
-    })
-
-    it('should handle arrays properly', () => {
-      const arraySchema: Schema = {
-        type: 'array',
-        items: { type: 'string' },
-        minItems: 1,
-        maxItems: 10,
-        uniqueItems: true
-      }
-      
-      const yamlString = stringifySchema(arraySchema)
-      
-      expect(yamlString).toContain('type: array')
-      expect(yamlString).toContain('minItems: 1')
-      expect(yamlString).toContain('maxItems: 10')
-      expect(yamlString).toContain('uniqueItems: true')
-    })
-
-    it('should handle enum values', () => {
-      const enumSchema: Schema = {
-        type: 'string',
-        enum: ['red', 'green', 'blue']
-      }
-      
-      const yamlString = stringifySchema(enumSchema)
-      
-      expect(yamlString).toContain('enum:')
-      expect(yamlString).toContain('- red')
-      expect(yamlString).toContain('- green')
-      expect(yamlString).toContain('- blue')
-    })
-  })
-
-  describe('loadSchemaFromString', () => {
-    it('should load and parse schema', async () => {
-      const yamlString = stringifySchema(sampleSchema)
-      const loaded = await loadSchemaFromString(yamlString)
-      
-      expect(loaded).toEqual(sampleSchema)
-    })
-
-    it('should handle async loading', async () => {
-      const jsonString = JSON.stringify(sampleSchema)
-      const loaded = await loadSchemaFromString(jsonString)
-      
-      expect(loaded).toEqual(sampleSchema)
-    })
-
-    it('should reject on invalid schema', async () => {
-      const invalidSchema = 'not a valid schema'
-      
-      await expect(loadSchemaFromString(invalidSchema)).rejects.toThrow()
-    })
-  })
-
-  describe('saveSchemaToString', () => {
-    it('should save schema as YAML string', async () => {
-      const saved = await saveSchemaToString(sampleSchema)
-      
-      expect(saved).toContain('type: object')
-      expect(saved).toContain('properties:')
-      expect(saved).toContain('required:')
-    })
-
-    it('should produce parseable output', async () => {
-      const saved = await saveSchemaToString(sampleSchema)
-      const parsed = parseSchema(saved)
-      
-      expect(parsed).toEqual(sampleSchema)
-    })
-
-    it('should handle complex schemas', async () => {
-      const complexSchema: Schema = {
-        type: 'object',
-        properties: {
-          vector: { type: 'array', format: 'vector3' },
-          matrix: { 
-            type: 'array', 
-            items: { 
-              type: 'array', 
-              items: { type: 'number' } 
-            } 
-          },
-          config: {
-            type: 'object',
-            patternProperties: {
-              '^[A-Z_]+$': { type: 'string' }
-            }
-          }
-        }
-      }
-      
-      const saved = await saveSchemaToString(complexSchema)
-      const parsed = parseSchema(saved)
-      
-      expect(parsed).toEqual(complexSchema)
-    })
-  })
-
-  describe('round-trip conversion', () => {
-    it('should preserve schema through parse and stringify', () => {
-      const original = sampleSchema
-      const stringified = stringifySchema(original)
-      const parsed = parseSchema(stringified)
-      const restringified = stringifySchema(parsed)
-      const reparsed = parseSchema(restringified)
-      
-      expect(reparsed).toEqual(original)
-    })
-
-    it('should preserve complex schemas', () => {
-      const complexSchema: Schema = {
-        type: 'object',
-        title: 'Complex Schema',
-        description: 'A complex schema for testing',
-        properties: {
-          id: { type: 'string', format: 'uuid' },
-          name: { type: 'string', minLength: 1, maxLength: 100 },
-          age: { type: 'integer', minimum: 0, maximum: 150 },
-          score: { type: 'number', multipleOf: 0.1 },
-          active: { type: 'boolean', default: true },
-          tags: { 
-            type: 'array', 
-            items: { type: 'string' },
-            minItems: 0,
-            maxItems: 10
-          },
-          metadata: {
-            type: 'object',
-            additionalProperties: { type: 'string' }
-          },
-          role: {
-            type: 'string',
-            enum: ['admin', 'user', 'guest']
-          }
-        },
-        required: ['id', 'name'],
-        additionalProperties: false
-      }
-      
-      const stringified = stringifySchema(complexSchema)
-      const parsed = parseSchema(stringified)
-      
-      expect(parsed).toEqual(complexSchema)
-    })
-
-    it('should handle schemas with foreign key references', () => {
-      const schemaWithFK: Schema = {
-        type: 'object',
-        properties: {
-          userId: {
-            type: 'string',
-            foreignKey: {
-              table: 'users',
-              key: 'id',
-              displayFields: ['name', 'email']
-            }
-          }
-        }
-      }
-      
-      const stringified = stringifySchema(schemaWithFK)
-      const parsed = parseSchema(stringified)
-      
-      expect(parsed.properties?.userId.foreignKey).toEqual({
-        table: 'users',
-        key: 'id',
-        displayFields: ['name', 'email']
+      expect(parsed).toEqual({
+        name: 'test',
+        value: null,
+        optional: null
       })
+    })
+
+    it('should parse YAML with boolean values', () => {
+      const yamlString = `
+yes: true
+no: false
+on: "on"
+off: "off"
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed).toEqual({
+        yes: true,
+        no: false,
+        on: "on",
+        off: "off"
+      })
+    })
+
+    it('should parse YAML with numbers', () => {
+      const yamlString = `
+integer: 42
+float: 3.14
+negative: -10
+scientific: 1.23e-4
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed).toEqual({
+        integer: 42,
+        float: 3.14,
+        negative: -10,
+        scientific: 0.000123
+      })
+    })
+
+    it('should parse YAML with multiline strings', () => {
+      const yamlString = `
+description: |
+  This is a
+  multiline string
+  with preserved newlines
+folded: >
+  This is a folded
+  string that will
+  be a single line
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed.description).toContain('multiline string')
+      expect(parsed.description).toContain('\n')
+      // The yaml library preserves a single newline at the end of folded strings
+      expect(parsed.folded.trim()).not.toContain('\n')
+    })
+
+    it('should parse YAML with references', () => {
+      const yamlString = `
+default: &default_settings
+  timeout: 30
+  retries: 3
+
+server1:
+  <<: *default_settings
+  host: server1.com
+
+server2:
+  <<: *default_settings
+  host: server2.com
+  timeout: 60
+`
+      const parsed = loadYamlString(yamlString)
+      
+      // The YAML library preserves the merge key as a literal key
+      // and resolves the reference, but doesn't perform the merge
+      expect(parsed.server1.host).toBe('server1.com')
+      expect(parsed.server1['<<']).toEqual({
+        timeout: 30,
+        retries: 3
+      })
+      
+      expect(parsed.server2.host).toBe('server2.com')
+      expect(parsed.server2.timeout).toBe(60)
+      expect(parsed.server2['<<']).toEqual({
+        timeout: 30,
+        retries: 3
+      })
+      
+      // The default anchor is also preserved
+      expect(parsed.default).toEqual({
+        timeout: 30,
+        retries: 3
+      })
+    })
+
+    it('should parse YAML with inconsistent indentation', () => {
+      // This YAML is actually valid - it's parsed as an array with two items
+      const yamlString = `
+invalid:
+  - item1
+    item2
+`
+      const parsed = loadYamlString(yamlString)
+      // The parser treats this as an array with first item being "item1 item2"
+      expect(Array.isArray(parsed.invalid)).toBe(true)
+    })
+
+    it('should parse complex schema definition', () => {
+      const yamlString = `
+id: items
+type: array
+items:
+  type: object
+  properties:
+    - key: id
+      type: uuid
+    - key: name
+      type: string
+      default: ""
+    - key: stackSize
+      type: integer
+      min: 1
+      max: 999
+    - key: category
+      type: enum
+      options:
+        - weapon
+        - armor
+        - consumable
+    - key: position
+      type: vector3
+      default: [0, 0, 0]
+`
+      const parsed = loadYamlString(yamlString)
+      
+      expect(parsed.id).toBe('items')
+      expect(parsed.type).toBe('array')
+      expect(parsed.items.type).toBe('object')
+      expect(parsed.items.properties).toHaveLength(5)
+      expect(parsed.items.properties[0]).toEqual({ key: 'id', type: 'uuid' })
+      expect(parsed.items.properties[3].options).toEqual(['weapon', 'armor', 'consumable'])
     })
   })
 })

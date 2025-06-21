@@ -11,6 +11,16 @@ import {
 // Mock fetch
 global.fetch = vi.fn()
 
+// Mock console.error to prevent noise in test output
+const originalConsoleError = console.error
+beforeEach(() => {
+  console.error = vi.fn()
+})
+
+afterEach(() => {
+  console.error = originalConsoleError
+})
+
 describe('devFileSystem', () => {
   beforeEach(() => {
     vi.clearAllMocks()

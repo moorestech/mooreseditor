@@ -8,6 +8,14 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
+      '**/test-examples/**'
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
@@ -37,6 +45,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@tauri-apps/api/path': path.resolve(__dirname, './src/test/mocks/tauri-api-path.ts'),
+      '@tauri-apps/plugin-dialog': path.resolve(__dirname, './src/test/mocks/tauri-plugin-dialog.ts'),
+      '@tauri-apps/plugin-fs': path.resolve(__dirname, './src/test/mocks/tauri-plugin-fs.ts'),
       '@tauri-apps/api': path.resolve(__dirname, './src/test/mocks/tauri.ts'),
     },
   },

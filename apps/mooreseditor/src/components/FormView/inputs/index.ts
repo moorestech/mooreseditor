@@ -8,3 +8,4 @@ export { BooleanInput } from './BooleanInput';
 export { Vector2Input } from './Vector2Input';
 export { Vector3Input } from './Vector3Input';
 export { Vector4Input } from './Vector4Input';
+export { ForeignKeySelect } from './ForeignKeySelect';

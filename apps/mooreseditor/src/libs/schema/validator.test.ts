@@ -1,346 +1,437 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
-import { createValidator, validateData } from './validator'
-import { z } from 'zod'
-import type { Schema } from './types'
+import { createSchemaValidator } from './validator'
+import type { SchemaContainer } from './types'
 
 describe('validator', () => {
-  describe('createValidator', () => {
-    it('should create validator for string schema', () => {
-      const schema: Schema = { type: 'string' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('test')).toBe('test')
-      expect(() => validator.parse(123)).toThrow()
-    })
-
-    it('should create validator for integer schema', () => {
-      const schema: Schema = { type: 'integer' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse(42)).toBe(42)
-      expect(() => validator.parse(3.14)).toThrow()
-      expect(() => validator.parse('42')).toThrow()
-    })
-
-    it('should create validator for number schema', () => {
-      const schema: Schema = { type: 'number' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse(3.14)).toBe(3.14)
-      expect(validator.parse(42)).toBe(42)
-      expect(() => validator.parse('3.14')).toThrow()
-    })
-
-    it('should create validator for boolean schema', () => {
-      const schema: Schema = { type: 'boolean' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse(true)).toBe(true)
-      expect(validator.parse(false)).toBe(false)
-      expect(() => validator.parse('true')).toThrow()
-    })
-
-    it('should handle string with enum', () => {
-      const schema: Schema = { type: 'string', enum: ['red', 'green', 'blue'] }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('red')).toBe('red')
-      expect(validator.parse('blue')).toBe('blue')
-      expect(() => validator.parse('yellow')).toThrow()
-    })
-
-    it('should handle string with minLength and maxLength', () => {
-      const schema: Schema = { type: 'string', minLength: 3, maxLength: 10 }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('test')).toBe('test')
-      expect(() => validator.parse('ab')).toThrow()
-      expect(() => validator.parse('this is too long')).toThrow()
-    })
-
-    it('should handle string with pattern', () => {
-      const schema: Schema = { type: 'string', pattern: '^[A-Z][a-z]+$' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('Hello')).toBe('Hello')
-      expect(() => validator.parse('hello')).toThrow()
-      expect(() => validator.parse('HELLO')).toThrow()
-    })
-
-    it('should handle string with format email', () => {
-      const schema: Schema = { type: 'string', format: 'email' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('test@example.com')).toBe('test@example.com')
-      expect(() => validator.parse('invalid-email')).toThrow()
-    })
-
-    it('should handle string with format uuid', () => {
-      const schema: Schema = { type: 'string', format: 'uuid' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('123e4567-e89b-12d3-a456-426614174000')).toBe('123e4567-e89b-12d3-a456-426614174000')
-      expect(() => validator.parse('not-a-uuid')).toThrow()
-    })
-
-    it('should handle integer with minimum and maximum', () => {
-      const schema: Schema = { type: 'integer', minimum: 0, maximum: 100 }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse(50)).toBe(50)
-      expect(validator.parse(0)).toBe(0)
-      expect(validator.parse(100)).toBe(100)
-      expect(() => validator.parse(-1)).toThrow()
-      expect(() => validator.parse(101)).toThrow()
-    })
-
-    it('should handle number with minimum and maximum', () => {
-      const schema: Schema = { type: 'number', minimum: 0.0, maximum: 1.0 }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse(0.5)).toBe(0.5)
-      expect(validator.parse(0.0)).toBe(0.0)
-      expect(validator.parse(1.0)).toBe(1.0)
-      expect(() => validator.parse(-0.1)).toThrow()
-      expect(() => validator.parse(1.1)).toThrow()
-    })
-
-    it('should handle array schema', () => {
-      const schema: Schema = { 
-        type: 'array', 
-        items: { type: 'string' } 
+  describe('createSchemaValidator', () => {
+    it('should validate string schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'string' }
       }
-      const validator = createValidator(schema)
+      const validator = createSchemaValidator(schemaContainer)
       
-      expect(validator.parse(['a', 'b', 'c'])).toEqual(['a', 'b', 'c'])
-      expect(validator.parse([])).toEqual([])
-      expect(() => validator.parse(['a', 1, 'c'])).toThrow()
-    })
-
-    it('should handle array with minItems and maxItems', () => {
-      const schema: Schema = { 
-        type: 'array', 
-        items: { type: 'number' },
-        minItems: 2,
-        maxItems: 5
-      }
-      const validator = createValidator(schema)
+      // Should validate actual data according to the schema
+      const validData = ['hello', 'world']
+      expect(validator.parse(validData)).toEqual(validData)
       
-      expect(validator.parse([1, 2, 3])).toEqual([1, 2, 3])
-      expect(() => validator.parse([1])).toThrow()
-      expect(() => validator.parse([1, 2, 3, 4, 5, 6])).toThrow()
-    })
-
-    it('should handle array with format vector2', () => {
-      const schema: Schema = { type: 'array', format: 'vector2' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse([1, 2])).toEqual([1, 2])
+      // Should throw on invalid data
       expect(() => validator.parse([1, 2, 3])).toThrow()
-      expect(() => validator.parse([1])).toThrow()
+      expect(() => validator.parse('not an array')).toThrow()
     })
 
-    it('should handle array with format vector3', () => {
-      const schema: Schema = { type: 'array', format: 'vector3' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse([1, 2, 3])).toEqual([1, 2, 3])
-      expect(() => validator.parse([1, 2])).toThrow()
-      expect(() => validator.parse([1, 2, 3, 4])).toThrow()
-    })
-
-    it('should handle array with format vector4', () => {
-      const schema: Schema = { type: 'array', format: 'vector4' }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse([1, 2, 3, 4])).toEqual([1, 2, 3, 4])
-      expect(() => validator.parse([1, 2, 3])).toThrow()
-      expect(() => validator.parse([1, 2, 3, 4, 5])).toThrow()
-    })
-
-    it('should handle object schema', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          age: { type: 'integer' }
-        },
-        required: ['name']
+    it('should validate integer schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'integer' }
       }
-      const validator = createValidator(schema)
+      const validator = createSchemaValidator(schemaContainer)
       
-      expect(validator.parse({ name: 'John', age: 30 })).toEqual({ name: 'John', age: 30 })
-      expect(validator.parse({ name: 'Jane' })).toEqual({ name: 'Jane' })
-      expect(() => validator.parse({ age: 30 })).toThrow()
+      const validData = [1, 2, 3]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on non-integer data
+      expect(() => validator.parse([1.5, 2.7])).toThrow()
+      expect(() => validator.parse(['not', 'integers'])).toThrow()
     })
 
-    it('should handle nested object schema', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          user: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              email: { type: 'string', format: 'email' }
-            },
-            required: ['name', 'email']
-          }
-        },
-        required: ['user']
+    it('should validate number schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'number' }
       }
-      const validator = createValidator(schema)
+      const validator = createSchemaValidator(schemaContainer)
       
-      expect(validator.parse({
-        user: { name: 'John', email: 'john@example.com' }
-      })).toEqual({
-        user: { name: 'John', email: 'john@example.com' }
-      })
+      const validData = [1, 2.5, 3.14]
+      expect(validator.parse(validData)).toEqual(validData)
       
-      expect(() => validator.parse({
-        user: { name: 'John' }
-      })).toThrow()
+      // Should throw on non-number data
+      expect(() => validator.parse(['not', 'numbers'])).toThrow()
     })
 
-    it('should handle additionalProperties', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' }
-        },
-        additionalProperties: false
+    it('should validate boolean schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'boolean' }
       }
-      const validator = createValidator(schema)
+      const validator = createSchemaValidator(schemaContainer)
       
-      expect(validator.parse({ name: 'John' })).toEqual({ name: 'John' })
-      expect(() => validator.parse({ name: 'John', extra: 'field' })).toThrow()
+      const validData = [true, false, true]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on non-boolean data
+      expect(() => validator.parse([1, 0])).toThrow()
     })
 
-    it('should handle nullable values', () => {
-      const schema: Schema = { type: 'string', nullable: true }
-      const validator = createValidator(schema)
-      
-      expect(validator.parse('test')).toBe('test')
-      expect(validator.parse(null)).toBe(null)
-      expect(() => validator.parse(undefined)).toThrow()
-    })
-
-    it('should handle default values', () => {
-      const schema: Schema = { type: 'string', default: 'default value' }
-      const validator = createValidator(schema)
-      
-      // Note: Zod doesn't handle defaults in parse, only in schemas with .default()
-      expect(validator.parse('test')).toBe('test')
-    })
-
-    it('should handle unknown schema type', () => {
-      const schema: any = { type: 'unknown' }
-      const validator = createValidator(schema)
-      
-      // Should return z.any() for unknown types
-      expect(validator.parse('anything')).toBe('anything')
-      expect(validator.parse(123)).toBe(123)
-      expect(validator.parse(null)).toBe(null)
-    })
-  })
-
-  describe('validateData', () => {
-    it('should validate data against schema', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          age: { type: 'integer' }
-        },
-        required: ['name']
+    it('should validate enum schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'enum', options: ['red', 'green', 'blue'] }
       }
+      const validator = createSchemaValidator(schemaContainer)
       
-      const validData = { name: 'John', age: 30 }
-      const result = validateData(validData, schema)
+      const validData = ['red', 'blue', 'green']
+      expect(validator.parse(validData)).toEqual(validData)
       
-      expect(result.success).toBe(true)
-      expect(result.data).toEqual(validData)
-      expect(result.error).toBeUndefined()
+      // Should throw on invalid enum values
+      expect(() => validator.parse(['red', 'yellow'])).toThrow()
     })
 
-    it('should return error for invalid data', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          age: { type: 'integer' }
-        },
-        required: ['name']
+    it('should validate uuid schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'uuid' }
       }
+      const validator = createSchemaValidator(schemaContainer)
       
-      const invalidData = { age: '30' } // Missing required name, wrong type for age
-      const result = validateData(invalidData, schema)
+      const validData = ['550e8400-e29b-41d4-a716-446655440000']
+      expect(validator.parse(validData)).toEqual(validData)
       
-      expect(result.success).toBe(false)
-      expect(result.data).toBeUndefined()
-      expect(result.error).toBeDefined()
+      // Should throw on invalid UUID
+      expect(() => validator.parse(['not-a-uuid'])).toThrow()
     })
 
-    it('should handle complex validation', () => {
-      const schema: Schema = {
-        type: 'object',
-        properties: {
-          id: { type: 'string', format: 'uuid' },
-          name: { type: 'string', minLength: 3, maxLength: 50 },
-          email: { type: 'string', format: 'email' },
-          age: { type: 'integer', minimum: 18, maximum: 120 },
-          tags: { type: 'array', items: { type: 'string' }, minItems: 1 },
-          settings: {
-            type: 'object',
-            properties: {
-              theme: { type: 'string', enum: ['light', 'dark'] },
-              notifications: { type: 'boolean' }
-            },
-            required: ['theme']
-          }
-        },
-        required: ['id', 'name', 'email']
+    it('should validate vector2 schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'vector2' }
       }
+      const validator = createSchemaValidator(schemaContainer)
       
-      const validData = {
-        id: '123e4567-e89b-12d3-a456-426614174000',
-        name: 'John Doe',
-        email: 'john@example.com',
-        age: 30,
-        tags: ['user', 'admin'],
-        settings: {
-          theme: 'dark',
-          notifications: true
-        }
-      }
+      const validData = [[1, 2], [3.5, 4.5]]
+      expect(validator.parse(validData)).toEqual(validData)
       
-      const result = validateData(validData, schema)
-      expect(result.success).toBe(true)
-      expect(result.data).toEqual(validData)
+      // Should throw on invalid vector data
+      expect(() => validator.parse([[1]])).toThrow()
+      expect(() => validator.parse([[1, 2, 3]])).toThrow()
     })
 
-    it('should handle array of objects', () => {
-      const schema: Schema = {
+    it('should validate vector3 schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'vector3' }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [[1, 2, 3], [4.5, 5.5, 6.5]]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on invalid vector data
+      expect(() => validator.parse([[1, 2]])).toThrow()
+    })
+
+    it('should validate vector4 schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'vector4' }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [[1, 2, 3, 4], [5.5, 6.5, 7.5, 8.5]]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on invalid vector data
+      expect(() => validator.parse([[1, 2, 3]])).toThrow()
+    })
+
+    it('should validate object schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
         type: 'array',
         items: {
           type: 'object',
-          properties: {
-            id: { type: 'integer' },
-            name: { type: 'string' }
-          },
-          required: ['id', 'name']
+          properties: [
+            { key: 'name', type: 'string' },
+            { key: 'age', type: 'integer' }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on invalid object data
+      expect(() => validator.parse([{ name: 'John', age: '30' }])).toThrow()
+    })
+
+    it('should validate nested array schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'array',
+          items: { type: 'integer' }
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [[1, 2], [3, 4], [5, 6]]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on invalid nested array data
+      expect(() => validator.parse([[1, 'two']])).toThrow()
+    })
+
+    it('should validate schema with optional fields', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'required', type: 'string' },
+            { key: 'optional', type: 'string', optional: true }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [
+        { required: 'value' },
+        { required: 'value', optional: 'optional value' }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw when required field is missing
+      expect(() => validator.parse([{ optional: 'value' }])).toThrow()
+    })
+
+    it('should validate schema with default values', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'name', type: 'string', default: 'Unknown' },
+            { key: 'age', type: 'integer', default: 0 }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      // Note: Zod's default values work on parse, not on missing fields in existing objects
+      const validData = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
+    })
+
+    it('should validate integer schema with min and max', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'integer', min: 0, max: 100 }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [0, 50, 100]
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on values outside range
+      expect(() => validator.parse([-1])).toThrow()
+      expect(() => validator.parse([101])).toThrow()
+    })
+
+    it('should validate array schema with minLength and maxLength', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: { type: 'string' },
+        minLength: 2,
+        maxLength: 4
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = ['a', 'b', 'c']
+      expect(validator.parse(validData)).toEqual(validData)
+      
+      // Should throw on arrays outside length range
+      expect(() => validator.parse(['a'])).toThrow()
+      expect(() => validator.parse(['a', 'b', 'c', 'd', 'e'])).toThrow()
+    })
+
+    it('should validate nested object schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'name', type: 'string' },
+            {
+              key: 'address',
+              type: 'object',
+              properties: [
+                { key: 'street', type: 'string' },
+                { key: 'city', type: 'string' }
+              ]
+            }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [
+        {
+          name: 'John',
+          address: {
+            street: '123 Main St',
+            city: 'New York'
+          }
+        }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
+    })
+
+    it('should handle object schema with ref', () => {
+      const referencedSchema: SchemaContainer = {
+        id: 'person',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'name', type: 'string' },
+            { key: 'age', type: 'integer' }
+          ]
         }
       }
       
-      const validData = [
-        { id: 1, name: 'Item 1' },
-        { id: 2, name: 'Item 2' }
-      ]
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          ref: 'person'
+        }
+      }
       
-      const result = validateData(validData, schema)
-      expect(result.success).toBe(true)
-      expect(result.data).toEqual(validData)
+      const validator = createSchemaValidator(schemaContainer, [referencedSchema])
+      
+      const validData = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
+    })
+
+    it('should validate schema container without referenced schema', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          ref: 'nonexistent'
+        }
+      }
+      
+      // Should throw when referenced schema is not found
+      expect(() => createSchemaValidator(schemaContainer)).toThrow('Referenced schema with id "nonexistent" not found')
+    })
+
+    it('should validate complex nested schema container', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'id', type: 'uuid' },
+            { key: 'type', type: 'enum', options: ['user', 'admin'] },
+            {
+              key: 'profile',
+              type: 'object',
+              properties: [
+                { key: 'name', type: 'string' },
+                { key: 'tags', type: 'array', items: { type: 'string' } },
+                { key: 'settings', type: 'object', properties: [
+                  { key: 'theme', type: 'enum', options: ['light', 'dark'] },
+                  { key: 'notifications', type: 'boolean', default: true }
+                ]}
+              ]
+            }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      const validData = [{
+        id: '550e8400-e29b-41d4-a716-446655440000',
+        type: 'admin',
+        profile: {
+          name: 'John Doe',
+          tags: ['developer', 'designer'],
+          settings: {
+            theme: 'dark',
+            notifications: false
+          }
+        }
+      }]
+      expect(validator.parse(validData)).toEqual(validData)
+    })
+
+    it('should validate vector int type schema containers', () => {
+      const vector2IntSchema: SchemaContainer = {
+        id: 'test2int',
+        type: 'array',
+        items: { type: 'vector2Int' }
+      }
+      const vector2IntValidator = createSchemaValidator(vector2IntSchema)
+      expect(vector2IntValidator.parse([[1, 2], [3, 4]])).toEqual([[1, 2], [3, 4]])
+      expect(() => vector2IntValidator.parse([[1.5, 2]])).toThrow()
+
+      const vector3IntSchema: SchemaContainer = {
+        id: 'test3int',
+        type: 'array',
+        items: { type: 'vector3Int' }
+      }
+      const vector3IntValidator = createSchemaValidator(vector3IntSchema)
+      expect(vector3IntValidator.parse([[1, 2, 3], [4, 5, 6]])).toEqual([[1, 2, 3], [4, 5, 6]])
+      expect(() => vector3IntValidator.parse([[1, 2.5, 3]])).toThrow()
+
+      const vector4IntSchema: SchemaContainer = {
+        id: 'test4int',
+        type: 'array',
+        items: { type: 'vector4Int' }
+      }
+      const vector4IntValidator = createSchemaValidator(vector4IntSchema)
+      expect(vector4IntValidator.parse([[1, 2, 3, 4], [5, 6, 7, 8]])).toEqual([[1, 2, 3, 4], [5, 6, 7, 8]])
+      expect(() => vector4IntValidator.parse([[1, 2, 3, 4.5]])).toThrow()
+    })
+
+    it('should validate schema with extra properties', () => {
+      const schemaContainer: SchemaContainer = {
+        id: 'test',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: [
+            { key: 'name', type: 'string' }
+          ]
+        }
+      }
+      const validator = createSchemaValidator(schemaContainer)
+      
+      // Should allow extra properties with passthrough
+      const validData = [
+        { name: 'John', extra: 'property', another: 123 }
+      ]
+      expect(validator.parse(validData)).toEqual(validData)
     })
   })
 })

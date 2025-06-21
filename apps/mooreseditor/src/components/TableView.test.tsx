@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import { TableView } from './TableView'
 import '@testing-library/jest-dom'
@@ -62,24 +62,24 @@ describe('TableView', () => {
   })
 
   it('should handle null data', () => {
-    render(<TableView {...defaultProps} data={null} />)
+    render(<TableView {...defaultProps} data={null as any} />)
     
-    // Should render without errors
-    expect(screen.getByRole('table')).toBeInTheDocument()
+    // Should display error message
+    expect(screen.getByText('Invalid data')).toBeInTheDocument()
   })
 
   it('should handle undefined data', () => {
-    render(<TableView {...defaultProps} data={undefined} />)
+    render(<TableView {...defaultProps} data={undefined as any} />)
     
-    // Should render without errors
-    expect(screen.getByRole('table')).toBeInTheDocument()
+    // Should display error message
+    expect(screen.getByText('Invalid data')).toBeInTheDocument()
   })
 
   it('should handle non-array data', () => {
     render(<TableView {...defaultProps} data={{ single: 'object' } as any} />)
     
-    // Should handle gracefully
-    expect(screen.getByRole('table')).toBeInTheDocument()
+    // Should display error message
+    expect(screen.getByText('Invalid data')).toBeInTheDocument()
   })
 
   it('should display rows', () => {
@@ -101,16 +101,19 @@ describe('TableView', () => {
 
   it('should handle data with different properties', () => {
     const customData = [
-      { title: 'Title 1', description: 'Desc 1' },
-      { title: 'Title 2', description: 'Desc 2' }
+      { id: 1, name: 'Title 1', value: 100 },
+      { id: 2, name: 'Title 2', value: 200 }
     ]
     
+    // Schema defines the columns, not the data
     render(<TableView {...defaultProps} data={customData} />)
     
-    expect(screen.getByText('title')).toBeInTheDocument()
-    expect(screen.getByText('description')).toBeInTheDocument()
+    // Columns are defined by schema
+    expect(screen.getByText('id')).toBeInTheDocument()
+    expect(screen.getByText('name')).toBeInTheDocument()
+    expect(screen.getByText('value')).toBeInTheDocument()
     expect(screen.getByText('Title 1')).toBeInTheDocument()
-    expect(screen.getByText('Desc 1')).toBeInTheDocument()
+    expect(screen.getByText('Title 2')).toBeInTheDocument()
   })
 
   it('should handle data with missing properties', () => {

@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@/test/utils/test-utils'
 import { StringInput } from './StringInput'
 import '@testing-library/jest-dom'
@@ -51,10 +51,8 @@ describe('StringInput', () => {
     // Fast forward debounce timer
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith('new value')
-      expect(onChange).toHaveBeenCalledTimes(1)
-    })
+    expect(onChange).toHaveBeenCalledWith('new value')
+    expect(onChange).toHaveBeenCalledTimes(1)
   })
 
   it('should handle empty string value', async () => {
@@ -66,9 +64,7 @@ describe('StringInput', () => {
     
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith('')
-    })
+    expect(onChange).toHaveBeenCalledWith('')
   })
 
   it('should handle undefined value as empty string', () => {
@@ -106,9 +102,7 @@ describe('StringInput', () => {
     
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith(specialChars)
-    })
+    expect(onChange).toHaveBeenCalledWith(specialChars)
   })
 
   it('should handle very long strings', async () => {
@@ -124,9 +118,7 @@ describe('StringInput', () => {
     
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith(newLongString)
-    })
+    expect(onChange).toHaveBeenCalledWith(newLongString)
   })
 
   it('should handle unicode characters', async () => {
@@ -139,9 +131,7 @@ describe('StringInput', () => {
     
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith(unicodeString)
-    })
+    expect(onChange).toHaveBeenCalledWith(unicodeString)
   })
 
   it('should debounce rapid changes', async () => {
@@ -166,11 +156,9 @@ describe('StringInput', () => {
     // Complete the debounce
     vi.advanceTimersByTime(200)
     
-    await waitFor(() => {
-      // Should only be called once with the final value
-      expect(onChange).toHaveBeenCalledTimes(1)
-      expect(onChange).toHaveBeenCalledWith('abc')
-    })
+    // Should only be called once with the final value
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange).toHaveBeenCalledWith('abc')
   })
 
   it('should update local value when prop changes', () => {
@@ -221,8 +209,6 @@ describe('StringInput', () => {
     
     vi.advanceTimersByTime(300)
     
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith(pastedText)
-    })
+    expect(onChange).toHaveBeenCalledWith(pastedText)
   })
 })

@@ -264,12 +264,17 @@ describe('useDebouncedCallback', () => {
 
     // Change delay to shorter
     rerender({ cb: callback, delay: 100 })
+    
+    // Call again with new delay
+    act(() => {
+      result.current('test')
+    })
 
     act(() => {
       vi.advanceTimersByTime(100)
     })
 
-    // Should still be called with the new delay
+    // Should be called with the new delay
     expect(callback).toHaveBeenCalledWith('test')
   })
 

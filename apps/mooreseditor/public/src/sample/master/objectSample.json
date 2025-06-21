@@ -1,0 +1,11 @@
+{
+  "companyInfo": {
+    "companyName": "Aa",
+    "foundedYear": 3,
+    "headquarters": {
+      "street": "bb",
+      "city": "ああ"
+    },
+    "isPublic": false
+  }
+}

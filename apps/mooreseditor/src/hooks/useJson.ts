@@ -7,6 +7,10 @@ import { getSampleJson } from "../utils/devFileSystem";
 
 const isDev = import.meta.env.DEV;
 
+interface Column {
+  title: string;
+  data: any[];
+}
 
 export function useJson() {
   const [jsonData, setJsonData] = useState<Column[]>([]);
@@ -40,14 +44,16 @@ export function useJson() {
         parsedData = JSON.parse(fileContents);
       }
 
-      if (!parsedData || !Array.isArray(parsedData.data)) {
+      if (!parsedData) {
         console.error(`Invalid JSON format in file: ${menuItem}.json`);
         return;
       }
 
+      console.log("Loaded JSON data:", parsedData);
+      
       const newJsonData = [
         ...jsonData.slice(0, columnIndex + 1),
-        { title: menuItem, data: parsedData.data },
+        { title: menuItem, data: parsedData },
       ];
       setJsonData(newJsonData);
     } catch (error) {

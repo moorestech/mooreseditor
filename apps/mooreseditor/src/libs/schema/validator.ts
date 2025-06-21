@@ -30,12 +30,8 @@ export function createSchemaValidator(
   // Preprocess schema containers to build a reference map
   const schemaMap = preprocessSchemaContainers([schemaContainer, ...allSchemaContainers]);
   
-  // First validate the schema container itself
-  const containerSchema = z.object({
-    id: z.string(),
-  }).and(createSchemaTypeValidator(schemaContainer, schemaMap));
-
-  return containerSchema;
+  // Create validator based on the schema container
+  return createSchemaTypeValidator(schemaContainer, schemaMap);
 }
 
 /**
@@ -100,8 +96,12 @@ function createObjectValidator(
     }
     
     // Use the referenced schema for validation
-    // SchemaContainer is an ArraySchema, so we need to handle it differently
-    return createArrayValidator(referencedSchema, schemaMap);
+    // If the referenced schema is an array type, use its items for the object validation
+    if (referencedSchema.type === 'array' && referencedSchema.items) {
+      return createSchemaTypeValidator(referencedSchema.items, schemaMap);
+    }
+    // Otherwise, validate as the referenced schema type
+    return createSchemaTypeValidator(referencedSchema, schemaMap);
   }
   
   if (!schema.properties || schema.properties.length === 0) {

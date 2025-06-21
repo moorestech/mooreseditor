@@ -4,9 +4,11 @@
       "Bash(npm run lint)",
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
+      "Bash(npm:*)",
       "Bash(node:*)",
       "Bash(pnpm run dev:*)",
       "Bash(pnpm run:*)",
+      "Bash(pnpm:*)",
       "mcp__playwright__browser_navigate",
       "mcp__playwright__browser_click",
       "mcp__playwright__browser_console_messages",
@@ -36,7 +38,10 @@
       "Bash(curl:*)",
       "mcp__playwright__browser_tab_new",
       "mcp__playwright__browser_tab_select",
-      "mcp__playwright__browser_tab_close"
+      "mcp__playwright__browser_tab_close",
+      "Bash(sed:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(npx c8 report:*)"
     ],
     "deny": []
   }

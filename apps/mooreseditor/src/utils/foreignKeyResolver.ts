@@ -234,6 +234,10 @@ export function validateForeignKeyPath(path: string): { valid: boolean; error?: 
   for (const segment of segments) {
     // Check if it's a valid array notation
     if (segment.includes('[')) {
+      // Allow [*] as a segment
+      if (segment === '[*]') {
+        continue;
+      }
       const arrayMatch = segment.match(/^(.+)\[\*\]$/);
       if (!arrayMatch || !arrayMatch[1]) {
         return { valid: false, error: `Invalid array notation in segment: ${segment}. Use format: name[*]` };

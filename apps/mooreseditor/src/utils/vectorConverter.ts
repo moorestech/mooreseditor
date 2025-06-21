@@ -56,9 +56,8 @@ export function isVectorArray(value: any): boolean {
 }
 
 export function isVectorObject(value: any): boolean {
-  return value && 
-    typeof value === 'object' && 
-    !Array.isArray(value) &&
-    'x' in value && 
-    typeof value.x === 'number';
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
+  }
+  return 'x' in value && typeof value.x === 'number';
 }

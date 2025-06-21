@@ -36,7 +36,7 @@ export function resolvePath(
     }
     
     // Go up the specified number of levels
-    const targetPath = currentPath.slice(0, -(upLevels + 1));
+    const targetPath = currentPath.slice(0, -upLevels);
     
     // If there's a remaining path, resolve it
     if (remainingPath) {

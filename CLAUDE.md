@@ -16,6 +16,11 @@ pnpm run lint
 pnpm run typecheck
 ```
 
+### テストの実行
+```bash
+pnpm run test
+```
+
 ## Playwrightを使ったデバッグ方法
 
 ### 基本的な手順

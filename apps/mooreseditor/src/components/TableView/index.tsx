@@ -103,8 +103,15 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                           setEditValue={setEditValue}
                           saveEdit={saveEdit}
                           onSave={(newValue) => {
-                            setEditValue(newValue);
-                            saveEdit();
+                            if (editingCell && onDataChange) {
+                              const newData = [...arrayData];
+                              newData[editingCell.row] = {
+                                ...newData[editingCell.row],
+                                [editingCell.column]: newValue
+                              };
+                              onDataChange(newData);
+                              cancelEditing();
+                            }
                           }}
                           onCancel={cancelEditing}
                         />
@@ -118,7 +125,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                   return (
                     <Table.Td 
                       key={column.key}
-                      onDoubleClick={(e: React.MouseEvent) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         startEditing(index, column.key);
                       }}
@@ -137,7 +144,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                 return (
                   <Table.Td 
                     key={column.key}
-                    onDoubleClick={(e: React.MouseEvent) => {
+                    onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       startEditing(index, column.key);
                     }}

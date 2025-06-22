@@ -11,16 +11,6 @@ interface EnumEditCellProps extends CellEditProps {
 export const EnumEditCell: React.FC<EnumEditCellProps> = ({ column, value, onSave, onCancel }) => {
   const columnSchema = column as any;
   const selectRef = useRef<HTMLInputElement>(null);
-  
-  // Auto-open dropdown on mount
-  useEffect(() => {
-    if (selectRef.current) {
-      // Small delay to ensure the component is fully mounted
-      setTimeout(() => {
-        selectRef.current?.click();
-      }, 50);
-    }
-  }, []);
 
   return (
     <Select
@@ -28,7 +18,7 @@ export const EnumEditCell: React.FC<EnumEditCellProps> = ({ column, value, onSav
       value={value || ''}
       onChange={(val) => {
         if (val !== null) {
-          setTimeout(() => onSave(val || ''), 0);
+          onSave(val || '');
         }
       }}
       data={columnSchema.options || []}
@@ -42,8 +32,10 @@ export const EnumEditCell: React.FC<EnumEditCellProps> = ({ column, value, onSav
       searchable={false}
       allowDeselect={false}
       withCheckIcon={false}
+      defaultDropdownOpened={true}
       comboboxProps={{ 
-        transitionProps: { transition: 'fade', duration: 0 }
+        transitionProps: { transition: 'fade', duration: 0 },
+        withinPortal: false
       }}
     />
   );

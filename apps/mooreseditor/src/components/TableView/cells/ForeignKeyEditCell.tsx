@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { Select, Loader } from "@mantine/core";
 
@@ -13,13 +13,12 @@ interface ForeignKeyEditCellProps extends CellEditProps {
 
 export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, value, onSave, onCancel }) => {
   const { projectDir } = useProject();
-  const [localValue, setLocalValue] = useState(value);
   const columnSchema = column as UuidSchema;
   
   const { options, loading, error } = useForeignKeyData(
     columnSchema.foreignKey,
     projectDir,
-    localValue
+    value
   );
 
   const selectData = useMemo(() => {
@@ -56,11 +55,10 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
   return (
     <Select
       data={selectData}
-      value={localValue || ''}
+      value={value || ''}
       onChange={(val) => {
-        setLocalValue(val || '');
         if (val !== null) {
-          setTimeout(() => onSave(val || ''), 0);
+          onSave(val || '');
         }
       }}
       placeholder={`Select ${columnSchema.foreignKey?.schemaId}`}
@@ -73,8 +71,10 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
       }}
       autoFocus
       withCheckIcon={false}
+      defaultDropdownOpened={true}
       comboboxProps={{ 
-        transitionProps: { transition: 'fade', duration: 0 }
+        transitionProps: { transition: 'fade', duration: 0 },
+        withinPortal: false
       }}
     />
   );

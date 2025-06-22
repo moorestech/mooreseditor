@@ -11,6 +11,7 @@ interface EditableCellProps extends CellEditProps {
   editValue: any;
   setEditValue: (value: any) => void;
   saveEdit: () => void;
+  onSave: (value: any) => void;
 }
 
 export const EditableCell: React.FC<EditableCellProps> = ({ 
@@ -19,6 +20,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   editValue,
   setEditValue,
   saveEdit,
+  onSave,
   onCancel 
 }) => {
   const columnSchema = column as any;
@@ -28,11 +30,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     return (
       <ForeignKeyEditCell
         column={column}
-        value={value}
-        onSave={(newValue) => {
-          setEditValue(newValue);
-          saveEdit();
-        }}
+        value={editValue}
+        onSave={onSave}
         onCancel={onCancel}
       />
     );
@@ -73,10 +72,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         <EnumEditCell
           column={column}
           value={editValue}
-          onSave={(newValue) => {
-            setEditValue(newValue);
-            saveEdit();
-          }}
+          onSave={onSave}
           onCancel={onCancel}
         />
       );

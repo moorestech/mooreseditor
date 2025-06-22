@@ -33,12 +33,27 @@ function App() {
 
   useEffect(() => {
     if (isShowFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && nestedViews.length === 0) {
-      setNestedViews([{
-        type: 'form',
-        schema: schemas[selectedSchema],
-        data: jsonData[jsonData.length - 1].data, // Pass the entire data object
-        path: []
-      }]);
+      const schema = schemas[selectedSchema];
+      const data = jsonData[jsonData.length - 1].data;
+      
+      // Check if the schema is an array type
+      if (schema.type === 'array') {
+        // For array schemas, show TableView directly
+        setNestedViews([{
+          type: 'table',
+          schema: schema,
+          data: data,
+          path: []
+        }]);
+      } else {
+        // For object schemas, show FormView
+        setNestedViews([{
+          type: 'form',
+          schema: schema,
+          data: data,
+          path: []
+        }]);
+      }
     }
   }, [isShowFormView, selectedSchema, schemas, jsonData]);
 
@@ -163,7 +178,18 @@ function App() {
             {view.type === 'table' ? (
               <TableView
                 schema={view.schema}
-                data={view.data}
+                data={(() => {
+                  // Always get the latest data from jsonData
+                  if (view.path.length === 0) {
+                    return jsonData[jsonData.length - 1]?.data;
+                  } else {
+                    let dataRef: any = jsonData[jsonData.length - 1]?.data;
+                    for (const key of view.path) {
+                      dataRef = dataRef?.[key];
+                    }
+                    return dataRef;
+                  }
+                })()}
                 onDataChange={(newData) => {
                   console.log('TableView onDataChange:', { newData, viewPath: view.path });
                   // Update the data through the same unified process
@@ -196,7 +222,12 @@ function App() {
                   setIsEditing(true);
                 }}
                 onRowSelect={(rowIndex) => {
-                  const selectedRowData = view.data[rowIndex];
+                  // Get the latest data for row selection
+                  let currentData: any = jsonData[jsonData.length - 1]?.data;
+                  for (const key of view.path) {
+                    currentData = currentData?.[key];
+                  }
+                  const selectedRowData = currentData?.[rowIndex];
                   if (selectedRowData && view.schema.items?.type === 'object') {
                     setNestedViews(prev => [
                       ...prev.slice(0, index + 1),
@@ -268,9 +299,11 @@ function App() {
                   });
                   
                   // Always get fresh data from jsonData to ensure consistency
-                  let dataAtPath: any = jsonData[jsonData.length - 1]?.data;
+                  const rootData = jsonData[jsonData.length - 1]?.data;
+                  let dataAtPath: any = rootData;
                   
                   // Navigate from the root data using the full path
+                  // If the root data has the same structure as the schema expects, navigate accordingly
                   for (const key of fullPath) {
                     dataAtPath = dataAtPath?.[key];
                   }

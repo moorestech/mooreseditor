@@ -63,9 +63,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockReturnValue(mockSchema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockReturnValue(mockSchema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     mockScanSchemaDirectory.mockResolvedValueOnce({})
     mockReadTextFile.mockResolvedValueOnce('type: object\nproperties:\n  - key: name\n    type: string')
@@ -135,9 +137,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockImplementation((schema) => schema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockImplementation((schema) => schema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     mockScanSchemaDirectory.mockResolvedValueOnce({})
     mockReadTextFile.mockResolvedValueOnce('type: object')
@@ -193,9 +197,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockImplementation((schema) => schema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockImplementation((schema) => schema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     // Empty definitions to trigger sample schema loading
     mockScanSchemaDirectory.mockResolvedValueOnce({})
@@ -229,9 +235,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockImplementation((schema) => schema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockImplementation((schema) => schema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     mockScanSchemaDirectory.mockRejectedValueOnce(new Error('No access'))
     
@@ -265,7 +273,7 @@ describe('useSchema', () => {
     const mockScanSchemaDirectory = vi.mocked(scanSchemaDirectory)
     
     const mockSchema = { type: 'object', ref: 'blocks/ItemBlock' }
-    const resolvedSchema = { type: 'object', properties: [] }
+    const resolvedSchema = { type: 'object', properties: [] as any[] }
     
     mockScanSchemaDirectory.mockResolvedValueOnce({})
     mockReadTextFile.mockResolvedValueOnce('type: object\nref: blocks/ItemBlock')
@@ -273,9 +281,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockReturnValueOnce(resolvedSchema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockReturnValueOnce(resolvedSchema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     const { result } = renderHook(() => useSchema())
     
@@ -326,9 +336,11 @@ describe('useSchema', () => {
     
     const mockResolver = {
       resolve: vi.fn().mockImplementation((schema) => schema),
-      debugBlocksSchema: vi.fn()
+      debugBlocksSchema: vi.fn(),
+      definitions: {},
+      resolveRefs: vi.fn().mockImplementation((schema) => schema)
     }
-    vi.mocked(RefResolver).mockImplementation(() => mockResolver)
+    vi.mocked(RefResolver).mockImplementation(() => mockResolver as any)
     
     mockScanSchemaDirectory.mockRejectedValueOnce(new Error('No access'))
     

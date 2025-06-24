@@ -74,7 +74,7 @@ describe('CollapsibleObject', () => {
   })
 
   it('should handle no children', () => {
-    render(<CollapsibleObject label="Empty Object" />)
+    render(<CollapsibleObject label="Empty Object">{null}</CollapsibleObject>)
     
     const header = screen.getByText('Empty Object')
     fireEvent.click(header)
@@ -107,7 +107,7 @@ describe('CollapsibleObject', () => {
     
     // Change children
     rerender(
-      <CollapsibleObject title="Test Object">
+      <CollapsibleObject label="Test Object">
         <div data-testid="new-content">New content</div>
       </CollapsibleObject>
     )

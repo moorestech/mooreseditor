@@ -104,7 +104,7 @@ describe('App', () => {
 
   const mockUseSchema = {
     schemas: {
-      'items': { type: 'object', properties: [] }
+      'items': { type: 'object' as const, properties: [] as any[] }
     },
     loadSchema: vi.fn()
   }

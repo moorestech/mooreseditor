@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 describe('Vector2Input', () => {
   const defaultProps = {
-    value: [0, 0],
+    value: [0, 0] as [number, number],
     onChange: vi.fn(),
     schema: { type: 'array' as const, format: 'vector2' }
   }
@@ -31,7 +31,7 @@ describe('Vector2Input', () => {
   })
 
   it('should display the provided vector values', () => {
-    render(<Vector2Input {...defaultProps} value={[3.14, -2.5]} />)
+    render(<Vector2Input {...defaultProps} value={[3.14, -2.5] as [number, number]} />)
     
     const inputs = screen.getAllByRole('textbox')
     expect(inputs[0]).toHaveValue('3.14')
@@ -40,7 +40,7 @@ describe('Vector2Input', () => {
 
   it('should call onChange when first value changes', () => {
     const onChange = vi.fn()
-    render(<Vector2Input {...defaultProps} value={[1, 2]} onChange={onChange} />)
+    render(<Vector2Input {...defaultProps} value={[1, 2] as [number, number]} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: '5' } })
@@ -53,7 +53,7 @@ describe('Vector2Input', () => {
 
   it('should call onChange when second value changes', () => {
     const onChange = vi.fn()
-    render(<Vector2Input {...defaultProps} value={[1, 2]} onChange={onChange} />)
+    render(<Vector2Input {...defaultProps} value={[1, 2] as [number, number]} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[1], { target: { value: '7' } })
@@ -141,7 +141,7 @@ describe('Vector2Input', () => {
 
   it('should handle empty string input', () => {
     const onChange = vi.fn()
-    render(<Vector2Input {...defaultProps} value={[10, 20]} onChange={onChange} />)
+    render(<Vector2Input {...defaultProps} value={[10, 20] as [number, number]} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: '' } })
@@ -153,7 +153,7 @@ describe('Vector2Input', () => {
 
   it.skip('should handle very large numbers', () => {
     const onChange = vi.fn()
-    const largeVector = [1e10, -1e10]
+    const largeVector: [number, number] = [1e10, -1e10]
     render(<Vector2Input {...defaultProps} value={largeVector} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
@@ -188,7 +188,7 @@ describe('Vector2Input', () => {
 
   it('should handle zero values', () => {
     const onChange = vi.fn()
-    render(<Vector2Input {...defaultProps} value={[100, 200]} onChange={onChange} />)
+    render(<Vector2Input {...defaultProps} value={[100, 200] as [number, number]} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: '0' } })

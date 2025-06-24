@@ -1,9 +1,9 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import ArrayField from './ArrayField'
 import '@testing-library/jest-dom'
-import type { Schema } from '@/libs/schema/types'
+import type { Schema, ArraySchema } from '@/libs/schema/types'
 
 // Mock Field component
 vi.mock('./Field', () => ({
@@ -34,7 +34,7 @@ describe('ArrayField', () => {
   const defaultProps = {
     schema: { 
       type: 'array' as const,
-      items: { type: 'string' }
+      items: { type: 'string' as const }
     },
     data: ['item1', 'item2'],
     onDataChange: vi.fn(),
@@ -143,10 +143,10 @@ describe('ArrayField', () => {
   })
 
   it('should respect minItems constraint', () => {
-    const schema: Schema = {
-      type: 'array',
-      items: { type: 'string' },
-      minItems: 2
+    const schema: ArraySchema = {
+      type: 'array' as const,
+      items: { type: 'string' as const },
+      minLength: 2
     }
     const value = ['item1', 'item2']
     
@@ -158,10 +158,10 @@ describe('ArrayField', () => {
   })
 
   it('should respect maxItems constraint', () => {
-    const schema: Schema = {
-      type: 'array',
-      items: { type: 'string' },
-      maxItems: 2
+    const schema: ArraySchema = {
+      type: 'array' as const,
+      items: { type: 'string' as const },
+      maxLength: 2
     }
     const value = ['item1', 'item2']
     
@@ -177,7 +177,7 @@ describe('ArrayField', () => {
       type: 'array',
       items: {
         type: 'array',
-        items: { type: 'string' }
+        items: { type: 'string' as const }
       }
     }
     const value = [['a', 'b'], ['c', 'd']]

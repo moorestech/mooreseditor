@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import { EnumInput } from './EnumInput'
 import '@testing-library/jest-dom'
@@ -126,7 +126,7 @@ describe('EnumInput', () => {
       onChange: vi.fn(),
       schema: { 
         type: 'enum' as const,
-        options: []
+        options: [] as any[]
       }
     }
     

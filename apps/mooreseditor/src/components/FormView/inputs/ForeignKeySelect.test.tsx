@@ -18,7 +18,7 @@ import { useProject } from '../../../hooks/useProject'
 
 describe('ForeignKeySelect', () => {
   const defaultProps = {
-    value: null,
+    value: null as any,
     onChange: vi.fn(),
     schema: { 
       type: 'string' as const,
@@ -33,13 +33,14 @@ describe('ForeignKeySelect', () => {
 
   const mockForeignKeyData = {
     options: [
-      { id: '1', display: 'Alice - alice@example.com' },
-      { id: '2', display: 'Bob - bob@example.com' },
-      { id: '3', display: 'Charlie - charlie@example.com' }
+      { id: '1', display: 'Alice - alice@example.com', path: '/users/0', indices: new Map() },
+      { id: '2', display: 'Bob - bob@example.com', path: '/users/1', indices: new Map() },
+      { id: '3', display: 'Charlie - charlie@example.com', path: '/users/2', indices: new Map() }
     ],
     loading: false,
-    error: null,
-    displayValue: null
+    error: null as any,
+    displayValue: null as any,
+    refresh: vi.fn()
   }
 
   beforeEach(() => {

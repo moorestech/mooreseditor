@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import { IntegerInput } from './IntegerInput'
 import '@testing-library/jest-dom'

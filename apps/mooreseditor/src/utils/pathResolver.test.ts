@@ -18,10 +18,10 @@ describe('resolvePath', () => {
       }
     },
     items: ['apple', 'banana', 'orange'],
-    nullValue: null,
-    undefinedValue: undefined,
+    nullValue: null as any,
+    undefinedValue: undefined as any,
     emptyObject: {},
-    emptyArray: []
+    emptyArray: [] as any[]
   }
 
   describe('absolute paths (starting with /)', () => {

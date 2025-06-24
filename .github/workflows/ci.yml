@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - macos-latest
+          - ubuntu-22.04
+          - windows-latest
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - if: matrix.platform == 'ubuntu-22.04'
+      name: Install Linux dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev \
+          librsvg2-dev patchelf
+
+    - uses: dtolnay/rust-toolchain@stable
+    
+    - uses: swatinem/rust-cache@v2
+      with:
+        workspaces: |
+          apps/mooreseditor/src-tauri
+    
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 9
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: pnpm
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Type check
+      run: pnpm run type-check
+      working-directory: apps/mooreseditor
+
+    - name: Lint
+      run: pnpm run lint
+      working-directory: apps/mooreseditor
+
+    - name: Test
+      run: pnpm run test --run
+      working-directory: apps/mooreseditor
+
+    - name: Build frontend
+      run: pnpm run build
+      working-directory: apps/mooreseditor
+
+    - name: Test Tauri build
+      run: pnpm run tauri build
+      working-directory: apps/mooreseditor

@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@/test/utils/test-utils'
 import Field from './Field'
 import '@testing-library/jest-dom'
@@ -64,7 +64,7 @@ describe('Field', () => {
 
   it('should render an integer input for integer schema', () => {
     const schema: Schema = { type: 'integer' }
-    render(<Field {...defaultProps} schema={schema} value={0} />)
+    render(<Field {...defaultProps} schema={schema} data={0} />)
     
     expect(screen.getByTestId('integer-input')).toBeInTheDocument()
   })

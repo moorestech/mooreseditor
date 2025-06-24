@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 
 describe('Vector4Input', () => {
   const defaultProps = {
-    value: [0, 0, 0, 0],
+    value: [0, 0, 0, 0] as [number, number, number, number],
     onChange: vi.fn(),
     schema: { type: 'array' as const, format: 'vector4' }
   }
@@ -178,7 +178,7 @@ describe('Vector4Input', () => {
   })
 
   it('should handle color values (RGBA)', () => {
-    const rgbaColor = [0.5, 0.75, 1.0, 0.8] // RGBA color
+    const rgbaColor: [number, number, number, number] = [0.5, 0.75, 1.0, 0.8] // RGBA color
     render(<Vector4Input {...defaultProps} value={rgbaColor} />)
     
     const inputs = screen.getAllByRole('textbox')
@@ -189,7 +189,7 @@ describe('Vector4Input', () => {
   })
 
   it('should handle quaternion values', () => {
-    const quaternion = [0.707, 0, 0.707, 0] // Rotation quaternion
+    const quaternion: [number, number, number, number] = [0.707, 0, 0.707, 0] // Rotation quaternion
     render(<Vector4Input {...defaultProps} value={quaternion} />)
     
     const inputs = screen.getAllByRole('textbox')
@@ -201,7 +201,7 @@ describe('Vector4Input', () => {
 
   it('should handle very large numbers', () => {
     const onChange = vi.fn()
-    const largeVector = [1e10, -1e10, 1e15, -1e15]
+    const largeVector: [number, number, number, number] = [1e10, -1e10, 1e15, -1e15]
     render(<Vector4Input {...defaultProps} value={largeVector} onChange={onChange} />)
     
     const inputs = screen.getAllByRole('textbox')
@@ -269,7 +269,7 @@ describe('Vector4Input', () => {
   })
 
   it('should handle normalized vectors', () => {
-    const normalizedVector = [0.5, 0.5, 0.5, 0.5] // Normalized 4D vector
+    const normalizedVector: [number, number, number, number] = [0.5, 0.5, 0.5, 0.5] // Normalized 4D vector
     render(<Vector4Input {...defaultProps} value={normalizedVector} />)
     
     const inputs = screen.getAllByRole('textbox')

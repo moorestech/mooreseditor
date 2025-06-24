@@ -1,5 +1,5 @@
 // AI Generated Test Code
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import FormView from './index'
 import '@testing-library/jest-dom'
@@ -29,7 +29,7 @@ vi.mock('./CollapsibleObject', () => ({
 
 describe('FormView', () => {
   const defaultProps = {
-    jsonData: { name: 'test', value: 42 },
+    data: { name: 'test', value: 42 },
     schema: {
       type: 'object' as const,
       properties: [
@@ -63,22 +63,22 @@ describe('FormView', () => {
     expect(screen.getByTestId('field-name')).toBeInTheDocument()
   })
 
-  it('should handle null jsonData', () => {
-    render(<FormView {...defaultProps} jsonData={null} />)
+  it('should handle null data', () => {
+    render(<FormView {...defaultProps} data={null} />)
     
     // Should render without errors
     expect(screen.getByTestId('field-name')).toBeInTheDocument()
   })
 
-  it('should handle undefined jsonData', () => {
-    render(<FormView {...defaultProps} jsonData={undefined} />)
+  it('should handle undefined data', () => {
+    render(<FormView {...defaultProps} data={undefined} />)
     
     // Should render without errors
     expect(screen.getByTestId('field-name')).toBeInTheDocument()
   })
 
-  it('should handle empty object jsonData', () => {
-    render(<FormView {...defaultProps} jsonData={{}} />)
+  it('should handle empty object data', () => {
+    render(<FormView {...defaultProps} data={{}} />)
     
     expect(screen.getByTestId('field-name')).toBeInTheDocument()
     expect(screen.getByTestId('field-value')).toBeInTheDocument()
@@ -101,7 +101,7 @@ describe('FormView', () => {
       items: { type: 'string' as const }
     }
     
-    render(<FormView {...defaultProps} schema={arraySchema} jsonData={['item1', 'item2']} />)
+    render(<FormView {...defaultProps} schema={arraySchema} data={['item1', 'item2']} />)
     
     // Should render Field component for array
     expect(screen.getByTestId('field-')).toBeInTheDocument()
@@ -146,7 +146,7 @@ describe('FormView', () => {
       type: 'string' as const
     }
     
-    render(<FormView {...defaultProps} schema={stringSchema} jsonData="test string" />)
+    render(<FormView {...defaultProps} schema={stringSchema} data="test string" />)
     
     // Should render Field for simple type
     expect(screen.getByTestId('field-')).toBeInTheDocument()

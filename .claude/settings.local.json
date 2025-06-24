@@ -41,7 +41,8 @@
       "mcp__playwright__browser_tab_close",
       "Bash(sed:*)",
       "Bash(npx vitest run:*)",
-      "Bash(npx c8 report:*)"
+      "Bash(npx c8 report:*)",
+      "mcp__playwright__browser_navigate_back"
     ],
     "deny": []
   }

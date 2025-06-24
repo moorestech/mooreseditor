@@ -1,0 +1,4 @@
+{
+  "extends": "@repo/typescript-config/tauri",
+  "include": ["vite.config.ts"]
+}

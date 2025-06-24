@@ -1,0 +1,10 @@
+{
+  "display": "Library",
+  "extends": "../base",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true
+  }
+}

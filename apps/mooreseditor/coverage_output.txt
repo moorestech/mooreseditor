@@ -1,0 +1,1194 @@
+
+> @mooreseditor/mooreseditor@0.1.0 test:coverage /Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor
+> vitest run --coverage "--" "--run"
+
+
+ RUN  v3.2.4 /Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor
+      Coverage enabled with v8
+
+stderr | src/hooks/useSchema.test.ts > useSchema > should load schema successfully
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.test.ts:76:24
+
+stdout | src/hooks/useJson.test.ts > useJson > should load JSON file successfully
+Loaded JSON data: { items: [ { id: [33m1[39m, name: [32m'Item 1'[39m } ] }
+
+stdout | src/hooks/useSchema.test.ts > useSchema > should handle schema load error
+Loading sample schema for items in dev mode
+
+stderr | src/hooks/useSchema.test.ts > useSchema > should load definitions from schema directory
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.test.ts:166:7
+
+stderr | src/hooks/useSchema.test.ts > useSchema > should fallback to sample schemas in dev mode
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.test.ts:187:7
+
+stdout | src/hooks/useJson.test.ts > useJson > should replace data at specific column index
+Loaded JSON data: { items: [ { id: [33m1[39m } ] }
+
+stdout | src/hooks/useJson.test.ts > useJson > should replace data at specific column index
+Loaded JSON data: { recipes: [ { id: [33m2[39m } ] }
+
+stdout | src/hooks/useSchema.test.ts > useSchema > should handle sample schema with definitions
+Loading sample schemas in dev mode
+
+stderr | src/hooks/useSchema.test.ts > useSchema > should handle sample schema with definitions
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.test.ts:219:7
+
+stdout | src/hooks/useJson.test.ts > useJson > should replace data at specific column index
+Loaded JSON data: { materials: [ { id: [33m3[39m } ] }
+
+stderr | src/hooks/useSchema.test.ts > useSchema > should handle missing sample schema in definitions
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.test.ts:309:7
+
+stdout | src/hooks/useJson.test.ts > useJson > should handle sample project in dev mode
+Loaded JSON data: { sample: [ { id: [33m1[39m } ] }
+
+stderr | Object.loadSchema (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/src/hooks/useSchema.ts:88:15)
+Error loading schema for items: TypeError: resolver.resolve is not a function
+    at Object.loadSchema [90m(/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useSchema.ts:76:39[90m)[39m
+[90m    at runNextTicks (node:internal/process/task_queues:65:5)[39m
+[90m    at processTimers (node:internal/timers:526:9)[39m
+
+ ❯ src/hooks/useSchema.test.ts (11 tests | 5 failed) 50ms
+   ✓ useSchema > should initialize with empty schemas 11ms
+   × useSchema > should load schema successfully 13ms
+     → expected null to deeply equal { type: 'object', …(1) }
+   ✓ useSchema > should handle schema directory not set 2ms
+   ✓ useSchema > should handle schema load error 2ms
+   × useSchema > should set loading state correctly 3ms
+     → expected false to be true // Object.is equality
+   ✓ useSchema > should load definitions from schema directory 2ms
+   × useSchema > should fallback to sample schemas in dev mode 6ms
+     → expected "spy" to be called with arguments: [ 'items' ][90m
+
+Number of calls: [1m0[22m
+[39m
+   × useSchema > should handle sample schema with definitions 3ms
+     → expected undefined to deeply equal { type: 'object' }
+   ✓ useSchema > should handle RefResolver properly 2ms
+   ✓ useSchema > should handle YAML parse error 2ms
+   × useSchema > should handle missing sample schema in definitions 2ms
+     → expected undefined to deeply equal { type: 'object' }
+ ❯ src/hooks/useJson.test.ts (11 tests | 1 failed) 57ms
+   ✓ useJson > should initialize with empty jsonData 11ms
+   ✓ useJson > should load JSON file successfully 6ms
+   ✓ useJson > should handle project directory not set 1ms
+   ✓ useJson > should handle JSON parse error 13ms
+   ✓ useJson > should handle file read error 2ms
+   × useJson > should replace data at specific column index 14ms
+     → expected [ …(2) ] to have a length of 1 but got 2
+   ✓ useJson > should set json data directly 1ms
+   ✓ useJson > should handle sample project in dev mode 2ms
+   ✓ useJson > should handle missing sample json in dev mode 1ms
+   ✓ useJson > should handle null parsed data 1ms
+   ✓ useJson > should log loaded JSON data 1ms
+stderr | src/components/FormView/inputs/EnumInput.test.tsx > EnumInput > should render a select element
+Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release.
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should render a select element
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stderr | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should render a select element
+Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release.
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should show placeholder when no value is selected
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/App.test.tsx > App > should save all data when saveAllData is called
+データが保存されました: /test/project/master/items.json
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should display loading state
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mtrue[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should display error state
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [32m'Failed to load data'[39m,
+  displayValue: [1mnull[22m
+}
+
+stderr | src/App.test.tsx > App > should handle save errors gracefully
+items.json の保存中にエラーが発生しました: Error: Write failed
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/App.test.tsx:408:45
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:20
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should display options from foreign key data
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/App.test.tsx > App > should handle array clicks in FormView
+FormView onObjectArrayClick: {
+  fullPath: [ [32m'data'[39m ],
+  schema: { type: [32m'array'[39m, items: { type: [32m'object'[39m } },
+  viewData: { data: [ [36m[Object][39m, [36m[Object][39m ] },
+  viewPath: [],
+  index: [33m0[39m
+}
+Data to display: [ { id: [33m1[39m }, { id: [33m2[39m } ]
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should call onChange when selection changes
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/App.test.tsx > App > should handle TableView row selection
+FormView onObjectArrayClick: {
+  fullPath: [ [32m'data'[39m ],
+  schema: { type: [32m'array'[39m, items: { type: [32m'object'[39m } },
+  viewData: { data: [ [36m[Object][39m, [36m[Object][39m ] },
+  viewPath: [],
+  index: [33m0[39m
+}
+Data to display: [ { id: [33m1[39m, name: [32m'Item 1'[39m }, { id: [33m2[39m, name: [32m'Item 2'[39m } ]
+
+stdout | src/App.test.tsx > App > should handle TableView data changes
+FormView onObjectArrayClick: {
+  fullPath: [ [32m'data'[39m ],
+  schema: { type: [32m'array'[39m, items: { type: [32m'object'[39m } },
+  viewData: { data: [ [36m[Object][39m ] },
+  viewPath: [],
+  index: [33m0[39m
+}
+Data to display: [ { id: [33m1[39m } ]
+
+stdout | src/App.test.tsx > App > should handle TableView data changes
+TableView onDataChange: { newData: [ { id: [33m1[39m }, { new: [32m'item'[39m } ], viewPath: [ [32m'data'[39m ] }
+Setting new jsonData: [ { title: [32m'items'[39m, data: { data: [36m[Array][39m } } ]
+
+ ✓ src/components/FormView/inputs/Vector2Input.test.tsx (18 tests | 2 skipped) 507ms
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should handle empty options
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: { options: [], loading: [33mfalse[39m, error: [1mnull[22m, displayValue: [1mnull[22m }
+
+stderr | src/App.test.tsx > App > should handle no projectDir when saving
+保存に必要な情報が不足しています
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should show error when foreignKey is missing
+ForeignKeySelect rendered: { foreignKey: [90mundefined[39m, projectDir: [32m'/test/project'[39m, value: [1mnull[22m }
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should be clearable when schema is optional
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [32m'1'[39m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should not be clearable when schema is required
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [32m'1'[39m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+ ❯ src/App.test.tsx (24 tests | 1 failed) 685ms
+   ✓ App > should render the main components 63ms
+   ✓ App > should display menu items in sidebar 12ms
+   ✓ App > should handle project open 23ms
+   ✓ App > should load file data when menu item is clicked 40ms
+   ✓ App > should update json data when form changes 12ms
+   ✓ App > should save data on Ctrl+S 6ms
+   ✓ App > should save data on Cmd+S (Mac) 15ms
+   ✓ App > should show editing indicator when data is modified 14ms
+   ✓ App > should handle no selected menu item 6ms
+   ✓ App > should handle schema loading state 7ms
+   ✓ App > should pass correct schema to FormView 6ms
+   ✓ App > should handle project not open state 6ms
+   ✓ App > should update json data with correct menu item 43ms
+   ✓ App > should save all data when saveAllData is called 94ms
+   × App > should handle sample project save differently 26ms
+     → Unable to find an element with the text: sample. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"m_89ab340 mantine-AppShell-root"[39m
+      [33mdata-resizing[39m=[32m"true"[39m
+      [33mstyle[39m=[32m"--app-shell-transition-duration: 200ms; --app-shell-transition-timing-function: ease;"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mstyle[39m=[32m"display: flex; flex-direction: row; height: 100vh; overflow: hidden; padding: 16px; gap: 16px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"sidebar"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mOpen Project[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mitems[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mrecipes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mstyle[39m=[32m"display: flex; flex-direction: row; flex: 1 1 0%; overflow-x: auto; height: 100%;"[39m
+        [36m/>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ App > should handle save errors gracefully 45ms
+   ✓ App > should render FormView when data is loaded 32ms
+   ✓ App > should handle FormView data changes 48ms
+   ✓ App > should handle array clicks in FormView 37ms
+   ✓ App > should handle TableView row selection 31ms
+   ✓ App > should handle TableView data changes 27ms
+   ✓ App > should show editing indicator when data is modified 53ms
+   ✓ App > should handle no jsonData when saving 6ms
+   ✓ App > should handle no projectDir when saving 30ms
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should be searchable
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should handle value not in options
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [32m'999'[39m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+ ✓ src/components/FormView/inputs/EnumInput.test.tsx (15 tests) 800ms
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should handle null value
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [1mnull[22m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should handle empty string value
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [32m''[39m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+stdout | src/components/FormView/inputs/ForeignKeySelect.test.tsx > ForeignKeySelect > should call onChange with empty string when cleared
+ForeignKeySelect rendered: {
+  foreignKey: {
+    table: [32m'users'[39m,
+    key: [32m'id'[39m,
+    displayFields: [ [32m'name'[39m, [32m'email'[39m ],
+    schemaId: [32m'user'[39m
+  },
+  projectDir: [32m'/test/project'[39m,
+  value: [32m'1'[39m
+}
+ForeignKeySelect data: {
+  options: [
+    { id: [32m'1'[39m, display: [32m'Alice - alice@example.com'[39m },
+    { id: [32m'2'[39m, display: [32m'Bob - bob@example.com'[39m },
+    { id: [32m'3'[39m, display: [32m'Charlie - charlie@example.com'[39m }
+  ],
+  loading: [33mfalse[39m,
+  error: [1mnull[22m,
+  displayValue: [1mnull[22m
+}
+
+ ✓ src/components/FormView/inputs/Vector4Input.test.tsx (22 tests | 1 skipped) 894ms
+ ✓ src/components/FormView/inputs/Vector3Input.test.tsx (21 tests | 1 skipped) 973ms
+ ✓ src/components/FormView/inputs/ForeignKeySelect.test.tsx (15 tests) 1022ms
+ ✓ src/components/TableView.test.tsx (14 tests) 749ms
+   ✓ TableView > should handle large datasets  367ms
+ ✓ src/components/Sidebar.test.tsx (16 tests) 263ms
+ ✓ src/components/FormView/ArrayField.test.tsx (18 tests | 1 skipped) 384ms
+stdout | src/hooks/useProject.test.ts > useProject > should open a project directory
+Menu to File Map: {
+  items: [32m'/test/project/schema/items.yml'[39m,
+  recipes: [32m'/test/project/schema/recipes.yml'[39m
+}
+
+stderr | src/hooks/useProject.test.ts > useProject > should handle no directory selected
+No directory selected.
+
+stderr | src/hooks/useProject.test.ts > useProject > should handle missing config file
+Error opening project directory: Error: File not found
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useProject.test.ts:82:54
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runFiles (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1787:3)
+
+stdout | src/hooks/useProject.test.ts > useProject > should handle missing config file
+Sample project schema data loaded: { items: [32m'items'[39m, recipes: [32m'recipes'[39m }
+
+stderr | src/hooks/useProject.test.ts > useProject > should handle invalid YAML in config
+Error parsing YAML: YAMLParseError: Nested mappings are not allowed in compact mappings at line 1, column 10:
+
+invalid: yaml: content:
+         ^
+
+    at Composer.onError (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/composer.js:70:34)
+    at Object.resolveBlockMap (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/resolve-block-map.js:78:21)
+    at resolveCollection (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/compose-collection.js:13:27)
+    at Object.composeCollection (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/compose-collection.js:59:16)
+    at Object.composeNode (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/compose-node.js:33:38)
+    at Object.composeDoc (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/compose-doc.js:35:23)
+    at Composer.next (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/composer.js:150:40)
+    at next (<anonymous>)
+    at Composer.compose (/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/yaml@2.7.1/node_modules/[4myaml[24m/dist/compose/composer.js:132:25)
+    at compose.next (<anonymous>) {
+  code: [32m'BLOCK_AS_IMPLICIT_KEY'[39m,
+  pos: [ [33m9[39m, [33m10[39m ],
+  linePos: [ { line: [33m1[39m, col: [33m10[39m }, { line: [33m1[39m, col: [33m11[39m } ]
+}
+Invalid or missing schemaPath in mooreseditor.config.yml
+
+stderr | src/hooks/useProject.test.ts > useProject > should handle no YAML files in schema directory
+No YAML files found in the schemaPath.
+
+stdout | src/hooks/useProject.test.ts > useProject > should set loading state correctly
+Menu to File Map: { test: [32m'/test/project/schema/test.yml'[39m }
+
+stderr | src/hooks/useProject.test.ts > useProject > should load sample project in dev mode when error occurs
+Error opening project directory: Error: Config file error
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useProject.test.ts:175:54
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runFiles (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1787:3)
+
+stderr | src/components/FormView/index.test.tsx > FormView > should maintain data consistency on updates
+A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://react.dev/link/controlled-components
+
+stdout | src/hooks/useProject.test.ts > useProject > should load sample project in dev mode when error occurs
+Sample project schema data loaded: { items: [32m'items'[39m, recipes: [32m'recipes'[39m }
+
+stderr | src/hooks/useProject.test.ts > useProject > should not load sample project in production mode
+Error opening project directory: Error: Config file error
+    at [90m/Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/apps/mooreseditor/[39msrc/hooks/useProject.test.ts:198:54
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:155:11
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:26
+    at file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1729:8)
+    at runFiles (file:///Users/katsumi.sato/WebstormProjects/tauri/mooreseditor/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1787:3)
+
+stdout | src/hooks/useProject.test.ts > useProject > should not load sample project in production mode
+Sample project schema data loaded: { items: [32m'items'[39m, recipes: [32m'recipes'[39m }
+
+stdout | src/hooks/useProject.test.ts > useProject > should handle schema files with various extensions
+Menu to File Map: {
+  items: [32m'/test/project/schema/items.yml'[39m,
+  recipes: [32m'/test/project/schema/recipes.yml'[39m
+}
+
+ ✓ src/hooks/useProject.test.ts (10 tests) 58ms
+ ✓ src/components/FormView/index.test.tsx (13 tests) 148ms
+ ✓ src/components/FormView/inputs/StringInput.test.tsx (15 tests) 295ms
+ ✓ src/components/FormView/inputs/IntegerInput.test.tsx (14 tests) 436ms
+ ✓ src/components/FormView/CollapsibleObject.test.tsx (14 tests) 246ms
+ ✓ src/components/FormView/inputs/NumberInput.test.tsx (16 tests) 313ms
+stderr | src/components/FormView/Field.test.tsx > Field > should handle null value
+`value` prop on `input` should not be null. Consider using an empty string to clear the component or `undefined` for uncontrolled components.
+
+ ✓ src/components/FormView/inputs/UuidInput.test.tsx (12 tests) 317ms
+ ✓ src/components/FormView/Field.test.tsx (19 tests) 245ms
+ ✓ src/components/FormView/inputs/BooleanInput.test.tsx (8 tests) 189ms
+ ✓ src/libs/schema/io.test.ts (12 tests) 20ms
+ ✓ src/hooks/useDebounce.test.ts (15 tests) 42ms
+ ✓ src/utils/devFileSystem.test.ts (19 tests) 12ms
+ ✓ src/libs/schema/validator.test.ts (21 tests) 12ms
+stdout | src/utils/foreignKeyResolver.test.ts > ForeignKeyResolver > getAllOptions > should expand [*] patterns and return all options
+ForeignKeyResolver initialized with: {
+  dataKeys: [ [32m'data'[39m ],
+  dataType: [32m'object'[39m,
+  config: {
+    schemaId: [32m'items'[39m,
+    foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+    displayElementPath: [32m'/data/[*]/name'[39m
+  }
+}
+getAllOptions called, expanding paths: {
+  foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+  displayElementPath: [32m'/data/[*]/name'[39m
+}
+expandAllPaths called with: /data/[*]/itemGuid
+Normalized path: data/[*]/itemGuid
+Path segments: [ [32m'data[*]'[39m, [32m'itemGuid'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+expandAllPaths results: [
+  {
+    value: [32m'item-001'[39m,
+    path: [32m'/data/0/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'item-002'[39m,
+    path: [32m'/data/1/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'item-003'[39m,
+    path: [32m'/data/2/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+expandAllPaths called with: /data/[*]/name
+Normalized path: data/[*]/name
+Path segments: [ [32m'data[*]'[39m, [32m'name'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+expandAllPaths results: [
+  {
+    value: [32m'Iron Ore'[39m,
+    path: [32m'/data/0/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Copper Wire'[39m,
+    path: [32m'/data/1/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'Steel Plate'[39m,
+    path: [32m'/data/2/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+Path expansion results: { idResults: [33m3[39m, displayResults: [33m3[39m }
+
+stdout | src/utils/foreignKeyResolver.test.ts > ForeignKeyResolver > getAllOptions > should handle nested array patterns
+ForeignKeyResolver initialized with: {
+  dataKeys: [ [32m'categories'[39m ],
+  dataType: [32m'object'[39m,
+  config: {
+    schemaId: [32m'nested'[39m,
+    foreignKeyIdPath: [32m'/categories/[*]/items/[*]/id'[39m,
+    displayElementPath: [32m'/categories/[*]/items/[*]/label'[39m
+  }
+}
+getAllOptions called, expanding paths: {
+  foreignKeyIdPath: [32m'/categories/[*]/items/[*]/id'[39m,
+  displayElementPath: [32m'/categories/[*]/items/[*]/label'[39m
+}
+expandAllPaths called with: /categories/[*]/items/[*]/id
+Normalized path: categories/[*]/items/[*]/id
+Path segments: [ [32m'categories[*]'[39m, [32m'items[*]'[39m, [32m'id'[39m ]
+Processing segment 0: "categories[*]", current data type: object
+Expanding categories array with 2 elements
+Processing segment 1: "items[*]", current data type: object
+Expanding items array with 2 elements
+Processing segment 2: "id", current data type: object
+Accessing property "id", got: string
+Processing segment 2: "id", current data type: object
+Accessing property "id", got: string
+Processing segment 1: "items[*]", current data type: object
+Expanding items array with 2 elements
+Processing segment 2: "id", current data type: object
+Accessing property "id", got: string
+Processing segment 2: "id", current data type: object
+Accessing property "id", got: string
+expandAllPaths results: [
+  {
+    value: [32m'r1'[39m,
+    path: [32m'/categories/0/items/0/id'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m0[39m, [32m'categories/0/items'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'r2'[39m,
+    path: [32m'/categories/0/items/1/id'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m0[39m, [32m'categories/0/items'[39m => [33m1[39m }
+  },
+  {
+    value: [32m't1'[39m,
+    path: [32m'/categories/1/items/0/id'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m1[39m, [32m'categories/1/items'[39m => [33m0[39m }
+  },
+  {
+    value: [32m't2'[39m,
+    path: [32m'/categories/1/items/1/id'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m1[39m, [32m'categories/1/items'[39m => [33m1[39m }
+  }
+]
+expandAllPaths called with: /categories/[*]/items/[*]/label
+Normalized path: categories/[*]/items/[*]/label
+Path segments: [ [32m'categories[*]'[39m, [32m'items[*]'[39m, [32m'label'[39m ]
+Processing segment 0: "categories[*]", current data type: object
+Expanding categories array with 2 elements
+Processing segment 1: "items[*]", current data type: object
+Expanding items array with 2 elements
+Processing segment 2: "label", current data type: object
+Accessing property "label", got: string
+Processing segment 2: "label", current data type: object
+Accessing property "label", got: string
+Processing segment 1: "items[*]", current data type: object
+Expanding items array with 2 elements
+Processing segment 2: "label", current data type: object
+Accessing property "label", got: string
+Processing segment 2: "label", current data type: object
+Accessing property "label", got: string
+expandAllPaths results: [
+  {
+    value: [32m'Wood'[39m,
+    path: [32m'/categories/0/items/0/label'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m0[39m, [32m'categories/0/items'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Stone'[39m,
+    path: [32m'/categories/0/items/1/label'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m0[39m, [32m'categories/0/items'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'Hammer'[39m,
+    path: [32m'/categories/1/items/0/label'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m1[39m, [32m'categories/1/items'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Saw'[39m,
+    path: [32m'/categories/1/items/1/label'[39m,
+    indices: Map(2) { [32m'categories'[39m => [33m1[39m, [32m'categories/1/items'[39m => [33m1[39m }
+  }
+]
+Path expansion results: { idResults: [33m4[39m, displayResults: [33m4[39m }
+
+stdout | src/utils/foreignKeyResolver.test.ts > ForeignKeyResolver > getDisplayByForeignKey > should return display value for given ID
+ForeignKeyResolver initialized with: {
+  dataKeys: [ [32m'data'[39m ],
+  dataType: [32m'object'[39m,
+  config: {
+    schemaId: [32m'items'[39m,
+    foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+    displayElementPath: [32m'/data/[*]/name'[39m
+  }
+}
+getAllOptions called, expanding paths: {
+  foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+  displayElementPath: [32m'/data/[*]/name'[39m
+}
+expandAllPaths called with: /data/[*]/itemGuid
+Normalized path: data/[*]/itemGuid
+Path segments: [ [32m'data[*]'[39m, [32m'itemGuid'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+expandAllPaths results: [
+  {
+    value: [32m'item-001'[39m,
+    path: [32m'/data/0/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'item-002'[39m,
+    path: [32m'/data/1/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'item-003'[39m,
+    path: [32m'/data/2/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+expandAllPaths called with: /data/[*]/name
+Normalized path: data/[*]/name
+Path segments: [ [32m'data[*]'[39m, [32m'name'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+expandAllPaths results: [
+  {
+    value: [32m'Iron Ore'[39m,
+    path: [32m'/data/0/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Copper Wire'[39m,
+    path: [32m'/data/1/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'Steel Plate'[39m,
+    path: [32m'/data/2/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+Path expansion results: { idResults: [33m3[39m, displayResults: [33m3[39m }
+getAllOptions called, expanding paths: {
+  foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+  displayElementPath: [32m'/data/[*]/name'[39m
+}
+expandAllPaths called with: /data/[*]/itemGuid
+Normalized path: data/[*]/itemGuid
+Path segments: [ [32m'data[*]'[39m, [32m'itemGuid'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+expandAllPaths results: [
+  {
+    value: [32m'item-001'[39m,
+    path: [32m'/data/0/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'item-002'[39m,
+    path: [32m'/data/1/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'item-003'[39m,
+    path: [32m'/data/2/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+expandAllPaths called with: /data/[*]/name
+Normalized path: data/[*]/name
+Path segments: [ [32m'data[*]'[39m, [32m'name'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+expandAllPaths results: [
+  {
+    value: [32m'Iron Ore'[39m,
+    path: [32m'/data/0/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Copper Wire'[39m,
+    path: [32m'/data/1/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'Steel Plate'[39m,
+    path: [32m'/data/2/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+Path expansion results: { idResults: [33m3[39m, displayResults: [33m3[39m }
+
+stdout | src/utils/foreignKeyResolver.test.ts > ForeignKeyResolver > findIndicesByForeignKey > should return indices for given ID
+ForeignKeyResolver initialized with: {
+  dataKeys: [ [32m'data'[39m ],
+  dataType: [32m'object'[39m,
+  config: {
+    schemaId: [32m'items'[39m,
+    foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+    displayElementPath: [32m'/data/[*]/name'[39m
+  }
+}
+getAllOptions called, expanding paths: {
+  foreignKeyIdPath: [32m'/data/[*]/itemGuid'[39m,
+  displayElementPath: [32m'/data/[*]/name'[39m
+}
+expandAllPaths called with: /data/[*]/itemGuid
+Normalized path: data/[*]/itemGuid
+Path segments: [ [32m'data[*]'[39m, [32m'itemGuid'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+Processing segment 1: "itemGuid", current data type: object
+Accessing property "itemGuid", got: string
+expandAllPaths results: [
+  {
+    value: [32m'item-001'[39m,
+    path: [32m'/data/0/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'item-002'[39m,
+    path: [32m'/data/1/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'item-003'[39m,
+    path: [32m'/data/2/itemGuid'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+expandAllPaths called with: /data/[*]/name
+Normalized path: data/[*]/name
+Path segments: [ [32m'data[*]'[39m, [32m'name'[39m ]
+Processing segment 0: "data[*]", current data type: object
+Expanding data array with 3 elements
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+Processing segment 1: "name", current data type: object
+Accessing property "name", got: string
+expandAllPaths results: [
+  {
+    value: [32m'Iron Ore'[39m,
+    path: [32m'/data/0/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m0[39m }
+  },
+  {
+    value: [32m'Copper Wire'[39m,
+    path: [32m'/data/1/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m1[39m }
+  },
+  {
+    value: [32m'Steel Plate'[39m,
+    path: [32m'/data/2/name'[39m,
+    indices: Map(1) { [32m'data'[39m => [33m2[39m }
+  }
+]
+Path expansion results: { idResults: [33m3[39m, displayResults: [33m3[39m }
+
+ ✓ src/utils/foreignKeyResolver.test.ts (6 tests) 11ms
+ ✓ src/utils/vectorConverter.test.ts (31 tests) 8ms
+ ✓ src/utils/pathResolver.test.ts (26 tests) 5ms
+ ✓ src/libs/schema/ui.test.ts (10 tests) 4ms
+ ✓ src/utils/deepMerge.test.ts (10 tests) 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > App > should handle sample project save differently
+TestingLibraryElementError: Unable to find an element with the text: sample. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"m_89ab340 mantine-AppShell-root"[39m
+      [33mdata-resizing[39m=[32m"true"[39m
+      [33mstyle[39m=[32m"--app-shell-transition-duration: 200ms; --app-shell-transition-timing-function: ease;"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mstyle[39m=[32m"display: flex; flex-direction: row; height: 100vh; overflow: hidden; padding: 16px; gap: 16px;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"sidebar"[39m
+        [36m>[39m
+          [36m<button>[39m
+            [0mOpen Project[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mitems[0m
+          [36m</button>[39m
+          [36m<button>[39m
+            [0mrecipes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mstyle[39m=[32m"display: flex; flex-direction: row; flex: 1 1 0%; overflow-x: auto; height: 100%;"[39m
+        [36m/>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@8.20.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:377:28
+    375|     
+    376|     // Load data and make a change
+    377|     fireEvent.click(screen.getByText('sample'))
+       |                            ^
+    378|     
+    379|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/hooks/useJson.test.ts > useJson > should replace data at specific column index
+AssertionError: expected [ …(2) ] to have a length of 1 but got 2
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 2[39m
+
+ ❯ src/hooks/useJson.test.ts:146:37
+    144|     })
+    145|     
+    146|     expect(result.current.jsonData).toHaveLength(1)
+       |                                     ^
+    147|     expect(result.current.jsonData[0].title).toBe('materials')
+    148|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/hooks/useSchema.test.ts > useSchema > should load schema successfully
+AssertionError: expected null to deeply equal { type: 'object', …(1) }
+
+[32m- Expected:[39m 
+{
+  "properties": [
+    {
+      "key": "name",
+      "type": "string",
+    },
+  ],
+  "type": "object",
+}
+
+[31m+ Received:[39m 
+null
+
+ ❯ src/hooks/useSchema.test.ts:79:28
+     77|     })
+     78|     
+     79|     expect(resolvedSchema).toEqual(mockSchema)
+       |                            ^
+     80|     expect(result.current.schemas.items).toEqual(mockSchema)
+     81|     expect(mockReadTextFile).toHaveBeenCalledWith('/test/schema/items.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/hooks/useSchema.test.ts > useSchema > should set loading state correctly
+AssertionError: expected false to be true // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+ ❯ src/hooks/useSchema.test.ts:140:38
+    138|       const promise = result.current.loadSchema('items', '/test/schema…
+    139|       // Check loading state immediately after calling
+    140|       expect(result.current.loading).toBe(true)
+       |                                      ^
+    141|       await promise
+    142|     })
+ ❯ ../../node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@8.20.1_@types+react-dom@19.0.4_@types+reac_fxtcvqiiy42ssvcn2quark7im4/node_modules/@testing-library/react/dist/act-compat.js:48:24
+ ❯ process.env.NODE_ENV.exports.act ../../node_modules/.pnpm/react@19.1.0/node_modules/react/cjs/react.development.js:789:22
+ ❯ Proxy.<anonymous> ../../node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@8.20.1_@types+react-dom@19.0.4_@types+reac_fxtcvqiiy42ssvcn2quark7im4/node_modules/@testing-library/react/dist/act-compat.js:47:25
+ ❯ src/hooks/useSchema.test.ts:137:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/hooks/useSchema.test.ts > useSchema > should fallback to sample schemas in dev mode
+AssertionError: expected "spy" to be called with arguments: [ 'items' ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/hooks/useSchema.test.ts:191:33
+    189|     
+    190|     expect(consoleSpy).toHaveBeenCalledWith('Loading sample schemas in…
+    191|     expect(mockGetSampleSchema).toHaveBeenCalledWith('items')
+       |                                 ^
+    192|   })
+    193| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/hooks/useSchema.test.ts > useSchema > should handle sample schema with definitions
+AssertionError: expected undefined to deeply equal { type: 'object' }
+
+[32m- Expected:[39m 
+{
+  "type": "object",
+}
+
+[31m+ Received:[39m 
+undefined
+
+ ❯ src/hooks/useSchema.test.ts:222:42
+    220|     })
+    221|     
+    222|     expect(result.current.schemas.items).toEqual({ type: 'object' })
+       |                                          ^
+    223|   })
+    224| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/hooks/useSchema.test.ts > useSchema > should handle missing sample schema in definitions
+AssertionError: expected undefined to deeply equal { type: 'object' }
+
+[32m- Expected:[39m 
+{
+  "type": "object",
+}
+
+[31m+ Received:[39m 
+undefined
+
+ ❯ src/hooks/useSchema.test.ts:313:42
+    311|     
+    312|     expect(consoleSpy).toHaveBeenCalledWith('Sample schema blocks/Miss…
+    313|     expect(result.current.schemas.items).toEqual({ type: 'object' })
+       |                                          ^
+    314|   })
+    315| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  3 failed | 26 passed (29)
+      Tests  7 failed | 444 passed | 5 skipped (456)
+   Start at  17:11:02
+   Duration  11.12s (transform 1.02s, setup 16.12s, collect 29.76s, tests 8.75s, environment 24.26s, prepare 5.03s)
+
+ ELIFECYCLE  Command failed with exit code 1.

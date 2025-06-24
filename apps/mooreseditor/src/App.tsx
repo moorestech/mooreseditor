@@ -37,7 +37,7 @@ function App() {
       const data = jsonData[jsonData.length - 1].data;
       
       // Check if the schema is an array type
-      if (schema.type === 'array') {
+      if ('type' in schema && schema.type === 'array') {
         // For array schemas, show TableView directly
         setNestedViews([{
           type: 'table',
@@ -144,8 +144,10 @@ function App() {
             menuToFileMap={menuToFileMap}
             selectedFile={null}
             loadFileData={async (menuItem) => {
-              await loadJsonFile(menuItem, projectDir);
-              await loadSchema(menuItem, schemaDir);
+              // Load schema first
+              const loadedSchema = await loadSchema(menuItem, schemaDir);
+              // Pass the loaded schema to loadJsonFile for auto-generation if needed
+              await loadJsonFile(menuItem, projectDir, 0, loadedSchema);
               setSelectedSchema(menuItem);
               setIsShowFormView(true);
               setNestedViews([]);

@@ -52,14 +52,16 @@ jobs:
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
       - uses: swatinem/rust-cache@v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: npm
-          cache-dependency-path: apps/mooreseditor/package-lock.json
-      - name: Install apps/mooreseditor deps
-        working-directory: apps/mooreseditor
-        run: npm ci
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # 2) ビルドのみ ---------------------------------------------------------
       - id: tauri
@@ -67,7 +69,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         with:
-          projectPath: apps/mooreseditor
+          projectPath: .
           # ★ tagName / releaseName を渡さない＝アップロードしない
           args: ${{ matrix.args }}
 
@@ -91,7 +93,7 @@ jobs:
           ARCH="${{ matrix.arch }}"
           EXT="${{ matrix.ext }}"
           DIR="${{ matrix.dir }}"
-          PROJECT_PATH="apps/mooreseditor"                  # ★ 実プロジェクトに合わせて
+          PROJECT_PATH="."                  # ★ 実プロジェクトに合わせて
           
           # 1) バンドル・ディレクトリを決定 ...............................
           CANDIDATES=(
@@ -125,13 +127,13 @@ jobs:
           fi
           
           # 3) 統一フォーマット名へリネーム .................................
-          NEW="CommandForgeEditor-v${VER}-${OS}-${ARCH}.${EXT}"
+          NEW="mooreseditor-v${VER}-${OS}-${ARCH}.${EXT}"
           mv "${FILE}" "${NEW}"
           
           # 4) ドラフトリリース作成 (既存ならスキップ) ＆ 資産アップロード ....
           if ! gh release view "${TAG}" &>/dev/null; then
             gh release create "${TAG}" \
-              -t "CommandForgeEditor ${TAG}" \
+              -t "mooreseditor ${TAG}" \
               -n "See the assets to download and install this version." \
               --draft
           fi
@@ -144,11 +146,11 @@ jobs:
           [[ "${OS}" == "windows" ]] && exe_suffix=".exe"
           
           BIN_CANDIDATES=(
-            "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/CommandForgeEditor"
-            "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/CommandForgeEditor${exe_suffix}"
-            "${PROJECT_PATH}/src-tauri/target/release/CommandForgeEditor${exe_suffix}"
-            "src-tauri/target/universal-apple-darwin/release/CommandForgeEditor"
-            "src-tauri/target/release/CommandForgeEditor${exe_suffix}"
+            "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/mooreseditor"
+            "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/mooreseditor${exe_suffix}"
+            "${PROJECT_PATH}/src-tauri/target/release/mooreseditor${exe_suffix}"
+            "src-tauri/target/universal-apple-darwin/release/mooreseditor"
+            "src-tauri/target/release/mooreseditor${exe_suffix}"
           )
           
           for p in "${BIN_CANDIDATES[@]}"; do
@@ -159,7 +161,7 @@ jobs:
           done
           
           if [[ -n "${BIN_FILE:-}" && -f "${BIN_FILE}" ]]; then
-            RAW="CommandForgeEditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
+            RAW="mooreseditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
             cp "${BIN_FILE}" "${RAW}"           # 元を残したい場合は cp
             gh release upload "${TAG}" "${RAW}" --clobber
             echo "Uploaded raw binary: ${RAW}"

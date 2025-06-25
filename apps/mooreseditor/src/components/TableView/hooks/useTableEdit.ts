@@ -11,22 +11,6 @@ export function useTableEdit(data: any[], onDataChange?: (newData: any[]) => voi
     setEditValue(null);
   }, []);
 
-  // Handle click outside to cancel editing
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (editingCell && editInputRef.current && !editInputRef.current.contains(event.target as Node)) {
-        cancelEditing();
-      }
-    };
-
-    if (editingCell) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [editingCell, cancelEditing]);
-
   const startEditing = useCallback((row: number, column: string) => {
     const value = data[row]?.[column];
     setEditingCell({ row, column });
@@ -44,6 +28,22 @@ export function useTableEdit(data: any[], onDataChange?: (newData: any[]) => voi
     }
     cancelEditing();
   }, [editingCell, editValue, data, onDataChange, cancelEditing]);
+
+  // Handle click outside to save editing
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (editingCell && editInputRef.current && !editInputRef.current.contains(event.target as Node)) {
+        saveEdit();
+      }
+    };
+
+    if (editingCell) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [editingCell, saveEdit]);
 
   return {
     editingCell,

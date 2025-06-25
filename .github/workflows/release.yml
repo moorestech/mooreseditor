@@ -55,11 +55,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: npm
-          cache-dependency-path: apps/mooreseditor/package-lock.json
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Install apps/mooreseditor deps
         working-directory: apps/mooreseditor
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # 2) ビルドのみ ---------------------------------------------------------
       - id: tauri

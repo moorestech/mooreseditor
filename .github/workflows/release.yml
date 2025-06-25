@@ -39,130 +39,134 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-      # 1) 取得 & セットアップ -------------------------------------------------
-      - uses: actions/checkout@v4
-      - if: matrix.platform == 'ubuntu-22.04'
-        name: Install Linux deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev \
-            librsvg2-dev patchelf libjavascriptcoregtk-4.1-dev
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-      - uses: swatinem/rust-cache@v2
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+    # 1) 取得 & セットアップ -------------------------------------------------
+    - uses: actions/checkout@v4
+    - if: matrix.platform == 'ubuntu-22.04'
+      name: Install Linux deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev \
+          librsvg2-dev patchelf
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+    - uses: swatinem/rust-cache@v2
+      with:
+        workspaces: |
+          apps/mooreseditor/src-tauri
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 9
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: pnpm
+    - name: Install dependencies
+      run: pnpm install
 
-      # 2) ビルドのみ ---------------------------------------------------------
-      - id: tauri
-        uses: tauri-apps/tauri-action@v0.5.20    # ← 最新パッチ
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-        with:
-          projectPath: .
-          # ★ tagName / releaseName を渡さない＝アップロードしない
-          args: ${{ matrix.args }}
+    # 2) ビルドのみ ---------------------------------------------------------
+    - id: tauri
+      uses: tauri-apps/tauri-action@v0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+      with:
+        projectPath: apps/mooreseditor
+        # ★ tagName / releaseName を渡さない＝アップロードしない
+        args: ${{ matrix.args }}
 
-      # 3) タグ文字列から "v" を除いたバージョン番号を取得 -------------------
-      - id: ver
-        shell: bash
-        run: echo "ver=${GITHUB_REF_NAME#v}" >>"$GITHUB_OUTPUT"
+    # 3) タグ文字列から "v" を除いたバージョン番号を取得 -------------------
+    - id: ver
+      shell: bash
+      run: echo "ver=${GITHUB_REF_NAME#v}" >>"$GITHUB_OUTPUT"
 
-      # 4) リネーム + リリース作成/アップロード ------------------------------
-      - name: Rename & upload asset
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-        run: |
-          set -euo pipefail
-          
-          TAG="${GITHUB_REF_NAME}"                 # 例: v1.2.3
-          VER="${TAG#v}"                           # → 1.2.3
-          
-          OS="${{ matrix.os }}"
-          ARCH="${{ matrix.arch }}"
-          EXT="${{ matrix.ext }}"
-          DIR="${{ matrix.dir }}"
-          PROJECT_PATH="."                  # ★ 実プロジェクトに合わせて
-          
-          # 1) バンドル・ディレクトリを決定 ...............................
-          CANDIDATES=(
-            "src-tauri/target/universal-apple-darwin/release/bundle/${DIR}"
-            "src-tauri/target/release/bundle/${DIR}"
-            "./src-tauri/target/universal-apple-darwin/release/bundle/${DIR}"
-            "./src-tauri/target/release/bundle/${DIR}"
-          )
-          for p in "${CANDIDATES[@]}"; do
-            if [[ -d "${p}" ]]; then
-              BUNDLE_DIR="${p}"
-              break
-            fi
-          done
-          
-          # 見つからなければ再帰検索
-          if [[ -z "${BUNDLE_DIR:-}" || ! -d "${BUNDLE_DIR}" ]]; then
-            BUNDLE_DIR=$(find "src-tauri/target" \
-              -type d -path "*/bundle/${DIR}" | head -n1 || true)
-          fi
-          if [[ -z "${BUNDLE_DIR}" || ! -d "${BUNDLE_DIR}" ]]; then
-            echo "::error :: No bundle directory found for ${DIR}"
-            exit 1
-          fi
-          
-          # 2) 生成物ファイルを取得（AppImage / DMG / MSI など）.............
-          FILE=$(find "${BUNDLE_DIR}" -maxdepth 1 -type f -name "*.${EXT}" | head -n1)
-          if [[ -z "${FILE}" ]]; then
-            echo "::error :: No bundle found in ${BUNDLE_DIR}"
-            exit 1
-          fi
-          
-          # 3) 統一フォーマット名へリネーム .................................
-          NEW="mooreseditor-v${VER}-${OS}-${ARCH}.${EXT}"
-          mv "${FILE}" "${NEW}"
-          
-          # 4) ドラフトリリース作成 (既存ならスキップ) ＆ 資産アップロード ....
-          if ! gh release view "${TAG}" &>/dev/null; then
-            gh release create "${TAG}" \
-              -t "mooreseditor ${TAG}" \
-              -n "See the assets to download and install this version." \
-              --draft
-          fi
-          gh release upload "${TAG}" "${NEW}" --clobber
-          
-          # ────────────────────────────────────────────────────────────────
-          # ★★ ここから追加 : 直接実行バイナリも探してアップロード
-          # ────────────────────────────────────────────────────────────────
-          exe_suffix=""
-          [[ "${OS}" == "windows" ]] && exe_suffix=".exe"
-          
-          BIN_CANDIDATES=(
-            "src-tauri/target/universal-apple-darwin/release/mooreseditor${exe_suffix}"
-            "src-tauri/target/release/mooreseditor${exe_suffix}"
-            "./src-tauri/target/universal-apple-darwin/release/mooreseditor${exe_suffix}"
-            "./src-tauri/target/release/mooreseditor${exe_suffix}"
-          )
-          
-          for p in "${BIN_CANDIDATES[@]}"; do
-            if [[ -f "${p}" ]]; then
-              BIN_FILE="${p}"
-              break
-            fi
-          done
-          
-          if [[ -n "${BIN_FILE:-}" && -f "${BIN_FILE}" ]]; then
-            RAW="mooreseditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
-            cp "${BIN_FILE}" "${RAW}"           # 元を残したい場合は cp
-            gh release upload "${TAG}" "${RAW}" --clobber
-            echo "Uploaded raw binary: ${RAW}"
-          else
-            echo "No standalone binary found; skipped raw upload."
-          fi
+    # 4) リネーム + リリース作成/アップロード ------------------------------
+    - name: Rename & upload asset
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+      run: |
+        set -euo pipefail
 
+        TAG="${GITHUB_REF_NAME}"                 # 例: v1.2.3
+        VER="${TAG#v}"                           # → 1.2.3
+
+        OS="${{ matrix.os }}"
+        ARCH="${{ matrix.arch }}"
+        EXT="${{ matrix.ext }}"
+        DIR="${{ matrix.dir }}"
+        PROJECT_PATH="apps/mooreseditor"         # ★ プロジェクトパス
+
+        # 1) バンドル・ディレクトリを決定 ...............................
+        CANDIDATES=(
+          "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/bundle/${DIR}"
+          "${PROJECT_PATH}/src-tauri/target/release/bundle/${DIR}"
+          "src-tauri/target/universal-apple-darwin/release/bundle/${DIR}"
+          "src-tauri/target/release/bundle/${DIR}"
+        )
+        for p in "${CANDIDATES[@]}"; do
+          if [[ -d "${p}" ]]; then
+            BUNDLE_DIR="${p}"
+            break
+          fi
+        done
+
+        # 見つからなければ再帰検索
+        if [[ -z "${BUNDLE_DIR:-}" || ! -d "${BUNDLE_DIR}" ]]; then
+          BUNDLE_DIR=$(find "${PROJECT_PATH}/src-tauri/target" \
+            -type d -path "*/bundle/${DIR}" | head -n1 || true)
+        fi
+        if [[ -z "${BUNDLE_DIR}" || ! -d "${BUNDLE_DIR}" ]]; then
+          echo "::error :: No bundle directory found for ${DIR}"
+          exit 1
+        fi
+
+        # 2) 生成物ファイルを取得（AppImage / DMG / MSI など）.............
+        FILE=$(find "${BUNDLE_DIR}" -maxdepth 1 -type f -name "*.${EXT}" | head -n1)
+        if [[ -z "${FILE}" ]]; then
+          echo "::error :: No bundle found in ${BUNDLE_DIR}"
+          exit 1
+        fi
+
+        # 3) 統一フォーマット名へリネーム .................................
+        NEW="mooreseditor-v${VER}-${OS}-${ARCH}.${EXT}"
+        mv "${FILE}" "${NEW}"
+
+        # 4) ドラフトリリース作成 (既存ならスキップ) ＆ 資産アップロード ....
+        if ! gh release view "${TAG}" &>/dev/null; then
+          gh release create "${TAG}" \
+            -t "mooreseditor ${TAG}" \
+            -n "See the assets to download and install this version." \
+            --draft
+        fi
+        gh release upload "${TAG}" "${NEW}" --clobber
+
+        # ────────────────────────────────────────────────────────────────
+        # ★★ ここから追加 : 直接実行バイナリも探してアップロード
+        # ────────────────────────────────────────────────────────────────
+        exe_suffix=""
+        [[ "${OS}" == "windows" ]] && exe_suffix=".exe"
+
+        BIN_CANDIDATES=(
+          "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/mooreseditor"
+          "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/mooreseditor${exe_suffix}"
+          "${PROJECT_PATH}/src-tauri/target/release/mooreseditor${exe_suffix}"
+          "src-tauri/target/universal-apple-darwin/release/mooreseditor"
+          "src-tauri/target/release/mooreseditor${exe_suffix}"
+        )
+
+        for p in "${BIN_CANDIDATES[@]}"; do
+          if [[ -f "${p}" ]]; then
+            BIN_FILE="${p}"
+            break
+          fi
+        done
+
+        if [[ -n "${BIN_FILE:-}" && -f "${BIN_FILE}" ]]; then
+          RAW="mooreseditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
+          cp "${BIN_FILE}" "${RAW}"           # 元を残したい場合は cp
+          gh release upload "${TAG}" "${RAW}" --clobber
+          echo "Uploaded raw binary: ${RAW}"
+        else
+          echo "No standalone binary found; skipped raw upload."
+        fi

@@ -22,7 +22,7 @@ jobs:
             ext: dmg
             dir: dmg           # 出力が入る bundle サブフォルダ
           # ──────────────────────────────────────────────────────────────
-          - platform: ubuntu-22.04
+          - platform: ubuntu-24.04
             args: ''
             os: linux
             arch: x86_64

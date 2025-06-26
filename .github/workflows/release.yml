@@ -41,7 +41,7 @@ jobs:
     steps:
       # 1) 取得 & セットアップ -------------------------------------------------
       - uses: actions/checkout@v4
-      - if: matrix.platform == 'ubuntu-22.04'
+      - if: matrix.platform == 'ubuntu-24.04'
         name: Install Linux deps
         run: |
           sudo apt-get update

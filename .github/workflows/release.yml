@@ -55,11 +55,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9.9.0
       - name: Install apps/mooreseditor deps
-        working-directory: apps/mooreseditor
         run: pnpm install --frozen-lockfile
 
       # 2) ビルドのみ ---------------------------------------------------------

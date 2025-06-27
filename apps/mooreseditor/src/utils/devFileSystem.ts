@@ -26,7 +26,16 @@ export async function getSampleSchema(name: string): Promise<string> {
  * @returns スキーマファイル名のリスト
  */
 export function getSampleSchemaList(): string[] {
-  return ['mapObjects', 'blocks', 'items', 'objectSample'];
+  return [
+    'blocks',
+    'challenges',
+    'characters',
+    'craftRecipes',
+    'fluids',
+    'items',
+    'machineRecipes',
+    'mapObjects'
+  ];
 }
 
 /**
@@ -36,11 +45,12 @@ export function getSampleSchemaList(): string[] {
 export function getSampleRefSchemaList(): string[] {
   return [
     'blockConnectInfo',
+    'challengeAction',
+    'fluidInventoryConnects',
+    'gearConnects',
     'inventoryConnects',
-    'gear',
-    'mineSettings',
     'mapObjectMineSettings',
-    'fluidInventoryConnects'
+    'mineSettings'
   ];
 }
 
@@ -50,19 +60,19 @@ export function getSampleRefSchemaList(): string[] {
  */
 export function getAllSampleSchemaMap(): Map<string, string> {
   const schemaMap = new Map<string, string>();
-  
+
   // メインスキーマ
   const mainSchemas = getSampleSchemaList();
   mainSchemas.forEach(schema => {
     schemaMap.set(schema, schema);
   });
-  
+
   // refスキーマ
   const refSchemas = getSampleRefSchemaList();
   refSchemas.forEach(schema => {
     schemaMap.set(`ref/${schema}`, schema);
   });
-  
+
   return schemaMap;
 }
 

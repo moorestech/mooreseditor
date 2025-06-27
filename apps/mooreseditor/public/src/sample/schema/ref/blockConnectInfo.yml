@@ -44,7 +44,7 @@ items:
             options:
             - CraftChainerCrafter
           - key: inventoryConnectOptionParam
-            switch: inventoryConnectOptionType
+            switch: ./inventoryConnectOptionType
             cases:
             - when: CraftChainerCrafter
               type: object
@@ -65,3 +65,5 @@ items:
       properties:
       - key: flowCapacity
         type: number
+      - key: connectTankIndex
+        type: integer

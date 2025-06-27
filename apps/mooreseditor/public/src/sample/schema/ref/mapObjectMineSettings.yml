@@ -8,8 +8,8 @@ items:
     type: uuid
     foreignKey:
       schemaId: mapObjects
-      foreignKeyIdPath: "/data/[*]/mapObjectGuid"
-      displayElementPath: "/data/[*]/mapObjectName"
+      foreignKeyIdPath: /data/[*]/mapObjectGuid
+      displayElementPath: /data/[*]/mapObjectName
   - key: miningTime
     type: number
     default: 1

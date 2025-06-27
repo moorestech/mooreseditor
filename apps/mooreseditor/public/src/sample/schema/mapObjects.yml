@@ -2,9 +2,6 @@ id: mapObjects
 type: object
 isDefaultOpen: true
 properties:
-- key: mapObjectName
-  type: string
-  default: mapObjectName2
 - key: data
   type: array
   overrideCodeGeneratePropertyName: MapObjectMasterElement
@@ -40,8 +37,8 @@ properties:
           type: uuid
           foreignKey:
             schemaId: items
-            foreignKeyIdPath: "/data/[*]/itemGuid"
-            displayElementPath: "/data/[*]/name"
+            foreignKeyIdPath: /data/[*]/itemGuid
+            displayElementPath: /data/[*]/name
         - key: minCount
           type: integer
           default: 1
@@ -54,7 +51,7 @@ properties:
       - PickUp
       - Mining
     - key: miningParam
-      switch: miningType
+      switch: ./miningType
       cases:
       - when: PickUp
         type: object
@@ -72,8 +69,8 @@ properties:
               type: uuid
               foreignKey:
                 schemaId: items
-                foreignKeyIdPath: "/data/[*]/itemGuid"
-                displayElementPath: "/data/[*]/name"
+                foreignKeyIdPath: /data/[*]/itemGuid
+                displayElementPath: /data/[*]/name
             - key: damage
               type: integer
               default: 10

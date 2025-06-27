@@ -6,10 +6,10 @@ items:
   properties:
   - key: itemGuid
     type: uuid
-    foreignKey: 
+    foreignKey:
       schemaId: items
-      foreignKeyIdPath: "/data/[*]/itemGuid"
-      displayElementPath: "/data/[*]/name"
+      foreignKeyIdPath: /data/[*]/itemGuid
+      displayElementPath: /data/[*]/name
   - key: time
     type: number
     default: 1

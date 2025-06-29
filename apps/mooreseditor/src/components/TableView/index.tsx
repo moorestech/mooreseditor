@@ -139,7 +139,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                 // Regular display for other types
                 const displayValue = columnSchema.type === 'uuid' && value
                   ? `${String(value).slice(0, 4)}..`
-                  : String(value || '');
+                  : value !== null && value !== undefined ? String(value) : '';
                   
                 return (
                   <Table.Td 

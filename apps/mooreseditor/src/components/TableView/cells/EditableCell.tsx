@@ -41,8 +41,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     case 'integer':
       return (
         <NumberInput
-          value={editValue || 0}
-          onChange={(val) => setEditValue(val)}
+          value={editValue ?? ''}
+          onChange={(val) => setEditValue(val === '' ? undefined : val)}
           size="xs"
           styles={{ input: { minHeight: 'auto', height: '28px' } }}
           onKeyDown={(e) => {
@@ -55,8 +55,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     case 'number':
       return (
         <NumberInput
-          value={editValue || 0}
-          onChange={(val) => setEditValue(val)}
+          value={editValue ?? ''}
+          onChange={(val) => setEditValue(val === '' ? undefined : val)}
           decimalScale={2}
           size="xs"
           styles={{ input: { minHeight: 'auto', height: '28px' } }}

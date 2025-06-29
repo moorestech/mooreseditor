@@ -1,7 +1,6 @@
 import React, { memo, useCallback } from 'react';
 
-import { Box, Text, Flex, Button, useMantineTheme } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { Box, Text, Flex, Button } from '@mantine/core';
 
 import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 import { resolvePath } from '../../utils/pathResolver';
@@ -36,15 +35,8 @@ interface FieldProps {
 }
 
 const Field = memo(function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices }: FieldProps) {
-    const theme = useMantineTheme();
-    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-    const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
-    
     const isSwitchSchema = (s: Schema): s is SwitchSchema => 'switch' in s;
     const isValueSchema = (s: Schema): s is ValueSchema => 'type' in s;
-    
-    // Dynamic label width based on viewport
-    const labelWidth = isMobile ? 80 : isTablet ? 100 : 120;
     
 
     if (isSwitchSchema(schema)) {
@@ -82,8 +74,8 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
 
     if (!isValueSchema(schema)) {
         return (
-            <Flex align="center" gap="md" wrap={isMobile ? "wrap" : "nowrap"}>
-                {label && <Text style={{ minWidth: labelWidth, flexShrink: 0 }}>{label}</Text>}
+            <Flex align="center" gap="md">
+                {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
                 <Text c="red">Invalid schema</Text>
             </Flex>
         );
@@ -137,12 +129,11 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
             }, [onObjectArrayClick, path, schema]);
             
             return (
-                <Flex align="center" gap="md" wrap={isMobile ? "wrap" : "nowrap"}>
-                    {label && <Text style={{ minWidth: labelWidth, flexShrink: 0 }}>{label}</Text>}
+                <Flex align="center" gap="md">
+                    {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
                     <Button
                         onClick={handleObjectArrayClick}
                         variant="light"
-                        size={isMobile ? "xs" : "sm"}
                     >
                         Edit {label}
                     </Button>
@@ -152,9 +143,9 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
 
         // Primitive arrays use ArrayField
         return (
-            <Flex align="flex-start" gap="md" wrap={isMobile ? "wrap" : "nowrap"}>
-                {label && <Text style={{ minWidth: labelWidth, flexShrink: 0 }}>{label}</Text>}
-                <Box style={{ flex: 1, minWidth: 0 }}>
+            <Flex align="flex-start" gap="md">
+                {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
+                <Box style={{ flex: 1 }}>
                     <ArrayField
                         schema={schema}
                         data={data}
@@ -199,9 +190,9 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
     };
 
     return (
-        <Flex align="center" gap="md" wrap={isMobile ? "wrap" : "nowrap"}>
-            {label && <Text style={{ minWidth: labelWidth, flexShrink: 0 }}>{label}</Text>}
-            <Box style={{ flex: 1, minWidth: 0 }}>
+        <Flex align="center" gap="md">
+            {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
+            <Box style={{ flex: 1 }}>
                 {renderPrimitiveInput()}
             </Box>
         </Flex>

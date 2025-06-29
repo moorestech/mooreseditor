@@ -136,4 +136,5 @@ export type Schema = |
 
 export type SchemaContainer = ArraySchema & {
   id: string;
+  sortOrder?: number;
 }

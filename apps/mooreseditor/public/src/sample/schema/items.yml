@@ -1,4 +1,5 @@
 id: items
+sortOrder: 1
 type: object
 isDefaultOpen: true
 properties:

@@ -1,4 +1,5 @@
 import { Button, Divider, Text } from "@mantine/core";
+import { useMemo } from "react";
 
 import { MoorestechIcon } from "./MoorestechIcon";
 
@@ -8,6 +9,7 @@ interface SidebarProps {
   loadFileData: (menuItem: string) => Promise<void>;
   openProjectDir: () => void;
   isEditing: boolean;
+  schemas: Record<string, any>;
 }
 
 function Sidebar({
@@ -16,7 +18,32 @@ function Sidebar({
   loadFileData,
   openProjectDir,
   isEditing,
+  schemas,
 }: SidebarProps) {
+  const sortedMenuItems = useMemo(() => {
+    const menuItems = Object.keys(menuToFileMap);
+    
+    // Create list with sortOrder info
+    const itemsWithSort = menuItems.map(menuItem => {
+      const schema = schemas[menuItem];
+      return {
+        id: menuItem,
+        sortOrder: schema?.sortOrder
+      };
+    });
+    
+    // Sort by sortOrder (items without sortOrder come last, sorted by id)
+    itemsWithSort.sort((a, b) => {
+      if (a.sortOrder !== undefined && b.sortOrder !== undefined) {
+        return a.sortOrder - b.sortOrder;
+      }
+      if (a.sortOrder !== undefined) return -1;
+      if (b.sortOrder !== undefined) return 1;
+      return a.id.localeCompare(b.id);
+    });
+    
+    return itemsWithSort.map(item => item.id);
+  }, [menuToFileMap, schemas]);
   return (
     <div
       style={{
@@ -73,7 +100,7 @@ function Sidebar({
           gap: "20px",
         }}
       >
-        {Object.keys(menuToFileMap).map((menuItem, index) => (
+        {sortedMenuItems.map((menuItem, index) => (
           <Text
             key={index}
             style={{

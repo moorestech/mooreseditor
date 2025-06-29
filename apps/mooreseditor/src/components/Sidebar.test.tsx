@@ -19,7 +19,8 @@ describe('Sidebar', () => {
     selectedFile: 'mapObjects',
     loadFileData: vi.fn(),
     openProjectDir: vi.fn(),
-    isEditing: false
+    isEditing: false,
+    schemas: {}
   }
 
   afterEach(() => {

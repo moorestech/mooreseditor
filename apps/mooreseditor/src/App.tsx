@@ -154,6 +154,7 @@ function App() {
             }}
             openProjectDir={openProjectDir}
             isEditing={isEditing}
+            schemas={schemas}
           />
 
           <div

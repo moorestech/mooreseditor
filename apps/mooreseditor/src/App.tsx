@@ -172,7 +172,7 @@ function App() {
                 style={{
                   borderRight: index < nestedViews.length - 1 ? "1px solid #E2E2E2" : "none",
                   padding: "16px",
-                  minWidth: "400px",
+                  width: "fit-content",
                   height: "100%",
                   overflowY: "auto",
                   flexShrink: 0,

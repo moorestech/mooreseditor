@@ -12,6 +12,7 @@ interface EditableCellProps extends CellEditProps {
   setEditValue: (value: any) => void;
   saveEdit: () => void;
   onSave: (value: any) => void;
+  jsonData?: any[];
 }
 
 export const EditableCell: React.FC<EditableCellProps> = ({ 
@@ -21,7 +22,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   setEditValue,
   saveEdit,
   onSave,
-  onCancel 
+  onCancel,
+  jsonData
 }) => {
   const columnSchema = column as any;
   
@@ -31,6 +33,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       <ForeignKeyEditCell
         column={column}
         value={editValue}
+        jsonData={jsonData}
         onSave={onSave}
         onCancel={onCancel}
       />

@@ -10,7 +10,7 @@ import { useTableEdit } from "./hooks/useTableEdit";
 import type { TableViewProps } from "./TableView.types";
 import { getDefaultValue } from "./utils/defaultValues";
 
-export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableViewProps) => {
+export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
   if (data === undefined) {
     data = [];
   }
@@ -105,6 +105,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                           editValue={editValue}
                           setEditValue={setEditValue}
                           saveEdit={saveEdit}
+                          jsonData={jsonData}
                           onSave={(newValue) => {
                             if (editingCell && onDataChange) {
                               const newData = [...arrayData];
@@ -134,7 +135,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                       }}
                       style={{ cursor: 'pointer' }}
                     >
-                      <ForeignKeyDisplayCell column={column} value={value} />
+                      <ForeignKeyDisplayCell column={column} value={value} jsonData={jsonData} />
                     </Table.Td>
                   );
                 }

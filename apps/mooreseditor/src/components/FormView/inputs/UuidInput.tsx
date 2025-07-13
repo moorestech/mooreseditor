@@ -4,7 +4,7 @@ import { FormInputProps } from './types';
 import { ForeignKeySelect } from './ForeignKeySelect';
 import type { UuidSchema } from '../../../libs/schema/types';
 
-export const UuidInput: React.FC<FormInputProps<string>> = ({ value, onChange, schema }) => {
+export const UuidInput: React.FC<FormInputProps<string>> = ({ value, onChange, schema, jsonData }) => {
   const uuidSchema = schema as UuidSchema;
   
   // If foreign key is configured, use ForeignKeySelect
@@ -14,6 +14,7 @@ export const UuidInput: React.FC<FormInputProps<string>> = ({ value, onChange, s
         value={value}
         onChange={onChange}
         schema={schema}
+        jsonData={jsonData}
       />
     );
   }

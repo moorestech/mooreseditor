@@ -190,6 +190,7 @@ function App() {
             {view.type === 'table' ? (
               <TableView
                 schema={view.schema}
+                jsonData={jsonData}
                 data={(() => {
                   // Get data from currentData
                   if (view.path.length === 0) {
@@ -259,6 +260,7 @@ function App() {
             ) : (
               <FormView
                 schema={view.schema}
+                jsonData={jsonData}
                 data={(() => {
                   // Get data from currentData
                   if (view.path.length === 0) {

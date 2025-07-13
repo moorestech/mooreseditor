@@ -9,7 +9,7 @@ import { getDefaultValue } from "../components/TableView/utils/defaultValues";
 
 const isDev = import.meta.env.DEV;
 
-interface Column {
+export interface Column {
   title: string;
   data: any[];
 }

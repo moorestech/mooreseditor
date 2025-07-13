@@ -5,10 +5,12 @@ import { Stack } from '@mantine/core';
 import Field from './Field';
 
 import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
+import type { Column } from '../../hooks/useJson';
 
 interface FormViewProps {
     schema: Schema;
     data: any;
+    jsonData?: Column[];
     onDataChange: (newData: any) => void;
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path?: string[];
@@ -17,7 +19,7 @@ interface FormViewProps {
     arrayIndices?: Map<string, number>;
 }
 
-const FormView = memo(function FormView({ schema, data, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) {
+const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) {
     const hasAutoOpenedRef = useRef(false);
     
     // Always treat the top-level as an object
@@ -67,6 +69,7 @@ const FormView = memo(function FormView({ schema, data, onDataChange, onObjectAr
                             label={propertyKey}
                             schema={propertySchema as Schema}
                             data={data?.[propertyKey]}
+                            jsonData={jsonData}
                             onDataChange={(value) => handlePropertyChange(propertyKey, value)}
                             onObjectArrayClick={onObjectArrayClick}
                             path={[...path, propertyKey]}
@@ -86,6 +89,7 @@ const FormView = memo(function FormView({ schema, data, onDataChange, onObjectAr
             label=""
             schema={schema}
             data={data}
+            jsonData={jsonData}
             onDataChange={onDataChange}
             onObjectArrayClick={onObjectArrayClick}
             path={path}

@@ -11,8 +11,11 @@ import type { TableViewProps } from "./TableView.types";
 import { getDefaultValue } from "./utils/defaultValues";
 
 export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableViewProps) => {
+  if (data === undefined) {
+    data = [];
+  }
   const arrayData = data || [];
-  
+
   const {
     editingCell,
     editValue,

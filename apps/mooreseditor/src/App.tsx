@@ -29,12 +29,14 @@ function App() {
   >([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
-  const [isShowFormView, setIsShowFormView] = useState(false);
+
+  // Find the currently selected data from jsonData
+  const currentData = jsonData.find(item => item.title === selectedSchema);
 
   useEffect(() => {
-    if (isShowFormView && selectedSchema && schemas[selectedSchema] && jsonData.length > 0 && nestedViews.length === 0) {
+    if (selectedSchema && schemas[selectedSchema] && currentData && nestedViews.length === 0) {
       const schema = schemas[selectedSchema];
-      const data = jsonData[jsonData.length - 1].data;
+      const data = currentData.data;
       
       // Check if the schema is an array type
       if ('type' in schema && schema.type === 'array') {
@@ -55,7 +57,7 @@ function App() {
         }]);
       }
     }
-  }, [isShowFormView, selectedSchema, schemas, jsonData]);
+  }, [selectedSchema, schemas, currentData, nestedViews.length]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -142,14 +144,21 @@ function App() {
         >
           <Sidebar
             menuToFileMap={menuToFileMap}
-            selectedFile={null}
+            selectedFile={selectedSchema}
             loadFileData={async (menuItem) => {
+              // Check if already loaded
+              const existingData = jsonData.find(item => item.title === menuItem);
+              if (existingData) {
+                console.log(`${menuItem} is already loaded. Using cached data.`);
+                setSelectedSchema(menuItem);
+                setNestedViews([]);
+                return;
+              }
               // Load schema first
               const loadedSchema = await loadSchema(menuItem, schemaDir);
               // Pass the loaded schema to loadJsonFile for auto-generation if needed
-              await loadJsonFile(menuItem, projectDir, 0, loadedSchema);
+              await loadJsonFile(menuItem, projectDir, jsonData.length, loadedSchema);
               setSelectedSchema(menuItem);
-              setIsShowFormView(true);
               setNestedViews([]);
             }}
             openProjectDir={openProjectDir}
@@ -182,11 +191,11 @@ function App() {
               <TableView
                 schema={view.schema}
                 data={(() => {
-                  // Always get the latest data from jsonData
+                  // Get data from currentData
                   if (view.path.length === 0) {
-                    return jsonData[jsonData.length - 1]?.data;
+                    return currentData?.data;
                   } else {
-                    let dataRef: any = jsonData[jsonData.length - 1]?.data;
+                    let dataRef: any = currentData?.data;
                     for (const key of view.path) {
                       dataRef = dataRef?.[key];
                     }
@@ -195,16 +204,19 @@ function App() {
                 })()}
                 onDataChange={(newData) => {
                   console.log('TableView onDataChange:', { newData, viewPath: view.path });
-                  // Update the data through the same unified process
+                  // Find and update the correct item in jsonData
                   const updatedJsonData = [...jsonData];
-                  const lastItem = { ...updatedJsonData[updatedJsonData.length - 1] };
+                  const targetIndex = updatedJsonData.findIndex(item => item.title === selectedSchema);
+                  if (targetIndex === -1) return;
+                  
+                  const updatedItem = { ...updatedJsonData[targetIndex] };
                   
                   if (view.path.length === 0) {
-                    lastItem.data = newData;
+                    updatedItem.data = newData;
                   } else {
                     // Deep copy for nested data
-                    lastItem.data = { ...lastItem.data };
-                    let ref: any = lastItem.data;
+                    updatedItem.data = { ...updatedItem.data };
+                    let ref: any = updatedItem.data;
                     
                     // Navigate to the parent of the target
                     for (let i = 0; i < view.path.length - 1; i++) {
@@ -219,18 +231,18 @@ function App() {
                     ref[view.path[view.path.length - 1]] = newData;
                   }
                   
-                  updatedJsonData[updatedJsonData.length - 1] = lastItem;
+                  updatedJsonData[targetIndex] = updatedItem;
                   console.log('Setting new jsonData:', updatedJsonData);
                   setJsonData(updatedJsonData);
                   setIsEditing(true);
                 }}
                 onRowSelect={(rowIndex) => {
-                  // Get the latest data for row selection
-                  let currentData: any = jsonData[jsonData.length - 1]?.data;
+                  // Get data from currentData
+                  let dataRef: any = currentData?.data;
                   for (const key of view.path) {
-                    currentData = currentData?.[key];
+                    dataRef = dataRef?.[key];
                   }
-                  const selectedRowData = currentData?.[rowIndex];
+                  const selectedRowData = dataRef?.[rowIndex];
                   if (selectedRowData && view.schema.items?.type === 'object') {
                     setNestedViews(prev => [
                       ...prev.slice(0, index + 1),
@@ -248,11 +260,11 @@ function App() {
               <FormView
                 schema={view.schema}
                 data={(() => {
-                  // Always get the latest data from jsonData
+                  // Get data from currentData
                   if (view.path.length === 0) {
-                    return jsonData[jsonData.length - 1]?.data;
+                    return currentData?.data;
                   } else {
-                    let dataRef: any = jsonData[jsonData.length - 1]?.data;
+                    let dataRef: any = currentData?.data;
                     for (const key of view.path) {
                       dataRef = dataRef?.[key];
                     }
@@ -260,20 +272,23 @@ function App() {
                   }
                 })()}
                 path={view.path}
-                rootData={jsonData[jsonData.length - 1]?.data}
+                rootData={currentData?.data}
                 onDataChange={(newData) => {
-                  // 統一的なデータ更新処理
+                  // Find and update the correct item in jsonData
                   const updatedJsonData = [...jsonData];
-                  const lastItem = { ...updatedJsonData[updatedJsonData.length - 1] };
+                  const targetIndex = updatedJsonData.findIndex(item => item.title === selectedSchema);
+                  if (targetIndex === -1) return;
+                  
+                  const updatedItem = { ...updatedJsonData[targetIndex] };
                   
                   if (view.path.length === 0) {
                     // ルートレベルの場合、dataを直接置き換え
-                    lastItem.data = newData;
+                    updatedItem.data = newData;
                   } else {
                     // ネストされたデータの更新
                     // イミュータブルに更新するために各レベルをコピー
-                    lastItem.data = { ...lastItem.data };
-                    let ref: any = lastItem.data;
+                    updatedItem.data = { ...updatedItem.data };
+                    let ref: any = updatedItem.data;
                     
                     // パスの最後の要素以外を辿る
                     for (let i = 0; i < view.path.length - 1; i++) {
@@ -288,7 +303,7 @@ function App() {
                     ref[view.path[view.path.length - 1]] = newData;
                   }
                   
-                  updatedJsonData[updatedJsonData.length - 1] = lastItem;
+                  updatedJsonData[targetIndex] = updatedItem;
                   setJsonData(updatedJsonData);
                   setIsEditing(true);
                 }}
@@ -301,8 +316,8 @@ function App() {
                     index
                   });
                   
-                  // Always get fresh data from jsonData to ensure consistency
-                  const rootData = jsonData[jsonData.length - 1]?.data;
+                  // Get fresh data from currentData
+                  const rootData = currentData?.data;
                   let dataAtPath: any = rootData;
                   
                   // Navigate from the root data using the full path

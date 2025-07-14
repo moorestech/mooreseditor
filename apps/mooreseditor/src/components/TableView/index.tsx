@@ -10,9 +10,12 @@ import { useTableEdit } from "./hooks/useTableEdit";
 import type { TableViewProps } from "./TableView.types";
 import { getDefaultValue } from "./utils/defaultValues";
 
-export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableViewProps) => {
+export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
+  if (data === undefined) {
+    data = [];
+  }
   const arrayData = data || [];
-  
+
   const {
     editingCell,
     editValue,
@@ -102,6 +105,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                           editValue={editValue}
                           setEditValue={setEditValue}
                           saveEdit={saveEdit}
+                          jsonData={jsonData}
                           onSave={(newValue) => {
                             if (editingCell && onDataChange) {
                               const newData = [...arrayData];
@@ -131,7 +135,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                       }}
                       style={{ cursor: 'pointer' }}
                     >
-                      <ForeignKeyDisplayCell column={column} value={value} />
+                      <ForeignKeyDisplayCell column={column} value={value} jsonData={jsonData} />
                     </Table.Td>
                   );
                 }
@@ -139,7 +143,7 @@ export const TableView = ({ schema, data, onDataChange, onRowSelect }: TableView
                 // Regular display for other types
                 const displayValue = columnSchema.type === 'uuid' && value
                   ? `${String(value).slice(0, 4)}..`
-                  : String(value || '');
+                  : value !== null && value !== undefined ? String(value) : '';
                   
                 return (
                   <Table.Td 

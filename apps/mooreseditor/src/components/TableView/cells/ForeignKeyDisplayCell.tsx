@@ -3,17 +3,15 @@ import React from "react";
 import { Text } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
-import { useProject } from "../../../hooks/useProject";
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { ColumnDisplayProps } from "../TableView.types";
 
-export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({ column, value }) => {
-  const { projectDir } = useProject();
+export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({ column, value, jsonData }) => {
   const columnSchema = column as UuidSchema;
   
   const { displayValue, loading, error } = useForeignKeyData(
     columnSchema.foreignKey,
-    projectDir,
+    jsonData || [],
     value
   );
 

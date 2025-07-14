@@ -25,18 +25,18 @@ export const Vector3Input: React.FC<FormInputProps<Vector3Object | [number, numb
   );
   
   const handleXChange = useCallback((val: number | string) => {
-    const numValue = val === '' ? 0 : Number(val);
-    debouncedOnChange({ ...vectorObject, x: numValue });
+    const numValue = val === '' ? undefined : Number(val);
+    debouncedOnChange({ ...vectorObject, x: numValue as number });
   }, [vectorObject, debouncedOnChange]);
   
   const handleYChange = useCallback((val: number | string) => {
-    const numValue = val === '' ? 0 : Number(val);
-    debouncedOnChange({ ...vectorObject, y: numValue });
+    const numValue = val === '' ? undefined : Number(val);
+    debouncedOnChange({ ...vectorObject, y: numValue as number });
   }, [vectorObject, debouncedOnChange]);
   
   const handleZChange = useCallback((val: number | string) => {
-    const numValue = val === '' ? 0 : Number(val);
-    debouncedOnChange({ ...vectorObject, z: numValue });
+    const numValue = val === '' ? undefined : Number(val);
+    debouncedOnChange({ ...vectorObject, z: numValue as number });
   }, [vectorObject, debouncedOnChange]);
   
   return (

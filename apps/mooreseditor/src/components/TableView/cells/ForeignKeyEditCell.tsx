@@ -3,21 +3,20 @@ import React, { useMemo } from "react";
 import { Select, Loader } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
-import { useProject } from "../../../hooks/useProject";
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
 
 interface ForeignKeyEditCellProps extends CellEditProps {
   column: any;
+  jsonData?: any[];
 }
 
-export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, value, onSave, onCancel }) => {
-  const { projectDir } = useProject();
+export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, value, jsonData, onSave, onCancel }) => {
   const columnSchema = column as UuidSchema;
   
   const { options, loading, error } = useForeignKeyData(
     columnSchema.foreignKey,
-    projectDir,
+    jsonData || [],
     value
   );
 

@@ -123,6 +123,30 @@ export class ForeignKeyResolver {
     const segment = segments[segmentIndex];
     console.log(`Processing segment ${segmentIndex}: "${segment}", current data type:`, typeof currentData);
     
+    // Handle standalone [*] segment (like /[*]/itemGuid)
+    if (segment === '[*]') {
+      if (Array.isArray(currentData)) {
+        console.log(`Expanding array at root level with ${currentData.length} elements`);
+        currentData.forEach((item, index) => {
+          const newPath = [...currentPath, index.toString()];
+          const newIndices = new Map(currentIndices);
+          newIndices.set(currentPath.join('/') || 'root', index);
+          
+          this.expandPathRecursive(
+            item,
+            segments,
+            segmentIndex + 1,
+            newPath,
+            newIndices,
+            results
+          );
+        });
+      } else {
+        console.log(`Expected array at root level but got:`, typeof currentData);
+      }
+      return;
+    }
+    
     // Check if this is a property with array notation like data[*]
     const arrayMatch = segment.match(/^(.+)\[\*\]$/);
     if (arrayMatch) {

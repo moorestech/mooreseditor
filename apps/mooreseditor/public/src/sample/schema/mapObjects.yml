@@ -1,4 +1,5 @@
 id: mapObjects
+sortOrder: 3
 type: object
 isDefaultOpen: true
 properties:

@@ -8,8 +8,8 @@ export const IntegerInput: React.FC<FormInputProps<number>> = ({ value, onChange
   
   return (
     <NumberInput
-      value={value || 0}
-      onChange={(val) => onChange(val === '' ? 0 : Number(val))}
+      value={value ?? ''}
+      onChange={(val) => onChange(val === '' ? (undefined as unknown as number) : Number(val))}
       min={intSchema.min}
       max={intSchema.max}
       allowDecimal={false}

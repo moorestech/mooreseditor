@@ -18,6 +18,7 @@ import {
   Vector3Input,
   Vector4Input
 } from './inputs';
+import type { Column } from '../../hooks/useJson';
 
 // Move React.lazy outside to prevent re-creating on every render
 const FormViewLazy = React.lazy(() => import('./index'));
@@ -26,6 +27,7 @@ interface FieldProps {
     label: string;
     schema: Schema;
     data: any;
+    jsonData?: Column[];
     onDataChange: (value: any) => void;
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path: string[];
@@ -34,7 +36,7 @@ interface FieldProps {
     arrayIndices?: Map<string, number>;
 }
 
-const Field = memo(function Field({ label, schema, data, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices }: FieldProps) {
+const Field = memo(function Field({ label, schema, data, jsonData, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices }: FieldProps) {
     const isSwitchSchema = (s: Schema): s is SwitchSchema => 'switch' in s;
     const isValueSchema = (s: Schema): s is ValueSchema => 'type' in s;
     
@@ -62,6 +64,7 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
                 label={label}
                 schema={matchingCase}
                 data={data}
+                jsonData={jsonData}
                 onDataChange={onDataChange}
                 onObjectArrayClick={onObjectArrayClick}
                 path={path}
@@ -91,6 +94,7 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
                         <FormViewLazy
                             schema={schema}
                             data={data}
+                            jsonData={jsonData}
                             onDataChange={onDataChange}
                             onObjectArrayClick={onObjectArrayClick}
                             path={path}
@@ -109,6 +113,7 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
                 <FormViewLazy
                     schema={schema}
                     data={data}
+                    jsonData={jsonData}
                     onDataChange={onDataChange}
                     onObjectArrayClick={onObjectArrayClick}
                     path={path}
@@ -164,26 +169,26 @@ const Field = memo(function Field({ label, schema, data, onDataChange, onObjectA
     const renderPrimitiveInput = () => {
         switch (schema.type) {
             case 'string':
-                return <StringInput value={data} onChange={onDataChange} schema={schema} />;
+                return <StringInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'uuid':
-                return <UuidInput value={data} onChange={onDataChange} schema={schema} />;
+                return <UuidInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'enum':
-                return <EnumInput value={data} onChange={onDataChange} schema={schema} />;
+                return <EnumInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'integer':
-                return <IntegerInput value={data} onChange={onDataChange} schema={schema} />;
+                return <IntegerInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'number':
-                return <NumberInput value={data} onChange={onDataChange} schema={schema} />;
+                return <NumberInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'boolean':
-                return <BooleanInput value={data} onChange={onDataChange} schema={schema} />;
+                return <BooleanInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector2':
             case 'vector2Int':
-                return <Vector2Input value={data} onChange={onDataChange} schema={schema} />;
+                return <Vector2Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector3':
             case 'vector3Int':
-                return <Vector3Input value={data} onChange={onDataChange} schema={schema} />;
+                return <Vector3Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector4':
             case 'vector4Int':
-                return <Vector4Input value={data} onChange={onDataChange} schema={schema} />;
+                return <Vector4Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             default:
                 return <Text c="dimmed" size="sm">Unsupported type: {(schema as any).type}</Text>;
         }

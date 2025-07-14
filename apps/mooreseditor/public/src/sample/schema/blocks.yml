@@ -1,4 +1,5 @@
 id: blocks
+sortOrder: 2
 type: object
 isDefaultOpen: true
 defineInterface:
@@ -35,6 +36,7 @@ properties:
 - key: data
   type: array
   overrideCodeGeneratePropertyName: BlockMasterElement
+  openedByDefault: true
   items:
     type: object
     properties:

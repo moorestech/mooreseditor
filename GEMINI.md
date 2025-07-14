@@ -157,4 +157,3 @@ mcp__playwright__browser_console_messages でブラウザコンソールのメ�
 - FileOpenボタンを押す
 - サイドバーに表示されたitems, blocks, mapObjects等を押す（指示によって変わる）
 - 表示されたデータに対して指定された動作を実行
-

@@ -12,6 +12,7 @@ interface EditableCellProps extends CellEditProps {
   setEditValue: (value: any) => void;
   saveEdit: () => void;
   onSave: (value: any) => void;
+  jsonData?: any[];
 }
 
 export const EditableCell: React.FC<EditableCellProps> = ({ 
@@ -21,7 +22,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   setEditValue,
   saveEdit,
   onSave,
-  onCancel 
+  onCancel,
+  jsonData
 }) => {
   const columnSchema = column as any;
   
@@ -31,6 +33,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       <ForeignKeyEditCell
         column={column}
         value={editValue}
+        jsonData={jsonData}
         onSave={onSave}
         onCancel={onCancel}
       />
@@ -41,8 +44,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     case 'integer':
       return (
         <NumberInput
-          value={editValue || 0}
-          onChange={(val) => setEditValue(val)}
+          value={editValue ?? ''}
+          onChange={(val) => setEditValue(val === '' ? undefined : val)}
           size="xs"
           styles={{ input: { minHeight: 'auto', height: '28px' } }}
           onKeyDown={(e) => {
@@ -55,8 +58,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     case 'number':
       return (
         <NumberInput
-          value={editValue || 0}
-          onChange={(val) => setEditValue(val)}
+          value={editValue ?? ''}
+          onChange={(val) => setEditValue(val === '' ? undefined : val)}
           decimalScale={2}
           size="xs"
           styles={{ input: { minHeight: 'auto', height: '28px' } }}

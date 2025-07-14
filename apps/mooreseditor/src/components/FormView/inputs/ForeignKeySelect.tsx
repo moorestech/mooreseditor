@@ -3,19 +3,18 @@ import { Select, Loader, Text } from '@mantine/core';
 import { FormInputProps } from './types';
 import type { UuidSchema } from '../../../libs/schema/types';
 import { useForeignKeyData } from '../../../hooks/useForeignKeyData';
-import { useProject } from '../../../hooks/useProject';
 
 export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({ 
   value, 
   onChange, 
-  schema 
+  schema,
+  jsonData
 }) => {
   const uuidSchema = schema as UuidSchema;
-  const { projectDir } = useProject();
   
   console.log('ForeignKeySelect rendered:', { 
     foreignKey: uuidSchema.foreignKey, 
-    projectDir, 
+    jsonData, 
     value 
   });
   
@@ -26,7 +25,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     displayValue 
   } = useForeignKeyData(
     uuidSchema.foreignKey,
-    projectDir,
+    jsonData || [],
     value
   );
 

@@ -6,11 +6,11 @@ import { useDebouncedCallback } from '../../../hooks/useDebounce';
 
 export const NumberInput: React.FC<FormInputProps<number>> = React.memo(({ value, onChange, schema }) => {
   const numSchema = schema as NumberSchema;
-  const [localValue, setLocalValue] = useState(value || 0);
+  const [localValue, setLocalValue] = useState<number | ''>(value ?? '');
   
   // Update local value when prop changes
   useEffect(() => {
-    setLocalValue(value || 0);
+    setLocalValue(value ?? '');
   }, [value]);
   
   // Debounce the onChange callback
@@ -23,9 +23,14 @@ export const NumberInput: React.FC<FormInputProps<number>> = React.memo(({ value
   );
   
   const handleChange = useCallback((val: number | string) => {
-    const numValue = val === '' ? 0 : Number(val);
-    setLocalValue(numValue);
-    debouncedOnChange(numValue);
+    if (val === '') {
+      setLocalValue('');
+      debouncedOnChange(undefined as unknown as number);
+    } else {
+      const numValue = Number(val);
+      setLocalValue(numValue);
+      debouncedOnChange(numValue);
+    }
   }, [debouncedOnChange]);
   
   return (

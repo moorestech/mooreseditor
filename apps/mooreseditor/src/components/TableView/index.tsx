@@ -89,7 +89,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
               onClick={() => onRowSelect?.(index)}
               style={{ cursor: onRowSelect ? 'pointer' : 'default' }}
             >
-              <Table.Td>{index + 1}</Table.Td>
+              <Table.Td>{index}</Table.Td>
               {columns.map(column => {
                 const value = row[column.key];
                 const columnSchema = column as any;

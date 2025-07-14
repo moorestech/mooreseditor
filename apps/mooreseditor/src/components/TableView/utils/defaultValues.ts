@@ -21,13 +21,13 @@ export const getDefaultValue = (itemSchema: ValueSchema): any => {
         return itemSchema.default || false;
       case 'vector2':
       case 'vector2Int':
-        return { x: 0, y: 0 };
+        return itemSchema.default || [0, 0];
       case 'vector3':
       case 'vector3Int':
-        return { x: 0, y: 0, z: 0 };
+        return itemSchema.default || [0, 0, 0];
       case 'vector4':
       case 'vector4Int':
-        return { x: 0, y: 0, z: 0, w: 0 };
+        return itemSchema.default || [0, 0, 0, 0];
       case 'object': {
         const obj: any = {};
         if (itemSchema.properties) {

@@ -21,7 +21,7 @@ const theme = createTheme({
 
 function App() {
   const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
-  const { jsonData, setJsonData, loadJsonFile } = useJson();
+  const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } = useJson();
   const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
@@ -33,11 +33,16 @@ function App() {
   // Find the currently selected data from jsonData
   const currentData = jsonData.find(item => item.title === selectedSchema);
 
+  // Preload all data when menuToFileMap changes (after File Open)
+  useEffect(() => {
+    preloadAllData(menuToFileMap, projectDir, schemaDir, loadSchema);
+  }, [menuToFileMap, projectDir, schemaDir]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (selectedSchema && schemas[selectedSchema] && currentData && nestedViews.length === 0) {
       const schema = schemas[selectedSchema];
       const data = currentData.data;
-      
+
       // Check if the schema is an array type
       if ('type' in schema && schema.type === 'array') {
         // For array schemas, show TableView directly
@@ -64,7 +69,7 @@ function App() {
       // Ctrl+S (Windows/Linux) or Cmd+S (Mac)
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault(); // Prevent browser's save dialog
-        
+
         if (isEditing && jsonData.length > 0) {
           // Save the current jsonData
           handleSave(jsonData);
@@ -73,7 +78,7 @@ function App() {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -118,7 +123,7 @@ function App() {
           console.error(`${column.title}.json の保存中にエラーが発生しました:`, columnError);
         }
       }
-      
+
       setIsEditing(false);
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);
@@ -145,6 +150,7 @@ function App() {
           <Sidebar
             menuToFileMap={menuToFileMap}
             selectedFile={selectedSchema}
+            isPreloading={isPreloading}
             loadFileData={async (menuItem) => {
               // Check if already loaded
               const existingData = jsonData.find(item => item.title === menuItem);
@@ -209,29 +215,29 @@ function App() {
                   const updatedJsonData = [...jsonData];
                   const targetIndex = updatedJsonData.findIndex(item => item.title === selectedSchema);
                   if (targetIndex === -1) return;
-                  
+
                   const updatedItem = { ...updatedJsonData[targetIndex] };
-                  
+
                   if (view.path.length === 0) {
                     updatedItem.data = newData;
                   } else {
                     // Deep copy for nested data
                     updatedItem.data = { ...updatedItem.data };
                     let ref: any = updatedItem.data;
-                    
+
                     // Navigate to the parent of the target
                     for (let i = 0; i < view.path.length - 1; i++) {
                       const key = view.path[i];
-                      ref[key] = Array.isArray(ref[key]) 
-                        ? [...ref[key]] 
+                      ref[key] = Array.isArray(ref[key])
+                        ? [...ref[key]]
                         : { ...ref[key] };
                       ref = ref[key];
                     }
-                    
+
                     // Update the final value
                     ref[view.path[view.path.length - 1]] = newData;
                   }
-                  
+
                   updatedJsonData[targetIndex] = updatedItem;
                   console.log('Setting new jsonData:', updatedJsonData);
                   setJsonData(updatedJsonData);
@@ -280,9 +286,9 @@ function App() {
                   const updatedJsonData = [...jsonData];
                   const targetIndex = updatedJsonData.findIndex(item => item.title === selectedSchema);
                   if (targetIndex === -1) return;
-                  
+
                   const updatedItem = { ...updatedJsonData[targetIndex] };
-                  
+
                   if (view.path.length === 0) {
                     // ルートレベルの場合、dataを直接置き換え
                     updatedItem.data = newData;
@@ -291,20 +297,20 @@ function App() {
                     // イミュータブルに更新するために各レベルをコピー
                     updatedItem.data = { ...updatedItem.data };
                     let ref: any = updatedItem.data;
-                    
+
                     // パスの最後の要素以外を辿る
                     for (let i = 0; i < view.path.length - 1; i++) {
                       const key = view.path[i];
-                      ref[key] = Array.isArray(ref[key]) 
-                        ? [...ref[key]] 
+                      ref[key] = Array.isArray(ref[key])
+                        ? [...ref[key]]
                         : { ...ref[key] };
                       ref = ref[key];
                     }
-                    
+
                     // 最後の要素を新しい値で更新
                     ref[view.path[view.path.length - 1]] = newData;
                   }
-                  
+
                   updatedJsonData[targetIndex] = updatedItem;
                   setJsonData(updatedJsonData);
                   setIsEditing(true);
@@ -317,19 +323,19 @@ function App() {
                     viewPath: view.path,
                     index
                   });
-                  
+
                   // Get fresh data from currentData
                   const rootData = currentData?.data;
                   let dataAtPath: any = rootData;
-                  
+
                   // Navigate from the root data using the full path
                   // If the root data has the same structure as the schema expects, navigate accordingly
                   for (const key of fullPath) {
                     dataAtPath = dataAtPath?.[key];
                   }
-                  
+
                   console.log('Data to display:', dataAtPath);
-                  
+
                   setNestedViews(prev => [
                     ...prev.slice(0, index + 1),
                     {

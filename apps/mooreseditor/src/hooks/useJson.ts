@@ -36,6 +36,7 @@ function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
 
 export function useJson() {
   const [jsonData, setJsonData] = useState<Column[]>([]);
+  const [isPreloading, setIsPreloading] = useState(false);
 
   async function loadJsonFile(
     menuItem: string,
@@ -94,19 +95,67 @@ export function useJson() {
 
       console.log("Loaded JSON data:", parsedData);
       
-      const newJsonData = [
-        ...jsonData.slice(0, columnIndex + 1),
-        { title: menuItem, data: parsedData },
-      ];
-      setJsonData(newJsonData);
+      setJsonData(prevJsonData => {
+        // Check if already exists
+        const existingIndex = prevJsonData.findIndex(item => item.title === menuItem);
+        if (existingIndex !== -1) {
+          // Update existing data
+          const newData = [...prevJsonData];
+          newData[existingIndex] = { title: menuItem, data: parsedData };
+          return newData;
+        } else {
+          // Add new data
+          return [
+            ...prevJsonData.slice(0, columnIndex + 1),
+            { title: menuItem, data: parsedData },
+          ];
+        }
+      });
     } catch (error) {
       console.error(`Error loading JSON file for ${menuItem}:`, error);
     }
+  }
+
+  async function preloadAllData(
+    menuToFileMap: Record<string, string>,
+    projectDir: string | null,
+    schemaDir: string | null,
+    loadSchema: (menuItem: string, schemaDir: string | null) => Promise<Schema | SchemaContainer | null>
+  ) {
+    if (Object.keys(menuToFileMap).length === 0 || isPreloading || !projectDir || !schemaDir) {
+      return;
+    }
+
+    setIsPreloading(true);
+    console.log('Preloading all data...');
+
+    // Priority order: items first (often referenced by foreign keys), then others
+    const menuItems = Object.keys(menuToFileMap);
+    const priorityItems = ['items'];
+    const otherItems = menuItems.filter(item => !priorityItems.includes(item));
+    const orderedItems = [...priorityItems.filter(item => menuItems.includes(item)), ...otherItems];
+
+    for (const menuItem of orderedItems) {
+      try {
+        console.log(`Preloading ${menuItem}...`);
+        // Load schema first
+        const loadedSchema = await loadSchema(menuItem, schemaDir);
+        // Load JSON data (loadJsonFile will check if already exists)
+        await loadJsonFile(menuItem, projectDir, 999, loadedSchema); // Large index to append
+      } catch (error) {
+        console.error(`Failed to preload ${menuItem}:`, error);
+      }
+    }
+
+    console.log('Preloading complete');
+    setIsPreloading(false);
   }
 
   return {
     jsonData,
     setJsonData,
     loadJsonFile,
+    preloadAllData,
+    isPreloading,
   };
 }

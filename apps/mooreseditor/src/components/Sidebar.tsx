@@ -1,4 +1,4 @@
-import { Button, Divider, Text } from "@mantine/core";
+import { Button, Divider, Text, Loader, Group } from "@mantine/core";
 import { useMemo } from "react";
 
 import { MoorestechIcon } from "./MoorestechIcon";
@@ -10,6 +10,7 @@ interface SidebarProps {
   openProjectDir: () => void;
   isEditing: boolean;
   schemas: Record<string, any>;
+  isPreloading?: boolean;
 }
 
 function Sidebar({
@@ -19,6 +20,7 @@ function Sidebar({
   openProjectDir,
   isEditing,
   schemas,
+  isPreloading = false,
 }: SidebarProps) {
   const sortedMenuItems = useMemo(() => {
     const menuItems = Object.keys(menuToFileMap);
@@ -91,6 +93,12 @@ function Sidebar({
       >
         File Open
       </Button>
+      {isPreloading && (
+        <Group justify="center" mt="sm" mb="sm">
+          <Loader size="sm" />
+          <Text size="sm" c="dimmed">Loading data...</Text>
+        </Group>
+      )}
       <Divider />
       <div
         style={{

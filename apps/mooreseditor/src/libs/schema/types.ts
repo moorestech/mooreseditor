@@ -1,3 +1,5 @@
+import type { AutoIncrementOptions } from '../../utils/autoIncrement';
+
 export type RefString = string;
 
 export interface ObjectSchema {
@@ -51,6 +53,7 @@ export interface IntegerSchema {
   default?: number;
   min?: number;
   max?: number;
+  autoIncrement?: AutoIncrementOptions;
 }
 
 export interface NumberSchema {
@@ -59,6 +62,7 @@ export interface NumberSchema {
   default?: number;
   min?: number;
   max?: number;
+  autoIncrement?: AutoIncrementOptions;
 }
 
 export interface Vector2 {

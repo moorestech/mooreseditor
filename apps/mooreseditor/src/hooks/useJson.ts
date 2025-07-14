@@ -5,7 +5,7 @@ import { readTextFile, writeTextFile, exists, create } from "@tauri-apps/plugin-
 
 import { getSampleJson } from "../utils/devFileSystem";
 import type { Schema, SchemaContainer } from "../libs/schema/types";
-import { getDefaultValue } from "../components/TableView/utils/defaultValues";
+import { createInitialValue } from "../utils/createInitialValue";
 
 const isDev = import.meta.env.DEV;
 
@@ -23,12 +23,12 @@ function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
       if (schema.properties) {
         schema.properties.forEach(prop => {
           const { key, ...propSchema } = prop;
-          obj[key] = getDefaultValue(propSchema as any);
+          obj[key] = createInitialValue(propSchema as any);
         });
       }
       return obj;
     } else {
-      return getDefaultValue(schema as any);
+      return createInitialValue(schema as any);
     }
   }
   return null;

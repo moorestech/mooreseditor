@@ -6,8 +6,7 @@ import { IconPlus, IconTrash } from '@tabler/icons-react';
 import Field from './Field';
 
 import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
-import { calculateAutoIncrement } from '../../utils/autoIncrement';
-import { getDefaultValue } from '../TableView/utils/defaultValues';
+import { createInitialValue } from '../../utils/createInitialValue';
 
 interface ArrayFieldProps {
     schema: ArraySchema;
@@ -31,32 +30,7 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, onObje
 
     const addItem = useCallback(() => {
         const newArray = [...arrayData];
-        let defaultValue = getDefaultValue(schema.items);
-        
-        // オブジェクト型の場合、autoIncrementプロパティをチェック
-        if ('type' in schema.items && schema.items.type === 'object' && schema.items.properties) {
-            const obj = { ...defaultValue };
-            
-            schema.items.properties.forEach(prop => {
-                const { key, ...propSchema } = prop;
-                
-                // integer型またはnumber型でautoIncrementが設定されている場合
-                if ('type' in propSchema && 
-                    (propSchema.type === 'integer' || propSchema.type === 'number') && 
-                    propSchema.autoIncrement) {
-                    
-                    // 既存の配列データから自動インクリメント値を計算
-                    obj[key] = calculateAutoIncrement(
-                        newArray,
-                        key,
-                        propSchema.autoIncrement
-                    );
-                }
-            });
-            
-            defaultValue = obj;
-        }
-        
+        const defaultValue = createInitialValue(schema.items, newArray);
         newArray.push(defaultValue);
         onDataChange(newArray);
     }, [arrayData, schema.items, onDataChange]);

@@ -8,7 +8,7 @@ import { ForeignKeyDisplayCell } from "./cells/ForeignKeyDisplayCell";
 import { EditableCell } from "./cells/EditableCell";
 import { useTableEdit } from "./hooks/useTableEdit";
 import type { TableViewProps } from "./TableView.types";
-import { getDefaultValue } from "./utils/defaultValues";
+import { createInitialValue } from "../../utils/createInitialValue";
 
 export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
   if (data === undefined) {
@@ -50,7 +50,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     if (onDataChange && schema.items) {
       const currentArray = Array.isArray(data) ? data : [];
       const newArray = [...currentArray];
-      const defaultValue = getDefaultValue(schema.items);
+      const defaultValue = createInitialValue(schema.items, newArray);
       console.log('Adding item with default value:', defaultValue);
       newArray.push(defaultValue);
       onDataChange(newArray);
@@ -89,7 +89,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
               onClick={() => onRowSelect?.(index)}
               style={{ cursor: onRowSelect ? 'pointer' : 'default' }}
             >
-              <Table.Td>{index + 1}</Table.Td>
+              <Table.Td>{index}</Table.Td>
               {columns.map(column => {
                 const value = row[column.key];
                 const columnSchema = column as any;

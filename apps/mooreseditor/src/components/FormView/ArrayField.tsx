@@ -6,6 +6,7 @@ import { IconPlus, IconTrash } from '@tabler/icons-react';
 import Field from './Field';
 
 import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
+import { createInitialValue } from '../../utils/createInitialValue';
 
 interface ArrayFieldProps {
     schema: ArraySchema;
@@ -26,57 +27,13 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, onObje
         onDataChange(newArray);
     }, [arrayData, onDataChange]);
 
-    const getDefaultValue = useCallback((itemSchema: ValueSchema): any => {
-        if ('type' in itemSchema) {
-            switch (itemSchema.type) {
-                case 'string':
-                    return itemSchema.default || '';
-                case 'uuid':
-                    return '';
-                case 'enum':
-                    return itemSchema.default || '';
-                case 'integer':
-                    return itemSchema.default || 0;
-                case 'number':
-                    return itemSchema.default || 0;
-                case 'boolean':
-                    return itemSchema.default || false;
-                case 'vector2':
-                case 'vector2Int':
-                    return { x: 0, y: 0 };
-                case 'vector3':
-                case 'vector3Int':
-                    return { x: 0, y: 0, z: 0 };
-                case 'vector4':
-                case 'vector4Int':
-                    return { x: 0, y: 0, z: 0, w: 0 };
-                case 'object': {
-                    const obj: any = {};
-                    if (itemSchema.properties) {
-                        itemSchema.properties.forEach(prop => {
-                            const { key, ...propSchema } = prop;
-                            if ('type' in propSchema) {
-                                obj[key] = getDefaultValue(propSchema as ValueSchema);
-                            }
-                        });
-                    }
-                    return obj;
-                }
-                case 'array':
-                    return [];
-                default:
-                    return null;
-            }
-        }
-        return null;
-    }, []);
 
     const addItem = useCallback(() => {
         const newArray = [...arrayData];
-        const defaultValue = getDefaultValue(schema.items);
+        const defaultValue = createInitialValue(schema.items, newArray);
         newArray.push(defaultValue);
         onDataChange(newArray);
-    }, [arrayData, schema.items, getDefaultValue, onDataChange]);
+    }, [arrayData, schema.items, onDataChange]);
 
     const removeItem = useCallback((index: number) => {
         const newArray = [...arrayData];

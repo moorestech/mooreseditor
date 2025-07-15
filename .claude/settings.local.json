@@ -44,7 +44,8 @@
       "Bash(npx c8 report:*)",
       "mcp__playwright__browser_navigate_back",
       "Bash(gemini:*)",
-      "mcp__playwright__browser_navigate_forward"
+      "mcp__playwright__browser_navigate_forward",
+      "Bash(similarity-ts:*)"
     ],
     "deny": []
   }

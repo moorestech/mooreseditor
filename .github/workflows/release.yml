@@ -128,13 +128,13 @@ jobs:
           fi
           
           # 3) 統一フォーマット名へリネーム .................................
-          NEW="CommandForgeEditor-v${VER}-${OS}-${ARCH}.${EXT}"
+          NEW="mooreseditor-v${VER}-${OS}-${ARCH}.${EXT}"
           mv "${FILE}" "${NEW}"
           
           # 4) ドラフトリリース作成 (既存ならスキップ) ＆ 資産アップロード ....
           if ! gh release view "${TAG}" &>/dev/null; then
             gh release create "${TAG}" \
-              -t "CommandForgeEditor ${TAG}" \
+              -t "mooreseditor ${TAG}" \
               -n "See the assets to download and install this version." \
               --draft
           fi
@@ -147,11 +147,11 @@ jobs:
           [[ "${OS}" == "windows" ]] && exe_suffix=".exe"
           
           BIN_CANDIDATES=(
-            "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/CommandForgeEditor"
-            "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/CommandForgeEditor${exe_suffix}"
-            "${PROJECT_PATH}/src-tauri/target/release/CommandForgeEditor${exe_suffix}"
-            "src-tauri/target/universal-apple-darwin/release/CommandForgeEditor"
-            "src-tauri/target/release/CommandForgeEditor${exe_suffix}"
+            "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/mooreseditor"
+            "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/mooreseditor${exe_suffix}"
+            "${PROJECT_PATH}/src-tauri/target/release/mooreseditor${exe_suffix}"
+            "src-tauri/target/universal-apple-darwin/release/mooreseditor"
+            "src-tauri/target/release/mooreseditor${exe_suffix}"
           )
           
           for p in "${BIN_CANDIDATES[@]}"; do
@@ -162,7 +162,7 @@ jobs:
           done
           
           if [[ -n "${BIN_FILE:-}" && -f "${BIN_FILE}" ]]; then
-            RAW="CommandForgeEditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
+            RAW="mooreseditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
             cp "${BIN_FILE}" "${RAW}"           # 元を残したい場合は cp
             gh release upload "${TAG}" "${RAW}" --clobber
             echo "Uploaded raw binary: ${RAW}"

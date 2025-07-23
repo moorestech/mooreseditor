@@ -8,11 +8,25 @@ vi.mock('@tauri-apps/api/path', () => ({
 }))
 
 vi.mock('@tauri-apps/plugin-fs', () => ({
-  readTextFile: vi.fn()
+  readTextFile: vi.fn(),
+  writeTextFile: vi.fn(),
+  exists: vi.fn(),
+  create: vi.fn()
 }))
 
 vi.mock('../utils/devFileSystem', () => ({
   getSampleJson: vi.fn()
+}))
+
+vi.mock('./useProject', () => ({
+  useProject: vi.fn(() => ({
+    projectDir: '/test/project',
+    masterDir: '/test/project/master',
+    schemaDir: '/test/project/schema',
+    menuToFileMap: {},
+    loading: false,
+    openProjectDir: vi.fn()
+  }))
 }))
 
 // Mock import.meta.env
@@ -45,7 +59,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(result.current.jsonData).toHaveLength(1)
@@ -57,12 +71,23 @@ describe('useJson', () => {
   })
 
   it('should handle project directory not set', async () => {
+    const { useProject } = await import('./useProject')
+    const mockUseProject = vi.mocked(useProject)
+    mockUseProject.mockReturnValueOnce({
+      projectDir: null,
+      masterDir: null,
+      schemaDir: null,
+      menuToFileMap: {},
+      loading: false,
+      openProjectDir: vi.fn()
+    })
+    
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', null, null)
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Project directory is not set.')
@@ -80,7 +105,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -101,7 +126,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -128,12 +153,12 @@ describe('useJson', () => {
     
     // Load first data
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     // Load second data
     await act(async () => {
-      await result.current.loadJsonFile('recipes', '/test/project', '/test/project/master', 1)
+      await result.current.loadJsonFile('recipes', 1)
     })
     
     expect(result.current.jsonData).toHaveLength(2)
@@ -143,7 +168,7 @@ describe('useJson', () => {
     // Then add the new data
     // Result: [items (kept), materials (new)]
     await act(async () => {
-      await result.current.loadJsonFile('materials', '/test/project', '/test/project/master', 0)
+      await result.current.loadJsonFile('materials', 0)
     })
     
     expect(result.current.jsonData).toHaveLength(2)
@@ -171,6 +196,17 @@ describe('useJson', () => {
       DEV: true
     })
     
+    const { useProject } = await import('./useProject')
+    const mockUseProject = vi.mocked(useProject)
+    mockUseProject.mockReturnValueOnce({
+      projectDir: 'SampleProject',
+      masterDir: 'SampleProject/master',
+      schemaDir: 'SampleProject/schema',
+      menuToFileMap: {},
+      loading: false,
+      openProjectDir: vi.fn()
+    })
+    
     const { getSampleJson } = await import('../utils/devFileSystem')
     const mockGetSampleJson = vi.mocked(getSampleJson)
     
@@ -180,7 +216,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', 'SampleProject', 'SampleProject/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(mockGetSampleJson).toHaveBeenCalledWith('items')
@@ -195,6 +231,17 @@ describe('useJson', () => {
       DEV: true
     })
     
+    const { useProject } = await import('./useProject')
+    const mockUseProject = vi.mocked(useProject)
+    mockUseProject.mockReturnValueOnce({
+      projectDir: 'SampleProject',
+      masterDir: 'SampleProject/master',
+      schemaDir: 'SampleProject/schema',
+      menuToFileMap: {},
+      loading: false,
+      openProjectDir: vi.fn()
+    })
+    
     const { getSampleJson } = await import('../utils/devFileSystem')
     const mockGetSampleJson = vi.mocked(getSampleJson)
     
@@ -205,7 +252,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', 'SampleProject', 'SampleProject/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Sample JSON not found for: items')
@@ -223,7 +270,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Invalid JSON format in file: items.json')
@@ -242,7 +289,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
+      await result.current.loadJsonFile('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Loaded JSON data:', mockData)

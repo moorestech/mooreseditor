@@ -6,6 +6,7 @@ import { readTextFile, writeTextFile, exists, create } from "@tauri-apps/plugin-
 import { getSampleJson } from "../utils/devFileSystem";
 import type { Schema, SchemaContainer } from "../libs/schema/types";
 import { createInitialValue } from "../utils/createInitialValue";
+import { useProject } from "./useProject";
 
 const isDev = import.meta.env.DEV;
 
@@ -35,13 +36,12 @@ function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
 }
 
 export function useJson() {
+  const { projectDir, masterDir, schemaDir, menuToFileMap } = useProject();
   const [jsonData, setJsonData] = useState<Column[]>([]);
   const [isPreloading, setIsPreloading] = useState(false);
 
   async function loadJsonFile(
     menuItem: string,
-    projectDir: string | null,
-    masterDir: string | null,
     columnIndex: number = 0,
     schema?: Schema | SchemaContainer | null
   ) {
@@ -121,11 +121,7 @@ export function useJson() {
   }
 
   async function preloadAllData(
-    menuToFileMap: Record<string, string>,
-    projectDir: string | null,
-    masterDir: string | null,
-    schemaDir: string | null,
-    loadSchema: (menuItem: string, schemaDir: string | null) => Promise<Schema | SchemaContainer | null>
+    loadSchema: (menuItem: string) => Promise<Schema | SchemaContainer | null>
   ) {
     if (Object.keys(menuToFileMap).length === 0 || isPreloading || !projectDir || !schemaDir) {
       return;
@@ -144,9 +140,9 @@ export function useJson() {
       try {
         console.log(`Preloading ${menuItem}...`);
         // Load schema first
-        const loadedSchema = await loadSchema(menuItem, schemaDir);
+        const loadedSchema = await loadSchema(menuItem);
         // Load JSON data (loadJsonFile will check if already exists)
-        await loadJsonFile(menuItem, projectDir, masterDir, 999, loadedSchema); // Large index to append
+        await loadJsonFile(menuItem, 999, loadedSchema); // Large index to append
       } catch (error) {
         console.error(`Failed to preload ${menuItem}:`, error);
       }

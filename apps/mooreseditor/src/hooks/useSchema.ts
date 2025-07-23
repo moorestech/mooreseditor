@@ -7,15 +7,16 @@ import type { Schema } from "../libs/schema/types";
 import { getSampleSchema, getAllSampleSchemaMap } from "../utils/devFileSystem";
 import { RefResolver } from "./useSchema/resolvers/RefResolver";
 import { scanSchemaDirectory } from "./useSchema/utils/schemaScanner";
+import { useProject } from "./useProject";
 
 
 export function useSchema() {
+  const { schemaDir } = useProject();
   const [schemas, setSchemas] = useState<Record<string, Schema>>({});
   const [loading, setLoading] = useState(false);
 
   const loadSchema = useCallback(async (
-    schemaName: string,
-    schemaDir: string | null
+    schemaName: string
   ): Promise<Schema | null> => {
     if (!schemaDir) {
       console.error("Schema directory is not set.");
@@ -90,7 +91,7 @@ export function useSchema() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [schemaDir]);
 
   return {
     schemas,

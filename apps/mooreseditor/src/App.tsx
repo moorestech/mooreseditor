@@ -35,7 +35,7 @@ function App() {
 
   // Preload all data when menuToFileMap changes (after File Open)
   useEffect(() => {
-    preloadAllData(menuToFileMap, projectDir, masterDir, schemaDir, loadSchema);
+    preloadAllData(loadSchema);
   }, [menuToFileMap, projectDir, masterDir, schemaDir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -164,9 +164,9 @@ function App() {
                 return;
               }
               // Load schema first
-              const loadedSchema = await loadSchema(menuItem, schemaDir);
+              const loadedSchema = await loadSchema(menuItem);
               // Pass the loaded schema to loadJsonFile for auto-generation if needed
-              await loadJsonFile(menuItem, projectDir, masterDir, jsonData.length, loadedSchema);
+              await loadJsonFile(menuItem, jsonData.length, loadedSchema);
               setSelectedSchema(menuItem);
               setNestedViews([]);
             }}

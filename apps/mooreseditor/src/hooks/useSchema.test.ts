@@ -31,6 +31,17 @@ vi.mock('./useSchema/utils/schemaScanner', () => ({
   scanSchemaDirectory: vi.fn()
 }))
 
+vi.mock('./useProject', () => ({
+  useProject: vi.fn(() => ({
+    projectDir: '/test/project',
+    masterDir: '/test/project/master',
+    schemaDir: '/test/schema',
+    menuToFileMap: {},
+    loading: false,
+    openProjectDir: vi.fn()
+  }))
+}))
+
 describe('useSchema', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -77,7 +88,7 @@ describe('useSchema', () => {
     
     let resolvedSchema
     await act(async () => {
-      resolvedSchema = await result.current.loadSchema('items', '/test/schema')
+      resolvedSchema = await result.current.loadSchema('items')
     })
     
     expect(resolvedSchema).toEqual(mockSchema)
@@ -86,13 +97,24 @@ describe('useSchema', () => {
   })
 
   it('should handle schema directory not set', async () => {
+    const { useProject } = await import('./useProject')
+    const mockUseProject = vi.mocked(useProject)
+    mockUseProject.mockReturnValueOnce({
+      projectDir: '/test/project',
+      masterDir: '/test/project/master',
+      schemaDir: null,
+      menuToFileMap: {},
+      loading: false,
+      openProjectDir: vi.fn()
+    })
+    
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     
     const { result } = renderHook(() => useSchema())
     
     let resolvedSchema
     await act(async () => {
-      resolvedSchema = await result.current.loadSchema('items', null)
+      resolvedSchema = await result.current.loadSchema('items')
     })
     
     expect(resolvedSchema).toBeNull()
@@ -118,7 +140,7 @@ describe('useSchema', () => {
     
     let resolvedSchema
     await act(async () => {
-      resolvedSchema = await result.current.loadSchema('items', '/test/schema')
+      resolvedSchema = await result.current.loadSchema('items')
     })
     
     expect(resolvedSchema).toBeNull()
@@ -153,7 +175,7 @@ describe('useSchema', () => {
     
     // Start loading - note that we can't check loading state immediately
     // because React batches state updates in act()
-    const loadPromise = result.current.loadSchema('items', '/test/schema')
+    const loadPromise = result.current.loadSchema('items')
     
     await act(async () => {
       await loadPromise
@@ -180,7 +202,7 @@ describe('useSchema', () => {
     const { result } = renderHook(() => useSchema())
     
     await act(async () => {
-      await result.current.loadSchema('items', '/test/schema')
+      await result.current.loadSchema('items')
     })
     
     expect(mockScanSchemaDirectory).toHaveBeenCalledWith('/test/schema')
@@ -216,11 +238,10 @@ describe('useSchema', () => {
     const { result } = renderHook(() => useSchema())
     
     await act(async () => {
-      await result.current.loadSchema('items', 'SampleProject/schema')
+      await result.current.loadSchema('items')
     })
     
     // Check that the debug messages were called
-    expect(consoleSpy).toHaveBeenCalledWith('Loading sample schemas in dev mode')
     expect(consoleSpy).toHaveBeenCalledWith('Loading sample schema for items in dev mode')
     expect(mockGetSampleSchema).toHaveBeenCalledWith('items')
   })
@@ -259,7 +280,7 @@ describe('useSchema', () => {
     const { result } = renderHook(() => useSchema())
     
     await act(async () => {
-      await result.current.loadSchema('items', '/test/schema')
+      await result.current.loadSchema('items')
     })
     
     expect(result.current.schemas.items).toEqual({ type: 'object' })
@@ -290,7 +311,7 @@ describe('useSchema', () => {
     const { result } = renderHook(() => useSchema())
     
     await act(async () => {
-      await result.current.loadSchema('items', '/test/schema')
+      await result.current.loadSchema('items')
     })
     
     expect(mockResolver.resolve).toHaveBeenCalledWith(mockSchema)
@@ -316,7 +337,7 @@ describe('useSchema', () => {
     
     let resolvedSchema
     await act(async () => {
-      resolvedSchema = await result.current.loadSchema('items', '/test/schema')
+      resolvedSchema = await result.current.loadSchema('items')
     })
     
     expect(resolvedSchema).toBeNull()
@@ -360,7 +381,7 @@ describe('useSchema', () => {
     const { result } = renderHook(() => useSchema())
     
     await act(async () => {
-      await result.current.loadSchema('items', '/test/schema')
+      await result.current.loadSchema('items')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Sample schema blocks/MissingBlock not found')

@@ -20,7 +20,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const { projectDir, schemaDir, menuToFileMap, openProjectDir } = useProject();
+  const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } = useJson();
   const { schemas, loadSchema } = useSchema();
 
@@ -35,8 +35,8 @@ function App() {
 
   // Preload all data when menuToFileMap changes (after File Open)
   useEffect(() => {
-    preloadAllData(menuToFileMap, projectDir, schemaDir, loadSchema);
-  }, [menuToFileMap, projectDir, schemaDir]); // eslint-disable-line react-hooks/exhaustive-deps
+    preloadAllData(menuToFileMap, projectDir, masterDir, schemaDir, loadSchema);
+  }, [menuToFileMap, projectDir, masterDir, schemaDir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedSchema && schemas[selectedSchema] && currentData && nestedViews.length === 0) {
@@ -107,9 +107,12 @@ function App() {
       for (const column of jsonData) {
         try {
           // Build the JSON file path for each data column
+          if (!masterDir) {
+            console.error("Master directory is not set.");
+            continue;
+          }
           const jsonFilePath = await path.join(
-            projectDir,
-            "master",
+            masterDir,
             `${column.title}.json`
           );
 
@@ -163,7 +166,7 @@ function App() {
               // Load schema first
               const loadedSchema = await loadSchema(menuItem, schemaDir);
               // Pass the loaded schema to loadJsonFile for auto-generation if needed
-              await loadJsonFile(menuItem, projectDir, jsonData.length, loadedSchema);
+              await loadJsonFile(menuItem, projectDir, masterDir, jsonData.length, loadedSchema);
               setSelectedSchema(menuItem);
               setNestedViews([]);
             }}

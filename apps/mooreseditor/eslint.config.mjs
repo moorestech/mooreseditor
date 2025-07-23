@@ -17,6 +17,8 @@ export default tseslint.config(
       "public/build",
       ".env",
       "eslint.config.mjs",
+      "coverage",
+      "dist",
     ]
   },
   {

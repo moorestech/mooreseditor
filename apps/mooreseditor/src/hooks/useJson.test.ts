@@ -45,7 +45,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     expect(result.current.jsonData).toHaveLength(1)
@@ -62,7 +62,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', null)
+      await result.current.loadJsonFile('items', null, null)
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Project directory is not set.')
@@ -80,7 +80,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -101,7 +101,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -128,12 +128,12 @@ describe('useJson', () => {
     
     // Load first data
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     // Load second data
     await act(async () => {
-      await result.current.loadJsonFile('recipes', '/test/project', 1)
+      await result.current.loadJsonFile('recipes', '/test/project', '/test/project/master', 1)
     })
     
     expect(result.current.jsonData).toHaveLength(2)
@@ -143,7 +143,7 @@ describe('useJson', () => {
     // Then add the new data
     // Result: [items (kept), materials (new)]
     await act(async () => {
-      await result.current.loadJsonFile('materials', '/test/project', 0)
+      await result.current.loadJsonFile('materials', '/test/project', '/test/project/master', 0)
     })
     
     expect(result.current.jsonData).toHaveLength(2)
@@ -180,7 +180,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', 'SampleProject')
+      await result.current.loadJsonFile('items', 'SampleProject', 'SampleProject/master')
     })
     
     expect(mockGetSampleJson).toHaveBeenCalledWith('items')
@@ -205,7 +205,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', 'SampleProject')
+      await result.current.loadJsonFile('items', 'SampleProject', 'SampleProject/master')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Sample JSON not found for: items')
@@ -223,7 +223,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Invalid JSON format in file: items.json')
@@ -242,7 +242,7 @@ describe('useJson', () => {
     const { result } = renderHook(() => useJson())
     
     await act(async () => {
-      await result.current.loadJsonFile('items', '/test/project')
+      await result.current.loadJsonFile('items', '/test/project', '/test/project/master')
     })
     
     expect(consoleSpy).toHaveBeenCalledWith('Loaded JSON data:', mockData)

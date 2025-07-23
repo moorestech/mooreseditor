@@ -11,6 +11,7 @@ const isDev = import.meta.env.DEV;
 interface ProjectContextType {
   projectDir: string | null;
   schemaDir: string | null;
+  masterDir: string | null;
   menuToFileMap: Record<string, string>;
   loading: boolean;
   openProjectDir: () => Promise<void>;
@@ -21,6 +22,7 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projectDir, setProjectDir] = useState<string | null>(null);
   const [schemaDir, setSchemaDir] = useState<string | null>(null);
+  const [masterDir, setMasterDir] = useState<string | null>(null);
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +60,14 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
       setSchemaDir(resolvedSchemaPath);
 
+      // masterPathを読み込む（デフォルトは"master"）
+      const masterPath = configData.masterPath || "master";
+      const resolvedMasterPath = await path.resolve(
+        openedDir as string,
+        masterPath
+      );
+      setMasterDir(resolvedMasterPath);
+
       const files = await readDir(resolvedSchemaPath);
       const yamlFiles: Record<string, string> = {};
 
@@ -92,6 +102,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     try {
       setProjectDir("SampleProject");
       setSchemaDir("SampleProject/schema");
+      setMasterDir("SampleProject/master");
       
       const schemaFiles = getSampleSchemaList();
       const menuMap: Record<string, string> = {};
@@ -130,6 +141,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       value={{
         projectDir,
         schemaDir,
+        masterDir,
         menuToFileMap,
         loading,
         openProjectDir,

@@ -41,6 +41,7 @@ export function useJson() {
   async function loadJsonFile(
     menuItem: string,
     projectDir: string | null,
+    masterDir: string | null,
     columnIndex: number = 0,
     schema?: Schema | SchemaContainer | null
   ) {
@@ -59,7 +60,10 @@ export function useJson() {
           return;
         }
       } else {
-        const masterDir = await path.join(projectDir, "master");
+        if (!masterDir) {
+          console.error("Master directory is not set.");
+          return;
+        }
         const jsonFilePath = await path.join(masterDir, `${menuItem}.json`);
         
         // Check if file exists
@@ -119,6 +123,7 @@ export function useJson() {
   async function preloadAllData(
     menuToFileMap: Record<string, string>,
     projectDir: string | null,
+    masterDir: string | null,
     schemaDir: string | null,
     loadSchema: (menuItem: string, schemaDir: string | null) => Promise<Schema | SchemaContainer | null>
   ) {
@@ -141,7 +146,7 @@ export function useJson() {
         // Load schema first
         const loadedSchema = await loadSchema(menuItem, schemaDir);
         // Load JSON data (loadJsonFile will check if already exists)
-        await loadJsonFile(menuItem, projectDir, 999, loadedSchema); // Large index to append
+        await loadJsonFile(menuItem, projectDir, masterDir, 999, loadedSchema); // Large index to append
       } catch (error) {
         console.error(`Failed to preload ${menuItem}:`, error);
       }

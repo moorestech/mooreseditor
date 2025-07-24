@@ -100,13 +100,13 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     const { active, over } = event;
 
     if (active.id !== over?.id && onDataChange) {
-      const oldIndex = items.indexOf(active.id);
-      const newIndex = items.indexOf(over?.id);
+      const oldIndex = items.indexOf(String(active.id));
+      const newIndex = items.indexOf(String(over?.id));
 
       const newData = arrayMove(arrayData, oldIndex, newIndex);
       onDataChange(newData);
     }
-  }, [arrayData, onDataChange]);
+  }, [arrayData, onDataChange, items]);
 
   if (!Array.isArray(data)) {
     return <Text>Invalid data</Text>;

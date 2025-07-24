@@ -100,6 +100,8 @@ describe('App', () => {
     jsonData: [{ title: 'items', data: { test: 'data' } }],
     setJsonData: vi.fn(),
     loadJsonFile: vi.fn(),
+    preloadAllData: vi.fn(),
+    isPreloading: false,
   }
 
   const mockUseSchema = {
@@ -112,6 +114,7 @@ describe('App', () => {
   const mockUseProject = {
     projectDir: '/test/project',
     schemaDir: '/test/project/schema',
+    masterDir: '/test/project/master',
     menuToFileMap: {
       'items': 'items.json',
       'recipes': 'recipes.json'
@@ -163,7 +166,7 @@ describe('App', () => {
     fireEvent.click(screen.getByText('recipes'))
     
     await waitFor(() => {
-      expect(mockUseJson.loadJsonFile).toHaveBeenCalledWith('recipes', '/test/project')
+      expect(mockUseJson.loadJsonFile).toHaveBeenCalledWith('recipes', 1, expect.anything())
       expect(mockUseSchema.loadSchema).toHaveBeenCalledWith('recipes', '/test/project/schema')
     })
   })
@@ -293,7 +296,7 @@ describe('App', () => {
     fireEvent.click(screen.getByText('recipes'))
     
     await waitFor(() => {
-      expect(mockUseJson.loadJsonFile).toHaveBeenCalledWith('recipes', '/test/project')
+      expect(mockUseJson.loadJsonFile).toHaveBeenCalledWith('recipes', 1, expect.anything())
     })
   })
 

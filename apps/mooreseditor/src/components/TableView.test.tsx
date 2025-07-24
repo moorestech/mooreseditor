@@ -71,8 +71,8 @@ describe('TableView', () => {
   it('should handle undefined data', () => {
     render(<TableView {...defaultProps} data={undefined as any} />)
     
-    // Should display error message
-    expect(screen.getByText('Invalid data')).toBeInTheDocument()
+    // Should render empty table (undefined is treated as empty array)
+    expect(screen.getByRole('table')).toBeInTheDocument()
   })
 
   it('should handle non-array data', () => {

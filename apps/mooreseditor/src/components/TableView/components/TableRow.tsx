@@ -42,10 +42,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   jsonData,
 }) => {
   return (
-    <Table.Tr
-      onClick={() => onRowSelect?.(index)}
-      style={{ cursor: onRowSelect ? 'pointer' : 'default' }}
-    >
+    <>
       <Table.Td>{index}</Table.Td>
       {columns.map(column => {
         const value = row[column.key];
@@ -141,6 +138,6 @@ export const TableRow: React.FC<TableRowProps> = ({
           )}
         </Group>
       </Table.Td>
-    </Table.Tr>
+    </>
   );
 };

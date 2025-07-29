@@ -7,10 +7,12 @@ import Field from './Field';
 
 import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
 import { createInitialValue } from '../../utils/createInitialValue';
+import type { Column } from '../../hooks/useJson';
 
 interface ArrayFieldProps {
     schema: ArraySchema;
     data: any[];
+    jsonData?: Column[];
     onDataChange: (value: any[]) => void;
     onObjectArrayClick?: (path: string[], schema: Schema) => void;
     path: string[];
@@ -18,7 +20,7 @@ interface ArrayFieldProps {
     arrayIndices?: Map<string, number>;
 }
 
-const ArrayField = memo(function ArrayField({ schema, data, onDataChange, onObjectArrayClick, path, rootData, arrayIndices }: ArrayFieldProps) {
+const ArrayField = memo(function ArrayField({ schema, data, jsonData, onDataChange, onObjectArrayClick, path, rootData, arrayIndices }: ArrayFieldProps) {
     const arrayData = data || [];
 
     const handleItemChange = useCallback((index: number, value: any) => {
@@ -56,6 +58,7 @@ const ArrayField = memo(function ArrayField({ schema, data, onDataChange, onObje
                                 label=""
                                 schema={schema.items as Schema}
                                 data={item}
+                                jsonData={jsonData}
                                 onDataChange={(value) => handleItemChange(index, value)}
                                 onObjectArrayClick={onObjectArrayClick}
                                 path={[...path, index.toString()]}

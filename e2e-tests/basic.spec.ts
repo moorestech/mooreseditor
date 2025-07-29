@@ -30,8 +30,13 @@ test('test', async ({ page }) => {
     await page.getByRole('button', { name: 'Edit' }).nth(1).click();
     await page.getByRole('button', { name: 'Edit', exact: true }).nth(2).click();
     await page.locator('div').filter({ hasText: /^referenceCategoryGuidsAdd Item$/ }).getByRole('button').click();
-    await page.locator('//html/body/div[1]/div/div/div[2]/div[5]/div/div[3]/div/div/div/div/div/div/div/div/input').click();
-
-    // 「」があるかどうかチェック
-    await expect(page.getByText('Cat1 Foreign Key Element 1')).toBeVisible();
+    // ドロップダウンをクリック
+    const dropdownInput = page.locator('div').filter({ hasText: /^referenceCategoryGuidsAdd Item$/ }).locator('input[type="text"]').first();
+    await dropdownInput.click();
+    
+    // ドロップダウンメニューが表示されるのを待つ
+    await page.waitForSelector('[role="listbox"]', { state: 'visible' });
+    
+    // オプションが表示されているかチェック
+    await expect(page.locator('[role="listbox"]').getByText('Cat1 Foreign Key Element 1')).toBeVisible();
 });

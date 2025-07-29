@@ -154,6 +154,7 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                     <ArrayField
                         schema={schema}
                         data={data}
+                        jsonData={jsonData}
                         onDataChange={onDataChange}
                         onObjectArrayClick={onObjectArrayClick}
                         path={path}

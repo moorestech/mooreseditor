@@ -52,6 +52,13 @@ pnpm run typecheck
 pnpm run test
 ```
 
+### E2Eテストの実行
+```bash
+pnpm run test:e2e       # E2Eテストの実行
+pnpm run test:e2e:ui    # UIモードでの実行
+pnpm run test:e2e:debug # デバッグモードでの実行
+```
+
 ## Playwrightを使ったデバッグ方法
 
 ### 基本的な手順

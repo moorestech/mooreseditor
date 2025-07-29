@@ -34,8 +34,8 @@ properties:
                   type: uuid
                   foreignKey:
                     schemaId: foreignKeySample
-                    foreignKeyIdPath: /data/[*]/categoryGuid
-                    displayElementPath: /data/[*]/categoryName
+                    foreignKeyIdPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementGuid
+                    displayElementPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementName
               - key: reference foreignKeyElementGuid
                 type: uuid
                 foreignKey:

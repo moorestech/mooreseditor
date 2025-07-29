@@ -34,7 +34,8 @@ export function getSampleSchemaList(): string[] {
     'fluids',
     'items',
     'machineRecipes',
-    'mapObjects'
+    'mapObjects',
+    'foreignKeySample'
   ];
 }
 

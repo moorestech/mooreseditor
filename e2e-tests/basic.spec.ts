@@ -33,5 +33,5 @@ test('test', async ({ page }) => {
     await page.locator('//html/body/div[1]/div/div/div[2]/div[5]/div/div[3]/div/div/div/div/div/div/div/div/input').click();
 
     // 「」があるかどうかチェック
-    await expect(page.getByText('No options found')).toBeVisible();
+    await expect(page.getByText('Cat1 Foreign Key Element 1')).toBeVisible();
 });

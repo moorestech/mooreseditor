@@ -36,9 +36,13 @@ properties:
                     schemaId: foreignKeySample
                     foreignKeyIdPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementGuid
                     displayElementPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementName
+                    hierarchyDisplayPaths:
+                      - /data/[*]/categoryName
               - key: reference foreignKeyElementGuid
                 type: uuid
                 foreignKey:
                   schemaId: foreignKeySample
                   foreignKeyIdPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementGuid
                   displayElementPath: /data/[*]/foreignKeyElements/[*]/foreignKeyElementName
+                  hierarchyDisplayPaths:
+                    - /data/[*]/categoryName

@@ -38,6 +38,7 @@ export interface ForeignKeyConfig {
   schemaId: string;
   foreignKeyIdPath: string;
   displayElementPath: string;
+  hierarchyDisplayPaths?: string[]; // Optional: parent paths to collect for hierarchical display (e.g., "/data/[*]/categoryName")
 }
 
 export interface UuidSchema {

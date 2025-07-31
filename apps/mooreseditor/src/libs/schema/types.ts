@@ -2,6 +2,11 @@ import type { AutoIncrementOptions } from '../../utils/autoIncrement';
 
 export type RefString = string;
 
+export interface StyleOptions {
+  multiline?: boolean;
+  // Additional style options can be added here in the future
+}
+
 export interface ObjectSchema {
   type: 'object';
   openedByDefault?: boolean;
@@ -25,6 +30,7 @@ export interface StringSchema {
   type: 'string';
   optional?: boolean;
   default?: string;
+  style?: StyleOptions;
 }
 
 export interface EnumSchema {

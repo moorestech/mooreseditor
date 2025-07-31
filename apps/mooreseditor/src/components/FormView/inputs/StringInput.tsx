@@ -28,7 +28,7 @@ export const StringInput: React.FC<FormInputProps<string>> = React.memo(({ value
     debouncedOnChange(newValue);
   }, [debouncedOnChange]);
   
-  if (stringSchema.default && stringSchema.default.length > 50) {
+  if (stringSchema.style?.multiline || (stringSchema.default && stringSchema.default.length > 50)) {
     return (
       <Textarea
         value={localValue}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Group, ActionIcon } from "@mantine/core";
+import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 import { EditableCell } from "../cells/EditableCell";
@@ -90,6 +90,37 @@ export const TableRow: React.FC<TableRowProps> = ({
               style={{ cursor: 'pointer' }}
             >
               <ForeignKeyDisplayCell column={column} value={value} jsonData={jsonData} />
+            </Table.Td>
+          );
+        }
+
+        // Handle boolean display with direct editing
+        if (columnSchema.type === 'boolean') {
+          return (
+            <Table.Td
+              key={column.key}
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+              }}
+            >
+              <Checkbox
+                checked={value ?? false}
+                onChange={(e) => {
+                  if (onDataChange) {
+                    const newData = [...arrayData];
+                    newData[index] = {
+                      ...newData[index],
+                      [column.key]: e.currentTarget.checked
+                    };
+                    onDataChange(newData);
+                  }
+                }}
+                aria-label={`${column.key} ${value ? 'true' : 'false'}`}
+                styles={{
+                  input: { cursor: 'pointer' },
+                  root: { padding: '8px' }
+                }}
+              />
             </Table.Td>
           );
         }

@@ -62,7 +62,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     return objectSchema.properties.filter(prop => {
       if (!('type' in prop)) return false;
       const propSchema = prop as any;
-      const primitiveTypes = ['string', 'uuid', 'enum', 'integer', 'number'];
+      const primitiveTypes = ['string', 'uuid', 'enum', 'integer', 'number', 'boolean'];
       return primitiveTypes.includes(propSchema.type);
     });
   }, [schema]);

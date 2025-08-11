@@ -7,8 +7,6 @@ import {
 } from "@mantine/core";
 import * as path from "@tauri-apps/api/path";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
-import { useTranslation } from 'react-i18next';
-import { i18nManager } from './i18n';
 
 import FormView from "./components/FormView";
 import Sidebar from "./components/Sidebar";
@@ -22,7 +20,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const { t } = useTranslation('ui');
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } = useJson();
   const { schemas, loadSchema } = useSchema();
@@ -35,30 +32,6 @@ function App() {
 
   // Find the currently selected data from jsonData
   const currentData = jsonData.find(item => item.title === selectedSchema);
-
-  // Initialize i18n on mount
-  useEffect(() => {
-    const initI18n = async () => {
-      // Try to get i18n path from project config if available
-      let i18nPath: string | undefined;
-      if (projectDir && projectDir !== 'SampleProject') {
-        try {
-          const { readTextFile } = await import('@tauri-apps/plugin-fs');
-          const configPath = await path.join(projectDir, 'mooreseditor.config.yml');
-          const configContent = await readTextFile(configPath);
-          const yaml = await import('yaml');
-          const config = yaml.parse(configContent);
-          if (config.i18n?.path) {
-            i18nPath = await path.join(projectDir, config.i18n.path);
-          }
-        } catch (error) {
-          console.warn('Failed to load i18n config:', error);
-        }
-      }
-      await i18nManager.initialize(i18nPath);
-    };
-    initI18n();
-  }, [projectDir]);
 
   // Preload all data when menuToFileMap changes (after File Open)
   useEffect(() => {
@@ -115,13 +88,13 @@ function App() {
     try {
       // Check if we have jsonData and project directory
       if (!jsonData.length || !projectDir) {
-        console.error(t('message.missingInfo'));
+        console.error("保存に必要な情報が不足しています");
         return;
       }
 
       // For development environment with sample project
       if (projectDir === "SampleProject") {
-        console.log(t('message.saveSkipped'));
+        console.log("サンプルプロジェクトのため、保存はスキップされました");
         // Log all data for debugging
         jsonData.forEach(column => {
           console.log(`${column.title}:`, JSON.stringify({ data: column.data }, null, 2));
@@ -148,7 +121,7 @@ function App() {
 
           // Save to the JSON file
           await writeTextFile(jsonFilePath, JSON.stringify(dataToSave, null, 2));
-          console.log(`${t('message.saved')}: ${jsonFilePath}`);
+          console.log(`データが保存されました: ${jsonFilePath}`);
         } catch (columnError) {
           console.error(`${column.title}.json の保存中にエラーが発生しました:`, columnError);
         }
@@ -156,7 +129,7 @@ function App() {
 
       setIsEditing(false);
     } catch (error) {
-      console.error(t('message.saveFailed'), error);
+      console.error("保存中にエラーが発生しました:", error);
     }
   }
 
@@ -192,8 +165,6 @@ function App() {
               }
               // Load schema first
               const loadedSchema = await loadSchema(menuItem);
-              // Load schema translations
-              await i18nManager.loadSchemaTranslations(menuItem);
               // Pass the loaded schema to loadJsonFile for auto-generation if needed
               await loadJsonFile(menuItem, jsonData.length, loadedSchema);
               setSelectedSchema(menuItem);

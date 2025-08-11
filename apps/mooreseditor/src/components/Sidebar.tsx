@@ -1,9 +1,7 @@
 import { Button, Divider, Text, Loader, Group } from "@mantine/core";
 import { useMemo } from "react";
-import { useTranslation } from 'react-i18next';
 
 import { MoorestechIcon } from "./MoorestechIcon";
-import { LanguageSelector } from "./LanguageSelector";
 
 interface SidebarProps {
   menuToFileMap: Record<string, string>;
@@ -24,7 +22,6 @@ function Sidebar({
   schemas,
   isPreloading = false,
 }: SidebarProps) {
-  const { t } = useTranslation('ui');
   const sortedMenuItems = useMemo(() => {
     const menuItems = Object.keys(menuToFileMap);
     
@@ -94,15 +91,12 @@ function Sidebar({
         }}
         onClick={openProjectDir}
       >
-        {t('button.fileOpen')}
+        File Open
       </Button>
-      <div style={{ marginTop: "16px", marginBottom: "16px" }}>
-        <LanguageSelector />
-      </div>
       {isPreloading && (
         <Group justify="center" mt="sm" mb="sm">
           <Loader size="sm" />
-          <Text size="sm" c="dimmed">{t('message.loading')}</Text>
+          <Text size="sm" c="dimmed">Loading data...</Text>
         </Group>
       )}
       <Divider />

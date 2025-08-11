@@ -10,7 +10,3 @@ schemaPath: "./schema"
 # 環境変数をプレースホルダとして使う $MOORESTECH_APP_DIR//Users/moorestech/schema
 
 masterPath: "./master"
-
-# i18n設定
-i18n:
-  path: "./i18n"

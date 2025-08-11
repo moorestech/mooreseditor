@@ -36,8 +36,6 @@ vi.mock('./useProject', () => ({
     projectDir: '/test/project',
     masterDir: '/test/project/master',
     schemaDir: '/test/schema',
-    i18nDir: '/test/project/i18n',
-    availableLanguages: ['en'],
     menuToFileMap: {},
     loading: false,
     openProjectDir: vi.fn()
@@ -105,8 +103,6 @@ describe('useSchema', () => {
       projectDir: '/test/project',
       masterDir: '/test/project/master',
       schemaDir: null,
-      i18nDir: '/test/project/i18n',
-      availableLanguages: ['en'],
       menuToFileMap: {},
       loading: false,
       openProjectDir: vi.fn()

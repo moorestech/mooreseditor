@@ -12,8 +12,6 @@ interface ProjectContextType {
   projectDir: string | null;
   schemaDir: string | null;
   masterDir: string | null;
-  i18nDir: string | null;
-  availableLanguages: string[];
   menuToFileMap: Record<string, string>;
   loading: boolean;
   openProjectDir: () => Promise<void>;
@@ -25,8 +23,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projectDir, setProjectDir] = useState<string | null>(null);
   const [schemaDir, setSchemaDir] = useState<string | null>(null);
   const [masterDir, setMasterDir] = useState<string | null>(null);
-  const [i18nDir, setI18nDir] = useState<string | null>(null);
-  const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -42,27 +38,11 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
       setProjectDir(openedDir as string);
 
-      // Try .yml then .yaml for config file
-      let configContents: string | null = null;
-      const configYmlPath = await path.join(
+      const configPath = await path.join(
         openedDir as string,
         "mooreseditor.config.yml"
       );
-      try {
-        configContents = await readTextFile(configYmlPath);
-      } catch (_) {
-        const configYamlPath = await path.join(
-          openedDir as string,
-          "mooreseditor.config.yaml"
-        );
-        try {
-          configContents = await readTextFile(configYamlPath);
-        } catch (err) {
-          console.error("Failed to read mooreseditor.config.(yml|yaml)", err);
-          setLoading(false);
-          return;
-        }
-      }
+      const configContents = await readTextFile(configPath);
 
       const configData = parseYaml(configContents);
       if (!configData || !configData.schemaPath) {
@@ -87,26 +67,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         masterPath
       );
       setMasterDir(resolvedMasterPath);
-
-      // Resolve i18n directory (default: "i18n") and detect languages
-      const i18nPath = (configData.i18n && configData.i18n.path) ? configData.i18n.path : "i18n";
-      const resolvedI18nPath = await path.resolve(
-        openedDir as string,
-        i18nPath
-      );
-      setI18nDir(resolvedI18nPath);
-
-      try {
-        const langEntries = await readDir(resolvedI18nPath);
-        const langs = langEntries
-          .filter((e) => e.isDirectory && !!e.name)
-          .map((e) => e.name!)
-          .sort();
-        setAvailableLanguages(langs);
-      } catch (e) {
-        console.warn("Failed to read i18n directory; continuing without languages", e);
-        setAvailableLanguages([]);
-      }
 
       const files = await readDir(resolvedSchemaPath);
       const yamlFiles: Record<string, string> = {};
@@ -143,9 +103,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       setProjectDir("SampleProject");
       setSchemaDir("SampleProject/schema");
       setMasterDir("SampleProject/master");
-      setI18nDir("SampleProject/i18n");
-      // Provide a default set of languages for dev sample
-      setAvailableLanguages(["en", "ja"]);
       
       const schemaFiles = getSampleSchemaList();
       const menuMap: Record<string, string> = {};
@@ -185,8 +142,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         projectDir,
         schemaDir,
         masterDir,
-        i18nDir,
-        availableLanguages,
         menuToFileMap,
         loading,
         openProjectDir,

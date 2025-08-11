@@ -6,7 +6,6 @@ import Field from './Field';
 
 import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
 import type { Column } from '../../hooks/useJson';
-import { useI18n } from '../../i18n/I18nContext';
 
 interface FormViewProps {
     schema: Schema;
@@ -18,13 +17,10 @@ interface FormViewProps {
     parentData?: any;
     rootData?: any;
     arrayIndices?: Map<string, number>;
-    schemaId?: string;
-    baseTPath?: string; // base translation path for this schema node, e.g., "" for root object, or "properties.data.items" for nested object
 }
 
-const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices, schemaId = "", baseTPath = "" }: FormViewProps) {
+const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) {
     const hasAutoOpenedRef = useRef(false);
-    const { tSchema } = useI18n();
     
     // Always treat the top-level as an object
     const handlePropertyChange = useCallback((key: string, value: any) => {
@@ -66,14 +62,11 @@ const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, 
                 {objSchema.properties?.map((property) => {
                     const propertyKey = property.key;
                     const { key, ...propertySchema } = property;
-                    const label = schemaId ? tSchema(schemaId, `${baseTPath ? baseTPath + '.' : ''}properties.${propertyKey}.title`, propertyKey) : propertyKey;
-                    // Compute next base translation path
-                    let nextBase = baseTPath ? `${baseTPath}.properties.${propertyKey}` : `properties.${propertyKey}`;
                     
                     return (
                         <Field
                             key={propertyKey}
-                            label={label}
+                            label={propertyKey}
                             schema={propertySchema as Schema}
                             data={data?.[propertyKey]}
                             jsonData={jsonData}
@@ -83,8 +76,6 @@ const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, 
                             parentData={data}
                             rootData={rootData || data}
                             arrayIndices={arrayIndices}
-                            schemaId={schemaId}
-                            baseTPath={nextBase}
                         />
                     );
                 })}
@@ -93,22 +84,20 @@ const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, 
     }
 
     // For non-object schemas at the root level, wrap in a simple object structure
-        return (
-            <Field
-                label=""
-                schema={schema}
-                data={data}
-                jsonData={jsonData}
-                onDataChange={onDataChange}
-                onObjectArrayClick={onObjectArrayClick}
-                path={path}
-                parentData={parentData}
-                rootData={rootData || data}
-                arrayIndices={arrayIndices}
-                schemaId={schemaId}
-                baseTPath={baseTPath}
-            />
-        );
+    return (
+        <Field
+            label=""
+            schema={schema}
+            data={data}
+            jsonData={jsonData}
+            onDataChange={onDataChange}
+            onObjectArrayClick={onObjectArrayClick}
+            path={path}
+            parentData={parentData}
+            rootData={rootData || data}
+            arrayIndices={arrayIndices}
+        />
+    );
 });
 
 export default FormView;

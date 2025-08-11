@@ -24,14 +24,12 @@ import type { TableViewProps } from "./TableView.types";
 import { createInitialValue } from "../../utils/createInitialValue";
 import { TableRow } from "./components/TableRow";
 import { SortableRow } from "./components/SortableRow";
-import { useI18n } from "../../i18n/I18nContext";
 
-export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect, schemaId = "", baseTPath = "" }: TableViewProps) => {
+export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
   if (data === undefined) {
     data = [];
   }
   const arrayData = data || [];
-  const { t, tSchema } = useI18n();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -111,7 +109,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect, s
   }, [arrayData, onDataChange, items]);
 
   if (!Array.isArray(data)) {
-    return <Text>{t('error.invalidData', 'Invalid data')}</Text>;
+    return <Text>Invalid data</Text>;
   }
 
   return (
@@ -127,13 +125,9 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect, s
               <Table.Th style={{ width: '40px' }}></Table.Th>
               <Table.Th style={{ width: '50px' }}>#</Table.Th>
               {columns.map(column => (
-                <Table.Th key={column.key}>{
-                  schemaId && baseTPath
-                    ? tSchema(schemaId, `${baseTPath}.properties.${column.key}.title`, column.key)
-                    : column.key
-                }</Table.Th>
+                <Table.Th key={column.key}>{column.key}</Table.Th>
               ))}
-              <Table.Th style={{ width: '80px' }}>{t('table.actions', 'Actions')}</Table.Th>
+              <Table.Th style={{ width: '80px' }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -175,7 +169,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect, s
           leftSection={<IconPlus size={16} />}
           onClick={addItem}
         >
-          {t('button.add', 'Add')}
+          Add Item
         </Button>
       )}
       </Stack>

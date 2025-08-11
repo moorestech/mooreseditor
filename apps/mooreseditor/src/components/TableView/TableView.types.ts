@@ -5,8 +5,6 @@ export interface TableViewProps {
   schema: ArraySchema;
   data: any[];
   jsonData?: Column[];
-  schemaId?: string;
-  baseTPath?: string; // e.g., "properties.data.items"
   onDataChange?: (newData: any[]) => void;
   onRowSelect?: (rowIndex: number) => void;
 }

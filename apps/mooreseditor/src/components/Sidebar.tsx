@@ -1,8 +1,7 @@
-import { Button, Divider, Text, Loader, Group, Select } from "@mantine/core";
+import { Button, Divider, Text, Loader, Group } from "@mantine/core";
 import { useMemo } from "react";
 
 import { MoorestechIcon } from "./MoorestechIcon";
-import { useI18n } from "../i18n/I18nContext";
 
 interface SidebarProps {
   menuToFileMap: Record<string, string>;
@@ -23,7 +22,6 @@ function Sidebar({
   schemas,
   isPreloading = false,
 }: SidebarProps) {
-  const { t, tSchema, language, setLanguage, availableLanguages } = useI18n();
   const sortedMenuItems = useMemo(() => {
     const menuItems = Object.keys(menuToFileMap);
     
@@ -93,21 +91,12 @@ function Sidebar({
         }}
         onClick={openProjectDir}
       >
-        {t('menu.fileOpen', 'File Open')}
+        File Open
       </Button>
-      {availableLanguages.length > 0 && (
-        <Select
-          size="xs"
-          label={t('menu.language', 'Language')}
-          data={availableLanguages.map(l => ({ value: l, label: l }))}
-          value={language}
-          onChange={(val) => val && setLanguage(val)}
-        />
-      )}
       {isPreloading && (
         <Group justify="center" mt="sm" mb="sm">
           <Loader size="sm" />
-          <Text size="sm" c="dimmed">{t('message.loading', 'Loading...')}</Text>
+          <Text size="sm" c="dimmed">Loading data...</Text>
         </Group>
       )}
       <Divider />
@@ -138,7 +127,7 @@ function Sidebar({
             }}
             onClick={() => loadFileData(menuItem)}
           >
-            {tSchema(menuItem, 'title', menuItem)}
+            {menuItem}
           </Text>
         ))}
       </div>

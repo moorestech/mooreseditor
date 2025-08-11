@@ -19,7 +19,6 @@ import {
   Vector4Input
 } from './inputs';
 import type { Column } from '../../hooks/useJson';
-import { useI18n } from '../../i18n/I18nContext';
 
 // Move React.lazy outside to prevent re-creating on every render
 const FormViewLazy = React.lazy(() => import('./index'));
@@ -35,14 +34,11 @@ interface FieldProps {
     parentData?: any;
     rootData?: any;
     arrayIndices?: Map<string, number>;
-    schemaId?: string;
-    baseTPath?: string; // base translation path for this node
 }
 
-const Field = memo(function Field({ label, schema, data, jsonData, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices, schemaId = "", baseTPath = "" }: FieldProps) {
+const Field = memo(function Field({ label, schema, data, jsonData, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices }: FieldProps) {
     const isSwitchSchema = (s: Schema): s is SwitchSchema => 'switch' in s;
     const isValueSchema = (s: Schema): s is ValueSchema => 'type' in s;
-    const { t } = useI18n();
     
 
     if (isSwitchSchema(schema)) {
@@ -75,8 +71,6 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                 parentData={parentData}
                 rootData={rootData}
                 arrayIndices={arrayIndices}
-                schemaId={schemaId}
-                baseTPath={baseTPath}
             />
         );
     }
@@ -107,8 +101,6 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                             parentData={parentData}
                             rootData={rootData}
                             arrayIndices={arrayIndices}
-                            schemaId={schemaId}
-                            baseTPath={baseTPath}
                         />
                     </React.Suspense>
                 </CollapsibleObject>
@@ -128,8 +120,6 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                     parentData={parentData}
                     rootData={rootData}
                     arrayIndices={arrayIndices}
-                    schemaId={schemaId}
-                    baseTPath={baseTPath}
                 />
             </React.Suspense>
         );
@@ -150,7 +140,7 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                         onClick={handleObjectArrayClick}
                         variant="light"
                     >
-                        {t('button.edit', 'Edit')} {label}
+                        Edit {label}
                     </Button>
                 </Flex>
             );
@@ -180,26 +170,26 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
     const renderPrimitiveInput = () => {
         switch (schema.type) {
             case 'string':
-                return <StringInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <StringInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'uuid':
-                return <UuidInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <UuidInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'enum':
-                return <EnumInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <EnumInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'integer':
-                return <IntegerInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <IntegerInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'number':
-                return <NumberInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <NumberInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'boolean':
-                return <BooleanInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <BooleanInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector2':
             case 'vector2Int':
-                return <Vector2Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <Vector2Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector3':
             case 'vector3Int':
-                return <Vector3Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <Vector3Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             case 'vector4':
             case 'vector4Int':
-                return <Vector4Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} schemaId={schemaId} baseTPath={baseTPath} />;
+                return <Vector4Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
             default:
                 return <Text c="dimmed" size="sm">Unsupported type: {(schema as any).type}</Text>;
         }

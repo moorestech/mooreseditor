@@ -13,195 +13,245 @@ i18n:
   path: "i18n"             # i18nフォルダのパス（プロジェクトルートからの相対パス）
 ```
 
-指摘：言語ごとのフォールバックはなく、英語がデフォルトにするようにしてください。
-
 ### 翻訳ファイル
-プロジェクトルート配下のi18nフォルダに言語別のJSONファイルを配置します。
+プロジェクトルート配下のi18nフォルダに、言語別のディレクトリを作成し、その中にUIとスキーマごとに分割したJSONファイルを配置します。
 
 ```
 project-root/
 ├── mooreseditor.config.yaml
 ├── i18n/
-│   ├── en.json    # 英語
-│   ├── ja.json    # 日本語
-│   └── ...        # その他の言語
+│   ├── en/                    # 英語（デフォルト言語）
+│   │   ├── ui.json            # UI翻訳
+│   │   ├── schema_items.json  # itemsスキーマ翻訳
+│   │   ├── schema_blocks.json # blocksスキーマ翻訳
+│   │   └── schema_*.json      # その他のスキーマ翻訳
+│   ├── ja/                    # 日本語
+│   │   ├── ui.json
+│   │   ├── schema_items.json
+│   │   ├── schema_blocks.json
+│   │   └── schema_*.json
+│   └── .../                   # その他の言語
 └── schemas/
+    ├── items.yml
+    ├── blocks.yml
+    ├── ref/                    # refで参照されるスキーマ
+    │   ├── inventoryConnects.yml
+    │   ├── blockConnectInfo.yml
+    │   └── ...
     └── ...
+
 ```
 
 ## JSONフォーマット
 
-指摘　基本的には良さそうです。ですが、schemaはそれだけで大きな翻訳ファイルになるので、schemaごとに別ファイルで分けたいです。
-jaディレクトリの中に、ui.json、schema_items.json、schema_blocks.jsonのように、schema_スキーマファイル名.jsonのようにしたいです。
-また、refの考慮もして欲しいです。
-
-### 基本構造
+### UI翻訳ファイル (ui.json)
 ```json
 {
-  "locale": "言語コード",
-  "name": "言語名",
-  "ui": {
-    "固定UI要素の翻訳"
-  },
-  "schema": {
-    "スキーマ関連の翻訳"
-  }
+  "menu.file": "File",
+  "menu.open": "Open",
+  "button.save": "Save",
+  "message.saved": "Data saved successfully"
+}
+```
+
+### スキーマ翻訳ファイル (schema_*.json)
+スキーマのプロパティパスをキーとして使用します。refで参照されるスキーマも同様の形式で別ファイルとして管理します。
+
+```json
+{
+  "properties.<propertyName>.title": "プロパティ名",
+  "properties.<propertyName>.description": "プロパティの説明",
+  "properties.<propertyName>.placeholder": "プレースホルダー",
+  "properties.<propertyName>.enum.<enumValue>": "列挙値の表示名"
 }
 ```
 
 ### 翻訳キー体系
 
-#### UIキー（固定要素）
-エディタの固定UI要素に使用します。
+#### UIキー（ui.json）
+エディタの固定UI要素に使用します。フラットなキー構造を採用します。
 
-- `ui.menu.<menuId>` - メニュー項目
-- `ui.button.<buttonId>` - ボタンラベル
-- `ui.dialog.<dialogId>.<element>` - ダイアログ要素
-- `ui.message.<messageId>` - システムメッセージ
-- `ui.error.<errorId>` - エラーメッセージ
+- `menu.<menuId>` - メニュー項目
+- `button.<buttonId>` - ボタンラベル
+- `dialog.<dialogId>.<element>` - ダイアログ要素
+- `message.<messageId>` - システムメッセージ
+- `error.<errorId>` - エラーメッセージ
 
-#### スキーマキー（動的要素）
-YAMLスキーマから動的に生成される要素に使用します。
+#### スキーマキー（schema_*.json）
+スキーマのプロパティパスをそのままキーとして使用します。
 
-- `schema.<schemaName>.<fieldName>.label` - フィールドラベル
-- `schema.<schemaName>.<fieldName>.description` - フィールド説明
-- `schema.<schemaName>.<fieldName>.placeholder` - プレースホルダー
-- `schema.<schemaName>.<fieldName>.enum.<enumValue>` - 列挙値
+- `properties.<propertyName>.title` - プロパティのタイトル
+- `properties.<propertyName>.description` - プロパティの説明
+- `properties.<propertyName>.placeholder` - プレースホルダー
+- `properties.<propertyName>.enum.<enumValue>` - 列挙値の表示名
+- `properties.<propertyName>.properties.<nestedProperty>.title` - ネストされたプロパティ
+- `properties.<propertyName>.items.properties.<itemProperty>.title` - 配列アイテムのプロパティ
+
+#### refスキーマ（schema_ref_*.json）
+refで参照されるスキーマも同様の形式で管理します。
+
+例：`schema_ref_blockConnectInfo.json`
+- `items.properties.connectType.enum.Inventory` - 接続タイプの列挙値
+- `items.properties.offset.title` - オフセットのタイトル
 
 ### 翻訳ファイル例
 
-#### en.json
+#### en/ui.json
 ```json
 {
-  "locale": "en",
-  "name": "English",
-  "ui": {
-    "menu": {
-      "file": "File",
-      "open": "Open",
-      "save": "Save",
-      "exit": "Exit"
-    },
-    "button": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "add": "Add",
-      "delete": "Delete"
-    },
-    "message": {
-      "saved": "Data saved successfully",
-      "loading": "Loading..."
-    }
-  },
-  "schema": {
-    "items": {
-      "name": {
-        "label": "Name",
-        "description": "Enter the item name",
-        "placeholder": "Item name"
-      },
-      "type": {
-        "label": "Type",
-        "enum": {
-          "weapon": "Weapon",
-          "armor": "Armor",
-          "consumable": "Consumable"
-        }
-      }
-    }
-  }
+  "menu.file": "File",
+  "menu.open": "Open",
+  "menu.save": "Save",
+  "menu.exit": "Exit",
+  "button.save": "Save",
+  "button.cancel": "Cancel",
+  "button.add": "Add",
+  "button.delete": "Delete",
+  "message.saved": "Data saved successfully",
+  "message.loading": "Loading..."
 }
 ```
 
-#### ja.json
+#### en/schema_blocks.json
 ```json
 {
-  "locale": "ja",
-  "name": "日本語",
-  "ui": {
-    "menu": {
-      "file": "ファイル",
-      "open": "開く",
-      "save": "保存",
-      "exit": "終了"
-    },
-    "button": {
-      "save": "保存",
-      "cancel": "キャンセル",
-      "add": "追加",
-      "delete": "削除"
-    },
-    "message": {
-      "saved": "データを保存しました",
-      "loading": "読み込み中..."
-    }
-  },
-  "schema": {
-    "items": {
-      "name": {
-        "label": "名前",
-        "description": "アイテム名を入力してください",
-        "placeholder": "アイテム名"
-      },
-      "type": {
-        "label": "タイプ",
-        "enum": {
-          "weapon": "武器",
-          "armor": "防具",
-          "consumable": "消耗品"
-        }
-      }
-    }
-  }
+  "properties.data.items.properties.blockGuid.title": "Block ID",
+  "properties.data.items.properties.name.title": "Name",
+  "properties.data.items.properties.blockType.title": "Block Type",
+  "properties.data.items.properties.blockType.enum.Block": "Block",
+  "properties.data.items.properties.blockType.enum.BeltConveyor": "Belt Conveyor",
+  "properties.data.items.properties.blockType.enum.Chest": "Chest",
+  "properties.data.items.properties.blockType.enum.ElectricMachine": "Electric Machine",
+  "properties.data.items.properties.blockSize.title": "Block Size",
+  "properties.data.items.properties.blockSize.description": "The size of the block in 3D space"
+}
+```
+
+#### en/schema_ref_blockConnectInfo.json
+```json
+{
+  "items.properties.connectType.title": "Connection Type",
+  "items.properties.connectType.enum.Inventory": "Inventory",
+  "items.properties.connectType.enum.Gear": "Gear",
+  "items.properties.connectType.enum.Fluid": "Fluid",
+  "items.properties.offset.title": "Offset",
+  "items.properties.directions.title": "Directions"
+}
+```
+
+#### ja/ui.json
+```json
+{
+  "menu.file": "ファイル",
+  "menu.open": "開く",
+  "menu.save": "保存",
+  "menu.exit": "終了",
+  "button.save": "保存",
+  "button.cancel": "キャンセル",
+  "button.add": "追加",
+  "button.delete": "削除",
+  "message.saved": "データを保存しました",
+  "message.loading": "読み込み中..."
+}
+```
+
+#### ja/schema_blocks.json
+```json
+{
+  "properties.data.items.properties.blockGuid.title": "ブロックID",
+  "properties.data.items.properties.name.title": "名前",
+  "properties.data.items.properties.blockType.title": "ブロックタイプ",
+  "properties.data.items.properties.blockType.enum.Block": "ブロック",
+  "properties.data.items.properties.blockType.enum.BeltConveyor": "ベルトコンベア",
+  "properties.data.items.properties.blockType.enum.Chest": "チェスト",
+  "properties.data.items.properties.blockType.enum.ElectricMachine": "電動機械",
+  "properties.data.items.properties.blockSize.title": "ブロックサイズ",
+  "properties.data.items.properties.blockSize.description": "3D空間でのブロックのサイズ"
+}
+```
+
+#### ja/schema_ref_blockConnectInfo.json
+```json
+{
+  "items.properties.connectType.title": "接続タイプ",
+  "items.properties.connectType.enum.Inventory": "インベントリ",
+  "items.properties.connectType.enum.Gear": "ギア",
+  "items.properties.connectType.enum.Fluid": "流体",
+  "items.properties.offset.title": "オフセット",
+  "items.properties.directions.title": "方向"
 }
 ```
 
 ## スキーマとの連携
 
-### x-i18n-keyプロパティ
-YAMLスキーマ内で`x-i18n-key`プロパティを使用して翻訳キーを指定します。
+### 翻訳キーの自動解決
+スキーマファイルに特別なプロパティは不要です。アプリケーションがスキーマのプロパティパスから自動的に翻訳キーを生成します。
 
 ```yaml
-# schemas/items.yaml
-type: object
+# schemas/blocks.yml
 properties:
-  name:
-    type: string
-    x-i18n-key: "items.name"
-    title: "Name"  # フォールバック用
-    description: "The name of the item"
-  type:
-    type: string
-    x-i18n-key: "items.type"
-    title: "Type"
-    enum:
-      - weapon
-      - armor
-      - consumable
+- key: data
+  type: array
+  items:
+    type: object
+    properties:
+    - key: name
+      type: string
+      title: "Name"  # フォールバック用
+    - key: blockType
+      type: enum
+      options:
+      - Block
+      - BeltConveyor
 ```
+
+上記のスキーマから、以下の翻訳キーが自動生成されます：
+- `properties.data.items.properties.name.title`
+- `properties.data.items.properties.blockType.enum.Block`
+- `properties.data.items.properties.blockType.enum.BeltConveyor`
+
+### refの解決
+refで参照されるスキーマは、`schema_ref_<ref名>.json`という命名規則で翻訳ファイルを作成します。
+
+```yaml
+# blocks.ymlでの参照
+- key: inventoryConnectors
+  ref: inventoryConnects
+```
+
+この場合、`schema_ref_inventoryConnects.json`から翻訳を取得します。
 
 ### 翻訳の解決順序
 
 1. 現在の言語の翻訳ファイルから取得
-2. 見つからない場合はフォールバック言語から取得
+2. 見つからない場合は英語（デフォルト言語）の翻訳ファイルから取得
 3. それでも見つからない場合はスキーマのtitle/descriptionを使用
-4. 最終的にフィールド名をそのまま表示
+4. 最終的にプロパティのkey名をそのまま表示
 
 ## 言語切り替え
 
 ユーザーは以下の方法で言語を切り替えることができます：
 
 1. エディタのUIから言語選択
-2. mooreseditor.config.yamlのdefaultLocale設定
-3. システムの言語設定（自動検出）
+2. システムの言語設定（自動検出）
 
-優先順位：ユーザー選択 > 設定ファイル > システム言語
+優先順位：ユーザー選択 > システム言語 > 英語（デフォルト）
 
 ## 翻訳ファイルの読み込み
 
 アプリケーション起動時に以下の処理を行います：
 
-1. mooreseditor.config.yamlからi18n設定を読み込み
-2. 指定されたパスから利用可能な言語ファイルを検出
-3. デフォルト言語とフォールバック言語のファイルを読み込み
-4. ユーザーが言語を切り替えた場合、対応するファイルを動的に読み込み
+1. mooreseditor.config.yamlからi18nパス設定を読み込み
+2. 指定されたパスから利用可能な言語ディレクトリを検出
+3. 現在の言語と英語（デフォルト）の翻訳ファイルを読み込み
+4. スキーマファイルの読み込み時に、対応するschema_*.jsonファイルも読み込み
+5. ユーザーが言語を切り替えた場合、対応するディレクトリのファイルを動的に読み込み
+
+## 命名規則
+
+### スキーマ翻訳ファイル名
+- 通常のスキーマ: `schema_<スキーマファイル名>.json`
+  - 例: `blocks.yml` → `schema_blocks.json`
+- refスキーマ: `schema_ref_<ref名>.json`
+  - 例: `ref: inventoryConnects` → `schema_ref_inventoryConnects.json`
+  - 例: `ref: blockConnectInfo` → `schema_ref_blockConnectInfo.json`

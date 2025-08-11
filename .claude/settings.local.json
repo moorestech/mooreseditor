@@ -46,7 +46,9 @@
       "Bash(gemini:*)",
       "mcp__playwright__browser_navigate_forward",
       "Bash(similarity-ts:*)",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "Bash(mcp__playwright__browser_navigate:*)",
+      "Bash(osascript:*)"
     ],
     "deny": []
   }

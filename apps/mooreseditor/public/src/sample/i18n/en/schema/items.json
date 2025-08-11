@@ -1,0 +1,47 @@
+{
+  "title": "Items",
+  "description": "Item definitions for the game",
+  "properties": {
+    "data": {
+      "title": "Item Data",
+      "items": {
+        "properties": {
+          "id": {
+            "title": "Item ID",
+            "description": "Unique identifier for the item"
+          },
+          "name": {
+            "title": "Name",
+            "placeholder": "Enter item name"
+          },
+          "maxStack": {
+            "title": "Max Stack",
+            "description": "Maximum number of items in a stack"
+          },
+          "fuelTime": {
+            "title": "Fuel Time",
+            "description": "Burn time when used as fuel (seconds)"
+          },
+          "toolType": {
+            "title": "Tool Type",
+            "enum": {
+              "Pickaxe": "Pickaxe",
+              "Axe": "Axe",
+              "Shovel": "Shovel",
+              "None": "None"
+            }
+          },
+          "itemType": {
+            "title": "Item Type",
+            "enum": {
+              "Material": "Material",
+              "Tool": "Tool",
+              "Consumable": "Consumable",
+              "Equipment": "Equipment"
+            }
+          }
+        }
+      }
+    }
+  }
+}

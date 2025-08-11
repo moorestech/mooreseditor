@@ -1,0 +1,23 @@
+{
+  "menu.file": "ファイル",
+  "menu.open": "開く",
+  "menu.save": "保存",
+  "menu.exit": "終了",
+  "button.save": "保存",
+  "button.cancel": "キャンセル",
+  "button.add": "追加",
+  "button.delete": "削除",
+  "button.fileOpen": "ファイルを開く",
+  "message.saved": "データを保存しました",
+  "message.saving": "保存中...",
+  "message.loading": "データを読み込み中...",
+  "message.saveFailed": "データの保存に失敗しました",
+  "message.saveSkipped": "サンプルプロジェクトのため、保存はスキップされました",
+  "message.missingInfo": "保存に必要な情報が不足しています",
+  "error.loadFailed": "ファイルの読み込みに失敗しました",
+  "label.language": "言語",
+  "label.true": "真",
+  "label.false": "偽",
+  "placeholder.selectValue": "値を選択",
+  "placeholder.enterValue": "値を入力"
+}

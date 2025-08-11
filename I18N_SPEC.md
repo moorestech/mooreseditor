@@ -11,8 +11,6 @@ mooreseditorは動的スキーマベースのエディタであり、エディ�
 ```yaml
 i18n:
   path: "i18n"             # i18nフォルダのパス（プロジェクトルートからの相対パス）
-  defaultLocale: "en"      # デフォルト言語
-  fallbackLocale: "en"     # フォールバック言語
 ```
 
 ### 翻訳ファイル
@@ -30,6 +28,10 @@ project-root/
 ```
 
 ## JSONフォーマット
+
+指摘　基本的には良さそうです。ですが、schemaはそれだけで大きな翻訳ファイルになるので、schemaごとに別ファイルで分けたいです。
+jaディレクトリの中に、ui.json、schema_items.json、schema_blocks.jsonのように、schema_スキーマファイル名.jsonのようにしたいです。
+また、refの考慮もして欲しいです。
 
 ### 基本構造
 ```json

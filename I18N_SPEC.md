@@ -14,7 +14,7 @@ i18n:
 ```
 
 ### 翻訳ファイル
-プロジェクトルート配下のi18nフォルダに、言語別のディレクトリを作成し、その中にUIとスキーマごとに分割したJSONファイルを配置します。
+プロジェクトルート配下のi18nフォルダに、言語別のディレクトリを作成し、schemasディレクトリと同じ構造で翻訳ファイルを配置します。
 
 ```
 project-root/
@@ -22,29 +22,35 @@ project-root/
 ├── i18n/
 │   ├── en/                    # 英語（デフォルト言語）
 │   │   ├── ui.json            # UI翻訳
-│   │   ├── schema_items.json  # itemsスキーマ翻訳
-│   │   ├── schema_blocks.json # blocksスキーマ翻訳
-│   │   └── schema_*.json      # その他のスキーマ翻訳
+│   │   └── schema/            # スキーマ翻訳（schemasと同じ構造）
+│   │       ├── items.json
+│   │       ├── blocks.json
+│   │       └── ref/
+│   │           ├── inventoryConnects.json
+│   │           ├── blockConnectInfo.json
+│   │           └── ...
 │   ├── ja/                    # 日本語
 │   │   ├── ui.json
-│   │   ├── schema_items.json
-│   │   ├── schema_blocks.json
-│   │   └── schema_*.json
+│   │   └── schema/
+│   │       ├── items.json
+│   │       ├── blocks.json
+│   │       └── ref/
+│   │           └── ...
 │   └── .../                   # その他の言語
 └── schemas/
     ├── items.yml
     ├── blocks.yml
-    ├── ref/                    # refで参照されるスキーマ
-    │   ├── inventoryConnects.yml
-    │   ├── blockConnectInfo.yml
-    │   └── ...
-    └── ...
+    └── ref/
+        ├── inventoryConnects.yml
+        ├── blockConnectInfo.yml
+        └── ...
 
 ```
 
 ## JSONフォーマット
 
 ### UI翻訳ファイル (ui.json)
+フラットなキーバリュー形式で管理します。
 ```json
 {
   "menu.file": "File",
@@ -54,15 +60,35 @@ project-root/
 }
 ```
 
-### スキーマ翻訳ファイル (schema_*.json)
-スキーマのプロパティパスをキーとして使用します。refで参照されるスキーマも同様の形式で別ファイルとして管理します。
+### スキーマ翻訳ファイル (schema/**/*.json)
+スキーマの構造をそのまま反映した階層構造で管理します。
 
 ```json
 {
-  "properties.<propertyName>.title": "プロパティ名",
-  "properties.<propertyName>.description": "プロパティの説明",
-  "properties.<propertyName>.placeholder": "プレースホルダー",
-  "properties.<propertyName>.enum.<enumValue>": "列挙値の表示名"
+  "title": "スキーマ全体のタイトル",
+  "description": "スキーマ全体の説明",
+  "properties": {
+    "<propertyName>": {
+      "title": "プロパティのタイトル",
+      "description": "プロパティの説明",
+      "placeholder": "プレースホルダー",
+      "enum": {
+        "<enumValue>": "列挙値の表示名"
+      },
+      "properties": {
+        "<nestedProperty>": {
+          "title": "ネストされたプロパティのタイトル"
+        }
+      },
+      "items": {
+        "properties": {
+          "<itemProperty>": {
+            "title": "配列アイテムのプロパティタイトル"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -77,22 +103,17 @@ project-root/
 - `message.<messageId>` - システムメッセージ
 - `error.<errorId>` - エラーメッセージ
 
-#### スキーマキー（schema_*.json）
-スキーマのプロパティパスをそのままキーとして使用します。
+#### スキーマキー（schema/**/*.json）
+JSONの階層構造をドット記法でつないだパスがキーになります。
 
+- `title` - スキーマ全体のタイトル
+- `description` - スキーマ全体の説明
 - `properties.<propertyName>.title` - プロパティのタイトル
 - `properties.<propertyName>.description` - プロパティの説明
 - `properties.<propertyName>.placeholder` - プレースホルダー
 - `properties.<propertyName>.enum.<enumValue>` - 列挙値の表示名
 - `properties.<propertyName>.properties.<nestedProperty>.title` - ネストされたプロパティ
 - `properties.<propertyName>.items.properties.<itemProperty>.title` - 配列アイテムのプロパティ
-
-#### refスキーマ（schema_ref_*.json）
-refで参照されるスキーマも同様の形式で管理します。
-
-例：`schema_ref_blockConnectInfo.json`
-- `items.properties.connectType.enum.Inventory` - 接続タイプの列挙値
-- `items.properties.offset.title` - オフセットのタイトル
 
 ### 翻訳ファイル例
 
@@ -112,30 +133,68 @@ refで参照されるスキーマも同様の形式で管理します。
 }
 ```
 
-#### en/schema_blocks.json
+#### en/schema/blocks.json
 ```json
 {
-  "properties.data.items.properties.blockGuid.title": "Block ID",
-  "properties.data.items.properties.name.title": "Name",
-  "properties.data.items.properties.blockType.title": "Block Type",
-  "properties.data.items.properties.blockType.enum.Block": "Block",
-  "properties.data.items.properties.blockType.enum.BeltConveyor": "Belt Conveyor",
-  "properties.data.items.properties.blockType.enum.Chest": "Chest",
-  "properties.data.items.properties.blockType.enum.ElectricMachine": "Electric Machine",
-  "properties.data.items.properties.blockSize.title": "Block Size",
-  "properties.data.items.properties.blockSize.description": "The size of the block in 3D space"
+  "title": "Blocks",
+  "description": "Block definitions for the game",
+  "properties": {
+    "data": {
+      "title": "Block Data",
+      "items": {
+        "properties": {
+          "blockGuid": {
+            "title": "Block ID",
+            "description": "Unique identifier for the block"
+          },
+          "name": {
+            "title": "Name",
+            "placeholder": "Enter block name"
+          },
+          "blockType": {
+            "title": "Block Type",
+            "enum": {
+              "Block": "Block",
+              "BeltConveyor": "Belt Conveyor",
+              "Chest": "Chest",
+              "ElectricMachine": "Electric Machine"
+            }
+          },
+          "blockSize": {
+            "title": "Block Size",
+            "description": "The size of the block in 3D space"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
-#### en/schema_ref_blockConnectInfo.json
+#### en/schema/ref/blockConnectInfo.json
 ```json
 {
-  "items.properties.connectType.title": "Connection Type",
-  "items.properties.connectType.enum.Inventory": "Inventory",
-  "items.properties.connectType.enum.Gear": "Gear",
-  "items.properties.connectType.enum.Fluid": "Fluid",
-  "items.properties.offset.title": "Offset",
-  "items.properties.directions.title": "Directions"
+  "title": "Block Connection Info",
+  "items": {
+    "properties": {
+      "connectType": {
+        "title": "Connection Type",
+        "enum": {
+          "Inventory": "Inventory",
+          "Gear": "Gear",
+          "Fluid": "Fluid"
+        }
+      },
+      "offset": {
+        "title": "Offset",
+        "description": "Connection point offset"
+      },
+      "directions": {
+        "title": "Directions",
+        "description": "Available connection directions"
+      }
+    }
+  }
 }
 ```
 
@@ -155,37 +214,75 @@ refで参照されるスキーマも同様の形式で管理します。
 }
 ```
 
-#### ja/schema_blocks.json
+#### ja/schema/blocks.json
 ```json
 {
-  "properties.data.items.properties.blockGuid.title": "ブロックID",
-  "properties.data.items.properties.name.title": "名前",
-  "properties.data.items.properties.blockType.title": "ブロックタイプ",
-  "properties.data.items.properties.blockType.enum.Block": "ブロック",
-  "properties.data.items.properties.blockType.enum.BeltConveyor": "ベルトコンベア",
-  "properties.data.items.properties.blockType.enum.Chest": "チェスト",
-  "properties.data.items.properties.blockType.enum.ElectricMachine": "電動機械",
-  "properties.data.items.properties.blockSize.title": "ブロックサイズ",
-  "properties.data.items.properties.blockSize.description": "3D空間でのブロックのサイズ"
+  "title": "ブロック",
+  "description": "ゲーム用のブロック定義",
+  "properties": {
+    "data": {
+      "title": "ブロックデータ",
+      "items": {
+        "properties": {
+          "blockGuid": {
+            "title": "ブロックID",
+            "description": "ブロックの一意識別子"
+          },
+          "name": {
+            "title": "名前",
+            "placeholder": "ブロック名を入力"
+          },
+          "blockType": {
+            "title": "ブロックタイプ",
+            "enum": {
+              "Block": "ブロック",
+              "BeltConveyor": "ベルトコンベア",
+              "Chest": "チェスト",
+              "ElectricMachine": "電動機械"
+            }
+          },
+          "blockSize": {
+            "title": "ブロックサイズ",
+            "description": "3D空間でのブロックのサイズ"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
-#### ja/schema_ref_blockConnectInfo.json
+#### ja/schema/ref/blockConnectInfo.json
 ```json
 {
-  "items.properties.connectType.title": "接続タイプ",
-  "items.properties.connectType.enum.Inventory": "インベントリ",
-  "items.properties.connectType.enum.Gear": "ギア",
-  "items.properties.connectType.enum.Fluid": "流体",
-  "items.properties.offset.title": "オフセット",
-  "items.properties.directions.title": "方向"
+  "title": "ブロック接続情報",
+  "items": {
+    "properties": {
+      "connectType": {
+        "title": "接続タイプ",
+        "enum": {
+          "Inventory": "インベントリ",
+          "Gear": "ギア",
+          "Fluid": "流体"
+        }
+      },
+      "offset": {
+        "title": "オフセット",
+        "description": "接続ポイントのオフセット"
+      },
+      "directions": {
+        "title": "方向",
+        "description": "使用可能な接続方向"
+      }
+    }
+  }
 }
 ```
 
 ## スキーマとの連携
 
 ### 翻訳キーの自動解決
-スキーマファイルに特別なプロパティは不要です。アプリケーションがスキーマのプロパティパスから自動的に翻訳キーを生成します。
+スキーマファイルに特別なプロパティは不要です。アプリケーションがスキーマファイルパスとプロパティパスから翻訳ファイルと翻訳キーを特定します。
 
 ```yaml
 # schemas/blocks.yml
@@ -205,21 +302,21 @@ properties:
       - BeltConveyor
 ```
 
-上記のスキーマから、以下の翻訳キーが自動生成されます：
+上記のスキーマは、`i18n/<言語>/schema/blocks.json`から翻訳を取得し、以下のキーパスで値を解決します：
 - `properties.data.items.properties.name.title`
 - `properties.data.items.properties.blockType.enum.Block`
 - `properties.data.items.properties.blockType.enum.BeltConveyor`
 
 ### refの解決
-refで参照されるスキーマは、`schema_ref_<ref名>.json`という命名規則で翻訳ファイルを作成します。
+refで参照されるスキーマは、参照先のスキーマファイルパスに対応する翻訳ファイルから取得します。
 
 ```yaml
 # blocks.ymlでの参照
 - key: inventoryConnectors
-  ref: inventoryConnects
+  ref: ref/inventoryConnects  # schemas/ref/inventoryConnects.ymlを参照
 ```
 
-この場合、`schema_ref_inventoryConnects.json`から翻訳を取得します。
+この場合、`i18n/<言語>/schema/ref/inventoryConnects.json`から翻訳を取得します。
 
 ### 翻訳の解決順序
 
@@ -243,15 +340,21 @@ refで参照されるスキーマは、`schema_ref_<ref名>.json`という命名
 
 1. mooreseditor.config.yamlからi18nパス設定を読み込み
 2. 指定されたパスから利用可能な言語ディレクトリを検出
-3. 現在の言語と英語（デフォルト）の翻訳ファイルを読み込み
-4. スキーマファイルの読み込み時に、対応するschema_*.jsonファイルも読み込み
+3. 現在の言語と英語（デフォルト）のui.jsonを読み込み
+4. スキーマファイルの読み込み時に、対応するschema/*/*.jsonファイルも読み込み
 5. ユーザーが言語を切り替えた場合、対応するディレクトリのファイルを動的に読み込み
 
-## 命名規則
+## キーの解決方法
 
-### スキーマ翻訳ファイル名
-- 通常のスキーマ: `schema_<スキーマファイル名>.json`
-  - 例: `blocks.yml` → `schema_blocks.json`
-- refスキーマ: `schema_ref_<ref名>.json`
-  - 例: `ref: inventoryConnects` → `schema_ref_inventoryConnects.json`
-  - 例: `ref: blockConnectInfo` → `schema_ref_blockConnectInfo.json`
+### 階層構造の解決
+翻訳関数`t(key)`は、ドット区切りのキーを受け取り、JSONオブジェクトを階層的にたどって値を取得します。
+
+例：`t('properties.name.title')`の場合
+1. JSONオブジェクトの`properties`プロパティを取得
+2. その中の`name`プロパティを取得
+3. その中の`title`プロパティの値を返す
+
+### スキーマファイルとの対応
+- `schemas/blocks.yml` → `i18n/<言語>/schema/blocks.json`
+- `schemas/ref/blockConnectInfo.yml` → `i18n/<言語>/schema/ref/blockConnectInfo.json`
+- `schemas/nested/dir/file.yml` → `i18n/<言語>/schema/nested/dir/file.json`

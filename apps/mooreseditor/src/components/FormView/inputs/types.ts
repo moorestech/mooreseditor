@@ -6,6 +6,8 @@ export interface FormInputProps<T = any> {
   onChange: (value: T) => void;
   schema: any;
   jsonData?: Column[];
+  schemaId?: string;
+  baseTPath?: string;
 }
 
 export interface FormInputComponent<T = any> {

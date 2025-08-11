@@ -14,15 +14,17 @@ import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
+import { I18nProvider, useI18n } from "./i18n/I18nContext";
 
 const theme = createTheme({
   primaryColor: "orange",
 });
 
-function App() {
+function AppInner() {
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } = useProject();
   const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } = useJson();
   const { schemas, loadSchema } = useSchema();
+  const { preloadSchema } = useI18n();
 
   const [nestedViews, setNestedViews] = useState<
     Array<{ type: 'form' | 'table'; schema: any; data: any; path: string[] }>
@@ -165,6 +167,8 @@ function App() {
               }
               // Load schema first
               const loadedSchema = await loadSchema(menuItem);
+              // Preload schema translations
+              await preloadSchema(menuItem);
               // Pass the loaded schema to loadJsonFile for auto-generation if needed
               await loadJsonFile(menuItem, jsonData.length, loadedSchema);
               setSelectedSchema(menuItem);
@@ -199,6 +203,17 @@ function App() {
             {view.type === 'table' ? (
               <TableView
                 schema={view.schema}
+                schemaId={selectedSchema || ""}
+                baseTPath={(function(){
+                  // Build base translation path for this array view
+                  // view.path contains property keys to the array field
+                  if (!view.path || view.path.length === 0) {
+                    // Root array schema -> use 'items'
+                    return 'items';
+                  }
+                  // e.g., properties.data.items
+                  return 'properties.' + view.path.join('.properties.') + '.items';
+                })()}
                 jsonData={jsonData}
                 data={(() => {
                   // Get data from currentData
@@ -269,6 +284,8 @@ function App() {
             ) : (
               <FormView
                 schema={view.schema}
+                schemaId={selectedSchema || ""}
+                baseTPath={""}
                 jsonData={jsonData}
                 data={(() => {
                   // Get data from currentData
@@ -361,3 +378,10 @@ function App() {
 }
 
 export default App;
+function App() {
+  return (
+    <I18nProvider>
+      <AppInner />
+    </I18nProvider>
+  );
+}

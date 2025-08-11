@@ -23,6 +23,8 @@ vi.mock('./useProject', () => ({
     projectDir: '/test/project',
     masterDir: '/test/project/master',
     schemaDir: '/test/project/schema',
+    i18nDir: '/test/project/i18n',
+    availableLanguages: ['en'],
     menuToFileMap: {},
     loading: false,
     openProjectDir: vi.fn()
@@ -77,6 +79,8 @@ describe('useJson', () => {
       projectDir: null,
       masterDir: null,
       schemaDir: null,
+      i18nDir: null,
+      availableLanguages: [],
       menuToFileMap: {},
       loading: false,
       openProjectDir: vi.fn()
@@ -202,6 +206,8 @@ describe('useJson', () => {
       projectDir: 'SampleProject',
       masterDir: 'SampleProject/master',
       schemaDir: 'SampleProject/schema',
+      i18nDir: 'SampleProject/i18n',
+      availableLanguages: ['en', 'ja'],
       menuToFileMap: {},
       loading: false,
       openProjectDir: vi.fn()
@@ -237,6 +243,8 @@ describe('useJson', () => {
       projectDir: 'SampleProject',
       masterDir: 'SampleProject/master',
       schemaDir: 'SampleProject/schema',
+      i18nDir: 'SampleProject/i18n',
+      availableLanguages: ['en', 'ja'],
       menuToFileMap: {},
       loading: false,
       openProjectDir: vi.fn()

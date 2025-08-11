@@ -1,0 +1,11 @@
+{
+  "menu.open": "Open",
+  "menu.fileOpen": "File Open",
+  "button.save": "Save",
+  "button.cancel": "Cancel",
+  "button.add": "Add",
+  "button.edit": "Edit",
+  "table.actions": "Actions",
+  "message.loading": "Loading...",
+  "error.invalidData": "Invalid data"
+}

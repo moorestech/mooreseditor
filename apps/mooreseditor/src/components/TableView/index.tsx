@@ -156,6 +156,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
                   removeItem={removeItem}
                   arrayData={arrayData}
                   jsonData={jsonData}
+                  itemSchema={schema.items && 'type' in schema.items && schema.items.type === 'object' ? schema.items as ObjectSchema : undefined}
                   />
                 );
               })}

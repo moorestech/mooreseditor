@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import * as path from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
+import { invoke } from "@tauri-apps/api/core";
 import YAML from "yaml";
 
 import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
@@ -37,6 +38,13 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       }
 
       setProjectDir(openedDir as string);
+      
+      // Add the opened directory to the file system scope
+      try {
+        await invoke('add_project_to_scope', { projectPath: openedDir });
+      } catch (error) {
+        console.warn("Failed to add project directory to scope:", error);
+      }
 
       const configPath = await path.join(
         openedDir as string,
@@ -59,6 +67,13 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       );
 
       setSchemaDir(resolvedSchemaPath);
+      
+      // Add the schema directory to the file system scope
+      try {
+        await invoke('add_project_to_scope', { projectPath: resolvedSchemaPath });
+      } catch (error) {
+        console.warn("Failed to add schema directory to scope:", error);
+      }
 
       // masterPathを読み込む（デフォルトは"master"）
       const masterPath = configData.masterPath || "master";
@@ -67,6 +82,13 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         masterPath
       );
       setMasterDir(resolvedMasterPath);
+      
+      // Add the master directory to the file system scope
+      try {
+        await invoke('add_project_to_scope', { projectPath: resolvedMasterPath });
+      } catch (error) {
+        console.warn("Failed to add master directory to scope:", error);
+      }
 
       const files = await readDir(resolvedSchemaPath);
       const yamlFiles: Record<string, string> = {};

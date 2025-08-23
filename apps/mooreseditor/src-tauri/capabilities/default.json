@@ -5,10 +5,15 @@
   "windows": ["main"],
   "permissions": [
     {
-      "identifier": "fs:scope",
-      "all": true,
-      "allow": ["$DOCUMENT/**/*", "$HOME/**/*"],
-      "deny": []
+      "identifier": "fs:scope-app-index",
+      "allow": [
+        "$APPDATA/**",
+        "$RESOURCE/**"
+      ]
+    },
+    {
+      "identifier": "fs:scope-app",
+      "allow": []
     },
     {
       "identifier": "dialog:allow-save",
@@ -25,6 +30,8 @@
     "fs:allow-stat",
     "fs:read-dirs",
     "fs:read-files",
-    "fs:write-files"
+    "fs:write-files",
+    "fs:allow-exists",
+    "fs:allow-read-dir"
   ]
 }

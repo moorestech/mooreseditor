@@ -68,16 +68,14 @@ describe('DataInitializer', () => {
           { 
             key: 'details', 
             type: 'object',
-            optional: false,
             properties: [
               { key: 'category', type: 'string', optional: false },
-              { key: 'tags', type: 'array', items: { type: 'string' }, optional: true }
+              { key: 'tags', type: 'array', items: { type: 'string' } }
             ]
           },
           { 
             key: 'metadata', 
             type: 'object',
-            optional: true,
             properties: [
               { key: 'created', type: 'string' }
             ]

@@ -6,6 +6,7 @@ import { IconGripVertical } from "@tabler/icons-react";
 import { TableRow } from "./TableRow";
 import type { EditingCell } from "../TableView.types";
 import type { Column } from "../../../hooks/useJson";
+import type { ObjectSchema } from "../../../libs/schema/types";
 
 interface SortableRowProps {
   id: string;
@@ -24,6 +25,7 @@ interface SortableRowProps {
   removeItem: (index: number) => void;
   arrayData: any[];
   jsonData?: Column[];
+  itemSchema?: ObjectSchema;
 }
 
 export const SortableRow: React.FC<SortableRowProps> = ({
@@ -43,6 +45,7 @@ export const SortableRow: React.FC<SortableRowProps> = ({
   removeItem,
   arrayData,
   jsonData,
+  itemSchema,
 }) => {
   const {
     attributes,
@@ -84,6 +87,7 @@ export const SortableRow: React.FC<SortableRowProps> = ({
         removeItem={removeItem}
         arrayData={arrayData}
         jsonData={jsonData}
+        itemSchema={itemSchema}
       />
     </Table.Tr>
   );

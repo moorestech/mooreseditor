@@ -5,6 +5,8 @@ import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 import { EditableCell } from "../cells/EditableCell";
 import type { EditingCell } from "../TableView.types";
 import type { Column } from "../../../hooks/useJson";
+import { processSwitchFields } from "../../../utils/switchFieldProcessor";
+import type { ObjectSchema } from "../../../libs/schema/types";
 
 interface TableRowProps {
   row: any;
@@ -22,6 +24,7 @@ interface TableRowProps {
   removeItem: (index: number) => void;
   arrayData: any[];
   jsonData?: Column[];
+  itemSchema?: ObjectSchema;
 }
 
 export const TableRow: React.FC<TableRowProps> = ({
@@ -40,6 +43,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   removeItem,
   arrayData,
   jsonData,
+  itemSchema,
 }) => {
   return (
     <>
@@ -63,10 +67,17 @@ export const TableRow: React.FC<TableRowProps> = ({
                   onSave={(newValue) => {
                     if (editingCell && onDataChange) {
                       const newData = [...arrayData];
-                      newData[editingCell.row] = {
+                      const updatedRow = {
                         ...newData[editingCell.row],
                         [editingCell.column]: newValue
                       };
+                      
+                      // switchフィールドの処理を適用
+                      const processedRow = itemSchema 
+                        ? processSwitchFields(itemSchema, newData[editingCell.row], updatedRow, editingCell.column)
+                        : updatedRow;
+                      
+                      newData[editingCell.row] = processedRow;
                       onDataChange(newData);
                       cancelEditing();
                     }
@@ -108,10 +119,17 @@ export const TableRow: React.FC<TableRowProps> = ({
                 onChange={(e) => {
                   if (onDataChange) {
                     const newData = [...arrayData];
-                    newData[index] = {
+                    const updatedRow = {
                       ...newData[index],
                       [column.key]: e.currentTarget.checked
                     };
+                    
+                    // switchフィールドの処理を適用
+                    const processedRow = itemSchema 
+                      ? processSwitchFields(itemSchema, newData[index], updatedRow, column.key)
+                      : updatedRow;
+                    
+                    newData[index] = processedRow;
                     onDataChange(newData);
                   }
                 }}

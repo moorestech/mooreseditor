@@ -4,6 +4,7 @@ import { Box, Text, Flex, Button } from '@mantine/core';
 
 import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 import { resolvePath } from '../../utils/pathResolver';
+import { useSwitchFieldAutoGeneration } from '../../hooks/useSwitchFieldAutoGeneration';
 
 import ArrayField from './ArrayField';
 import CollapsibleObject from './CollapsibleObject';
@@ -49,6 +50,9 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
             rootData || data,
             arrayIndices
         );
+        
+        // カスタムフックを使用してswitch値変更を検出し、必須フィールドを自動生成
+        useSwitchFieldAutoGeneration(switchValue, schema, data, onDataChange);
         
         // Find the matching case
         const matchingCase = schema.cases?.find(c => c.when === switchValue);

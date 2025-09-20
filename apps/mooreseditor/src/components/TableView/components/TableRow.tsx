@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconTrash, IconCopy } from "@tabler/icons-react";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 import { EditableCell } from "../cells/EditableCell";
 import type { EditingCell } from "../TableView.types";
@@ -22,6 +22,7 @@ interface TableRowProps {
   onRowSelect?: (index: number) => void;
   onDataChange?: (newData: any[]) => void;
   removeItem: (index: number) => void;
+  duplicateItem: (index: number) => void;
   arrayData: any[];
   jsonData?: Column[];
   itemSchema?: ObjectSchema;
@@ -41,6 +42,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   onRowSelect,
   onDataChange,
   removeItem,
+  duplicateItem,
   arrayData,
   jsonData,
   itemSchema,
@@ -173,17 +175,32 @@ export const TableRow: React.FC<TableRowProps> = ({
             Edit
           </Button>
           {onDataChange && (
-            <ActionIcon
-              color="red"
-              variant="subtle"
-              size="sm"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                removeItem(index);
-              }}
-            >
-              <IconTrash size={16} />
-            </ActionIcon>
+            <>
+              <ActionIcon
+                color="gray"
+                variant="subtle"
+                size="sm"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  duplicateItem(index);
+                }}
+                title="複製"
+              >
+                <IconCopy size={16} />
+              </ActionIcon>
+              <ActionIcon
+                color="red"
+                variant="subtle"
+                size="sm"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  removeItem(index);
+                }}
+                title="削除"
+              >
+                <IconTrash size={16} />
+              </ActionIcon>
+            </>
           )}
         </Group>
       </Table.Td>

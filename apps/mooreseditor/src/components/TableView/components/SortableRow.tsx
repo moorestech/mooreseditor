@@ -23,6 +23,7 @@ interface SortableRowProps {
   onRowSelect?: (index: number) => void;
   onDataChange?: (newData: any[]) => void;
   removeItem: (index: number) => void;
+  duplicateItem: (index: number) => void;
   arrayData: any[];
   jsonData?: Column[];
   itemSchema?: ObjectSchema;
@@ -43,6 +44,7 @@ export const SortableRow: React.FC<SortableRowProps> = ({
   onRowSelect,
   onDataChange,
   removeItem,
+  duplicateItem,
   arrayData,
   jsonData,
   itemSchema,
@@ -85,6 +87,7 @@ export const SortableRow: React.FC<SortableRowProps> = ({
         onRowSelect={onRowSelect}
         onDataChange={onDataChange}
         removeItem={removeItem}
+        duplicateItem={duplicateItem}
         arrayData={arrayData}
         jsonData={jsonData}
         itemSchema={itemSchema}

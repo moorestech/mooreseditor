@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -6,10 +6,8 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -21,15 +19,17 @@ import { IconPlus } from "@tabler/icons-react";
 import type { ObjectSchema } from "../../libs/schema/types";
 import { useTableEdit } from "./hooks/useTableEdit";
 import type { TableViewProps } from "./TableView.types";
-import { createInitialValue } from "../../utils/createInitialValue";
-import { TableRow } from "./components/TableRow";
+import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 import { SortableRow } from "./components/SortableRow";
 
 export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
-  if (data === undefined) {
-    data = [];
-  }
-  const arrayData = data || [];
+  // useArrayDataManagerフックを使用して共通ロジックを管理
+  const { arrayData, addItem, removeItem, duplicateItem, handleDragEnd, items } = useArrayDataManager({
+    data,
+    schema,
+    onDataChange,
+    useFullInitialization: false // TableViewでは全フィールドを生成
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -67,46 +67,6 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     });
   }, [schema]);
 
-  const addItem = useCallback(() => {
-    console.log('TableView addItem called', { data, schema, onDataChange: !!onDataChange });
-    if (onDataChange && schema.items) {
-      const currentArray = Array.isArray(data) ? data : [];
-      const newArray = [...currentArray];
-      const defaultValue = createInitialValue(schema.items, newArray);
-      console.log('Adding item with default value:', defaultValue);
-      newArray.push(defaultValue);
-      onDataChange(newArray);
-    }
-  }, [data, schema.items, onDataChange]);
-
-  const removeItem = useCallback((index: number) => {
-    if (onDataChange) {
-      const currentArray = Array.isArray(data) ? data : [];
-      const newArray = [...currentArray];
-      newArray.splice(index, 1);
-      onDataChange(newArray);
-    }
-  }, [data, onDataChange]);
-
-
-  // Generate items using stable IDs from data
-  const items = useMemo(() => {
-    return arrayData.map((_, index) => {
-      return `index-${index}`;
-    });
-  }, [arrayData]);
-
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (active.id !== over?.id && onDataChange) {
-      const oldIndex = items.indexOf(String(active.id));
-      const newIndex = items.indexOf(String(over?.id));
-
-      const newData = arrayMove(arrayData, oldIndex, newIndex);
-      onDataChange(newData);
-    }
-  }, [arrayData, onDataChange, items]);
 
   if (!Array.isArray(data)) {
     return <Text>Invalid data</Text>;
@@ -135,7 +95,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
               items={items}
               strategy={verticalListSortingStrategy}
             >
-              {data.map((row, index) => {
+              {arrayData.map((row, index) => {
                 const itemId = items[index];
                 return (
                   <SortableRow
@@ -154,6 +114,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
                   onRowSelect={onRowSelect}
                   onDataChange={onDataChange}
                   removeItem={removeItem}
+                  duplicateItem={duplicateItem}
                   arrayData={arrayData}
                   jsonData={jsonData}
                   itemSchema={schema.items && 'type' in schema.items && schema.items.type === 'object' ? schema.items as ObjectSchema : undefined}

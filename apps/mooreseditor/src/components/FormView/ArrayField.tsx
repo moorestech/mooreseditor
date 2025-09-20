@@ -1,12 +1,12 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import { Stack, Group, Box, Button, ActionIcon } from '@mantine/core';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconCopy } from '@tabler/icons-react';
 
 import Field from './Field';
 
-import type { ArraySchema, ValueSchema, Schema } from '../../libs/schema/types';
-import { createInitialValue } from '../../utils/createInitialValue';
+import type { ArraySchema, Schema } from '../../libs/schema/types';
+import { useArrayDataManager } from '../../hooks/useArrayDataManager';
 import type { Column } from '../../hooks/useJson';
 
 interface ArrayFieldProps {
@@ -21,25 +21,17 @@ interface ArrayFieldProps {
 }
 
 const ArrayField = memo(function ArrayField({ schema, data, jsonData, onDataChange, onObjectArrayClick, path, rootData, arrayIndices }: ArrayFieldProps) {
-    const arrayData = data || [];
+    // useArrayDataManagerフックを使用して共通ロジックを管理
+    const { arrayData, addItem, removeItem, duplicateItem } = useArrayDataManager({
+        data,
+        schema,
+        onDataChange,
+        useFullInitialization: true // ArrayFieldでは必須フィールドのみ生成
+    });
 
     const handleItemChange = useCallback((index: number, value: any) => {
         const newArray = [...arrayData];
         newArray[index] = value;
-        onDataChange(newArray);
-    }, [arrayData, onDataChange]);
-
-
-    const addItem = useCallback(() => {
-        const newArray = [...arrayData];
-        const defaultValue = createInitialValue(schema.items, newArray);
-        newArray.push(defaultValue);
-        onDataChange(newArray);
-    }, [arrayData, schema.items, onDataChange]);
-
-    const removeItem = useCallback((index: number) => {
-        const newArray = [...arrayData];
-        newArray.splice(index, 1);
         onDataChange(newArray);
     }, [arrayData, onDataChange]);
 
@@ -68,9 +60,18 @@ const ArrayField = memo(function ArrayField({ schema, data, jsonData, onDataChan
                             />
                         </Box>
                     <ActionIcon
+                        color="gray"
+                        variant="subtle"
+                        onClick={() => duplicateItem(index)}
+                        title="複製"
+                    >
+                        <IconCopy size={16} />
+                    </ActionIcon>
+                    <ActionIcon
                         color="red"
                         variant="subtle"
                         onClick={() => removeItem(index)}
+                        title="削除"
                     >
                         <IconTrash size={16} />
                     </ActionIcon>

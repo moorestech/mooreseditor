@@ -25,13 +25,13 @@ export async function showNotification(title: string, message: string, type: Not
 
   // Also attempt to show native notification
   try {
-    let permissionGranted = await isPermissionGranted();
-    if (!permissionGranted) {
+    let isGranted = await isPermissionGranted();
+    if (!isGranted) {
       const permission = await requestPermission();
-      permissionGranted = permission === "granted";
+      isGranted = permission === "granted";
     }
 
-    if (permissionGranted) {
+    if (isGranted) {
       await sendNotification({ title, body: message });
     }
   } catch (error) {

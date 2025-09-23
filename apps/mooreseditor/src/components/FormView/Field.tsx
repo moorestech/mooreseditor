@@ -6,7 +6,7 @@ import { useSwitchFieldAutoGeneration } from '../../hooks/useSwitchFieldAutoGene
 import { resolvePath } from '../../utils/pathResolver';
 
 import ArrayField from './ArrayField';
-import CollapsibleObject from './CollapsibleObject';
+import CollapsibleObjectWithCopyPaste from './CollapsibleObjectWithCopyPaste';
 import { FieldWithCopyPaste } from './FieldWithCopyPaste';
 import {
   StringInput,
@@ -92,10 +92,16 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
 
     // Handle object type recursively
     if (schema.type === 'object') {
-        // If there's a label, use collapsible display
+        // If there's a label, use collapsible display with copy/paste
         if (label) {
             return (
-                <CollapsibleObject label={label} defaultExpanded={true}>
+                <CollapsibleObjectWithCopyPaste
+                    label={label}
+                    value={data}
+                    onChange={onDataChange}
+                    schema={schema}
+                    defaultExpanded={true}
+                >
                     <React.Suspense fallback={<Text c="dimmed">Loading...</Text>}>
                         <FormViewLazy
                             schema={schema}
@@ -109,7 +115,7 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                             arrayIndices={arrayIndices}
                         />
                     </React.Suspense>
-                </CollapsibleObject>
+                </CollapsibleObjectWithCopyPaste>
             );
         }
         
@@ -133,40 +139,44 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
 
     // Handle array type
     if (schema.type === 'array') {
-        // Object arrays get a button to open in table view
+        // Object arrays get a button to open in table view with copy/paste
         if (schema.items && 'type' in schema.items && schema.items.type === 'object') {
             const handleObjectArrayClick = useCallback(() => {
                 onObjectArrayClick?.(path, schema);
             }, [onObjectArrayClick, path, schema]);
-            
+
             return (
                 <Flex align="center" gap="md">
                     {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
-                    <Button
-                        onClick={handleObjectArrayClick}
-                        variant="light"
-                    >
-                        Edit {label}
-                    </Button>
+                    <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
+                        <Button
+                            onClick={handleObjectArrayClick}
+                            variant="light"
+                        >
+                            Edit {label}
+                        </Button>
+                    </FieldWithCopyPaste>
                 </Flex>
             );
         }
 
-        // Primitive arrays use ArrayField
+        // Primitive arrays use ArrayField with copy/paste
         return (
             <Flex align="flex-start" gap="md">
                 {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
                 <Box style={{ flex: 1 }}>
-                    <ArrayField
-                        schema={schema}
-                        data={data}
-                        jsonData={jsonData}
-                        onDataChange={onDataChange}
-                        onObjectArrayClick={onObjectArrayClick}
-                        path={path}
-                        rootData={rootData}
-                        arrayIndices={arrayIndices}
-                    />
+                    <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
+                        <ArrayField
+                            schema={schema}
+                            data={data}
+                            jsonData={jsonData}
+                            onDataChange={onDataChange}
+                            onObjectArrayClick={onObjectArrayClick}
+                            path={path}
+                            rootData={rootData}
+                            arrayIndices={arrayIndices}
+                        />
+                    </FieldWithCopyPaste>
                 </Box>
             </Flex>
         );

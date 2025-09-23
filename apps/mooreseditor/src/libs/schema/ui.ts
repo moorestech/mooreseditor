@@ -1,4 +1,4 @@
-import type { ArraySchema, ObjectPropertySchema } from "./types";
+import { ArraySchema, ObjectPropertySchema } from "./types";
 
 export const getTableColumns = (schema: ArraySchema) => {
   if (schema.items.type !== 'object') {

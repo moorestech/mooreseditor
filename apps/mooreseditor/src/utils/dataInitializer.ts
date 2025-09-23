@@ -1,6 +1,5 @@
-import { calculateAutoIncrement } from './autoIncrement';
-
 import type { Schema, ValueSchema, ObjectSchema, ArraySchema } from '../libs/schema/types';
+import { calculateAutoIncrement } from './autoIncrement';
 
 /**
  * DataInitializerクラス

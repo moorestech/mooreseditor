@@ -1,6 +1,5 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
-
 import { resolvePath } from './pathResolver'
 
 describe('resolvePath', () => {

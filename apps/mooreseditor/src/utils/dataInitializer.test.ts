@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
-
 import { DataInitializer } from './dataInitializer';
-
-import type { ObjectSchema, ArraySchema } from '../libs/schema/types';
+import type { ObjectSchema, ArraySchema, StringSchema, IntegerSchema } from '../libs/schema/types';
 
 describe('DataInitializer', () => {
   describe('Simple schemas', () => {

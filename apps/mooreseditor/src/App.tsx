@@ -5,7 +5,6 @@ import {
   MantineProvider,
   createTheme,
 } from "@mantine/core";
-import { Notifications } from '@mantine/notifications';
 import * as path from "@tauri-apps/api/path";
 import { writeTextFile } from "@tauri-apps/plugin-fs";
 
@@ -37,7 +36,7 @@ function App() {
   // Preload all data when menuToFileMap changes (after File Open)
   useEffect(() => {
     preloadAllData(loadSchema);
-  }, [menuToFileMap, projectDir, masterDir, schemaDir]);  
+  }, [menuToFileMap, projectDir, masterDir, schemaDir]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedSchema && schemas[selectedSchema] && currentData && nestedViews.length === 0) {
@@ -137,7 +136,6 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <Notifications position="top-center" />
       <AppShell
         header={{ height: 64 }}
         padding={0}

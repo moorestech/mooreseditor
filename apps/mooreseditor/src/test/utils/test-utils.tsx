@@ -1,10 +1,7 @@
 // AI Generated Test Code
 import React from 'react'
-
+import { render, RenderOptions } from '@testing-library/react'
 import { MantineProvider } from '@mantine/core'
-import { render } from '@testing-library/react'
-
-import type { RenderOptions } from '@testing-library/react';
 
 interface AllTheProvidersProps {
   children: React.ReactNode

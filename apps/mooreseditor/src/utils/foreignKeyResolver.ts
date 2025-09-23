@@ -1,3 +1,4 @@
+import { resolvePath } from './pathResolver';
 import type { ForeignKeyConfig } from '../libs/schema/types';
 
 export interface ForeignKeyOption {

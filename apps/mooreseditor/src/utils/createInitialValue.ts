@@ -1,7 +1,6 @@
+import type { Schema, ValueSchema } from '../libs/schema/types';
 import { calculateAutoIncrement } from './autoIncrement';
 import { DataInitializer } from './dataInitializer';
-
-import type { Schema, ValueSchema } from '../libs/schema/types';
 
 /**
  * プライベート関数：基本的なデフォルト値を生成

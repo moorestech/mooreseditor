@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-
 import { NumberInput as MantineNumberInput } from '@mantine/core';
-
-import { useDebouncedCallback } from '../../../hooks/useDebounce';
-
-import type { FormInputProps } from './types';
+import { FormInputProps } from './types';
 import type { NumberSchema } from '../../../libs/schema/types';
+import { useDebouncedCallback } from '../../../hooks/useDebounce';
 
 export const NumberInput: React.FC<FormInputProps<number>> = React.memo(({ value, onChange, schema }) => {
   const numSchema = schema as NumberSchema;

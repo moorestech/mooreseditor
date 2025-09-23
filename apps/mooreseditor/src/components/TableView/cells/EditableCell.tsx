@@ -2,10 +2,9 @@ import React from "react";
 
 import { TextInput, NumberInput } from "@mantine/core";
 
+import type { CellEditProps } from "../TableView.types";
 import { EnumEditCell } from "./EnumEditCell";
 import { ForeignKeyEditCell } from "./ForeignKeyEditCell";
-
-import type { CellEditProps } from "../TableView.types";
 
 interface EditableCellProps extends CellEditProps {
   column: any;

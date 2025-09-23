@@ -1,10 +1,8 @@
 import * as path from "@tauri-apps/api/path";
-
-import { scanSchemaDirectory, loadSchemaFile } from '../utils/schemaScanner';
-
 import type { SchemaLoader } from './SchemaLoader';
-import type { Schema } from '../../../libs/schema/types';
 import type { SchemaDefinitions, SchemaLoadOptions } from '../types';
+import type { Schema } from '../../../libs/schema/types';
+import { scanSchemaDirectory, loadSchemaFile } from '../utils/schemaScanner';
 
 /**
  * 本番環境用のスキーマローダー

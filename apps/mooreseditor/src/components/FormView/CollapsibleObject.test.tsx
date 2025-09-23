@@ -1,9 +1,7 @@
 // AI Generated Test Code
 import { describe, it, expect, vi } from 'vitest'
-
-import CollapsibleObject from './CollapsibleObject'
-
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
+import CollapsibleObject from './CollapsibleObject'
 import '@testing-library/jest-dom'
 
 // Mock Tabler icons

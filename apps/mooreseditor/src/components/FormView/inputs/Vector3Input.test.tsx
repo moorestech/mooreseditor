@@ -1,9 +1,7 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
-
-import { Vector3Input } from './Vector3Input'
-
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
+import { Vector3Input } from './Vector3Input'
 import '@testing-library/jest-dom'
 
 describe('Vector3Input', () => {

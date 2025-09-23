@@ -1,16 +1,13 @@
 import { useState, useCallback } from "react";
-
 import * as path from "@tauri-apps/api/path";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, readDir, BaseDirectory } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
+import type { Schema } from "../libs/schema/types";
 import { getSampleSchema, getAllSampleSchemaMap } from "../utils/devFileSystem";
-
-import { useProject } from "./useProject";
 import { RefResolver } from "./useSchema/resolvers/RefResolver";
 import { scanSchemaDirectory } from "./useSchema/utils/schemaScanner";
-
-import type { Schema } from "../libs/schema/types";
+import { useProject } from "./useProject";
 
 
 export function useSchema() {

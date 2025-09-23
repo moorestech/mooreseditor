@@ -1,5 +1,5 @@
+import type { ArraySchema, ValueSchema } from "../../libs/schema/types";
 import type { Column } from "../../hooks/useJson";
-import type { ArraySchema } from "../../libs/schema/types";
 
 export interface TableViewProps {
   schema: ArraySchema;

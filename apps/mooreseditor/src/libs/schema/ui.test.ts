@@ -1,9 +1,7 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
-
 import { getTableColumns } from './ui'
-
-import type { ArraySchema } from './types'
+import type { ArraySchema, ObjectSchema } from './types'
 
 describe('ui', () => {
   describe('getTableColumns', () => {

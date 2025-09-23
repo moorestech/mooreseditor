@@ -1,11 +1,8 @@
 import React, { useMemo } from 'react';
-
 import { Select, Loader, Text } from '@mantine/core';
-
-import { useForeignKeyData } from '../../../hooks/useForeignKeyData';
-
-import type { FormInputProps } from './types';
+import { FormInputProps } from './types';
 import type { UuidSchema } from '../../../libs/schema/types';
+import { useForeignKeyData } from '../../../hooks/useForeignKeyData';
 
 export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({ 
   value, 

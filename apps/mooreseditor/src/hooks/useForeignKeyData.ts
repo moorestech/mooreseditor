@@ -1,10 +1,8 @@
 import { useMemo } from 'react';
 
-import { ForeignKeyResolver } from '../utils/foreignKeyResolver';
-
-import type { Column } from './useJson';
+import { ForeignKeyResolver, ForeignKeyOption } from '../utils/foreignKeyResolver';
 import type { ForeignKeyConfig } from '../libs/schema/types';
-import type { ForeignKeyOption } from '../utils/foreignKeyResolver';
+import type { Column } from './useJson';
 
 // Overloaded function signatures
 export function useForeignKeyData(

@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-
 import { TextInput, Textarea } from '@mantine/core';
-
-import { useDebouncedCallback } from '../../../hooks/useDebounce';
-
-import type { FormInputProps } from './types';
+import { FormInputProps } from './types';
 import type { StringSchema } from '../../../libs/schema/types';
+import { useDebouncedCallback } from '../../../hooks/useDebounce';
 
 export const StringInput: React.FC<FormInputProps<string>> = React.memo(({ value, onChange, schema }) => {
   const stringSchema = schema as StringSchema;

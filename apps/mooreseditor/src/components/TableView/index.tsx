@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-
 import {
   DndContext,
   closestCenter,
@@ -13,16 +12,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+
 import { Table, Button, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-import { useArrayDataManager } from "../../hooks/useArrayDataManager";
-
-import { SortableRow } from "./components/SortableRow";
-import { useTableEdit } from "./hooks/useTableEdit";
-
-import type { TableViewProps } from "./TableView.types";
 import type { ObjectSchema } from "../../libs/schema/types";
+import { useTableEdit } from "./hooks/useTableEdit";
+import type { TableViewProps } from "./TableView.types";
+import { useArrayDataManager } from "../../hooks/useArrayDataManager";
+import { SortableRow } from "./components/SortableRow";
 
 export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
   // useArrayDataManagerフックを使用して共通ロジックを管理

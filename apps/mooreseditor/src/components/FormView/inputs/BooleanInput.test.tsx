@@ -1,9 +1,7 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
-
-import { BooleanInput } from './BooleanInput'
-
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
+import { BooleanInput } from './BooleanInput'
 import '@testing-library/jest-dom'
 
 describe('BooleanInput', () => {

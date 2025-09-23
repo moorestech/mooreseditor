@@ -1,9 +1,7 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
-
+import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import { EnumInput } from './EnumInput'
-
-import { render, screen } from '@/test/utils/test-utils'
 import '@testing-library/jest-dom'
 
 describe('EnumInput', () => {

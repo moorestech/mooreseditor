@@ -1,8 +1,6 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-
 import { render, screen, fireEvent, waitFor } from '@/test/utils/test-utils'
-
 import { ForeignKeySelect } from './ForeignKeySelect'
 import '@testing-library/jest-dom'
 

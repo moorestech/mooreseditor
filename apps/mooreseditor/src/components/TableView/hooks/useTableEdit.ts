@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-
 import type { EditingCell } from "../TableView.types";
 
 export function useTableEdit(data: any[], onDataChange?: (newData: any[]) => void) {

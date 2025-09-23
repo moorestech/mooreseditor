@@ -2,12 +2,12 @@ import React, { memo, useCallback } from 'react';
 
 import { Box, Text, Flex, Button } from '@mantine/core';
 
-import { useSwitchFieldAutoGeneration } from '../../hooks/useSwitchFieldAutoGeneration';
+import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 import { resolvePath } from '../../utils/pathResolver';
+import { useSwitchFieldAutoGeneration } from '../../hooks/useSwitchFieldAutoGeneration';
 
 import ArrayField from './ArrayField';
 import CollapsibleObject from './CollapsibleObject';
-import { FieldWithCopyPaste } from './FieldWithCopyPaste';
 import {
   StringInput,
   UuidInput,
@@ -19,9 +19,7 @@ import {
   Vector3Input,
   Vector4Input
 } from './inputs';
-
 import type { Column } from '../../hooks/useJson';
-import type { Schema, ValueSchema, SwitchSchema } from '../../libs/schema/types';
 
 // Move React.lazy outside to prevent re-creating on every render
 const FormViewLazy = React.lazy(() => import('./index'));
@@ -174,46 +172,31 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
 
     // Handle primitive types
     const renderPrimitiveInput = () => {
-        const renderInput = () => {
-            switch (schema.type) {
-                case 'string':
-                    return <StringInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'uuid':
-                    return <UuidInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'enum':
-                    return <EnumInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'integer':
-                    return <IntegerInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'number':
-                    return <NumberInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'boolean':
-                    return <BooleanInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'vector2':
-                case 'vector2Int':
-                    return <Vector2Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'vector3':
-                case 'vector3Int':
-                    return <Vector3Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                case 'vector4':
-                case 'vector4Int':
-                    return <Vector4Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
-                default:
-                    return <Text c="dimmed" size="sm">Unsupported type: {(schema as any).type}</Text>;
-            }
-        };
-
-        const input = renderInput();
-
-        // Wrap with copy/paste buttons for all valid types
-        if (schema.type) {
-            return (
-                <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
-                    {input}
-                </FieldWithCopyPaste>
-            );
+        switch (schema.type) {
+            case 'string':
+                return <StringInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'uuid':
+                return <UuidInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'enum':
+                return <EnumInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'integer':
+                return <IntegerInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'number':
+                return <NumberInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'boolean':
+                return <BooleanInput value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'vector2':
+            case 'vector2Int':
+                return <Vector2Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'vector3':
+            case 'vector3Int':
+                return <Vector3Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            case 'vector4':
+            case 'vector4Int':
+                return <Vector4Input value={data} onChange={onDataChange} schema={schema} jsonData={jsonData} />;
+            default:
+                return <Text c="dimmed" size="sm">Unsupported type: {(schema as any).type}</Text>;
         }
-
-        return input;
     };
 
     return (

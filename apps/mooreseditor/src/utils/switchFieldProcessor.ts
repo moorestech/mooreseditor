@@ -1,7 +1,7 @@
+import type { ObjectSchema, SwitchSchema } from '../libs/schema/types';
 import { DataInitializer } from './dataInitializer';
 import { deepMerge } from './deepMerge';
-
-import type { ObjectSchema, SwitchSchema } from '../libs/schema/types';
+import { resolvePath } from './pathResolver';
 
 /**
  * オブジェクトスキーマ内のswitchフィールドを処理し、

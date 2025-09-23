@@ -1,10 +1,7 @@
 import React from 'react';
-
 import { TextInput } from '@mantine/core';
-
+import { FormInputProps } from './types';
 import { ForeignKeySelect } from './ForeignKeySelect';
-
-import type { FormInputProps } from './types';
 import type { UuidSchema } from '../../../libs/schema/types';
 
 export const UuidInput: React.FC<FormInputProps<string>> = ({ value, onChange, schema, jsonData }) => {

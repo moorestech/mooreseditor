@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import { Select, Loader } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
-
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
 

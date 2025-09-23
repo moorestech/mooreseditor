@@ -1,6 +1,5 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
-
 import { loadYamlString } from './io'
 
 describe('io', () => {

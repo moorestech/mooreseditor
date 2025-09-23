@@ -1,15 +1,12 @@
 import React from "react";
-
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Table } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
-
 import { TableRow } from "./TableRow";
-
+import type { EditingCell } from "../TableView.types";
 import type { Column } from "../../../hooks/useJson";
 import type { ObjectSchema } from "../../../libs/schema/types";
-import type { EditingCell } from "../TableView.types";
 
 interface SortableRowProps {
   id: string;

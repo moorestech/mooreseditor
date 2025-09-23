@@ -1,6 +1,8 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
 import { render, screen, fireEvent, waitFor } from '@/test/utils/test-utils'
+
 import App from './App'
 import '@testing-library/jest-dom'
 
@@ -92,8 +94,8 @@ vi.mock('@tauri-apps/api/path', () => ({
 }))
 
 import { useJson } from './hooks/useJson'
-import { useSchema } from './hooks/useSchema'
 import { useProject } from './hooks/useProject'
+import { useSchema } from './hooks/useSchema'
 
 describe('App', () => {
   const mockUseJson = {

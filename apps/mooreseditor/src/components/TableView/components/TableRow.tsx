@@ -1,12 +1,15 @@
 import React from "react";
+
 import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
 import { IconTrash, IconCopy } from "@tabler/icons-react";
-import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
-import { EditableCell } from "../cells/EditableCell";
-import type { EditingCell } from "../TableView.types";
-import type { Column } from "../../../hooks/useJson";
+
 import { processSwitchFields } from "../../../utils/switchFieldProcessor";
+import { EditableCell } from "../cells/EditableCell";
+import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
+
+import type { Column } from "../../../hooks/useJson";
 import type { ObjectSchema } from "../../../libs/schema/types";
+import type { EditingCell } from "../TableView.types";
 
 interface TableRowProps {
   row: any;

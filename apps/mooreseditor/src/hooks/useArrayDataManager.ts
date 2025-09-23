@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from 'react';
+
 import { arrayMove } from '@dnd-kit/sortable';
-import { DragEndEvent } from '@dnd-kit/core';
-import type { Schema, ValueSchema, ArraySchema } from '../libs/schema/types';
-import { createInitialValue } from '../utils/createInitialValue';
+
 import { calculateAutoIncrement } from '../utils/autoIncrement';
+import { createInitialValue } from '../utils/createInitialValue';
+
+import type { Schema, ValueSchema, ArraySchema } from '../libs/schema/types';
+import type { DragEndEvent } from '@dnd-kit/core';
 
 export interface UseArrayDataManagerOptions {
   data: any[] | undefined;

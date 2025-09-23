@@ -1,10 +1,12 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act, waitFor } from '@testing-library/react'
-import { useProject } from './useProject'
+import * as pathMock from '@tauri-apps/api/path'
 import * as dialogMock from '@tauri-apps/plugin-dialog'
 import * as fsMock from '@tauri-apps/plugin-fs'
-import * as pathMock from '@tauri-apps/api/path'
+import { renderHook, act, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+import { useProject } from './useProject'
+
 
 // Mock the imports
 vi.mock('@tauri-apps/plugin-dialog')

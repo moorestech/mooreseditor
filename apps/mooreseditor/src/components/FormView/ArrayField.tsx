@@ -3,11 +3,12 @@ import React, { memo, useCallback } from 'react';
 import { Stack, Group, Box, Button, ActionIcon } from '@mantine/core';
 import { IconPlus, IconTrash, IconCopy } from '@tabler/icons-react';
 
+import { useArrayDataManager } from '../../hooks/useArrayDataManager';
+
 import Field from './Field';
 
-import type { ArraySchema, Schema } from '../../libs/schema/types';
-import { useArrayDataManager } from '../../hooks/useArrayDataManager';
 import type { Column } from '../../hooks/useJson';
+import type { ArraySchema, Schema } from '../../libs/schema/types';
 
 interface ArrayFieldProps {
     schema: ArraySchema;

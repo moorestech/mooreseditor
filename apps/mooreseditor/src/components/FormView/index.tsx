@@ -4,8 +4,8 @@ import { Stack } from '@mantine/core';
 
 import Field from './Field';
 
-import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
 import type { Column } from '../../hooks/useJson';
+import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
 
 interface FormViewProps {
     schema: Schema;

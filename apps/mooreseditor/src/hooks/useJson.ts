@@ -3,10 +3,12 @@ import { useState } from "react";
 import * as path from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile, exists, create } from "@tauri-apps/plugin-fs";
 
-import { getSampleJson } from "../utils/devFileSystem";
-import type { Schema, SchemaContainer } from "../libs/schema/types";
 import { createInitialValue } from "../utils/createInitialValue";
+import { getSampleJson } from "../utils/devFileSystem";
+
 import { useProject } from "./useProject";
+
+import type { Schema, SchemaContainer } from "../libs/schema/types";
 
 const isDev = import.meta.env.DEV;
 

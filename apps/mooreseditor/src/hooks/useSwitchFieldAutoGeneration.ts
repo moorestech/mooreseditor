@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
-import type { SwitchSchema, ValueSchema } from '../libs/schema/types';
+
 import { DataInitializer } from '../utils/dataInitializer';
 import { deepMerge } from '../utils/deepMerge';
+
+import type { SwitchSchema, ValueSchema } from '../libs/schema/types';
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する

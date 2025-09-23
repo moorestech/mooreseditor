@@ -3,6 +3,7 @@ import React from "react";
 import { Text } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
+
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { ColumnDisplayProps } from "../TableView.types";
 

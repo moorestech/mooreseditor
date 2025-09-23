@@ -1,7 +1,9 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@/test/utils/test-utils'
+
 import { UuidInput } from './UuidInput'
+
+import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import '@testing-library/jest-dom'
 
 // Mock ForeignKeySelect component

@@ -1,6 +1,7 @@
+import path from "path";
+
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import path from "path";
 
 const host = process.env.TAURI_DEV_HOST;
 

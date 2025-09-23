@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import type { SchemaContainer, Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, UuidSchema, IntegerSchema, NumberSchema, BooleanSchema, Vector2, Vector3, Vector4, Vector2Int, Vector3Int, Vector4Int, SwitchSchema } from './types';
 
 /**
@@ -162,7 +163,7 @@ function createEnumValidator(schema: EnumSchema): z.ZodType<any> {
 }
 
 function createUuidValidator(schema: UuidSchema): z.ZodType<any> {
-  let uuidValidator = z.string().uuid();
+  const uuidValidator = z.string().uuid();
   
   return schema.optional ? uuidValidator.optional() : uuidValidator;
 }

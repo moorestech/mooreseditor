@@ -1,7 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useSchema } from './useSchema'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import YAML from 'yaml'
+
+import { useSchema } from './useSchema'
+
 
 // Mock dependencies
 vi.mock('@tauri-apps/api/path', () => ({

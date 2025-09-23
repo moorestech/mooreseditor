@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { NumberInput } from '@mantine/core';
-import { FormInputProps } from './types';
+
+import type { FormInputProps } from './types';
 import type { IntegerSchema } from '../../../libs/schema/types';
 
 export const IntegerInput: React.FC<FormInputProps<number>> = ({ value, onChange, schema }) => {

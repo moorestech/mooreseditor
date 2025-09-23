@@ -1,9 +1,12 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@/test/utils/test-utils'
+
 import FormView from './index'
+
+import { render, screen, fireEvent } from '@/test/utils/test-utils'
+
+
 import '@testing-library/jest-dom'
-import type { Schema } from '@/libs/schema/types'
 
 // Mock child components
 vi.mock('./Field', () => ({

@@ -1,5 +1,6 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
+
 import { 
   arrayToVector2,
   vector2ToArray,
@@ -11,10 +12,7 @@ import {
   isVectorObject,
   type Vector2Array,
   type Vector3Array,
-  type Vector4Array,
-  type Vector2Object,
-  type Vector3Object,
-  type Vector4Object
+  type Vector4Array
 } from './vectorConverter'
 
 describe('vectorConverter', () => {

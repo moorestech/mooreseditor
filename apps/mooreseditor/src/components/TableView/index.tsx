@@ -84,9 +84,15 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
             <Table.Tr>
               <Table.Th style={{ width: '40px' }}></Table.Th>
               <Table.Th style={{ width: '50px' }}>#</Table.Th>
-              {columns.map(column => (
-                <Table.Th key={column.key}>{column.key}</Table.Th>
-              ))}
+              {columns.map(column => {
+                // 文字数に基づいて最小幅を計算（文字あたり10px + パディング32px、最小120px）
+                const minWidth = Math.max(120, column.key.length * 10 + 32);
+                return (
+                  <Table.Th key={column.key} style={{ minWidth }}>
+                    {column.key}
+                  </Table.Th>
+                );
+              })}
               <Table.Th style={{ width: '80px' }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>

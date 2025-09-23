@@ -6,7 +6,6 @@ import { useSwitchFieldAutoGeneration } from '../../hooks/useSwitchFieldAutoGene
 import { resolvePath } from '../../utils/pathResolver';
 
 import ArrayField from './ArrayField';
-import CollapsibleObjectWithCopyPaste from './CollapsibleObjectWithCopyPaste';
 import { FieldWithCopyPaste } from './FieldWithCopyPaste';
 import {
   StringInput,
@@ -95,11 +94,12 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
         // If there's a label, use collapsible display with copy/paste
         if (label) {
             return (
-                <CollapsibleObjectWithCopyPaste
-                    label={label}
+                <FieldWithCopyPaste
                     value={data}
                     onChange={onDataChange}
                     schema={schema}
+                    collapsible={true}
+                    label={label}
                     defaultExpanded={true}
                 >
                     <React.Suspense fallback={<Text c="dimmed">Loading...</Text>}>
@@ -115,7 +115,7 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
                             arrayIndices={arrayIndices}
                         />
                     </React.Suspense>
-                </CollapsibleObjectWithCopyPaste>
+                </FieldWithCopyPaste>
             );
         }
         

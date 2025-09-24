@@ -43,22 +43,22 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
     return (
       <Box>
         <Flex align="center" gap="xs">
-          <Group gap={4}>
-            <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
-            <ActionIcon
-              variant="subtle"
-              size="sm"
-              onClick={toggleExpanded}
-            >
-              {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
-            </ActionIcon>
-          </Group>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            onClick={toggleExpanded}
+          >
+            {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+          </ActionIcon>
           <Box
             style={{ cursor: 'pointer', userSelect: 'none' }}
             onClick={toggleExpanded}
           >
             {label}
           </Box>
+          <Group gap={4} wrap="nowrap">
+            <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
+          </Group>
         </Flex>
         <Collapse in={isExpanded}>
           <Box pl="md" mt="xs">

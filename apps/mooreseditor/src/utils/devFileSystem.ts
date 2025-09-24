@@ -35,7 +35,8 @@ export function getSampleSchemaList(): string[] {
     'items',
     'machineRecipes',
     'mapObjects',
-    'foreignKeySample'
+    'modMeta',
+    'research',
   ];
 }
 

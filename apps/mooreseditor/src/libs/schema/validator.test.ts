@@ -1,6 +1,8 @@
 // AI Generated Test Code
 import { describe, it, expect } from 'vitest'
+
 import { createSchemaValidator } from './validator'
+
 import type { SchemaContainer } from './types'
 
 describe('validator', () => {

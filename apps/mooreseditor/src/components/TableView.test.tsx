@@ -1,7 +1,9 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@/test/utils/test-utils'
+
 import { TableView } from './TableView'
+
+import { render, screen, fireEvent } from '@/test/utils/test-utils'
 import '@testing-library/jest-dom'
 
 // No need to mock MasterTable as TableView doesn't use it

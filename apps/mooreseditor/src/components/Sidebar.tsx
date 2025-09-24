@@ -1,5 +1,6 @@
-import { Button, Divider, Text, Loader, Group } from "@mantine/core";
 import { useMemo } from "react";
+
+import { Button, Divider, Text, Loader, Group } from "@mantine/core";
 
 import { MoorestechIcon } from "./MoorestechIcon";
 

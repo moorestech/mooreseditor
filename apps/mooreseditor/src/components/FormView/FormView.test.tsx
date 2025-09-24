@@ -1,7 +1,9 @@
+import { MantineProvider } from '@mantine/core';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { MantineProvider } from '@mantine/core';
+
 import FormView from './index';
+
 import type { ObjectSchema, ArraySchema } from '../../libs/schema/types';
 
 describe('FormView openedByDefault', () => {

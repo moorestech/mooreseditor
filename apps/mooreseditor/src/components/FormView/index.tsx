@@ -1,11 +1,11 @@
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { Stack } from '@mantine/core';
 
 import Field from './Field';
 
-import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
 import type { Column } from '../../hooks/useJson';
+import type { Schema, ObjectSchema, ArraySchema } from '../../libs/schema/types';
 
 interface FormViewProps {
     schema: Schema;
@@ -19,7 +19,7 @@ interface FormViewProps {
     arrayIndices?: Map<string, number>;
 }
 
-const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) {
+const FormView = ({ schema, data, jsonData, onDataChange, onObjectArrayClick, path = [], parentData, rootData, arrayIndices }: FormViewProps) => {
     const hasAutoOpenedRef = useRef(false);
     
     // Always treat the top-level as an object
@@ -98,6 +98,6 @@ const FormView = memo(function FormView({ schema, data, jsonData, onDataChange, 
             arrayIndices={arrayIndices}
         />
     );
-});
+};
 
 export default FormView;

@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 
 import { Select, Loader } from "@mantine/core";
 
-import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
+import { useForeignKeyData, buildForeignKeySelectKey } from "../../../hooks/useForeignKeyData";
+
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
 
@@ -14,7 +15,7 @@ interface ForeignKeyEditCellProps extends CellEditProps {
 export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, value, jsonData, onSave, onCancel }) => {
   const columnSchema = column as UuidSchema;
   
-  const { options, loading, error } = useForeignKeyData(
+  const { options, loading, error, displayValue } = useForeignKeyData(
     columnSchema.foreignKey,
     jsonData || [],
     value
@@ -26,6 +27,11 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
       label: option.display
     }));
   }, [options]);
+
+  const selectKey = useMemo(
+    () => buildForeignKeySelectKey(columnSchema.foreignKey, value, displayValue, 'foreign-key-edit-select'),
+    [columnSchema.foreignKey, value, displayValue]
+  );
 
   if (loading) {
     return (
@@ -53,6 +59,7 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
 
   return (
     <Select
+      key={selectKey}
       data={selectData}
       value={value || ''}
       onChange={(val) => {

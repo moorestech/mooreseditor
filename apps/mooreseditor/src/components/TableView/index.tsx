@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+
 import {
   DndContext,
   closestCenter,
@@ -12,15 +13,16 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
 import { Table, Button, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-import type { ObjectSchema } from "../../libs/schema/types";
-import { useTableEdit } from "./hooks/useTableEdit";
-import type { TableViewProps } from "./TableView.types";
 import { useArrayDataManager } from "../../hooks/useArrayDataManager";
+
 import { SortableRow } from "./components/SortableRow";
+import { useTableEdit } from "./hooks/useTableEdit";
+
+import type { TableViewProps } from "./TableView.types";
+import type { ObjectSchema } from "../../libs/schema/types";
 
 export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
   // useArrayDataManagerフックを使用して共通ロジックを管理
@@ -84,9 +86,15 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
             <Table.Tr>
               <Table.Th style={{ width: '40px' }}></Table.Th>
               <Table.Th style={{ width: '50px' }}>#</Table.Th>
-              {columns.map(column => (
-                <Table.Th key={column.key}>{column.key}</Table.Th>
-              ))}
+              {columns.map(column => {
+                // 文字数に基づいて最小幅を計算（文字あたり10px + パディング32px、最小120px）
+                const minWidth = Math.max(120, column.key.length * 10 + 32);
+                return (
+                  <Table.Th key={column.key} style={{ minWidth }}>
+                    {column.key}
+                  </Table.Th>
+                );
+              })}
               <Table.Th style={{ width: '80px' }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>

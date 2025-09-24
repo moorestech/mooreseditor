@@ -1,8 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
+
 import { Group, NumberInput } from '@mantine/core';
-import { FormInputProps } from './types';
+
 import { useDebouncedCallback } from '../../../hooks/useDebounce';
-import { arrayToVector2, vector2ToArray, isVectorArray, Vector2Object } from '../../../utils/vectorConverter';
+import { arrayToVector2, vector2ToArray, isVectorArray } from '../../../utils/vectorConverter';
+
+import type { FormInputProps } from './types';
+import type { Vector2Object } from '../../../utils/vectorConverter';
 
 export const Vector2Input: React.FC<FormInputProps<Vector2Object | [number, number]>> = React.memo(({ value, onChange, schema }) => {
   const allowDecimal = !schema.type.includes('Int');

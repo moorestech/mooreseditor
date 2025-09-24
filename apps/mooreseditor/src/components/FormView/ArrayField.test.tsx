@@ -1,7 +1,10 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from 'vitest'
+
 import { render, screen, fireEvent } from '@/test/utils/test-utils'
+
 import ArrayField from './ArrayField'
+
 import '@testing-library/jest-dom'
 import type { Schema, ArraySchema } from '@/libs/schema/types'
 

@@ -13,7 +13,7 @@ import type { Schema } from "../../libs/schema/types";
  */
 export function useSchema(): UseSchemaReturn {
   const [schemas, setSchemas] = useState<Record<string, Schema>>({});
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadSchema = useCallback(
     async (
@@ -26,7 +26,7 @@ export function useSchema(): UseSchemaReturn {
       }
 
       try {
-        setLoading(true);
+        setIsLoading(true);
 
         // ローダーの選択: try-catchパターンで本番環境を先に試す
         let loader: SchemaLoader;
@@ -46,7 +46,7 @@ export function useSchema(): UseSchemaReturn {
               "No schemas loaded from file system, falling back to dev mode",
             );
           }
-        } catch (error) {
+        } catch (_error) {
           // 開発環境のローダーにフォールバック
           loader = new DevelopmentLoader();
           definitions = await loader.loadDefinitions(schemaDir);
@@ -61,7 +61,7 @@ export function useSchema(): UseSchemaReturn {
             schemaName,
             schemaDir,
           });
-        } catch (error) {
+        } catch (_error) {
           // 開発環境での読み込みにフォールバック
           const developmentLoader = new DevelopmentLoader();
           schema = await developmentLoader.loadMainSchema({
@@ -88,7 +88,7 @@ export function useSchema(): UseSchemaReturn {
         console.error(`Error loading schema for ${schemaName}:`, error);
         return null;
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     },
     [],
@@ -96,7 +96,7 @@ export function useSchema(): UseSchemaReturn {
 
   return {
     schemas,
-    loading,
+    loading: isLoading,
     loadSchema,
   };
 }

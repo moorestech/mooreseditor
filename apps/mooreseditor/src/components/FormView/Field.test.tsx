@@ -1,12 +1,12 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from "vitest";
-
-import { render, screen } from "@/test/utils/test-utils";
+import "@testing-library/jest-dom";
 
 import Field from "./Field";
 
-import "@testing-library/jest-dom";
 import type { Schema } from "@/libs/schema/types";
+
+import { render, screen } from "@/test/utils/test-utils";
 
 // Mock the input components
 vi.mock("./inputs", () => ({
@@ -61,13 +61,13 @@ vi.mock("./inputs", () => ({
       onChange={(e) => onChange(e.target.value)}
     />
   ),
-  Vector2Input: ({ value, onChange }: any) => (
+  Vector2Input: ({ value, onChange: _onChange }: any) => (
     <div data-testid="vector2-input">{JSON.stringify(value)}</div>
   ),
-  Vector3Input: ({ value, onChange }: any) => (
+  Vector3Input: ({ value, onChange: _onChange }: any) => (
     <div data-testid="vector3-input">{JSON.stringify(value)}</div>
   ),
-  Vector4Input: ({ value, onChange }: any) => (
+  Vector4Input: ({ value, onChange: _onChange }: any) => (
     <div data-testid="vector4-input">{JSON.stringify(value)}</div>
   ),
   ForeignKeySelect: ({ value, onChange }: any) => (

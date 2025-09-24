@@ -1,13 +1,14 @@
-import { render, screen } from "@/test/utils/test-utils";
-import { describe, it, expect } from "vitest";
 import React from "react";
 
+import { describe, it, expect } from "vitest";
+
+import blocksData from "../../../../public/src/sample/master/blocks.json";
 import FormView from "../index";
 
-import type { Schema } from "@/libs/schema/types";
 import type { Column } from "@/hooks/useJson";
+import type { Schema } from "@/libs/schema/types";
 
-const blocksData = require("../../../../public/src/sample/master/blocks.json");
+import { render, screen } from "@/test/utils/test-utils";
 
 const blockItemSchema: Schema = {
   type: "object",

@@ -12,11 +12,11 @@ const VECTOR_KEYS = ["x", "y", "z", "w"] as const;
 
 const createVectorSchema = (
   dimension: number,
-  allowDecimal: boolean,
+  isDecimalAllowed: boolean,
   isOptional: boolean,
 ) => {
   const createNumberSchema = () =>
-    allowDecimal ? z.number() : z.number().int();
+    isDecimalAllowed ? z.number() : z.number().int();
   const arraySchema = z.array(createNumberSchema()).length(dimension);
 
   const shape: Record<string, ZodType<any>> = {};
@@ -102,30 +102,30 @@ export function schemaToZod(schema: Schema): ZodType<any> {
 
     case "vector2":
     case "vector2Int": {
-      const allowDecimal = valueSchema.type === "vector2";
+      const isDecimalAllowed = valueSchema.type === "vector2";
       return createVectorSchema(
         2,
-        allowDecimal,
+        isDecimalAllowed,
         valueSchema.optional !== false,
       );
     }
 
     case "vector3":
     case "vector3Int": {
-      const allowDecimal = valueSchema.type === "vector3";
+      const isDecimalAllowed = valueSchema.type === "vector3";
       return createVectorSchema(
         3,
-        allowDecimal,
+        isDecimalAllowed,
         valueSchema.optional !== false,
       );
     }
 
     case "vector4":
     case "vector4Int": {
-      const allowDecimal = valueSchema.type === "vector4";
+      const isDecimalAllowed = valueSchema.type === "vector4";
       return createVectorSchema(
         4,
-        allowDecimal,
+        isDecimalAllowed,
         valueSchema.optional !== false,
       );
     }

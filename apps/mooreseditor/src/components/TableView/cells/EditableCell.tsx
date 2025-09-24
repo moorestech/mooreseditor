@@ -18,7 +18,7 @@ interface EditableCellProps extends CellEditProps {
 
 export const EditableCell: React.FC<EditableCellProps> = ({
   column,
-  value,
+  value: _value,
   editValue,
   setEditValue,
   saveEdit,

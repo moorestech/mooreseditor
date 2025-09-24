@@ -1,9 +1,5 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-
-import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
-
-import App from "./App";
 import "@testing-library/jest-dom";
 
 // Mock the hooks
@@ -23,7 +19,7 @@ vi.mock("./hooks/useProject", () => ({
 vi.mock("./components/Sidebar", () => ({
   default: ({
     menuToFileMap,
-    selectedFile,
+    selectedFile: _selectedFile,
     loadFileData,
     openProjectDir,
     isEditing,
@@ -47,8 +43,8 @@ vi.mock("./components/FormView", () => ({
     schema,
     onDataChange,
     onObjectArrayClick,
-    path,
-    rootData,
+    path: _path,
+    rootData: _rootData,
   }: any) => (
     <div data-testid="form-view">
       <input
@@ -74,10 +70,10 @@ vi.mock("./components/FormView", () => ({
 }));
 
 vi.mock("./components/TableView", () => ({
-  TableView: ({ data, schema, onDataChange, onRowSelect }: any) => (
+  TableView: ({ data, schema: _schema, onDataChange, onRowSelect }: any) => (
     <div data-testid="table-view">
       <div data-testid="table-data">{JSON.stringify(data)}</div>
-      {data?.map((item: any, index: number) => (
+      {data?.map((_: any, index: number) => (
         <button
           key={index}
           data-testid={`row-${index}`}
@@ -112,9 +108,12 @@ vi.mock("@tauri-apps/api/path", () => ({
   ),
 }));
 
+import App from "./App";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
+
+import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
 describe("App", () => {
   const mockUseJson = {
@@ -206,7 +205,7 @@ describe("App", () => {
       jsonData: [{ title: "items", data: { test: "data" } }],
     } as any);
 
-    const { rerender } = render(<App />);
+    render(<App />);
 
     // Click on a menu item to load data and show FormView
     fireEvent.click(screen.getByText("items"));

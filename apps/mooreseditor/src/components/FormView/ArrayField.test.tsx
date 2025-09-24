@@ -1,12 +1,12 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from "vitest";
-
-import { render, screen, fireEvent } from "@/test/utils/test-utils";
+import "@testing-library/jest-dom";
 
 import ArrayField from "./ArrayField";
 
-import "@testing-library/jest-dom";
 import type { Schema, ArraySchema } from "@/libs/schema/types";
+
+import { render, screen, fireEvent } from "@/test/utils/test-utils";
 
 // Mock calculateAutoIncrement
 vi.mock("@/utils/autoIncrement", () => ({

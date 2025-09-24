@@ -19,7 +19,7 @@ const isDev = import.meta.env.DEV;
 
 export interface Column {
   title: string;
-  data: any[];
+  data: any;
 }
 
 function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
@@ -74,16 +74,16 @@ export function useJson() {
         const jsonFilePath = await path.join(masterDir, `${menuItem}.json`);
 
         // Check if file exists
-        const fileExists = await exists(jsonFilePath);
+        const isFilePresent = await exists(jsonFilePath);
 
-        if (!fileExists && schema) {
+        if (!isFilePresent && schema) {
           console.log(
             `JSON file not found for ${menuItem}. Creating new file with default values.`,
           );
 
           // Check if master directory exists, create if not
-          const masterDirExists = await exists(masterDir);
-          if (!masterDirExists) {
+          const isMasterDirPresent = await exists(masterDir);
+          if (!isMasterDirPresent) {
             await create(masterDir);
             console.log(`Created master directory: ${masterDir}`);
           }

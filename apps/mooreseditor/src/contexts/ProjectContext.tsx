@@ -29,15 +29,15 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
     {},
   );
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function openProjectDir() {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const openedDir = await open({ directory: true });
       if (!openedDir) {
         console.error("No directory selected.");
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
@@ -61,7 +61,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         console.error(
           "Invalid or missing schemaPath in mooreseditor.config.yml",
         );
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
@@ -112,7 +112,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
       if (Object.keys(yamlFiles).length === 0) {
         console.error("No YAML files found in the schemaPath.");
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
@@ -121,14 +121,14 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       console.error("Error opening project directory:", error);
       loadSampleProjectData();
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   async function loadSampleProjectData() {
     if (!isDev) return;
 
-    setLoading(true);
+    setIsLoading(true);
     try {
       setProjectDir("SampleProject");
       setSchemaDir("SampleProject/schema");
@@ -153,7 +153,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Error loading sample project data:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -173,7 +173,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         schemaDir,
         masterDir,
         menuToFileMap,
-        loading,
+        loading: isLoading,
         openProjectDir,
       }}
     >

@@ -15,7 +15,7 @@ import type { Vector2Object } from "../../../utils/vectorConverter";
 export const Vector2Input: React.FC<
   FormInputProps<Vector2Object | [number, number]>
 > = React.memo(({ value, onChange, schema }) => {
-  const allowDecimal = !schema.type.includes("Int");
+  const isDecimalAllowed = !schema.type.includes("Int");
 
   // Convert array format to object format for display
   const vectorObject = useMemo(() => {
@@ -56,14 +56,14 @@ export const Vector2Input: React.FC<
         placeholder="X"
         value={vectorObject.x}
         onChange={handleXChange}
-        allowDecimal={allowDecimal}
+        allowDecimal={isDecimalAllowed}
         style={{ width: 100 }}
       />
       <NumberInput
         placeholder="Y"
         value={vectorObject.y}
         onChange={handleYChange}
-        allowDecimal={allowDecimal}
+        allowDecimal={isDecimalAllowed}
         style={{ width: 100 }}
       />
     </Group>

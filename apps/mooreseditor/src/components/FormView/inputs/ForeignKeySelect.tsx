@@ -24,7 +24,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     value,
   });
 
-  const { options, loading, error, displayValue } = useForeignKeyData(
+  const { options, loading: isLoading, error, displayValue } = useForeignKeyData(
     uuidSchema.foreignKey,
     jsonData || [],
     value,
@@ -32,7 +32,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
 
   console.log("ForeignKeySelect data:", {
     options,
-    loading,
+    loading: isLoading,
     error,
     displayValue,
   });
@@ -94,7 +94,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     return <Text c="red">Foreign key configuration missing</Text>;
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Select
         placeholder="Loading..."

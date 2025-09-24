@@ -139,7 +139,6 @@ describe("useSchema", () => {
     mockGetSampleSchema.mockRejectedValueOnce(new Error("Sample not found"));
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
 
     const { result } = renderHook(() => useSchema());
 

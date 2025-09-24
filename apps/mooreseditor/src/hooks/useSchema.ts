@@ -15,7 +15,7 @@ import type { Schema } from "../libs/schema/types";
 export function useSchema() {
   const { schemaDir } = useProject();
   const [schemas, setSchemas] = useState<Record<string, Schema>>({});
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadSchema = useCallback(
     async (schemaName: string): Promise<Schema | null> => {
@@ -25,7 +25,7 @@ export function useSchema() {
       }
 
       try {
-        setLoading(true);
+        setIsLoading(true);
 
         // Load all ref schemas into a definitions object
         let definitions: Record<string, any> = {};
@@ -44,19 +44,19 @@ export function useSchema() {
               "No schemas loaded from file system, falling back to dev mode",
             );
           }
-        } catch (error) {
+        } catch (_error) {
           // Fallback to dev mode sample schemas
           console.debug("Loading sample schemas in dev mode");
           const schemaMap = getAllSampleSchemaMap();
 
-          for (const [schemaPath, schemaId] of schemaMap) {
+          for (const [schemaPath, _schemaId] of schemaMap) {
             try {
               const content = await getSampleSchema(schemaPath);
               const schema = YAML.parse(content);
               if (schema.id) {
                 definitions[schema.id] = schema;
               }
-            } catch (error) {
+            } catch (_error) {
               console.debug(`Sample schema ${schemaPath} not found`);
             }
           }
@@ -72,7 +72,7 @@ export function useSchema() {
             `${schemaName}.yml`,
           );
           schemaContent = await readTextFile(schemaFilePath);
-        } catch (error) {
+        } catch (_error) {
           // Fallback to dev mode sample schema
           console.debug(`Loading sample schema for ${schemaName} in dev mode`);
           schemaContent = await getSampleSchema(schemaName);
@@ -93,11 +93,11 @@ export function useSchema() {
         }));
 
         return resolvedSchema;
-      } catch (error) {
+        } catch (error) {
         console.error(`Error loading schema for ${schemaName}:`, error);
         return null;
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     },
     [schemaDir],
@@ -105,7 +105,7 @@ export function useSchema() {
 
   return {
     schemas,
-    loading,
+    loading: isLoading,
     loadSchema,
   };
 }

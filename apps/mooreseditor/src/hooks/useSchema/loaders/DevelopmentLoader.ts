@@ -14,19 +14,19 @@ import type { SchemaDefinitions, SchemaLoadOptions } from "../types";
  * devFileSystemを使用してサンプルスキーマを読み込む
  */
 export class DevelopmentLoader implements SchemaLoader {
-  async loadDefinitions(schemaDir: string): Promise<SchemaDefinitions> {
+  async loadDefinitions(_schemaDir: string): Promise<SchemaDefinitions> {
     console.debug("Loading sample schemas in dev mode");
     const definitions: SchemaDefinitions = {};
     const schemaMap = getAllSampleSchemaMap();
 
-    for (const [schemaPath, schemaId] of schemaMap) {
+    for (const [schemaPath] of schemaMap) {
       try {
         const content = await getSampleSchema(schemaPath);
         const schema = YAML.parse(content);
         if (schema.id) {
           definitions[schema.id] = schema;
         }
-      } catch (error) {
+      } catch (_error) {
         console.debug(`Sample schema ${schemaPath} not found`);
       }
     }

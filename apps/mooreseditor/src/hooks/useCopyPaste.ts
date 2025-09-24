@@ -44,7 +44,7 @@ export function useCopyPaste(
       let parsed;
       try {
         parsed = JSON.parse(text);
-      } catch (e) {
+      } catch (_error) {
         await showNotification("ペースト失敗", "無効なJSON形式です", "error");
         return;
       }

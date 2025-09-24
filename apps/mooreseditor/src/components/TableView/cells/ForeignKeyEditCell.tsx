@@ -24,7 +24,7 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({
 }) => {
   const columnSchema = column as UuidSchema;
 
-  const { options, loading, error, displayValue } = useForeignKeyData(
+  const { options, loading: isLoading, error, displayValue } = useForeignKeyData(
     columnSchema.foreignKey,
     jsonData || [],
     value,
@@ -48,7 +48,7 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({
     [columnSchema.foreignKey, value, displayValue],
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Select
         placeholder="Loading..."

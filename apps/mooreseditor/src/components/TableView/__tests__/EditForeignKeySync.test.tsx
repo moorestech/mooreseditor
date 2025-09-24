@@ -1,14 +1,23 @@
-import { render, screen, fireEvent } from "@/test/utils/test-utils";
-import { describe, it, expect } from "vitest";
 import React, { useState } from "react";
 
-import { TableView } from "../index";
+import { describe, it, expect } from "vitest";
+
+import blocksData from "../../../../public/src/sample/master/blocks.json";
 import FormView from "../../FormView";
+import { TableView } from "../index";
 
-import type { ArraySchema, Schema } from "@/libs/schema/types";
 import type { Column } from "@/hooks/useJson";
+import type { ArraySchema, Schema } from "@/libs/schema/types";
 
-const blocksData = require("../../../../public/src/sample/master/blocks.json");
+import { render, screen, fireEvent } from "@/test/utils/test-utils";
+
+const getNestedValue = (root: unknown, path: string[]) =>
+  path.reduce<unknown>((acc, key) => {
+    if (acc && typeof acc === "object" && key in (acc as Record<string, unknown>)) {
+      return (acc as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, root);
 
 const blockItemSchema: Schema = {
   type: "object",
@@ -69,15 +78,13 @@ const Harness: React.FC = () => {
     <div>
       {views.map((view, index) => {
         if (view.type === "table") {
-          const data = view.path.reduce(
-            (acc: any, key) => acc?.[key],
-            currentData.data,
-          );
+          const nestedData = getNestedValue(currentData.data, view.path);
+          const tableData = Array.isArray(nestedData) ? nestedData : [];
           return (
             <TableView
               key={`table-${index}`}
               schema={view.schema}
-              data={data}
+              data={tableData}
               jsonData={jsonData}
               onDataChange={(newData) => {
                 setJsonData((prev) => {
@@ -104,10 +111,7 @@ const Harness: React.FC = () => {
           );
         }
 
-        const data = view.path.reduce(
-          (acc: any, key) => acc?.[key],
-          currentData.data,
-        );
+        const data = getNestedValue(currentData.data, view.path);
         return (
           <FormView
             key={`form-${view.path.join(".")}`}

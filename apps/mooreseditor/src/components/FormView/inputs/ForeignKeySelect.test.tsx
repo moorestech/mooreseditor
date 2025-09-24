@@ -1,9 +1,5 @@
 // AI Generated Test Code
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-
-import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
-
-import { ForeignKeySelect } from "./ForeignKeySelect";
 import "@testing-library/jest-dom";
 
 // Mock the hooks
@@ -17,6 +13,10 @@ vi.mock("../../../hooks/useProject", () => ({
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
 import { useProject } from "../../../hooks/useProject";
+
+import { ForeignKeySelect } from "./ForeignKeySelect";
+
+import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
 describe("ForeignKeySelect", () => {
   const defaultProps = {

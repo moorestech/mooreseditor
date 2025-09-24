@@ -14,7 +14,7 @@ export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({
 }) => {
   const columnSchema = column as UuidSchema;
 
-  const { displayValue, loading, error } = useForeignKeyData(
+  const { displayValue, loading: isLoading, error } = useForeignKeyData(
     columnSchema.foreignKey,
     jsonData || [],
     value,
@@ -28,7 +28,7 @@ export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Text size="sm" c="dimmed">
         Loading...

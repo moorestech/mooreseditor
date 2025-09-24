@@ -53,10 +53,11 @@ export const TableRow: React.FC<TableRowProps> = ({
   return (
     <>
       <Table.Td>{index}</Table.Td>
-      {columns.map(column => {
+      {columns.map((column) => {
         const value = row[column.key];
         const columnSchema = column as any;
-        const isEditing = editingCell?.row === index && editingCell?.column === column.key;
+        const isEditing =
+          editingCell?.row === index && editingCell?.column === column.key;
 
         if (isEditing) {
           return (
@@ -74,14 +75,19 @@ export const TableRow: React.FC<TableRowProps> = ({
                       const newData = [...arrayData];
                       const updatedRow = {
                         ...newData[editingCell.row],
-                        [editingCell.column]: newValue
+                        [editingCell.column]: newValue,
                       };
-                      
+
                       // switchフィールドの処理を適用
-                      const processedRow = itemSchema 
-                        ? processSwitchFields(itemSchema, newData[editingCell.row], updatedRow, editingCell.column)
+                      const processedRow = itemSchema
+                        ? processSwitchFields(
+                            itemSchema,
+                            newData[editingCell.row],
+                            updatedRow,
+                            editingCell.column,
+                          )
                         : updatedRow;
-                      
+
                       newData[editingCell.row] = processedRow;
                       onDataChange(newData);
                       cancelEditing();
@@ -95,7 +101,7 @@ export const TableRow: React.FC<TableRowProps> = ({
         }
 
         // Handle foreign key display
-        if (columnSchema.type === 'uuid' && columnSchema.foreignKey) {
+        if (columnSchema.type === "uuid" && columnSchema.foreignKey) {
           return (
             <Table.Td
               key={column.key}
@@ -103,15 +109,19 @@ export const TableRow: React.FC<TableRowProps> = ({
                 e.stopPropagation();
                 startEditing(index, column.key);
               }}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             >
-              <ForeignKeyDisplayCell column={column} value={value} jsonData={jsonData} />
+              <ForeignKeyDisplayCell
+                column={column}
+                value={value}
+                jsonData={jsonData}
+              />
             </Table.Td>
           );
         }
 
         // Handle boolean display with direct editing
-        if (columnSchema.type === 'boolean') {
+        if (columnSchema.type === "boolean") {
           return (
             <Table.Td
               key={column.key}
@@ -126,22 +136,27 @@ export const TableRow: React.FC<TableRowProps> = ({
                     const newData = [...arrayData];
                     const updatedRow = {
                       ...newData[index],
-                      [column.key]: e.currentTarget.checked
+                      [column.key]: e.currentTarget.checked,
                     };
-                    
+
                     // switchフィールドの処理を適用
-                    const processedRow = itemSchema 
-                      ? processSwitchFields(itemSchema, newData[index], updatedRow, column.key)
+                    const processedRow = itemSchema
+                      ? processSwitchFields(
+                          itemSchema,
+                          newData[index],
+                          updatedRow,
+                          column.key,
+                        )
                       : updatedRow;
-                    
+
                     newData[index] = processedRow;
                     onDataChange(newData);
                   }
                 }}
-                aria-label={`${column.key} ${value ? 'true' : 'false'}`}
+                aria-label={`${column.key} ${value ? "true" : "false"}`}
                 styles={{
-                  input: { cursor: 'pointer' },
-                  root: { padding: '8px' }
+                  input: { cursor: "pointer" },
+                  root: { padding: "8px" },
                 }}
               />
             </Table.Td>
@@ -149,9 +164,12 @@ export const TableRow: React.FC<TableRowProps> = ({
         }
 
         // Regular display for other types
-        const displayValue = columnSchema.type === 'uuid' && value
-          ? `${String(value).slice(0, 4)}..`
-          : value !== null && value !== undefined ? String(value) : '';
+        const displayValue =
+          columnSchema.type === "uuid" && value
+            ? `${String(value).slice(0, 4)}..`
+            : value !== null && value !== undefined
+              ? String(value)
+              : "";
 
         return (
           <Table.Td
@@ -160,7 +178,7 @@ export const TableRow: React.FC<TableRowProps> = ({
               e.stopPropagation();
               startEditing(index, column.key);
             }}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             {displayValue}
           </Table.Td>

@@ -1,6 +1,7 @@
 # Subtreeの設定
 
 ## 初期設定
+
 remoteの追加
 
 ```sh
@@ -12,15 +13,14 @@ git subtree add --prefix=apps/mooreseditor/app/schema --squash schema main
 ## コミットをVanillaSchemaにpush
 
 ```sh
-git subtree push --prefix=apps/mooreseditor/app/schema schema main 
+git subtree push --prefix=apps/mooreseditor/app/schema schema main
 ```
 
 ## VanillaSchemaからpull
+
 ```sh
-git subtree pull --prefix=apps/mooreseditor/app/schema --squash schema main 
+git subtree pull --prefix=apps/mooreseditor/app/schema --squash schema main
 ```
-
-
 
 # Turborepo starter
 

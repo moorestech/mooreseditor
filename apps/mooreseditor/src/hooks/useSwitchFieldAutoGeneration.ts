@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-import { DataInitializer } from '../utils/dataInitializer';
-import { deepMerge } from '../utils/deepMerge';
+import { DataInitializer } from "../utils/dataInitializer";
+import { deepMerge } from "../utils/deepMerge";
 
-import type { SwitchSchema, ValueSchema } from '../libs/schema/types';
+import type { SwitchSchema, ValueSchema } from "../libs/schema/types";
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する
@@ -16,7 +16,7 @@ export function useSwitchFieldAutoGeneration(
   switchValue: any,
   switchSchema: SwitchSchema | null,
   data: any,
-  onDataChange: (newData: any) => void
+  onDataChange: (newData: any) => void,
 ) {
   const previousSwitchValueRef = useRef<any>(undefined);
 
@@ -35,12 +35,14 @@ export function useSwitchFieldAutoGeneration(
     // switch値が変更されたかチェック
     if (previousSwitchValueRef.current !== switchValue) {
       // 新しいcaseを探す
-      const newCase = switchSchema.cases?.find(c => c.when === switchValue);
+      const newCase = switchSchema.cases?.find((c) => c.when === switchValue);
 
-      if (newCase && 'type' in newCase) {
+      if (newCase && "type" in newCase) {
         // 新しいcaseの必須フィールドを生成
         const initializer = new DataInitializer([]);
-        const requiredFields = initializer.createRequiredValue(newCase as ValueSchema);
+        const requiredFields = initializer.createRequiredValue(
+          newCase as ValueSchema,
+        );
 
         // 既存データとマージ
         if (requiredFields !== null && requiredFields !== undefined) {

@@ -1,14 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 
-import { Group, Box, Flex, Collapse, ActionIcon } from '@mantine/core';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import { Group, Box, Flex, Collapse, ActionIcon } from "@mantine/core";
+import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
-import { CopyPasteButtons } from './CopyPasteButtons';
+import { CopyPasteButtons } from "./CopyPasteButtons";
 
-import type { Schema } from '@/libs/schema/types';
-import type { JsonValue } from '@/types/json';
+import type { Schema } from "@/libs/schema/types";
+import type { JsonValue } from "@/types/json";
 
-import { useCopyPaste } from '@/hooks/useCopyPaste';
+import { useCopyPaste } from "@/hooks/useCopyPaste";
 
 interface FieldWithCopyPasteProps {
   value: JsonValue;
@@ -30,14 +30,14 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
   collapsible = false,
   label,
   defaultExpanded = true,
-  isParentHovered = false
+  isParentHovered = false,
 }) => {
   const { handleCopy, handlePaste } = useCopyPaste(value, onChange, schema);
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [isActive, setIsActive] = useState(false);
 
   const toggleExpanded = useCallback(() => {
-    setIsExpanded(prev => !prev);
+    setIsExpanded((prev) => !prev);
   }, []);
 
   const showButtons = () => {
@@ -58,11 +58,11 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
 
   const isButtonsVisible = isParentHovered || isActive;
   const buttonGroupStyle: React.CSSProperties = {
-    display: 'inline-flex',
+    display: "inline-flex",
     opacity: isButtonsVisible ? 1 : 0,
-    visibility: isButtonsVisible ? 'visible' : 'hidden',
-    pointerEvents: isButtonsVisible ? 'auto' : 'none',
-    transition: 'opacity 150ms ease',
+    visibility: isButtonsVisible ? "visible" : "hidden",
+    pointerEvents: isButtonsVisible ? "auto" : "none",
+    transition: "opacity 150ms ease",
   };
 
   if (collapsible && label) {
@@ -76,15 +76,15 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
           onFocusCapture={showButtons}
           onBlurCapture={handleBlur}
         >
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            onClick={toggleExpanded}
-          >
-            {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+          <ActionIcon variant="subtle" size="sm" onClick={toggleExpanded}>
+            {isExpanded ? (
+              <IconChevronDown size={16} />
+            ) : (
+              <IconChevronRight size={16} />
+            )}
           </ActionIcon>
           <Box
-            style={{ cursor: 'pointer', userSelect: 'none' }}
+            style={{ cursor: "pointer", userSelect: "none" }}
             onClick={toggleExpanded}
           >
             {label}
@@ -107,7 +107,7 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
       gap={4}
       wrap="nowrap"
       align="flex-start"
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       onMouseEnter={showButtons}
       onMouseLeave={handleMouseLeave}
       onFocusCapture={showButtons}
@@ -116,9 +116,7 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
       <Box style={buttonGroupStyle}>
         <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
       </Box>
-      <div style={{ flex: 1 }}>
-        {children}
-      </div>
+      <div style={{ flex: 1 }}>{children}</div>
     </Group>
   );
 };

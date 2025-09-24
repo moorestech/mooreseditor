@@ -1,19 +1,31 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { showNotification } from '../utils/notification';
-import { schemaToZod } from '../utils/schemaToZod';
+import { showNotification } from "../utils/notification";
+import { schemaToZod } from "../utils/schemaToZod";
 
-import type { Schema } from '../libs/schema/types';
+import type { Schema } from "../libs/schema/types";
 
-export function useCopyPaste(value: any, onChange: (value: any) => void, schema: Schema) {
+export function useCopyPaste(
+  value: any,
+  onChange: (value: any) => void,
+  schema: Schema,
+) {
   const handleCopy = useCallback(async () => {
     try {
       const json = JSON.stringify({ value, schema: { type: schema } }, null, 2);
       await navigator.clipboard.writeText(json);
-      await showNotification("コピー成功", "値をクリップボードにコピーしました", "success");
+      await showNotification(
+        "コピー成功",
+        "値をクリップボードにコピーしました",
+        "success",
+      );
     } catch (error) {
       console.error("コピーに失敗しました:", error);
-      await showNotification("コピー失敗", "クリップボードへの書き込みに失敗しました", "error");
+      await showNotification(
+        "コピー失敗",
+        "クリップボードへの書き込みに失敗しました",
+        "error",
+      );
     }
   }, [value, schema]);
 
@@ -21,7 +33,11 @@ export function useCopyPaste(value: any, onChange: (value: any) => void, schema:
     try {
       const text = await navigator.clipboard.readText();
       if (!text) {
-        await showNotification("ペースト失敗", "クリップボードが空です", "info");
+        await showNotification(
+          "ペースト失敗",
+          "クリップボードが空です",
+          "info",
+        );
         return;
       }
 
@@ -46,13 +62,23 @@ export function useCopyPaste(value: any, onChange: (value: any) => void, schema:
       } else {
         const firstError = validationResult.error.errors[0];
         const errorMessage = firstError?.message || "不明なエラー";
-        const errorPath = firstError?.path?.join('.') || '';
-        const fullMessage = errorPath ? `${errorPath}: ${errorMessage}` : errorMessage;
-        await showNotification("スキーマエラー", `値がスキーマに一致しません: ${fullMessage}`, "error");
+        const errorPath = firstError?.path?.join(".") || "";
+        const fullMessage = errorPath
+          ? `${errorPath}: ${errorMessage}`
+          : errorMessage;
+        await showNotification(
+          "スキーマエラー",
+          `値がスキーマに一致しません: ${fullMessage}`,
+          "error",
+        );
       }
     } catch (error) {
       console.error("ペースト処理に失敗しました:", error);
-      await showNotification("ペースト失敗", "ペースト処理中にエラーが発生しました", "error");
+      await showNotification(
+        "ペースト失敗",
+        "ペースト処理中にエラーが発生しました",
+        "error",
+      );
     }
   }, [onChange, schema]);
 

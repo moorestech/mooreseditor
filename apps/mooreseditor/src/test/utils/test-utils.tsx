@@ -1,27 +1,24 @@
 // AI Generated Test Code
-import React from 'react'
+import React from "react";
 
-import { MantineProvider } from '@mantine/core'
-import { render } from '@testing-library/react'
+import { MantineProvider } from "@mantine/core";
+import { render } from "@testing-library/react";
 
-import type { RenderOptions } from '@testing-library/react';
+import type { RenderOptions } from "@testing-library/react";
 
 interface AllTheProvidersProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
-  return (
-    <MantineProvider>
-      {children}
-    </MantineProvider>
-  )
-}
+  return <MantineProvider>{children}</MantineProvider>;
+};
 
 const customRender = (
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-): ReturnType<typeof render> => render(ui, { wrapper: AllTheProviders, ...options })
+  options?: Omit<RenderOptions, "wrapper">,
+): ReturnType<typeof render> =>
+  render(ui, { wrapper: AllTheProviders, ...options });
 
-export * from '@testing-library/react'
-export { customRender as render }
+export * from "@testing-library/react";
+export { customRender as render };

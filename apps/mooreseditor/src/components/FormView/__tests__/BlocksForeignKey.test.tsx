@@ -1,56 +1,56 @@
-import { render, screen } from '@/test/utils/test-utils'
-import { describe, it, expect } from 'vitest'
-import React from 'react'
+import { render, screen } from "@/test/utils/test-utils";
+import { describe, it, expect } from "vitest";
+import React from "react";
 
-import FormView from '../index'
+import FormView from "../index";
 
-import type { Schema } from '@/libs/schema/types'
-import type { Column } from '@/hooks/useJson'
+import type { Schema } from "@/libs/schema/types";
+import type { Column } from "@/hooks/useJson";
 
-const blocksData = require('../../../../public/src/sample/master/blocks.json')
+const blocksData = require("../../../../public/src/sample/master/blocks.json");
 
 const blockItemSchema: Schema = {
-  type: 'object',
+  type: "object",
   properties: [
-    { key: 'blockGuid', type: 'uuid' },
-    { key: 'name', type: 'string' },
+    { key: "blockGuid", type: "uuid" },
+    { key: "name", type: "string" },
     {
-      key: 'overrideVerticalBlock',
-      type: 'object',
+      key: "overrideVerticalBlock",
+      type: "object",
       properties: [
         {
-          key: 'upBlockGuid',
-          type: 'uuid',
+          key: "upBlockGuid",
+          type: "uuid",
           foreignKey: {
-            schemaId: 'blocks',
-            foreignKeyIdPath: '/data/[*]/blockGuid',
-            displayElementPath: '/data/[*]/name'
-          }
+            schemaId: "blocks",
+            foreignKeyIdPath: "/data/[*]/blockGuid",
+            displayElementPath: "/data/[*]/name",
+          },
         },
         {
-          key: 'horizontalBlockGuid',
-          type: 'uuid',
+          key: "horizontalBlockGuid",
+          type: "uuid",
           foreignKey: {
-            schemaId: 'blocks',
-            foreignKeyIdPath: '/data/[*]/blockGuid',
-            displayElementPath: '/data/[*]/name'
-          }
-        }
-      ]
-    }
-  ]
-}
+            schemaId: "blocks",
+            foreignKeyIdPath: "/data/[*]/blockGuid",
+            displayElementPath: "/data/[*]/name",
+          },
+        },
+      ],
+    },
+  ],
+};
 
-describe('blocks foreign key rendering', () => {
-  it('displays current labels for nested foreign key fields', async () => {
+describe("blocks foreign key rendering", () => {
+  it("displays current labels for nested foreign key fields", async () => {
     const jsonData: Column[] = [
       {
-        title: 'blocks',
-        data: blocksData
-      }
-    ]
+        title: "blocks",
+        data: blocksData,
+      },
+    ];
 
-    const targetRow = blocksData.data[10]
+    const targetRow = blocksData.data[10];
 
     render(
       <FormView
@@ -59,57 +59,67 @@ describe('blocks foreign key rendering', () => {
         jsonData={jsonData}
         onDataChange={() => {}}
         rootData={blocksData}
-        path={['data', '10']}
-      />
-    )
+        path={["data", "10"]}
+      />,
+    );
 
-    await expect(screen.findByDisplayValue('上り歯車ベルトコンベア')).resolves.toBeInTheDocument()
-    await expect(screen.findByDisplayValue('直線歯車ベルトコンベア')).resolves.toBeInTheDocument()
-  })
+    await expect(
+      screen.findByDisplayValue("上り歯車ベルトコンベア"),
+    ).resolves.toBeInTheDocument();
+    await expect(
+      screen.findByDisplayValue("直線歯車ベルトコンベア"),
+    ).resolves.toBeInTheDocument();
+  });
 
-  it('updates labels when referenced block name changes', async () => {
-    const baseData = JSON.parse(JSON.stringify(blocksData))
-    const updatedData = JSON.parse(JSON.stringify(blocksData))
+  it("updates labels when referenced block name changes", async () => {
+    const baseData = JSON.parse(JSON.stringify(blocksData));
+    const updatedData = JSON.parse(JSON.stringify(blocksData));
 
-    const targetIndex = 10
-    const baseRow = baseData.data[targetIndex]
-    const referencedGuid = baseRow?.overrideVerticalBlock?.horizontalBlockGuid
+    const targetIndex = 10;
+    const baseRow = baseData.data[targetIndex];
+    const referencedGuid = baseRow?.overrideVerticalBlock?.horizontalBlockGuid;
 
     if (!referencedGuid) {
-      throw new Error('Test fixture missing horizontalBlockGuid')
+      throw new Error("Test fixture missing horizontalBlockGuid");
     }
 
-    const newLabel = '直線歯車ベルトコンベア（更新）'
-    const referencedBlock = updatedData.data.find((item: any) => item.blockGuid === referencedGuid)
+    const newLabel = "直線歯車ベルトコンベア（更新）";
+    const referencedBlock = updatedData.data.find(
+      (item: any) => item.blockGuid === referencedGuid,
+    );
     if (!referencedBlock) {
-      throw new Error('Test fixture missing referenced block')
+      throw new Error("Test fixture missing referenced block");
     }
-    referencedBlock.name = newLabel
+    referencedBlock.name = newLabel;
 
     const { rerender } = render(
       <FormView
         schema={blockItemSchema}
         data={baseRow}
-        jsonData={[{ title: 'blocks', data: baseData }]}
+        jsonData={[{ title: "blocks", data: baseData }]}
         onDataChange={() => {}}
         rootData={baseData}
-        path={['data', targetIndex.toString()]}
-      />
-    )
+        path={["data", targetIndex.toString()]}
+      />,
+    );
 
-    await expect(screen.findByDisplayValue('直線歯車ベルトコンベア')).resolves.toBeInTheDocument()
+    await expect(
+      screen.findByDisplayValue("直線歯車ベルトコンベア"),
+    ).resolves.toBeInTheDocument();
 
     rerender(
       <FormView
         schema={blockItemSchema}
         data={updatedData.data[targetIndex]}
-        jsonData={[{ title: 'blocks', data: updatedData }]}
+        jsonData={[{ title: "blocks", data: updatedData }]}
         onDataChange={() => {}}
         rootData={updatedData}
-        path={['data', targetIndex.toString()]}
-      />
-    )
+        path={["data", targetIndex.toString()]}
+      />,
+    );
 
-    await expect(screen.findByDisplayValue(newLabel)).resolves.toBeInTheDocument()
-  })
-})
+    await expect(
+      screen.findByDisplayValue(newLabel),
+    ).resolves.toBeInTheDocument();
+  });
+});

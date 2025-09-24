@@ -1,197 +1,212 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach } from "vitest";
 
-import FormView from './index'
+import FormView from "./index";
 
-import { render, screen, fireEvent } from '@/test/utils/test-utils'
+import { render, screen, fireEvent } from "@/test/utils/test-utils";
 
-
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 
 // Mock child components
-vi.mock('./Field', () => ({
+vi.mock("./Field", () => ({
   default: ({ path, data, onDataChange }: any) => (
-    <div data-testid={`field-${path.join('-')}`}>
+    <div data-testid={`field-${path.join("-")}`}>
       <input
-        data-testid={`input-${path.join('-')}`}
+        data-testid={`input-${path.join("-")}`}
         value={JSON.stringify(data)}
         onChange={(e) => onDataChange(JSON.parse(e.target.value))}
       />
     </div>
-  )
-}))
+  ),
+}));
 
-vi.mock('./CollapsibleObject', () => ({
+vi.mock("./CollapsibleObject", () => ({
   default: ({ title, children }: any) => (
     <div data-testid="collapsible-object">
       <h3>{title}</h3>
       {children}
     </div>
-  )
-}))
+  ),
+}));
 
-describe('FormView', () => {
+describe("FormView", () => {
   const defaultProps = {
-    data: { name: 'test', value: 42 },
+    data: { name: "test", value: 42 },
     schema: {
-      type: 'object' as const,
+      type: "object" as const,
       properties: [
-        { key: 'name', type: 'string' as const },
-        { key: 'value', type: 'integer' as const }
-      ]
+        { key: "name", type: "string" as const },
+        { key: "value", type: "integer" as const },
+      ],
     },
-    onDataChange: vi.fn()
-  }
+    onDataChange: vi.fn(),
+  };
 
   afterEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('should render form fields', () => {
-    render(<FormView {...defaultProps} />)
-    
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-    expect(screen.getByTestId('field-value')).toBeInTheDocument()
-  })
+  it("should render form fields", () => {
+    render(<FormView {...defaultProps} />);
 
-  it('should render with title when schema has title', () => {
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+    expect(screen.getByTestId("field-value")).toBeInTheDocument();
+  });
+
+  it("should render with title when schema has title", () => {
     const schemaWithTitle = {
       ...defaultProps.schema,
-      title: 'Test Form'
-    }
-    
-    render(<FormView {...defaultProps} schema={schemaWithTitle} />)
-    
+      title: "Test Form",
+    };
+
+    render(<FormView {...defaultProps} schema={schemaWithTitle} />);
+
     // FormView doesn't display title, just verify it renders
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+  });
 
-  it('should handle null data', () => {
-    render(<FormView {...defaultProps} data={null} />)
-    
+  it("should handle null data", () => {
+    render(<FormView {...defaultProps} data={null} />);
+
     // Should render without errors
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+  });
 
-  it('should handle undefined data', () => {
-    render(<FormView {...defaultProps} data={undefined} />)
-    
+  it("should handle undefined data", () => {
+    render(<FormView {...defaultProps} data={undefined} />);
+
     // Should render without errors
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+  });
 
-  it('should handle empty object data', () => {
-    render(<FormView {...defaultProps} data={{}} />)
-    
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-    expect(screen.getByTestId('field-value')).toBeInTheDocument()
-  })
+  it("should handle empty object data", () => {
+    render(<FormView {...defaultProps} data={{}} />);
 
-  it('should handle schema without properties', () => {
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+    expect(screen.getByTestId("field-value")).toBeInTheDocument();
+  });
+
+  it("should handle schema without properties", () => {
     const schemaWithoutProps = {
-      type: 'object' as const
-    }
-    
-    const { container } = render(<FormView {...defaultProps} schema={schemaWithoutProps} />)
-    
+      type: "object" as const,
+    };
+
+    const { container } = render(
+      <FormView {...defaultProps} schema={schemaWithoutProps} />,
+    );
+
     // Should render without errors (empty Stack)
-    expect(container).toBeInTheDocument()
-  })
+    expect(container).toBeInTheDocument();
+  });
 
-  it('should handle array schema', () => {
+  it("should handle array schema", () => {
     const arraySchema = {
-      type: 'array' as const,
-      items: { type: 'string' as const }
-    }
-    
-    render(<FormView {...defaultProps} schema={arraySchema} data={['item1', 'item2']} />)
-    
+      type: "array" as const,
+      items: { type: "string" as const },
+    };
+
+    render(
+      <FormView
+        {...defaultProps}
+        schema={arraySchema}
+        data={["item1", "item2"]}
+      />,
+    );
+
     // Should render Field component for array
-    expect(screen.getByTestId('field-')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId("field-")).toBeInTheDocument();
+  });
 
-  it('should handle nested object schema', () => {
+  it("should handle nested object schema", () => {
     const nestedSchema = {
-      type: 'object' as const,
+      type: "object" as const,
       properties: [
-        { 
-          key: 'user',
-          type: 'object' as const,
+        {
+          key: "user",
+          type: "object" as const,
           properties: [
-            { key: 'name', type: 'string' as const },
-            { key: 'age', type: 'integer' as const }
-          ]
-        }
-      ]
-    }
-    
+            { key: "name", type: "string" as const },
+            { key: "age", type: "integer" as const },
+          ],
+        },
+      ],
+    };
+
     const nestedData = {
-      user: { name: 'John', age: 30 }
-    }
-    
-    render(<FormView {...defaultProps} schema={nestedSchema} data={nestedData} />)
-    
-    expect(screen.getByTestId('field-user')).toBeInTheDocument()
-  })
+      user: { name: "John", age: 30 },
+    };
 
-  it('should call onDataChange when field changes', () => {
-    const onDataChange = vi.fn()
-    render(<FormView {...defaultProps} onDataChange={onDataChange} />)
-    
-    const input = screen.getByTestId('input-name')
-    fireEvent.change(input, { target: { value: '"updated"' } })
-    
-    expect(onDataChange).toHaveBeenCalled()
-  })
+    render(
+      <FormView {...defaultProps} schema={nestedSchema} data={nestedData} />,
+    );
 
-  it('should handle string schema (non-object)', () => {
+    expect(screen.getByTestId("field-user")).toBeInTheDocument();
+  });
+
+  it("should call onDataChange when field changes", () => {
+    const onDataChange = vi.fn();
+    render(<FormView {...defaultProps} onDataChange={onDataChange} />);
+
+    const input = screen.getByTestId("input-name");
+    fireEvent.change(input, { target: { value: '"updated"' } });
+
+    expect(onDataChange).toHaveBeenCalled();
+  });
+
+  it("should handle string schema (non-object)", () => {
     const stringSchema = {
-      type: 'string' as const
-    }
-    
-    render(<FormView {...defaultProps} schema={stringSchema} data="test string" />)
-    
+      type: "string" as const,
+    };
+
+    render(
+      <FormView {...defaultProps} schema={stringSchema} data="test string" />,
+    );
+
     // Should render Field for simple type
-    expect(screen.getByTestId('field-')).toBeInTheDocument()
-  })
+    expect(screen.getByTestId("field-")).toBeInTheDocument();
+  });
 
-  it('should render with custom styles', () => {
-    const { container } = render(<FormView {...defaultProps} />)
-    
-    const stackElement = container.querySelector('.mantine-Stack-root')
-    expect(stackElement).toBeInTheDocument()
+  it("should render with custom styles", () => {
+    const { container } = render(<FormView {...defaultProps} />);
+
+    const stackElement = container.querySelector(".mantine-Stack-root");
+    expect(stackElement).toBeInTheDocument();
     // Mantine Stack uses CSS variables for gap
-    expect(stackElement).toHaveStyle('--stack-gap: var(--mantine-spacing-sm)')
-  })
+    expect(stackElement).toHaveStyle("--stack-gap: var(--mantine-spacing-sm)");
+  });
 
-  it('should handle schema with ui hints', () => {
+  it("should handle schema with ui hints", () => {
     const schemaWithUi = {
-      type: 'object' as const,
+      type: "object" as const,
       properties: [
-        { 
-          key: 'name', 
-          type: 'string' as const,
-          uiOptions: { hidden: true }
-        }
-      ]
-    }
-    
-    render(<FormView {...defaultProps} schema={schemaWithUi} />)
-    
-    // UI options would be handled by Field component
-    expect(screen.getByTestId('field-name')).toBeInTheDocument()
-  })
+        {
+          key: "name",
+          type: "string" as const,
+          uiOptions: { hidden: true },
+        },
+      ],
+    };
 
-  it('should maintain data consistency on updates', () => {
-    const onDataChange = vi.fn()
-    const { rerender } = render(<FormView {...defaultProps} onDataChange={onDataChange} />)
-    
+    render(<FormView {...defaultProps} schema={schemaWithUi} />);
+
+    // UI options would be handled by Field component
+    expect(screen.getByTestId("field-name")).toBeInTheDocument();
+  });
+
+  it("should maintain data consistency on updates", () => {
+    const onDataChange = vi.fn();
+    const { rerender } = render(
+      <FormView {...defaultProps} onDataChange={onDataChange} />,
+    );
+
     // Update props
-    const newData = { name: 'updated', value: 100 }
-    rerender(<FormView {...defaultProps} data={newData} onDataChange={onDataChange} />)
-    
+    const newData = { name: "updated", value: 100 };
+    rerender(
+      <FormView {...defaultProps} data={newData} onDataChange={onDataChange} />,
+    );
+
     // Check that new data is reflected
-    const nameInput = screen.getByTestId('input-name')
-    expect(nameInput).toHaveValue(JSON.stringify(newData.name))
-  })
-})
+    const nameInput = screen.getByTestId("input-name");
+    expect(nameInput).toHaveValue(JSON.stringify(newData.name));
+  });
+});

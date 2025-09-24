@@ -1,20 +1,40 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import type { SchemaContainer, Schema, ObjectSchema, ArraySchema, StringSchema, EnumSchema, UuidSchema, IntegerSchema, NumberSchema, BooleanSchema, Vector2, Vector3, Vector4, Vector2Int, Vector3Int, Vector4Int, SwitchSchema } from './types';
+import type {
+  SchemaContainer,
+  Schema,
+  ObjectSchema,
+  ArraySchema,
+  StringSchema,
+  EnumSchema,
+  UuidSchema,
+  IntegerSchema,
+  NumberSchema,
+  BooleanSchema,
+  Vector2,
+  Vector3,
+  Vector4,
+  Vector2Int,
+  Vector3Int,
+  Vector4Int,
+  SwitchSchema,
+} from "./types";
 
 /**
  * Preprocesses schema containers to build a reference map for efficient lookups
  * @param schemaContainers Array of schema containers to preprocess
  * @returns A map of schema IDs to their containers
  */
-function preprocessSchemaContainers(schemaContainers: SchemaContainer[]): Map<string, SchemaContainer> {
+function preprocessSchemaContainers(
+  schemaContainers: SchemaContainer[],
+): Map<string, SchemaContainer> {
   const schemaMap = new Map<string, SchemaContainer>();
-  
+
   // First pass: build the map of schema IDs to containers
   for (const container of schemaContainers) {
     schemaMap.set(container.id, container);
   }
-  
+
   return schemaMap;
 }
 
@@ -25,12 +45,15 @@ function preprocessSchemaContainers(schemaContainers: SchemaContainer[]): Map<st
  * @returns A Zod schema that validates according to the schema definition
  */
 export function createSchemaValidator(
-  schemaContainer: SchemaContainer, 
-  allSchemaContainers: SchemaContainer[] = []
+  schemaContainer: SchemaContainer,
+  allSchemaContainers: SchemaContainer[] = [],
 ): z.ZodType<any> {
   // Preprocess schema containers to build a reference map
-  const schemaMap = preprocessSchemaContainers([schemaContainer, ...allSchemaContainers]);
-  
+  const schemaMap = preprocessSchemaContainers([
+    schemaContainer,
+    ...allSchemaContainers,
+  ]);
+
   // Create validator based on the schema container
   return createSchemaTypeValidator(schemaContainer, schemaMap);
 }
@@ -42,41 +65,41 @@ export function createSchemaValidator(
  * @returns A Zod schema that validates according to the schema definition
  */
 function createSchemaTypeValidator(
-  schema: Schema, 
-  schemaMap: Map<string, SchemaContainer>
+  schema: Schema,
+  schemaMap: Map<string, SchemaContainer>,
 ): z.ZodType<any> {
-  if ('switch' in schema) {
+  if ("switch" in schema) {
     return createSwitchValidator(schema, schemaMap);
   }
 
   switch (schema.type) {
-    case 'object':
+    case "object":
       return createObjectValidator(schema, schemaMap);
-    case 'array':
+    case "array":
       return createArrayValidator(schema, schemaMap);
-    case 'string':
+    case "string":
       return createStringValidator(schema);
-    case 'enum':
+    case "enum":
       return createEnumValidator(schema);
-    case 'uuid':
+    case "uuid":
       return createUuidValidator(schema);
-    case 'integer':
+    case "integer":
       return createIntegerValidator(schema);
-    case 'number':
+    case "number":
       return createNumberValidator(schema);
-    case 'boolean':
+    case "boolean":
       return createBooleanValidator(schema);
-    case 'vector2':
+    case "vector2":
       return createVector2Validator(schema);
-    case 'vector3':
+    case "vector3":
       return createVector3Validator(schema);
-    case 'vector4':
+    case "vector4":
       return createVector4Validator(schema);
-    case 'vector2Int':
+    case "vector2Int":
       return createVector2IntValidator(schema);
-    case 'vector3Int':
+    case "vector3Int":
       return createVector3IntValidator(schema);
-    case 'vector4Int':
+    case "vector4Int":
       return createVector4IntValidator(schema);
     default:
       // This should never happen if the schema is correctly typed
@@ -85,40 +108,40 @@ function createSchemaTypeValidator(
 }
 
 function createObjectValidator(
-  schema: ObjectSchema, 
-  schemaMap: Map<string, SchemaContainer>
+  schema: ObjectSchema,
+  schemaMap: Map<string, SchemaContainer>,
 ): z.ZodType<any> {
   // If the schema has a ref property, find the referenced schema container
   if (schema.ref) {
     const referencedSchema = schemaMap.get(schema.ref);
-    
+
     if (!referencedSchema) {
       throw new Error(`Referenced schema with id "${schema.ref}" not found`);
     }
-    
+
     // Use the referenced schema for validation
     // If the referenced schema is an array type, use its items for the object validation
-    if (referencedSchema.type === 'array' && referencedSchema.items) {
+    if (referencedSchema.type === "array" && referencedSchema.items) {
       return createSchemaTypeValidator(referencedSchema.items, schemaMap);
     }
     // Otherwise, validate as the referenced schema type
     return createSchemaTypeValidator(referencedSchema, schemaMap);
   }
-  
+
   if (!schema.properties || schema.properties.length === 0) {
     return z.object({}).passthrough();
   }
 
   const shape: Record<string, z.ZodType<any>> = {};
-  
+
   for (const property of schema.properties) {
     const propertyValidator = createSchemaTypeValidator(property, schemaMap);
-    
+
     // Handle optional properties
-    const isOptional = 'optional' in property && property.optional === true;
-    
-    shape[property.key] = isOptional 
-      ? propertyValidator.optional() 
+    const isOptional = "optional" in property && property.optional === true;
+
+    shape[property.key] = isOptional
+      ? propertyValidator.optional()
       : propertyValidator;
   }
 
@@ -126,156 +149,195 @@ function createObjectValidator(
 }
 
 function createArrayValidator(
-  schema: ArraySchema, 
-  schemaMap: Map<string, SchemaContainer>
+  schema: ArraySchema,
+  schemaMap: Map<string, SchemaContainer>,
 ): z.ZodType<any> {
-  let arrayValidator = z.array(createSchemaTypeValidator(schema.items, schemaMap));
-  
+  let arrayValidator = z.array(
+    createSchemaTypeValidator(schema.items, schemaMap),
+  );
+
   if (schema.minLength !== undefined) {
     arrayValidator = arrayValidator.min(schema.minLength);
   }
-  
+
   if (schema.maxLength !== undefined) {
     arrayValidator = arrayValidator.max(schema.maxLength);
   }
-  
+
   return arrayValidator;
 }
 
 function createStringValidator(schema: StringSchema): z.ZodType<any> {
   let stringValidator = z.string();
-  
+
   if (schema.default !== undefined) {
-    stringValidator = stringValidator.default(schema.default) as unknown as z.ZodString;
+    stringValidator = stringValidator.default(
+      schema.default,
+    ) as unknown as z.ZodString;
   }
-  
+
   return schema.optional ? stringValidator.optional() : stringValidator;
 }
 
 function createEnumValidator(schema: EnumSchema): z.ZodType<any> {
   let enumValidator = z.enum(schema.options as [string, ...string[]]);
-  
+
   if (schema.default !== undefined) {
-    enumValidator = enumValidator.default(schema.default) as unknown as z.ZodEnum<[string, ...string[]]>;
+    enumValidator = enumValidator.default(
+      schema.default,
+    ) as unknown as z.ZodEnum<[string, ...string[]]>;
   }
-  
+
   return schema.optional ? enumValidator.optional() : enumValidator;
 }
 
 function createUuidValidator(schema: UuidSchema): z.ZodType<any> {
   const uuidValidator = z.string().uuid();
-  
+
   return schema.optional ? uuidValidator.optional() : uuidValidator;
 }
 
 function createIntegerValidator(schema: IntegerSchema): z.ZodType<any> {
   let intValidator = z.number().int();
-  
+
   if (schema.min !== undefined) {
     intValidator = intValidator.min(schema.min);
   }
-  
+
   if (schema.max !== undefined) {
     intValidator = intValidator.max(schema.max);
   }
-  
+
   if (schema.default !== undefined) {
-    intValidator = intValidator.default(schema.default) as unknown as z.ZodNumber;
+    intValidator = intValidator.default(
+      schema.default,
+    ) as unknown as z.ZodNumber;
   }
-  
+
   return schema.optional ? intValidator.optional() : intValidator;
 }
 
 function createNumberValidator(schema: NumberSchema): z.ZodType<any> {
   let numberValidator = z.number();
-  
+
   if (schema.min !== undefined) {
     numberValidator = numberValidator.min(schema.min);
   }
-  
+
   if (schema.max !== undefined) {
     numberValidator = numberValidator.max(schema.max);
   }
-  
+
   if (schema.default !== undefined) {
-    numberValidator = numberValidator.default(schema.default) as unknown as z.ZodNumber;
+    numberValidator = numberValidator.default(
+      schema.default,
+    ) as unknown as z.ZodNumber;
   }
-  
+
   return schema.optional ? numberValidator.optional() : numberValidator;
 }
 
 function createBooleanValidator(schema: BooleanSchema): z.ZodType<any> {
   let booleanValidator = z.boolean();
-  
+
   if (schema.default !== undefined) {
-    booleanValidator = booleanValidator.default(schema.default) as unknown as z.ZodBoolean;
+    booleanValidator = booleanValidator.default(
+      schema.default,
+    ) as unknown as z.ZodBoolean;
   }
-  
+
   return schema.optional ? booleanValidator.optional() : booleanValidator;
 }
 
 function createVector2Validator(schema: Vector2): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number(), z.number()]);
-  
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
 function createVector3Validator(schema: Vector3): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number(), z.number(), z.number()]);
-  
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
 function createVector4Validator(schema: Vector4): z.ZodType<any> {
-  let vectorValidator = z.tuple([z.number(), z.number(), z.number(), z.number()]);
-  
+  let vectorValidator = z.tuple([
+    z.number(),
+    z.number(),
+    z.number(),
+    z.number(),
+  ]);
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<
+      [z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber],
+      null
+    >;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
 function createVector2IntValidator(schema: Vector2Int): z.ZodType<any> {
   let vectorValidator = z.tuple([z.number().int(), z.number().int()]);
-  
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
 function createVector3IntValidator(schema: Vector3Int): z.ZodType<any> {
-  let vectorValidator = z.tuple([z.number().int(), z.number().int(), z.number().int()]);
-  
+  let vectorValidator = z.tuple([
+    z.number().int(),
+    z.number().int(),
+    z.number().int(),
+  ]);
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
 function createVector4IntValidator(schema: Vector4Int): z.ZodType<any> {
   let vectorValidator = z.tuple([
-    z.number().int(), 
-    z.number().int(), 
-    z.number().int(), 
-    z.number().int()
+    z.number().int(),
+    z.number().int(),
+    z.number().int(),
+    z.number().int(),
   ]);
-  
+
   if (schema.default !== undefined) {
-    vectorValidator = vectorValidator.default(schema.default) as unknown as z.ZodTuple<[z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber], null>;
+    vectorValidator = vectorValidator.default(
+      schema.default,
+    ) as unknown as z.ZodTuple<
+      [z.ZodNumber, z.ZodNumber, z.ZodNumber, z.ZodNumber],
+      null
+    >;
   }
-  
+
   return schema.optional ? vectorValidator.optional() : vectorValidator;
 }
 
@@ -288,19 +350,19 @@ function createVector4IntValidator(schema: Vector4Int): z.ZodType<any> {
  * @returns The prepared object with parent references
  */
 function prepareObjectForValidation(obj: any, parent: any = null): any {
-  if (obj === null || obj === undefined || typeof obj !== 'object') {
+  if (obj === null || obj === undefined || typeof obj !== "object") {
     return obj;
   }
-  
+
   // Add parent reference
   if (parent !== null) {
-    Object.defineProperty(obj, '..', {
+    Object.defineProperty(obj, "..", {
       value: parent,
       enumerable: false, // Don't include in JSON.stringify or for...in loops
-      configurable: true // Allow overwriting if needed
+      configurable: true, // Allow overwriting if needed
     });
   }
-  
+
   // Recursively process all properties
   if (Array.isArray(obj)) {
     for (let i = 0; i < obj.length; i++) {
@@ -311,7 +373,7 @@ function prepareObjectForValidation(obj: any, parent: any = null): any {
       obj[key] = prepareObjectForValidation(obj[key], obj);
     }
   }
-  
+
   return obj;
 }
 
@@ -324,77 +386,83 @@ function prepareObjectForValidation(obj: any, parent: any = null): any {
 function getValueByPath(obj: any, path: string): any {
   // Handle empty path
   if (!path) return obj;
-  
+
   // Split the path into segments
-  const segments = path.split('/').filter(segment => segment !== '');
-  
+  const segments = path.split("/").filter((segment) => segment !== "");
+
   // Traverse the object using the path segments
   let current = obj;
-  
+
   for (const segment of segments) {
     // Handle special segments
-    if (segment === '.') continue;
-    
-    if (segment === '..') {
+    if (segment === ".") continue;
+
+    if (segment === "..") {
       // Go up one level by accessing the special ".." property
       // that was added by prepareObjectForValidation
-      current = current['..'];
+      current = current[".."];
       if (current === undefined) {
         return undefined; // No parent reference found
       }
       continue;
     }
-    
+
     // If current is null or undefined, or not an object, we can't traverse further
-    if (current === null || current === undefined || typeof current !== 'object') {
+    if (
+      current === null ||
+      current === undefined ||
+      typeof current !== "object"
+    ) {
       return undefined;
     }
-    
+
     // Move to the next level
     current = current[segment];
   }
-  
+
   return current;
 }
 
 function createSwitchValidator(
-  schema: SwitchSchema, 
-  schemaMap: Map<string, SchemaContainer>
+  schema: SwitchSchema,
+  schemaMap: Map<string, SchemaContainer>,
 ): z.ZodType<any> {
   // For a switch schema, we create a discriminated union
   // based on the switch property and cases
-  
+
   const unionSchemas: z.ZodType<any>[] = [];
-  
+
   for (const caseItem of schema.cases) {
     const caseSchema = createSchemaTypeValidator(caseItem, schemaMap);
-    
+
     // Create a refined schema that checks the switch property value
     const refinedSchema = caseSchema.refine(
       (data) => {
         // Prepare the object for validation by adding parent references
         const preparedData = prepareObjectForValidation(data);
-        
+
         // Get the value at the path specified by the switch property
         const switchValue = getValueByPath(preparedData, schema.switch);
-        
+
         // Check if the value matches the expected value
         return switchValue === caseItem.when;
       },
       {
         message: `Expected value at path "${schema.switch}" to be ${caseItem.when}`,
         path: [schema.switch],
-      }
+      },
     );
-    
+
     unionSchemas.push(refinedSchema);
   }
-  
+
   // If there are no cases, return a passthrough schema
   if (unionSchemas.length === 0) {
     return z.any();
   }
-  
+
   // Create a union of all case schemas
-  return z.union(unionSchemas as [z.ZodType<any>, z.ZodType<any>, ...z.ZodType<any>[]]);
+  return z.union(
+    unionSchemas as [z.ZodType<any>, z.ZodType<any>, ...z.ZodType<any>[]],
+  );
 }

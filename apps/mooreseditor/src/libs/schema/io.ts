@@ -1,5 +1,5 @@
-import YAML from 'yaml';
+import YAML from "yaml";
 
 export function loadYamlString(yaml: string) {
-  return YAML.parse(yaml)
+  return YAML.parse(yaml);
 }

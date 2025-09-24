@@ -25,16 +25,16 @@ function Sidebar({
 }: SidebarProps) {
   const sortedMenuItems = useMemo(() => {
     const menuItems = Object.keys(menuToFileMap);
-    
+
     // Create list with sortOrder info
-    const itemsWithSort = menuItems.map(menuItem => {
+    const itemsWithSort = menuItems.map((menuItem) => {
       const schema = schemas[menuItem];
       return {
         id: menuItem,
-        sortOrder: schema?.sortOrder
+        sortOrder: schema?.sortOrder,
       };
     });
-    
+
     // Sort by sortOrder (items without sortOrder come last, sorted by id)
     itemsWithSort.sort((a, b) => {
       if (a.sortOrder !== undefined && b.sortOrder !== undefined) {
@@ -44,8 +44,8 @@ function Sidebar({
       if (b.sortOrder !== undefined) return 1;
       return a.id.localeCompare(b.id);
     });
-    
-    return itemsWithSort.map(item => item.id);
+
+    return itemsWithSort.map((item) => item.id);
   }, [menuToFileMap, schemas]);
   return (
     <div
@@ -97,7 +97,9 @@ function Sidebar({
       {isPreloading && (
         <Group justify="center" mt="sm" mb="sm">
           <Loader size="sm" />
-          <Text size="sm" c="dimmed">Loading data...</Text>
+          <Text size="sm" c="dimmed">
+            Loading data...
+          </Text>
         </Group>
       )}
       <Divider />

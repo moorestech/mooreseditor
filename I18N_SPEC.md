@@ -1,19 +1,22 @@
 # mooreseditor i18n仕様書
 
 ## 概要
+
 mooreseditorは動的スキーマベースのエディタであり、エディタUIと動的に生成されるフィールドの両方を多言語対応します。
 
 ## ファイル構成
 
 ### 設定ファイル
+
 `mooreseditor.config.yaml`にi18n設定を記述します。
 
 ```yaml
 i18n:
-  path: "i18n"             # i18nフォルダのパス（プロジェクトルートからの相対パス）
+  path: "i18n" # i18nフォルダのパス（プロジェクトルートからの相対パス）
 ```
 
 ### 翻訳ファイル
+
 プロジェクトルート配下のi18nフォルダに、言語別のディレクトリを作成し、schemasディレクトリと同じ構造で翻訳ファイルを配置します。
 
 ```
@@ -50,7 +53,9 @@ project-root/
 ## JSONフォーマット
 
 ### UI翻訳ファイル (ui.json)
+
 フラットなキーバリュー形式で管理します。
+
 ```json
 {
   "menu.file": "File",
@@ -60,7 +65,8 @@ project-root/
 }
 ```
 
-### スキーマ翻訳ファイル (schema/**/*.json)
+### スキーマ翻訳ファイル (schema/\*_/_.json)
+
 スキーマの構造をそのまま反映した階層構造で管理します。
 
 ```json
@@ -95,6 +101,7 @@ project-root/
 ### 翻訳キー体系
 
 #### UIキー（ui.json）
+
 エディタの固定UI要素に使用します。フラットなキー構造を採用します。
 
 - `menu.<menuId>` - メニュー項目
@@ -103,7 +110,8 @@ project-root/
 - `message.<messageId>` - システムメッセージ
 - `error.<errorId>` - エラーメッセージ
 
-#### スキーマキー（schema/**/*.json）
+#### スキーマキー（schema/\*_/_.json）
+
 JSONの階層構造をドット記法でつないだパスがキーになります。
 
 - `title` - スキーマ全体のタイトル
@@ -118,6 +126,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ### 翻訳ファイル例
 
 #### en/ui.json
+
 ```json
 {
   "menu.file": "File",
@@ -134,6 +143,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ```
 
 #### en/schema/blocks.json
+
 ```json
 {
   "title": "Blocks",
@@ -172,6 +182,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ```
 
 #### en/schema/ref/blockConnectInfo.json
+
 ```json
 {
   "title": "Block Connection Info",
@@ -199,6 +210,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ```
 
 #### ja/ui.json
+
 ```json
 {
   "menu.file": "ファイル",
@@ -215,6 +227,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ```
 
 #### ja/schema/blocks.json
+
 ```json
 {
   "title": "ブロック",
@@ -253,6 +266,7 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ```
 
 #### ja/schema/ref/blockConnectInfo.json
+
 ```json
 {
   "title": "ブロック接続情報",
@@ -282,38 +296,41 @@ JSONの階層構造をドット記法でつないだパスがキーになりま�
 ## スキーマとの連携
 
 ### 翻訳キーの自動解決
+
 スキーマファイルに特別なプロパティは不要です。アプリケーションがスキーマファイルパスとプロパティパスから翻訳ファイルと翻訳キーを特定します。
 
 ```yaml
 # schemas/blocks.yml
 properties:
-- key: data
-  type: array
-  items:
-    type: object
-    properties:
-    - key: name
-      type: string
-      title: "Name"  # フォールバック用
-    - key: blockType
-      type: enum
-      options:
-      - Block
-      - BeltConveyor
+  - key: data
+    type: array
+    items:
+      type: object
+      properties:
+        - key: name
+          type: string
+          title: "Name" # フォールバック用
+        - key: blockType
+          type: enum
+          options:
+            - Block
+            - BeltConveyor
 ```
 
 上記のスキーマは、`i18n/<言語>/schema/blocks.json`から翻訳を取得し、以下のキーパスで値を解決します：
+
 - `properties.data.items.properties.name.title`
 - `properties.data.items.properties.blockType.enum.Block`
 - `properties.data.items.properties.blockType.enum.BeltConveyor`
 
 ### refの解決
+
 refで参照されるスキーマは、参照先のスキーマファイルパスに対応する翻訳ファイルから取得します。
 
 ```yaml
 # blocks.ymlでの参照
 - key: inventoryConnectors
-  ref: ref/inventoryConnects  # schemas/ref/inventoryConnects.ymlを参照
+  ref: ref/inventoryConnects # schemas/ref/inventoryConnects.ymlを参照
 ```
 
 この場合、`i18n/<言語>/schema/ref/inventoryConnects.json`から翻訳を取得します。
@@ -341,20 +358,23 @@ refで参照されるスキーマは、参照先のスキーマファイルパ�
 1. mooreseditor.config.yamlからi18nパス設定を読み込み
 2. 指定されたパスから利用可能な言語ディレクトリを検出
 3. 現在の言語と英語（デフォルト）のui.jsonを読み込み
-4. スキーマファイルの読み込み時に、対応するschema/*/*.jsonファイルも読み込み
+4. スキーマファイルの読み込み時に、対応するschema/_/_.jsonファイルも読み込み
 5. ユーザーが言語を切り替えた場合、対応するディレクトリのファイルを動的に読み込み
 
 ## キーの解決方法
 
 ### 階層構造の解決
+
 翻訳関数`t(key)`は、ドット区切りのキーを受け取り、JSONオブジェクトを階層的にたどって値を取得します。
 
 例：`t('properties.name.title')`の場合
+
 1. JSONオブジェクトの`properties`プロパティを取得
 2. その中の`name`プロパティを取得
 3. その中の`title`プロパティの値を返す
 
 ### スキーマファイルとの対応
+
 - `schemas/blocks.yml` → `i18n/<言語>/schema/blocks.json`
 - `schemas/ref/blockConnectInfo.yml` → `i18n/<言語>/schema/ref/blockConnectInfo.json`
 - `schemas/nested/dir/file.yml` → `i18n/<言語>/schema/nested/dir/file.json`

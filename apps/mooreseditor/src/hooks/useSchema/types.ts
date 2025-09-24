@@ -21,10 +21,10 @@ export class SchemaLoadError extends Error {
   constructor(
     message: string,
     public readonly schemaName: string,
-    public readonly cause?: Error
+    public readonly cause?: Error,
   ) {
     super(message);
-    this.name = 'SchemaLoadError';
+    this.name = "SchemaLoadError";
   }
 }
 
@@ -34,7 +34,10 @@ export class SchemaLoadError extends Error {
 export interface UseSchemaReturn {
   schemas: Record<string, Schema>;
   loading: boolean;
-  loadSchema: (schemaName: string, schemaDir: string | null) => Promise<Schema | null>;
+  loadSchema: (
+    schemaName: string,
+    schemaDir: string | null,
+  ) => Promise<Schema | null>;
 }
 
 /**

@@ -24,20 +24,33 @@ import { useTableEdit } from "./hooks/useTableEdit";
 import type { TableViewProps } from "./TableView.types";
 import type { ObjectSchema } from "../../libs/schema/types";
 
-export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }: TableViewProps) => {
+export const TableView = ({
+  schema,
+  data,
+  jsonData,
+  onDataChange,
+  onRowSelect,
+}: TableViewProps) => {
   // useArrayDataManagerフックを使用して共通ロジックを管理
-  const { arrayData, addItem, removeItem, duplicateItem, handleDragEnd, items } = useArrayDataManager({
+  const {
+    arrayData,
+    addItem,
+    removeItem,
+    duplicateItem,
+    handleDragEnd,
+    items,
+  } = useArrayDataManager({
     data,
     schema,
     onDataChange,
-    useFullInitialization: false // TableViewでは全フィールドを生成
+    useFullInitialization: false, // TableViewでは全フィールドを生成
   });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const {
@@ -47,11 +60,15 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     editInputRef,
     startEditing,
     saveEdit,
-    cancelEditing
+    cancelEditing,
   } = useTableEdit(arrayData, onDataChange);
 
   const columns = useMemo(() => {
-    if (!schema.items || !('type' in schema.items) || schema.items.type !== 'object') {
+    if (
+      !schema.items ||
+      !("type" in schema.items) ||
+      schema.items.type !== "object"
+    ) {
       return [];
     }
 
@@ -61,14 +78,20 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
     }
 
     // Filter primitive type properties (including uuid with foreign keys)
-    return objectSchema.properties.filter(prop => {
-      if (!('type' in prop)) return false;
+    return objectSchema.properties.filter((prop) => {
+      if (!("type" in prop)) return false;
       const propSchema = prop as any;
-      const primitiveTypes = ['string', 'uuid', 'enum', 'integer', 'number', 'boolean'];
+      const primitiveTypes = [
+        "string",
+        "uuid",
+        "enum",
+        "integer",
+        "number",
+        "boolean",
+      ];
       return primitiveTypes.includes(propSchema.type);
     });
   }, [schema]);
-
 
   if (!Array.isArray(data)) {
     return <Text>Invalid data</Text>;
@@ -84,9 +107,9 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
         <Table striped highlightOnHover>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th style={{ width: '40px' }}></Table.Th>
-              <Table.Th style={{ width: '50px' }}>#</Table.Th>
-              {columns.map(column => {
+              <Table.Th style={{ width: "40px" }}></Table.Th>
+              <Table.Th style={{ width: "50px" }}>#</Table.Th>
+              {columns.map((column) => {
                 // 文字数に基づいて最小幅を計算（文字あたり10px + パディング32px、最小120px）
                 const minWidth = Math.max(120, column.key.length * 10 + 32);
                 return (
@@ -95,7 +118,7 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
                   </Table.Th>
                 );
               })}
-              <Table.Th style={{ width: '80px' }}>Actions</Table.Th>
+              <Table.Th style={{ width: "80px" }}>Actions</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -109,39 +132,45 @@ export const TableView = ({ schema, data, jsonData, onDataChange, onRowSelect }:
                   <SortableRow
                     key={itemId}
                     id={itemId}
-                  row={row}
-                  index={index}
-                  columns={columns}
-                  editingCell={editingCell}
-                  editValue={editValue}
-                  setEditValue={setEditValue}
-                  editInputRef={editInputRef}
-                  startEditing={startEditing}
-                  saveEdit={saveEdit}
-                  cancelEditing={cancelEditing}
-                  onRowSelect={onRowSelect}
-                  onDataChange={onDataChange}
-                  removeItem={removeItem}
-                  duplicateItem={duplicateItem}
-                  arrayData={arrayData}
-                  jsonData={jsonData}
-                  itemSchema={schema.items && 'type' in schema.items && schema.items.type === 'object' ? schema.items as ObjectSchema : undefined}
+                    row={row}
+                    index={index}
+                    columns={columns}
+                    editingCell={editingCell}
+                    editValue={editValue}
+                    setEditValue={setEditValue}
+                    editInputRef={editInputRef}
+                    startEditing={startEditing}
+                    saveEdit={saveEdit}
+                    cancelEditing={cancelEditing}
+                    onRowSelect={onRowSelect}
+                    onDataChange={onDataChange}
+                    removeItem={removeItem}
+                    duplicateItem={duplicateItem}
+                    arrayData={arrayData}
+                    jsonData={jsonData}
+                    itemSchema={
+                      schema.items &&
+                      "type" in schema.items &&
+                      schema.items.type === "object"
+                        ? (schema.items as ObjectSchema)
+                        : undefined
+                    }
                   />
                 );
               })}
             </SortableContext>
           </Table.Tbody>
         </Table>
-      {onDataChange && (
-        <Button
-          variant="light"
-          size="sm"
-          leftSection={<IconPlus size={16} />}
-          onClick={addItem}
-        >
-          Add Item
-        </Button>
-      )}
+        {onDataChange && (
+          <Button
+            variant="light"
+            size="sm"
+            leftSection={<IconPlus size={16} />}
+            onClick={addItem}
+          >
+            Add Item
+          </Button>
+        )}
       </Stack>
     </DndContext>
   );

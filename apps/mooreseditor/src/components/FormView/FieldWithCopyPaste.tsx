@@ -106,6 +106,7 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
     <Group
       gap={4}
       wrap="nowrap"
+      align="flex-start"
       style={{ width: '100%' }}
       onMouseEnter={showButtons}
       onMouseLeave={handleMouseLeave}

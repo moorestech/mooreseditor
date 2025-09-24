@@ -3,6 +3,23 @@ import { z } from 'zod';
 import type { Schema, ValueSchema, ArraySchema, ObjectSchema } from '../libs/schema/types';
 import type { ZodType } from 'zod';
 
+const VECTOR_KEYS = ['x', 'y', 'z', 'w'] as const;
+
+const createVectorSchema = (dimension: number, allowDecimal: boolean, isOptional: boolean) => {
+  const createNumberSchema = () => allowDecimal ? z.number() : z.number().int();
+  const arraySchema = z.array(createNumberSchema()).length(dimension);
+
+  const shape: Record<string, ZodType<any>> = {};
+  VECTOR_KEYS.slice(0, dimension).forEach(key => {
+    shape[key] = createNumberSchema();
+  });
+
+  const objectSchema = z.object(shape);
+  const unionSchema = z.union([arraySchema, objectSchema] as [typeof arraySchema, typeof objectSchema]);
+
+  return isOptional ? unionSchema.optional() : unionSchema;
+};
+
 export function schemaToZod(schema: Schema): ZodType<any> {
   // SwitchSchemaの場合は、全てのケースのスキーマをunionで結合
   if ('switch' in schema) {
@@ -62,28 +79,22 @@ export function schemaToZod(schema: Schema): ZodType<any> {
       return z.boolean().optional();
 
     case 'vector2':
-    case 'vector2Int':
-      return z.object({
-        x: z.number(),
-        y: z.number()
-      }).optional();
+    case 'vector2Int': {
+      const allowDecimal = valueSchema.type === 'vector2';
+      return createVectorSchema(2, allowDecimal, valueSchema.optional !== false);
+    }
 
     case 'vector3':
-    case 'vector3Int':
-      return z.object({
-        x: z.number(),
-        y: z.number(),
-        z: z.number()
-      }).optional();
+    case 'vector3Int': {
+      const allowDecimal = valueSchema.type === 'vector3';
+      return createVectorSchema(3, allowDecimal, valueSchema.optional !== false);
+    }
 
     case 'vector4':
-    case 'vector4Int':
-      return z.object({
-        x: z.number(),
-        y: z.number(),
-        z: z.number(),
-        w: z.number()
-      }).optional();
+    case 'vector4Int': {
+      const allowDecimal = valueSchema.type === 'vector4';
+      return createVectorSchema(4, allowDecimal, valueSchema.optional !== false);
+    }
 
     case 'array': {
       const arraySchema = valueSchema as ArraySchema;

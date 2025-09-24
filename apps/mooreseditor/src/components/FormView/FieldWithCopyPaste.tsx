@@ -5,7 +5,6 @@ import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 import { CopyPasteButtons } from './CopyPasteButtons';
 
-
 import type { Schema } from '@/libs/schema/types';
 import type { JsonValue } from '@/types/json';
 
@@ -20,6 +19,7 @@ interface FieldWithCopyPasteProps {
   collapsible?: boolean;
   label?: string;
   defaultExpanded?: boolean;
+  isParentHovered?: boolean;
 }
 
 export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
@@ -29,20 +29,53 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
   children,
   collapsible = false,
   label,
-  defaultExpanded = true
+  defaultExpanded = true,
+  isParentHovered = false
 }) => {
   const { handleCopy, handlePaste } = useCopyPaste(value, onChange, schema);
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [isActive, setIsActive] = useState(false);
 
   const toggleExpanded = useCallback(() => {
     setIsExpanded(prev => !prev);
   }, []);
 
-  // Collapsible mode
+  const showButtons = () => {
+    setIsActive(true);
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLElement>) => {
+    const nextFocus = event.relatedTarget as Node | null;
+    if (nextFocus && event.currentTarget.contains(nextFocus)) {
+      return;
+    }
+    setIsActive(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsActive(false);
+  };
+
+  const isButtonsVisible = isParentHovered || isActive;
+  const buttonGroupStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    opacity: isButtonsVisible ? 1 : 0,
+    visibility: isButtonsVisible ? 'visible' : 'hidden',
+    pointerEvents: isButtonsVisible ? 'auto' : 'none',
+    transition: 'opacity 150ms ease',
+  };
+
   if (collapsible && label) {
     return (
       <Box>
-        <Flex align="center" gap="xs">
+        <Flex
+          align="center"
+          gap="xs"
+          onMouseEnter={showButtons}
+          onMouseLeave={handleMouseLeave}
+          onFocusCapture={showButtons}
+          onBlurCapture={handleBlur}
+        >
           <ActionIcon
             variant="subtle"
             size="sm"
@@ -56,7 +89,7 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
           >
             {label}
           </Box>
-          <Group gap={4} wrap="nowrap">
+          <Group gap={4} wrap="nowrap" style={buttonGroupStyle}>
             <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
           </Group>
         </Flex>
@@ -69,10 +102,19 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
     );
   }
 
-  // Non-collapsible mode (original behavior)
   return (
-    <Group gap={4} wrap="nowrap" style={{ width: '100%' }}>
-      <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
+    <Group
+      gap={4}
+      wrap="nowrap"
+      style={{ width: '100%' }}
+      onMouseEnter={showButtons}
+      onMouseLeave={handleMouseLeave}
+      onFocusCapture={showButtons}
+      onBlurCapture={handleBlur}
+    >
+      <Box style={buttonGroupStyle}>
+        <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
+      </Box>
       <div style={{ flex: 1 }}>
         {children}
       </div>

@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from 'react';
 
 import { Box, Text, Flex, Button } from '@mantine/core';
+import { useHover } from '@mantine/hooks';
 
 import ArrayField from './ArrayField';
 import { FieldWithCopyPaste } from './FieldWithCopyPaste';
@@ -31,7 +32,16 @@ interface FieldProps {
 }
 
 const Field = memo(function Field({ label, schema, data, jsonData, onDataChange, onObjectArrayClick, path, parentData, rootData, arrayIndices }: FieldProps) {
-    
+    const { hovered: isLabelHovered, ref: labelHoverRef } = useHover<HTMLDivElement>();
+
+    const labelElement = label ? (
+        <Text
+            ref={labelHoverRef}
+            style={{ minWidth: 120 }}
+        >
+            {label}
+        </Text>
+    ) : null;
 
     if (isSwitchSchema(schema)) {
         // Use resolvePath for all path types
@@ -137,8 +147,13 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
 
             return (
                 <Flex align="center" gap="md">
-                    {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
-                    <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
+                    {labelElement}
+                    <FieldWithCopyPaste
+                        value={data}
+                        onChange={onDataChange}
+                        schema={schema}
+                        isParentHovered={isLabelHovered}
+                    >
                         <Button
                             onClick={handleObjectArrayClick}
                             variant="light"
@@ -153,9 +168,14 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
         // Primitive arrays use ArrayField with copy/paste
         return (
             <Flex align="flex-start" gap="md">
-                {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
+                {labelElement}
                 <Box style={{ flex: 1 }}>
-                    <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
+                    <FieldWithCopyPaste
+                        value={data}
+                        onChange={onDataChange}
+                        schema={schema}
+                        isParentHovered={isLabelHovered}
+                    >
                         <ArrayField
                             schema={schema}
                             data={data}
@@ -177,12 +197,13 @@ const Field = memo(function Field({ label, schema, data, jsonData, onDataChange,
         schema,
         data,
         jsonData,
-        onDataChange
+        onDataChange,
+        isParentHovered: isLabelHovered
     });
 
     return (
         <Flex align="center" gap="md">
-            {label && <Text style={{ minWidth: 120 }}>{label}</Text>}
+            {labelElement}
             <Box style={{ flex: 1 }}>
                 {primitiveInput}
             </Box>

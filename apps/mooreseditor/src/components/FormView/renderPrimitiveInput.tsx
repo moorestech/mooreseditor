@@ -23,13 +23,15 @@ interface RenderPrimitiveInputProps {
   data: any;
   jsonData?: Column[];
   onDataChange: (value: any) => void;
+  isParentHovered?: boolean;
 }
 
 export const renderPrimitiveInput = ({
   schema,
   data,
   jsonData,
-  onDataChange
+  onDataChange,
+  isParentHovered = false
 }: RenderPrimitiveInputProps): React.ReactElement => {
   const renderInput = () => {
     switch (schema.type) {
@@ -64,7 +66,12 @@ export const renderPrimitiveInput = ({
   // Wrap with copy/paste buttons for all valid types
   if (schema.type) {
     return (
-      <FieldWithCopyPaste value={data} onChange={onDataChange} schema={schema}>
+      <FieldWithCopyPaste
+        value={data}
+        onChange={onDataChange}
+        schema={schema}
+        isParentHovered={isParentHovered}
+      >
         {input}
       </FieldWithCopyPaste>
     );

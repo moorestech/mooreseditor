@@ -76,3 +76,17 @@ export function useForeignKeyData(
   }
 }
 
+export function buildForeignKeySelectKey(
+  config: ForeignKeyConfig | undefined,
+  value: unknown,
+  displayValue: string | null,
+  prefix: string
+): string {
+  if (!config) {
+    return prefix;
+  }
+
+  const identifier = value ?? 'null';
+  const label = displayValue ?? 'no-label';
+  return `${prefix}-${config.schemaId}-${String(identifier)}-${label}`;
+}

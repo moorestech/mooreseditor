@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Select, Loader, Text } from '@mantine/core';
 
-import { useForeignKeyData } from '../../../hooks/useForeignKeyData';
+import { useForeignKeyData, buildForeignKeySelectKey } from '../../../hooks/useForeignKeyData';
 
 import type { FormInputProps } from './types';
 import type { UuidSchema } from '../../../libs/schema/types';
@@ -80,6 +80,11 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     return groupedData;
   }, [options]);
 
+  const selectKey = useMemo(
+    () => buildForeignKeySelectKey(uuidSchema.foreignKey, value, displayValue, 'foreign-key-select'),
+    [uuidSchema.foreignKey, value, displayValue]
+  );
+
   if (!uuidSchema.foreignKey) {
     return <Text c="red">Foreign key configuration missing</Text>;
   }
@@ -106,6 +111,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
 
   return (
     <Select
+      key={selectKey}
       data={selectData}
       value={value || ''}
       onChange={(val) => onChange(val || '')}

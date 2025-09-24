@@ -7,6 +7,7 @@ import App from "./App";
 import { ProjectProvider } from "./contexts/ProjectContext";
 
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

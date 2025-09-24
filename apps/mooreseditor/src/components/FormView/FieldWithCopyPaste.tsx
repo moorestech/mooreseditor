@@ -1,15 +1,19 @@
 import React, { useState, useCallback } from 'react';
 
-import { Group, ActionIcon, Tooltip, Box, Flex, Collapse } from '@mantine/core';
-import { IconCopy, IconClipboard, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import { Group, Box, Flex, Collapse, ActionIcon } from '@mantine/core';
+import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
-import { useCopyPaste } from '../../hooks/useCopyPaste';
+import { CopyPasteButtons } from './CopyPasteButtons';
 
-import type { Schema } from '../../libs/schema/types';
+
+import type { Schema } from '@/libs/schema/types';
+import type { JsonValue } from '@/types/json';
+
+import { useCopyPaste } from '@/hooks/useCopyPaste';
 
 interface FieldWithCopyPasteProps {
-  value: any;
-  onChange: (value: any) => void;
+  value: JsonValue;
+  onChange: (value: JsonValue) => void;
   schema: Schema;
   children: React.ReactNode;
   // Collapsible options
@@ -34,39 +38,13 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
     setIsExpanded(prev => !prev);
   }, []);
 
-  // Copy/Paste buttons component
-  const CopyPasteButtons = () => (
-    <>
-      <Tooltip label="値をコピー" withArrow position="top">
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          onClick={handleCopy}
-          size="sm"
-        >
-          <IconCopy size={14} />
-        </ActionIcon>
-      </Tooltip>
-      <Tooltip label="値をペースト" withArrow position="top">
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          onClick={handlePaste}
-          size="sm"
-        >
-          <IconClipboard size={14} />
-        </ActionIcon>
-      </Tooltip>
-    </>
-  );
-
   // Collapsible mode
   if (collapsible && label) {
     return (
       <Box>
         <Flex align="center" gap="xs">
           <Group gap={4}>
-            <CopyPasteButtons />
+            <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
             <ActionIcon
               variant="subtle"
               size="sm"
@@ -94,7 +72,7 @@ export const FieldWithCopyPaste: React.FC<FieldWithCopyPasteProps> = ({
   // Non-collapsible mode (original behavior)
   return (
     <Group gap={4} wrap="nowrap" style={{ width: '100%' }}>
-      <CopyPasteButtons />
+      <CopyPasteButtons onCopy={handleCopy} onPaste={handlePaste} />
       <div style={{ flex: 1 }}>
         {children}
       </div>

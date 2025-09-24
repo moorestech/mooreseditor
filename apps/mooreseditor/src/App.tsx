@@ -137,7 +137,12 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <Notifications position="top-center" />
+      <Notifications
+        position="bottom-left"
+        zIndex={2000}
+        autoClose={4000}
+        limit={5}
+      />
       <AppShell
         header={{ height: 64 }}
         padding={0}

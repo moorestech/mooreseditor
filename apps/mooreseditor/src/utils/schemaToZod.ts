@@ -45,8 +45,13 @@ export function schemaToZod(schema: Schema): ZodType<any> {
       return stringSchema.optional();
     }
 
-    case 'uuid':
-      return z.string().uuid().optional();
+    case 'uuid': {
+      const uuidSchema = z.string().uuid();
+      if (valueSchema.optional === false) {
+        return uuidSchema;
+      }
+      return z.union([uuidSchema, z.literal('')]).optional();
+    }
 
     case 'enum': {
       const enumSchema = valueSchema as any;

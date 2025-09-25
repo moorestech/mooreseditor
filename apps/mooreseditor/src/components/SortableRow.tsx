@@ -27,10 +27,15 @@ function SortableRow({
   onRowExpand,
   handleDragEnd,
 }: SortableRowProps & { handleDragEnd: (event: DragEndEvent) => void }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: rowIndex,
-    });
+  const {
+    attributes,
+    listeners: _listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({
+    id: rowIndex,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),

@@ -26,53 +26,57 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [projectDir, setProjectDir] = useState<string | null>(null);
   const [schemaDir, setSchemaDir] = useState<string | null>(null);
   const [masterDir, setMasterDir] = useState<string | null>(null);
-  const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
+    {},
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
   async function openProjectDir() {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const openedDir = await open({ directory: true });
       if (!openedDir) {
         console.error("No directory selected.");
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
       setProjectDir(openedDir as string);
-      
+
       // Add the opened directory to the file system scope
       try {
-        await invoke('add_project_to_scope', { projectPath: openedDir });
+        await invoke("add_project_to_scope", { projectPath: openedDir });
       } catch (error) {
         console.warn("Failed to add project directory to scope:", error);
       }
 
       const configPath = await path.join(
         openedDir as string,
-        "mooreseditor.config.yml"
+        "mooreseditor.config.yml",
       );
       const configContents = await readTextFile(configPath);
 
       const configData = parseYaml(configContents);
       if (!configData || !configData.schemaPath) {
         console.error(
-          "Invalid or missing schemaPath in mooreseditor.config.yml"
+          "Invalid or missing schemaPath in mooreseditor.config.yml",
         );
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
       const resolvedSchemaPath = await path.resolve(
         openedDir as string,
-        configData.schemaPath
+        configData.schemaPath,
       );
 
       setSchemaDir(resolvedSchemaPath);
-      
+
       // Add the schema directory to the file system scope
       try {
-        await invoke('add_project_to_scope', { projectPath: resolvedSchemaPath });
+        await invoke("add_project_to_scope", {
+          projectPath: resolvedSchemaPath,
+        });
       } catch (error) {
         console.warn("Failed to add schema directory to scope:", error);
       }
@@ -81,13 +85,15 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       const masterPath = configData.masterPath || "master";
       const resolvedMasterPath = await path.resolve(
         openedDir as string,
-        masterPath
+        masterPath,
       );
       setMasterDir(resolvedMasterPath);
-      
+
       // Add the master directory to the file system scope
       try {
-        await invoke('add_project_to_scope', { projectPath: resolvedMasterPath });
+        await invoke("add_project_to_scope", {
+          projectPath: resolvedMasterPath,
+        });
       } catch (error) {
         console.warn("Failed to add master directory to scope:", error);
       }
@@ -99,14 +105,14 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         if (file.name && file.name.endsWith(".yml")) {
           yamlFiles[file.name.replace(".yml", "")] = await path.join(
             resolvedSchemaPath,
-            file.name
+            file.name,
           );
         }
       }
 
       if (Object.keys(yamlFiles).length === 0) {
         console.error("No YAML files found in the schemaPath.");
-        setLoading(false);
+        setIsLoading(false);
         return;
       }
 
@@ -115,22 +121,22 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       console.error("Error opening project directory:", error);
       loadSampleProjectData();
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   async function loadSampleProjectData() {
     if (!isDev) return;
-    
-    setLoading(true);
+
+    setIsLoading(true);
     try {
       setProjectDir("SampleProject");
       setSchemaDir("SampleProject/schema");
       setMasterDir("SampleProject/master");
-      
+
       const schemaFiles = getSampleSchemaList();
       const menuMap: Record<string, string> = {};
-      
+
       for (const schemaName of schemaFiles) {
         try {
           const schemaContent = await getSampleSchema(schemaName);
@@ -142,15 +148,15 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
           console.error(`Failed to load schema ${schemaName}:`, error);
         }
       }
-      
+
       setMenuToFileMap(menuMap);
     } catch (error) {
       console.error("Error loading sample project data:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
-  
+
   function parseYaml(yamlText: string): any {
     try {
       return YAML.parse(yamlText);
@@ -167,7 +173,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         schemaDir,
         masterDir,
         menuToFileMap,
-        loading,
+        loading: isLoading,
         openProjectDir,
       }}
     >

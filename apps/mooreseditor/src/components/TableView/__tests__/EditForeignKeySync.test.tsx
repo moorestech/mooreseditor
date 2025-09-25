@@ -1,106 +1,124 @@
-import { render, screen, fireEvent } from '@/test/utils/test-utils'
-import { describe, it, expect } from 'vitest'
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import { TableView } from '../index'
-import FormView from '../../FormView'
+import { describe, it, expect } from "vitest";
 
-import type { ArraySchema, Schema } from '@/libs/schema/types'
-import type { Column } from '@/hooks/useJson'
+import blocksData from "../../../../public/src/sample/master/blocks.json";
+import FormView from "../../FormView";
+import { TableView } from "../index";
 
-const blocksData = require('../../../../public/src/sample/master/blocks.json')
+import type { Column } from "@/hooks/useJson";
+import type { ArraySchema, Schema } from "@/libs/schema/types";
+
+import { render, screen, fireEvent } from "@/test/utils/test-utils";
+
+const getNestedValue = (root: unknown, path: string[]) =>
+  path.reduce<unknown>((acc, key) => {
+    if (
+      acc &&
+      typeof acc === "object" &&
+      key in (acc as Record<string, unknown>)
+    ) {
+      return (acc as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, root);
 
 const blockItemSchema: Schema = {
-  type: 'object',
+  type: "object",
   properties: [
-    { key: 'blockGuid', type: 'uuid' },
-    { key: 'name', type: 'string' },
+    { key: "blockGuid", type: "uuid" },
+    { key: "name", type: "string" },
     {
-      key: 'overrideVerticalBlock',
-      type: 'object',
+      key: "overrideVerticalBlock",
+      type: "object",
       properties: [
         {
-          key: 'upBlockGuid',
-          type: 'uuid',
+          key: "upBlockGuid",
+          type: "uuid",
           foreignKey: {
-            schemaId: 'blocks',
-            foreignKeyIdPath: '/data/[*]/blockGuid',
-            displayElementPath: '/data/[*]/name'
-          }
+            schemaId: "blocks",
+            foreignKeyIdPath: "/data/[*]/blockGuid",
+            displayElementPath: "/data/[*]/name",
+          },
         },
         {
-          key: 'horizontalBlockGuid',
-          type: 'uuid',
+          key: "horizontalBlockGuid",
+          type: "uuid",
           foreignKey: {
-            schemaId: 'blocks',
-            foreignKeyIdPath: '/data/[*]/blockGuid',
-            displayElementPath: '/data/[*]/name'
-          }
-        }
-      ]
-    }
-  ]
-}
+            schemaId: "blocks",
+            foreignKeyIdPath: "/data/[*]/blockGuid",
+            displayElementPath: "/data/[*]/name",
+          },
+        },
+      ],
+    },
+  ],
+};
 
 const blockArraySchema: ArraySchema = {
-  type: 'array',
-  items: blockItemSchema
-}
+  type: "array",
+  items: blockItemSchema,
+};
 
 type View =
-  | { type: 'form'; schema: Schema; path: string[] }
-  | { type: 'table'; schema: ArraySchema; path: string[] }
+  | { type: "form"; schema: Schema; path: string[] }
+  | { type: "table"; schema: ArraySchema; path: string[] };
 
 const Harness: React.FC = () => {
   const [jsonData, setJsonData] = useState<Column[]>([
     {
-      title: 'blocks',
-      data: blocksData
-    }
-  ])
+      title: "blocks",
+      data: blocksData,
+    },
+  ]);
 
   const [views, setViews] = useState<View[]>([
-    { type: 'table', schema: blockArraySchema, path: ['data'] }
-  ])
+    { type: "table", schema: blockArraySchema, path: ["data"] },
+  ]);
 
-  const currentData = jsonData[0]
+  const currentData = jsonData[0];
 
   return (
     <div>
       {views.map((view, index) => {
-        if (view.type === 'table') {
-          const data = view.path.reduce((acc: any, key) => acc?.[key], currentData.data)
+        if (view.type === "table") {
+          const nestedData = getNestedValue(currentData.data, view.path);
+          const tableData = Array.isArray(nestedData) ? nestedData : [];
           return (
             <TableView
               key={`table-${index}`}
               schema={view.schema}
-              data={data}
+              data={tableData}
               jsonData={jsonData}
               onDataChange={(newData) => {
-                setJsonData(prev => {
-                  const next = [...prev]
-                  const updated = { ...next[0] }
-                  const root = { ...updated.data }
-                  root[view.path[0]] = newData
-                  updated.data = root
-                  next[0] = updated
-                  return next
-                })
+                setJsonData((prev) => {
+                  const next = [...prev];
+                  const updated = { ...next[0] };
+                  const root = { ...updated.data };
+                  root[view.path[0]] = newData;
+                  updated.data = root;
+                  next[0] = updated;
+                  return next;
+                });
               }}
               onRowSelect={(rowIndex) => {
-                setViews(prev => [
+                setViews((prev) => [
                   ...prev.slice(0, index + 1),
-                  { type: 'form', schema: view.schema.items!, path: [...view.path, rowIndex.toString()] }
-                ])
+                  {
+                    type: "form",
+                    schema: view.schema.items!,
+                    path: [...view.path, rowIndex.toString()],
+                  },
+                ]);
               }}
             />
-          )
+          );
         }
 
-        const data = view.path.reduce((acc: any, key) => acc?.[key], currentData.data)
+        const data = getNestedValue(currentData.data, view.path);
         return (
           <FormView
-            key={`form-${view.path.join('.')}`}
+            key={`form-${view.path.join(".")}`}
             schema={view.schema}
             data={data}
             jsonData={jsonData}
@@ -108,20 +126,24 @@ const Harness: React.FC = () => {
             onDataChange={() => {}}
             path={view.path}
           />
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
-describe('Table edit foreign key sync', () => {
-  it('shows overrideVerticalBlock values after pressing Edit', async () => {
-    render(<Harness />)
+describe("Table edit foreign key sync", () => {
+  it("shows overrideVerticalBlock values after pressing Edit", async () => {
+    render(<Harness />);
 
-    const rowButtons = await screen.findAllByRole('button', { name: 'Edit' })
-    fireEvent.click(rowButtons[10])
+    const rowButtons = await screen.findAllByRole("button", { name: "Edit" });
+    fireEvent.click(rowButtons[10]);
 
-    await expect(screen.findByDisplayValue('上り歯車ベルトコンベア')).resolves.toBeInTheDocument()
-    await expect(screen.findAllByDisplayValue('直線歯車ベルトコンベア')).resolves.toHaveLength(2)
-  })
-})
+    await expect(
+      screen.findByDisplayValue("上り歯車ベルトコンベア"),
+    ).resolves.toBeInTheDocument();
+    await expect(
+      screen.findAllByDisplayValue("直線歯車ベルトコンベア"),
+    ).resolves.toHaveLength(2);
+  });
+});

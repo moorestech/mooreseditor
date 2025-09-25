@@ -1,4 +1,4 @@
-import type { SchemaDefinitions } from '../types';
+import type { SchemaDefinitions } from "../types";
 
 /**
  * スキーマ内のref参照を解決するクラス
@@ -18,10 +18,10 @@ export class RefResolver {
    */
   private resolveRefs(obj: any): any {
     if (Array.isArray(obj)) {
-      return obj.map(item => this.resolveRefs(item));
-    } else if (obj && typeof obj === 'object') {
+      return obj.map((item) => this.resolveRefs(item));
+    } else if (obj && typeof obj === "object") {
       // Check if this object has a ref property
-      if (obj.ref && typeof obj.ref === 'string') {
+      if (obj.ref && typeof obj.ref === "string") {
         const refSchema = this.definitions[obj.ref];
         if (refSchema) {
           // Merge the ref schema with any other properties in the object
@@ -48,17 +48,23 @@ export class RefResolver {
    * デバッグ用: blocksスキーマの詳細をログ出力
    */
   debugBlocksSchema(schema: any, schemaName: string): void {
-    if (schemaName === 'blocks') {
-      console.log('Blocks schema after ref resolution:', schema);
-      
+    if (schemaName === "blocks") {
+      console.log("Blocks schema after ref resolution:", schema);
+
       // Log specific block type
-      const dataProperty = schema.properties?.find((p: any) => p.key === 'data');
-      const blockParamProperty = dataProperty?.items?.properties?.find((p: any) => p.key === 'blockParam');
-      const gearCase = blockParamProperty?.cases?.find((c: any) => c.when === 'Gear');
-      
-      console.log('Gear case:', gearCase);
-      console.log('Gear case properties:', gearCase?.properties);
-      
+      const dataProperty = schema.properties?.find(
+        (p: any) => p.key === "data",
+      );
+      const blockParamProperty = dataProperty?.items?.properties?.find(
+        (p: any) => p.key === "blockParam",
+      );
+      const gearCase = blockParamProperty?.cases?.find(
+        (c: any) => c.when === "Gear",
+      );
+
+      console.log("Gear case:", gearCase);
+      console.log("Gear case properties:", gearCase?.properties);
+
       if (gearCase?.properties) {
         gearCase.properties.forEach((prop: any, index: number) => {
           console.log(`Property ${index}:`, prop.key, prop);

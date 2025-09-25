@@ -2,7 +2,10 @@ import React, { useMemo } from "react";
 
 import { Select, Loader } from "@mantine/core";
 
-import { useForeignKeyData, buildForeignKeySelectKey } from "../../../hooks/useForeignKeyData";
+import {
+  useForeignKeyData,
+  buildForeignKeySelectKey,
+} from "../../../hooks/useForeignKeyData";
 
 import type { UuidSchema } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
@@ -12,34 +15,47 @@ interface ForeignKeyEditCellProps extends CellEditProps {
   jsonData?: any[];
 }
 
-export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, value, jsonData, onSave, onCancel }) => {
+export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({
+  column,
+  value,
+  jsonData,
+  onSave,
+  onCancel,
+}) => {
   const columnSchema = column as UuidSchema;
-  
-  const { options, loading, error, displayValue } = useForeignKeyData(
-    columnSchema.foreignKey,
-    jsonData || [],
-    value
-  );
+
+  const {
+    options,
+    loading: isLoading,
+    error,
+    displayValue,
+  } = useForeignKeyData(columnSchema.foreignKey, jsonData || [], value);
 
   const selectData = useMemo(() => {
-    return options.map(option => ({
+    return options.map((option) => ({
       value: option.id,
-      label: option.display
+      label: option.display,
     }));
   }, [options]);
 
   const selectKey = useMemo(
-    () => buildForeignKeySelectKey(columnSchema.foreignKey, value, displayValue, 'foreign-key-edit-select'),
-    [columnSchema.foreignKey, value, displayValue]
+    () =>
+      buildForeignKeySelectKey(
+        columnSchema.foreignKey,
+        value,
+        displayValue,
+        "foreign-key-edit-select",
+      ),
+    [columnSchema.foreignKey, value, displayValue],
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Select
         placeholder="Loading..."
         disabled
         size="xs"
-        styles={{ input: { minHeight: 'auto', height: '28px' } }}
+        styles={{ input: { minHeight: "auto", height: "28px" } }}
         rightSection={<Loader size="xs" />}
       />
     );
@@ -52,7 +68,7 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
         disabled
         error
         size="xs"
-        styles={{ input: { minHeight: 'auto', height: '28px' } }}
+        styles={{ input: { minHeight: "auto", height: "28px" } }}
       />
     );
   }
@@ -61,26 +77,26 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({ column, 
     <Select
       key={selectKey}
       data={selectData}
-      value={value || ''}
+      value={value || ""}
       onChange={(val) => {
         if (val !== null) {
-          onSave(val || '');
+          onSave(val || "");
         }
       }}
       placeholder={`Select ${columnSchema.foreignKey?.schemaId}`}
       searchable
       size="xs"
-      styles={{ input: { minHeight: 'auto', height: '28px' } }}
+      styles={{ input: { minHeight: "auto", height: "28px" } }}
       onKeyDown={(e) => {
-        if (e.key === 'Escape') onCancel();
-        if (e.key === 'Enter') e.preventDefault();
+        if (e.key === "Escape") onCancel();
+        if (e.key === "Enter") e.preventDefault();
       }}
       autoFocus
       withCheckIcon={false}
       defaultDropdownOpened={true}
-      comboboxProps={{ 
-        transitionProps: { transition: 'fade', duration: 0 },
-        withinPortal: false
+      comboboxProps={{
+        transitionProps: { transition: "fade", duration: 0 },
+        withinPortal: false,
       }}
     />
   );

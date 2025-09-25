@@ -9,7 +9,7 @@
  */
 export async function getSampleJson(name: string): Promise<any> {
   const content = await fetchFileContent(`/src/sample/master/${name}.json`);
-    return JSON.parse(content);
+  return JSON.parse(content);
 }
 
 /**
@@ -18,7 +18,7 @@ export async function getSampleJson(name: string): Promise<any> {
  * @returns YAMLデータ（文字列）
  */
 export async function getSampleSchema(name: string): Promise<string> {
-  return  await fetchFileContent(`/src/sample/schema/${name}.yml`);
+  return await fetchFileContent(`/src/sample/schema/${name}.yml`);
 }
 
 /**
@@ -27,16 +27,16 @@ export async function getSampleSchema(name: string): Promise<string> {
  */
 export function getSampleSchemaList(): string[] {
   return [
-    'blocks',
-    'challenges',
-    'characters',
-    'craftRecipes',
-    'fluids',
-    'items',
-    'machineRecipes',
-    'mapObjects',
-    'modMeta',
-    'research',
+    "blocks",
+    "challenges",
+    "characters",
+    "craftRecipes",
+    "fluids",
+    "items",
+    "machineRecipes",
+    "mapObjects",
+    "modMeta",
+    "research",
   ];
 }
 
@@ -46,13 +46,13 @@ export function getSampleSchemaList(): string[] {
  */
 export function getSampleRefSchemaList(): string[] {
   return [
-    'blockConnectInfo',
-    'challengeAction',
-    'fluidInventoryConnects',
-    'gearConnects',
-    'inventoryConnects',
-    'mapObjectMineSettings',
-    'mineSettings'
+    "blockConnectInfo",
+    "challengeAction",
+    "fluidInventoryConnects",
+    "gearConnects",
+    "inventoryConnects",
+    "mapObjectMineSettings",
+    "mineSettings",
   ];
 }
 
@@ -65,13 +65,13 @@ export function getAllSampleSchemaMap(): Map<string, string> {
 
   // メインスキーマ
   const mainSchemas = getSampleSchemaList();
-  mainSchemas.forEach(schema => {
+  mainSchemas.forEach((schema) => {
     schemaMap.set(schema, schema);
   });
 
   // refスキーマ
   const refSchemas = getSampleRefSchemaList();
-  refSchemas.forEach(schema => {
+  refSchemas.forEach((schema) => {
     schemaMap.set(`ref/${schema}`, schema);
   });
 
@@ -90,5 +90,3 @@ async function fetchFileContent(path: string): Promise<string> {
     throw error;
   }
 }
-
-

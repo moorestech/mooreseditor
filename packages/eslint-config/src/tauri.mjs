@@ -67,7 +67,7 @@ export default tseslint.config(
         }
       ],
       "unused-imports/no-unused-imports": "error",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/naming-convention": [
         "error",
         {

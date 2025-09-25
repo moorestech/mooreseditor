@@ -1,6 +1,6 @@
-import type { ReactElement } from 'react';
+import type { ReactElement } from "react";
 
-import type { Column } from '../../../hooks/useJson';
+import type { Column } from "../../../hooks/useJson";
 
 export interface FormInputProps<T = any> {
   value: T;

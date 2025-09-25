@@ -68,13 +68,17 @@ export const SortableRow: React.FC<SortableRowProps> = ({
   };
 
   return (
-    <Table.Tr 
-      ref={setNodeRef} 
+    <Table.Tr
+      ref={setNodeRef}
       style={style}
       onClick={() => onRowSelect?.(index)}
     >
-      <Table.Td style={{ width: '40px', cursor: 'grab' }} {...attributes} {...listeners}>
-        <IconGripVertical size={16} style={{ color: '#868e96' }} />
+      <Table.Td
+        style={{ width: "40px", cursor: "grab" }}
+        {...attributes}
+        {...listeners}
+      >
+        <IconGripVertical size={16} style={{ color: "#868e96" }} />
       </Table.Td>
       <TableRow
         row={row}

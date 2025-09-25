@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 import * as path from "@tauri-apps/api/path";
-import { readTextFile, writeTextFile, exists, create } from "@tauri-apps/plugin-fs";
+import {
+  readTextFile,
+  writeTextFile,
+  exists,
+  create,
+} from "@tauri-apps/plugin-fs";
 
 import { createInitialValue } from "../utils/createInitialValue";
 import { getSampleJson } from "../utils/devFileSystem";
@@ -14,17 +19,17 @@ const isDev = import.meta.env.DEV;
 
 export interface Column {
   title: string;
-  data: any[];
+  data: any;
 }
 
 function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
-  if ('type' in schema) {
-    if (schema.type === 'array') {
+  if ("type" in schema) {
+    if (schema.type === "array") {
       return [];
-    } else if (schema.type === 'object') {
+    } else if (schema.type === "object") {
       const obj: any = {};
       if (schema.properties) {
-        schema.properties.forEach(prop => {
+        schema.properties.forEach((prop) => {
           const { key, ...propSchema } = prop;
           obj[key] = createInitialValue(propSchema as any);
         });
@@ -45,7 +50,7 @@ export function useJson() {
   async function loadJsonFile(
     menuItem: string,
     columnIndex: number = 0,
-    schema?: Schema | SchemaContainer | null
+    schema?: Schema | SchemaContainer | null,
   ) {
     if (!projectDir) {
       console.error("Project directory is not set.");
@@ -54,7 +59,7 @@ export function useJson() {
 
     try {
       let parsedData;
-      
+
       if (isDev && projectDir === "SampleProject") {
         parsedData = await getSampleJson(menuItem);
         if (!parsedData) {
@@ -67,25 +72,30 @@ export function useJson() {
           return;
         }
         const jsonFilePath = await path.join(masterDir, `${menuItem}.json`);
-        
+
         // Check if file exists
-        const fileExists = await exists(jsonFilePath);
-        
-        if (!fileExists && schema) {
-          console.log(`JSON file not found for ${menuItem}. Creating new file with default values.`);
-          
+        const isFilePresent = await exists(jsonFilePath);
+
+        if (!isFilePresent && schema) {
+          console.log(
+            `JSON file not found for ${menuItem}. Creating new file with default values.`,
+          );
+
           // Check if master directory exists, create if not
-          const masterDirExists = await exists(masterDir);
-          if (!masterDirExists) {
+          const isMasterDirPresent = await exists(masterDir);
+          if (!isMasterDirPresent) {
             await create(masterDir);
             console.log(`Created master directory: ${masterDir}`);
           }
-          
+
           // Generate default JSON from schema
           parsedData = generateDefaultJsonFromSchema(schema);
-          
+
           // Write the default JSON to file
-          await writeTextFile(jsonFilePath, JSON.stringify(parsedData, null, 2));
+          await writeTextFile(
+            jsonFilePath,
+            JSON.stringify(parsedData, null, 2),
+          );
           console.log(`Created new JSON file: ${jsonFilePath}`);
         } else {
           // Read existing file
@@ -100,10 +110,12 @@ export function useJson() {
       }
 
       console.log("Loaded JSON data:", parsedData);
-      
-      setJsonData(prevJsonData => {
+
+      setJsonData((prevJsonData) => {
         // Check if already exists
-        const existingIndex = prevJsonData.findIndex(item => item.title === menuItem);
+        const existingIndex = prevJsonData.findIndex(
+          (item) => item.title === menuItem,
+        );
         if (existingIndex !== -1) {
           // Update existing data
           const newData = [...prevJsonData];
@@ -123,20 +135,30 @@ export function useJson() {
   }
 
   async function preloadAllData(
-    loadSchema: (menuItem: string) => Promise<Schema | SchemaContainer | null>
+    loadSchema: (menuItem: string) => Promise<Schema | SchemaContainer | null>,
   ) {
-    if (Object.keys(menuToFileMap).length === 0 || isPreloading || !projectDir || !schemaDir) {
+    if (
+      Object.keys(menuToFileMap).length === 0 ||
+      isPreloading ||
+      !projectDir ||
+      !schemaDir
+    ) {
       return;
     }
 
     setIsPreloading(true);
-    console.log('Preloading all data...');
+    console.log("Preloading all data...");
 
     // Priority order: items first (often referenced by foreign keys), then others
     const menuItems = Object.keys(menuToFileMap);
-    const priorityItems = ['items'];
-    const otherItems = menuItems.filter(item => !priorityItems.includes(item));
-    const orderedItems = [...priorityItems.filter(item => menuItems.includes(item)), ...otherItems];
+    const priorityItems = ["items"];
+    const otherItems = menuItems.filter(
+      (item) => !priorityItems.includes(item),
+    );
+    const orderedItems = [
+      ...priorityItems.filter((item) => menuItems.includes(item)),
+      ...otherItems,
+    ];
 
     for (const menuItem of orderedItems) {
       try {
@@ -150,7 +172,7 @@ export function useJson() {
       }
     }
 
-    console.log('Preloading complete');
+    console.log("Preloading complete");
     setIsPreloading(false);
   }
 

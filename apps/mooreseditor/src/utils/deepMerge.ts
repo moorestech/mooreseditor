@@ -5,16 +5,16 @@
  * @returns The merged object
  */
 export function deepMerge(target: any, source: any): any {
-  if (!source || typeof source !== 'object') return source;
-  if (!target || typeof target !== 'object') return source;
-  
+  if (!source || typeof source !== "object") return source;
+  if (!target || typeof target !== "object") return source;
+
   const result = { ...target };
-  
+
   for (const key in source) {
-    if (source.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
       if (
-        source[key] && 
-        typeof source[key] === 'object' && 
+        source[key] &&
+        typeof source[key] === "object" &&
         !Array.isArray(source[key]) &&
         !(source[key] instanceof Date) &&
         source[key].constructor === Object
@@ -25,6 +25,6 @@ export function deepMerge(target: any, source: any): any {
       }
     }
   }
-  
+
   return result;
 }

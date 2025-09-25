@@ -5,7 +5,7 @@ export interface AutoIncrementOptions {
   /**
    * 昇順(最大値+step) or 降順(最小値-step)
    */
-  direction: 'asc' | 'desc';
+  direction: "asc" | "desc";
   /**
    * 加算/減算する値
    */
@@ -34,17 +34,20 @@ export const calculateAutoIncrement = <T extends Record<string, any>>(
   // 有効な数値のみを抽出
   const values = data
     .map((item) => item[key])
-    .filter((value): value is number => typeof value === 'number' && isFinite(value));
+    .filter(
+      (value): value is number => typeof value === "number" && isFinite(value),
+    );
 
   // 配列が空、または有効な数値が一つもなければ初期値を返す
   if (values.length === 0) {
     return startWith;
   }
 
-  if (direction === 'asc') {
+  if (direction === "asc") {
     const maxValue = Math.max(...values);
     return maxValue + step;
-  } else { // 'desc'
+  } else {
+    // 'desc'
     const minValue = Math.min(...values);
     return minValue - step;
   }

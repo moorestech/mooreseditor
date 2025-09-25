@@ -16,20 +16,20 @@ interface EditableCellProps extends CellEditProps {
   jsonData?: any[];
 }
 
-export const EditableCell: React.FC<EditableCellProps> = ({ 
-  column, 
-  value, 
+export const EditableCell: React.FC<EditableCellProps> = ({
+  column,
+  value: _value,
   editValue,
   setEditValue,
   saveEdit,
   onSave,
   onCancel,
-  jsonData
+  jsonData,
 }) => {
   const columnSchema = column as any;
-  
+
   // Handle uuid with foreign key
-  if (columnSchema.type === 'uuid' && columnSchema.foreignKey) {
+  if (columnSchema.type === "uuid" && columnSchema.foreignKey) {
     return (
       <ForeignKeyEditCell
         column={column}
@@ -40,38 +40,38 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       />
     );
   }
-  
+
   switch (columnSchema.type) {
-    case 'integer':
+    case "integer":
       return (
         <NumberInput
-          value={editValue ?? ''}
-          onChange={(val) => setEditValue(val === '' ? undefined : val)}
+          value={editValue ?? ""}
+          onChange={(val) => setEditValue(val === "" ? undefined : val)}
           size="xs"
-          styles={{ input: { minHeight: 'auto', height: '28px' } }}
+          styles={{ input: { minHeight: "auto", height: "28px" } }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') saveEdit();
-            if (e.key === 'Escape') onCancel();
+            if (e.key === "Enter") saveEdit();
+            if (e.key === "Escape") onCancel();
           }}
           autoFocus
         />
       );
-    case 'number':
+    case "number":
       return (
         <NumberInput
-          value={editValue ?? ''}
-          onChange={(val) => setEditValue(val === '' ? undefined : val)}
+          value={editValue ?? ""}
+          onChange={(val) => setEditValue(val === "" ? undefined : val)}
           decimalScale={2}
           size="xs"
-          styles={{ input: { minHeight: 'auto', height: '28px' } }}
+          styles={{ input: { minHeight: "auto", height: "28px" } }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') saveEdit();
-            if (e.key === 'Escape') onCancel();
+            if (e.key === "Enter") saveEdit();
+            if (e.key === "Escape") onCancel();
           }}
           autoFocus
         />
       );
-    case 'enum':
+    case "enum":
       return (
         <EnumEditCell
           column={column}
@@ -80,18 +80,18 @@ export const EditableCell: React.FC<EditableCellProps> = ({
           onCancel={onCancel}
         />
       );
-    case 'string':
-    case 'uuid':  // Regular uuid without foreign key
+    case "string":
+    case "uuid": // Regular uuid without foreign key
     default:
       return (
         <TextInput
-          value={editValue || ''}
+          value={editValue || ""}
           onChange={(e) => setEditValue(e.currentTarget.value)}
           size="xs"
-          styles={{ input: { minHeight: 'auto', height: '28px' } }}
+          styles={{ input: { minHeight: "auto", height: "28px" } }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') saveEdit();
-            if (e.key === 'Escape') onCancel();
+            if (e.key === "Enter") saveEdit();
+            if (e.key === "Escape") onCancel();
           }}
           autoFocus
         />

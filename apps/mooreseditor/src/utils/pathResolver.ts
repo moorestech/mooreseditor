@@ -11,51 +11,63 @@ export function resolvePath(
   path: string,
   currentPath: string[],
   rootData: any,
-  arrayIndices?: Map<string, number>
+  arrayIndices?: Map<string, number>,
 ): any {
-  
   // Handle relative path starting with ./
-  if (path.startsWith('./')) {
+  if (path.startsWith("./")) {
     const propertyName = path.slice(2);
-    
+
     // Get the current object's data
-    const currentData = getDataAtPath(currentPath.slice(0, -1), rootData, arrayIndices);
-    
+    const currentData = getDataAtPath(
+      currentPath.slice(0, -1),
+      rootData,
+      arrayIndices,
+    );
+
     return currentData?.[propertyName];
   }
 
   // Handle parent path starting with ../
-  if (path.startsWith('../')) {
+  if (path.startsWith("../")) {
     let upLevels = 0;
     let remainingPath = path;
-    
+
     // Count how many levels to go up
-    while (remainingPath.startsWith('../')) {
+    while (remainingPath.startsWith("../")) {
       upLevels++;
       remainingPath = remainingPath.slice(3);
     }
-    
+
     // Go up the specified number of levels
     const targetPath = currentPath.slice(0, -upLevels);
-    
+
     // If there's a remaining path, resolve it
     if (remainingPath) {
       const targetData = getDataAtPath(targetPath, rootData, arrayIndices);
-      return getValueByPath(targetData, remainingPath.split('/'), arrayIndices, [...targetPath]);
+      return getValueByPath(
+        targetData,
+        remainingPath.split("/"),
+        arrayIndices,
+        [...targetPath],
+      );
     }
-    
+
     // Otherwise return the data at the target level
     return getDataAtPath(targetPath, rootData, arrayIndices);
   }
 
   // Handle absolute path starting with /
-  if (path.startsWith('/')) {
-    const pathParts = path.slice(1).split('/').filter(Boolean);
+  if (path.startsWith("/")) {
+    const pathParts = path.slice(1).split("/").filter(Boolean);
     return getValueByPath(rootData, pathParts, arrayIndices, []);
   }
 
   // Handle simple property name (same as ./)
-  const parentData = getDataAtPath(currentPath.slice(0, -1), rootData, arrayIndices);
+  const parentData = getDataAtPath(
+    currentPath.slice(0, -1),
+    rootData,
+    arrayIndices,
+  );
   return parentData?.[path];
 }
 
@@ -65,7 +77,7 @@ export function resolvePath(
 function getDataAtPath(
   path: string[],
   rootData: any,
-  arrayIndices?: Map<string, number>
+  arrayIndices?: Map<string, number>,
 ): any {
   let current = rootData;
   const fullPath: string[] = [];
@@ -78,16 +90,17 @@ function getDataAtPath(
     if (arrayMatch) {
       const [, arrayName, indexPart] = arrayMatch;
       current = current[arrayName];
-      
+
       if (!Array.isArray(current)) return undefined;
-      
+
       fullPath.push(arrayName);
-      const index = indexPart === '@' 
-        ? arrayIndices?.get(fullPath.join('/')) ?? 0
-        : indexPart === '*' 
-          ? arrayIndices?.get(fullPath.join('/')) ?? 0  // Keep for backward compatibility
-          : parseInt(indexPart, 10);
-        
+      const index =
+        indexPart === "@"
+          ? arrayIndices?.get(fullPath.join("/")) ?? 0
+          : indexPart === "*"
+            ? arrayIndices?.get(fullPath.join("/")) ?? 0 // Keep for backward compatibility
+            : parseInt(indexPart, 10);
+
       current = current[index];
     } else {
       // Check if the part is a numeric string (array index)
@@ -113,7 +126,7 @@ function getValueByPath(
   data: any,
   pathParts: string[],
   arrayIndices?: Map<string, number>,
-  basePath: string[] = []
+  basePath: string[] = [],
 ): any {
   let current = data;
   const fullPath = [...basePath];
@@ -126,16 +139,17 @@ function getValueByPath(
     if (arrayMatch) {
       const [, arrayName, indexPart] = arrayMatch;
       current = current[arrayName];
-      
+
       if (!Array.isArray(current)) return undefined;
-      
+
       fullPath.push(arrayName);
-      const index = indexPart === '@' 
-        ? arrayIndices?.get(fullPath.join('/')) ?? 0
-        : indexPart === '*' 
-          ? arrayIndices?.get(fullPath.join('/')) ?? 0  // Keep for backward compatibility
-          : parseInt(indexPart, 10);
-        
+      const index =
+        indexPart === "@"
+          ? arrayIndices?.get(fullPath.join("/")) ?? 0
+          : indexPart === "*"
+            ? arrayIndices?.get(fullPath.join("/")) ?? 0 // Keep for backward compatibility
+            : parseInt(indexPart, 10);
+
       current = current[index];
     } else {
       // Check if the part is a numeric string (array index)

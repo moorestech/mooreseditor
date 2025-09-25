@@ -93,7 +93,7 @@ export function useSchema() {
         }));
 
         return resolvedSchema;
-        } catch (error) {
+      } catch (error) {
         console.error(`Error loading schema for ${schemaName}:`, error);
         return null;
       } finally {

@@ -13,7 +13,11 @@ import { render, screen, fireEvent } from "@/test/utils/test-utils";
 
 const getNestedValue = (root: unknown, path: string[]) =>
   path.reduce<unknown>((acc, key) => {
-    if (acc && typeof acc === "object" && key in (acc as Record<string, unknown>)) {
+    if (
+      acc &&
+      typeof acc === "object" &&
+      key in (acc as Record<string, unknown>)
+    ) {
       return (acc as Record<string, unknown>)[key];
     }
     return undefined;

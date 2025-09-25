@@ -24,11 +24,12 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({
 }) => {
   const columnSchema = column as UuidSchema;
 
-  const { options, loading: isLoading, error, displayValue } = useForeignKeyData(
-    columnSchema.foreignKey,
-    jsonData || [],
-    value,
-  );
+  const {
+    options,
+    loading: isLoading,
+    error,
+    displayValue,
+  } = useForeignKeyData(columnSchema.foreignKey, jsonData || [], value);
 
   const selectData = useMemo(() => {
     return options.map((option) => ({

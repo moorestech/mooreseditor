@@ -14,11 +14,11 @@ export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({
 }) => {
   const columnSchema = column as UuidSchema;
 
-  const { displayValue, loading: isLoading, error } = useForeignKeyData(
-    columnSchema.foreignKey,
-    jsonData || [],
-    value,
-  );
+  const {
+    displayValue,
+    loading: isLoading,
+    error,
+  } = useForeignKeyData(columnSchema.foreignKey, jsonData || [], value);
 
   if (!value) {
     return (

@@ -24,11 +24,12 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     value,
   });
 
-  const { options, loading: isLoading, error, displayValue } = useForeignKeyData(
-    uuidSchema.foreignKey,
-    jsonData || [],
-    value,
-  );
+  const {
+    options,
+    loading: isLoading,
+    error,
+    displayValue,
+  } = useForeignKeyData(uuidSchema.foreignKey, jsonData || [], value);
 
   console.log("ForeignKeySelect data:", {
     options,

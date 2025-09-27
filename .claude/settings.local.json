@@ -49,5 +49,9 @@
       "mcp__playwright__browser_evaluate"
     ],
     "deny": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
+  "enableAllProjectMcpServers": true
 }

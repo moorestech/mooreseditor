@@ -5,26 +5,72 @@
  * @returns The merged object
  */
 export function deepMerge(target: any, source: any): any {
-  if (!source || typeof source !== "object") return source;
-  if (!target || typeof target !== "object") return source;
+  if (!source || typeof source !== "object") {
+    return source;
+  }
 
-  const result = { ...target };
+  if (!target || typeof target !== "object") {
+    return cloneValue(source);
+  }
 
-  for (const key in source) {
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      if (
-        source[key] &&
-        typeof source[key] === "object" &&
-        !Array.isArray(source[key]) &&
-        !(source[key] instanceof Date) &&
-        source[key].constructor === Object
-      ) {
-        result[key] = deepMerge(target[key], source[key]);
+  const result: Record<string, any> = { ...target };
+
+  for (const key of Object.keys(source)) {
+    const sourceValue = source[key];
+    const targetValue = target[key];
+
+    if (Array.isArray(sourceValue)) {
+      if (Array.isArray(targetValue)) {
+        // Preserve existing array contents so we don't wipe user data
+        result[key] = targetValue;
+      } else if (targetValue === undefined || targetValue === null) {
+        result[key] = cloneValue(sourceValue);
       } else {
-        result[key] = source[key];
+        result[key] = cloneValue(sourceValue);
       }
+      continue;
+    }
+
+    if (
+      sourceValue &&
+      typeof sourceValue === "object" &&
+      !(sourceValue instanceof Date) &&
+      sourceValue.constructor === Object
+    ) {
+      result[key] = deepMerge(
+        targetValue && typeof targetValue === "object"
+          ? targetValue
+          : {},
+        sourceValue,
+      );
+      continue;
+    }
+
+    if (targetValue === undefined || targetValue === null) {
+      result[key] = sourceValue;
+    } else {
+      result[key] = targetValue;
     }
   }
 
   return result;
+}
+
+function cloneValue<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => cloneValue(item)) as T;
+  }
+  if (value instanceof Date) {
+    return new Date(value.getTime()) as T;
+  }
+  if (value && typeof value === "object") {
+    return Object.entries(value).reduce(
+      (acc, [key, child]) => {
+        acc[key] = cloneValue(child);
+        return acc;
+      },
+      {} as Record<string, any>,
+    ) as T;
+  }
+  return value;
 }

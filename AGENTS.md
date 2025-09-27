@@ -28,11 +28,18 @@ pnpm run test
 ```
 
 ### E2Eテストの実行
-
 ```bash
-pnpm run test:e2e       # E2Eテストの実行
-pnpm run test:e2e:ui    # UIモードでの実行
-pnpm run test:e2e:debug # デバッグモードでの実行
+# 基本的な実行（必ず --reporter=list を付ける）
+pnpm run test:e2e -- --reporter=list
+
+# UIモードでの実行
+pnpm run test:e2e:ui -- --reporter=list
+
+# 特定のテストファイルを実行
+pnpm run test:e2e -- --reporter=list tests/specific-test.spec.ts
+
+# デバッグモードで実行
+pnpm run test:e2e:debug -- --reporter=list --debug
 ```
 
 ## Playwrightを使ったデバッグ方法

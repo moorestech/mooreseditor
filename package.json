@@ -19,6 +19,6 @@
     "@playwright/test": "^1.48.0",
     "tsx": "^4.7.0"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@10.17.1",
   "name": "_"
 }

@@ -74,43 +74,27 @@ jobs:
           # ★ tagName / releaseName を渡さない＝アップロードしない
           args: ${{ matrix.args }}
 
-      # 3) タグ文字列から "v" を除いたバージョン番号を取得（未使用でも残す） ---
+      # 3) タグ文字列から "v" を除いたバージョン番号を取得 -------------------
       - id: ver
         shell: bash
         run: echo "ver=${GITHUB_REF_NAME#v}" >>"$GITHUB_OUTPUT"
 
-      # 4) リネーム + リリース作成/アップロード（手動時はスキップして artifact）
+      # 4) リネーム + リリース作成/アップロード ------------------------------
       - name: Rename & upload asset
-        id: pack
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-          EVENT_NAME: ${{ github.event_name }}
-          RUN_NUMBER: ${{ github.run_number }}
-          REF_NAME: ${{ github.ref_name }}
-          REF_TYPE: ${{ github.ref_type }}
         run: |
           set -euo pipefail
           
-          # イベント種別でバージョン決定
-          # - 手動実行: dev-${RUN_NUMBER}
-          # - タグ push: 例 v1.2.3 から 1.2.3
-          TAG=""
-          VER=""
-          if [[ "${EVENT_NAME}" == "workflow_dispatch" || "${REF_TYPE:-}" != "tag" ]]; then
-            VER="dev-${RUN_NUMBER}"
-          else
-            TAG="${REF_NAME:-}"
-            VER="${TAG#v}"
-          fi
-          # ファイル名に安全な文字だけ残す（/ 等は _ に置換）
-          VER_SAFE="${VER//[^A-Za-z0-9._-]/_}"
+          TAG="${GITHUB_REF_NAME}"                 # 例: v1.2.3
+          VER="${TAG#v}"                           # → 1.2.3
           
           OS="${{ matrix.os }}"
           ARCH="${{ matrix.arch }}"
           EXT="${{ matrix.ext }}"
           DIR="${{ matrix.dir }}"
-          PROJECT_PATH="apps/mooreseditor"       # ★ 実プロジェクトに合わせて
+          PROJECT_PATH="apps/mooreseditor"                  # ★ 実プロジェクトに合わせて
           
           # 1) バンドル・ディレクトリを決定 ...............................
           CANDIDATES=(
@@ -144,17 +128,27 @@ jobs:
           fi
           
           # 3) 統一フォーマット名へリネーム .................................
-          NEW="mooreseditor-v${VER_SAFE}-${OS}-${ARCH}.${EXT}"
+          NEW="mooreseditor-v${VER}-${OS}-${ARCH}.${EXT}"
           mv "${FILE}" "${NEW}"
           
+          # 4) ドラフトリリース作成 (既存ならスキップ) ＆ 資産アップロード ....
+          if ! gh release view "${TAG}" &>/dev/null; then
+            gh release create "${TAG}" \
+              -t "mooreseditor ${TAG}" \
+              -n "See the assets to download and install this version." \
+              --draft
+          fi
+          gh release upload "${TAG}" "${NEW}" --clobber
+          
           # ────────────────────────────────────────────────────────────────
-          # ★★ 直接実行バイナリも探す（あれば後続で利用）
+          # ★★ ここから追加 : 直接実行バイナリも探してアップロード
           # ────────────────────────────────────────────────────────────────
           exe_suffix=""
           [[ "${OS}" == "windows" ]] && exe_suffix=".exe"
           
           BIN_CANDIDATES=(
             "${PROJECT_PATH}/src-tauri/target/universal-apple-darwin/release/mooreseditor"
+            "${PROJECT_PATH}/src-tauri/target/${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || 'release' }}/release/mooreseditor${exe_suffix}"
             "${PROJECT_PATH}/src-tauri/target/release/mooreseditor${exe_suffix}"
             "src-tauri/target/universal-apple-darwin/release/mooreseditor"
             "src-tauri/target/release/mooreseditor${exe_suffix}"
@@ -167,44 +161,12 @@ jobs:
             fi
           done
           
-          RAW=""
           if [[ -n "${BIN_FILE:-}" && -f "${BIN_FILE}" ]]; then
-            RAW="mooreseditor-v${VER_SAFE}-${OS}-${ARCH}${exe_suffix}"
+            RAW="mooreseditor-v${VER}-${OS}-${ARCH}${exe_suffix}"
             cp "${BIN_FILE}" "${RAW}"           # 元を残したい場合は cp
-            echo "Found raw binary: ${RAW}"
+            gh release upload "${TAG}" "${RAW}" --clobber
+            echo "Uploaded raw binary: ${RAW}"
           else
-            echo "No standalone binary found; will skip raw upload."
+            echo "No standalone binary found; skipped raw upload."
           fi
-          
-          # 4) イベント種別で分岐 ............................................
-          if [[ "${EVENT_NAME}" != "workflow_dispatch" ]]; then
-            # タグ push 等: Draft リリースにアップロード（従来どおり）
-            TAG_USE="${TAG:-v${VER_SAFE}}"
-            if ! gh release view "${TAG_USE}" &>/dev/null; then
-              gh release create "${TAG_USE}" \
-                -t "mooreseditor ${TAG_USE}" \
-                -n "See the assets to download and install this version." \
-                --draft
-            fi
-            gh release upload "${TAG_USE}" "${NEW}" --clobber
-            [[ -n "${RAW}" ]] && gh release upload "${TAG_USE}" "${RAW}" --clobber
-            echo "mode=released" >>"$GITHUB_OUTPUT"
-          else
-            # 手動実行: リリース操作は行わず、後続の artifact アップロードに委ねる
-            echo "mode=artifact" >>"$GITHUB_OUTPUT"
-          fi
-          
-          # 後続で使えるように出力を渡す
-          echo "asset=${NEW}" >>"$GITHUB_OUTPUT"
-          [[ -n "${RAW}" ]] && echo "raw=${RAW}" >>"$GITHUB_OUTPUT"
 
-      # 5) 手動実行時のみ: アーティファクトとして保存 -----------------------
-      - name: Upload artifacts (manual run)
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: mooreseditor-${{ matrix.os }}-${{ matrix.arch }}
-          path: |
-            ${{ steps.pack.outputs.asset }}
-            ${{ steps.pack.outputs.raw }}
-          if-no-files-found: ignore

@@ -227,6 +227,9 @@ function App() {
                     schema={view.schema}
                     jsonData={jsonData}
                     data={(() => {
+                      if (!currentData) {
+                        return [];
+                      }
                       // Get data from currentData
                       if (view.path.length === 0) {
                         return currentData?.data;

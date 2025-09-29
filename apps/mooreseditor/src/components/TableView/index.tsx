@@ -93,7 +93,8 @@ export const TableView = ({
     });
   }, [schema]);
 
-  if (!Array.isArray(data)) {
+  const isDataMissing = data === undefined || data === null;
+  if (!isDataMissing && !Array.isArray(data)) {
     return <Text>Invalid data</Text>;
   }
 

@@ -6,6 +6,7 @@ import type {
   ValueSchema,
   ObjectSchema,
   SchemaContainer,
+  SwitchSchema,
 } from "../libs/schema/types";
 
 /**
@@ -51,16 +52,33 @@ export function validateAndFillMissingFields(
       objectSchema.properties.forEach((prop) => {
         const { key, ...propSchema } = prop;
         if (key in mergedData && propSchema) {
-          // ネストしたオブジェクトや配列の場合、再帰的に検証
-          if (
-            "type" in propSchema &&
-            (propSchema.type === "object" || propSchema.type === "array")
-          ) {
+          // 配列の場合、各要素を再帰的に検証
+          if ("type" in propSchema && propSchema.type === "array") {
+            const arrayData = mergedData[key];
+            if (Array.isArray(arrayData) && "items" in propSchema && propSchema.items) {
+              for (let i = 0; i < arrayData.length; i++) {
+                const { data: validatedItem, addedFields: itemAddedFields } =
+                  validateAndFillMissingFields(
+                    arrayData[i],
+                    propSchema.items as ValueSchema,
+                    arrayData,
+                  );
+                arrayData[i] = validatedItem;
+
+                // 配列要素内で追加されたフィールドのパスを記録
+                itemAddedFields.forEach((field) => {
+                  allAddedFields.push(`${key}[${i}].${field}`);
+                });
+              }
+            }
+          }
+          // ネストしたオブジェクトの場合、再帰的に検証
+          else if ("type" in propSchema && propSchema.type === "object") {
             const { data: validatedValue, addedFields: nestedAddedFields } =
               validateAndFillMissingFields(
                 mergedData[key],
                 propSchema as ValueSchema,
-                propSchema.type === "array" ? mergedData[key] : undefined,
+                undefined,
               );
             mergedData[key] = validatedValue;
 
@@ -68,6 +86,38 @@ export function validateAndFillMissingFields(
             nestedAddedFields.forEach((field) => {
               allAddedFields.push(`${key}.${field}`);
             });
+          }
+          // Switch fieldの場合、switch値に基づいて適切なcaseのスキーマを取得して検証
+          else if ("switch" in propSchema) {
+            const switchSchema = propSchema as SwitchSchema;
+            const switchPath = switchSchema.switch;
+
+            // 相対パス（./）の場合、現在のレベルのフィールドを参照
+            if (switchPath.startsWith("./")) {
+              const referencedField = switchPath.slice(2);
+              const switchValue = mergedData[referencedField];
+
+              // 一致するcaseを見つける
+              const matchedCase = switchSchema.cases?.find(
+                (c) => c.when === switchValue,
+              );
+
+              if (matchedCase && "type" in matchedCase) {
+                // そのcaseのスキーマに対して再帰的に検証
+                const { data: validatedValue, addedFields: nestedAddedFields } =
+                  validateAndFillMissingFields(
+                    mergedData[key],
+                    matchedCase as ValueSchema,
+                    undefined,
+                  );
+                mergedData[key] = validatedValue;
+
+                // Switch field内で追加されたフィールドのパスを記録
+                nestedAddedFields.forEach((field) => {
+                  allAddedFields.push(`${key}.${field}`);
+                });
+              }
+            }
           }
         }
       });

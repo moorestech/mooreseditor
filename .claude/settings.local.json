@@ -46,12 +46,13 @@
       "Bash(gemini:*)",
       "mcp__playwright__browser_navigate_forward",
       "Bash(similarity-ts:*)",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "Bash(xargs kill:*)"
     ],
     "deny": []
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "playwright"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

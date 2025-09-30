@@ -4888,7 +4888,6 @@
       },
       "enableConveyorPlacement": false,
       "blockParam": {
-        "requiredPower": 1000,
         "inputSlotCount": 3,
         "outputSlotCount": 3,
         "inventoryConnectors": {

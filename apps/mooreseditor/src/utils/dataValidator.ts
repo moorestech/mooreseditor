@@ -4,7 +4,6 @@ import { deepMerge } from "./deepMerge";
 import type {
   Schema,
   ValueSchema,
-  ArraySchema,
   ObjectSchema,
   SchemaContainer,
 } from "../libs/schema/types";
@@ -26,41 +25,13 @@ export function validateAndFillMissingFields(
     return { data: existingData, addedFields: [] };
   }
 
-  // トップレベルが配列の場合、deepMergeをスキップして直接配列要素を検証
-  if (
-    Array.isArray(existingData) &&
-    "type" in schema &&
-    schema.type === "array"
-  ) {
-    const arraySchema = schema as ArraySchema;
-    if (arraySchema.items) {
-      const allAddedFields: string[] = [];
-
-      for (let i = 0; i < existingData.length; i++) {
-        const { data: validatedItem, addedFields: itemAddedFields } =
-          validateAndFillMissingFields(
-            existingData[i],
-            arraySchema.items,
-            existingData,
-          );
-        existingData[i] = validatedItem;
-
-        itemAddedFields.forEach((field) => {
-          allAddedFields.push(`[${i}].${field}`);
-        });
-      }
-
-      return { data: existingData, addedFields: allAddedFields };
-    }
-    return { data: existingData, addedFields: [] };
-  }
-
   // DataInitializerで必須フィールドのデフォルト構造を生成
   const initializer = new DataInitializer(existingArray || []);
   const requiredDefaults = initializer.createRequiredValue(schema);
 
   // deepMergeで既存データに不足フィールドを補完
-  const mergedData = deepMerge(requiredDefaults, existingData);
+  // 引数順序: (既存データ, デフォルト値) -> 既存データを優先し、不足分を補完
+  const mergedData = deepMerge(existingData, requiredDefaults);
 
   // 追加されたフィールドを検出
   const addedFields = findAddedFields(existingData, mergedData);

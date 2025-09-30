@@ -19,8 +19,14 @@ const theme = createTheme({
 function App() {
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
     useProject();
-  const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } =
-    useJson();
+  const {
+    jsonData,
+    setJsonData,
+    loadJsonFile,
+    preloadAllData,
+    isPreloading,
+    clearUnsavedChanges,
+  } = useJson();
   const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
@@ -111,6 +117,7 @@ function App() {
           );
         });
         setIsEditing(false);
+        clearUnsavedChanges();
         return;
       }
 
@@ -145,6 +152,7 @@ function App() {
       }
 
       setIsEditing(false);
+      clearUnsavedChanges();
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);
     }

@@ -11,6 +11,7 @@ import {
 import { createInitialValue } from "../utils/createInitialValue";
 import { validateAndFillMissingFields } from "../utils/dataValidator";
 import { getSampleJson } from "../utils/devFileSystem";
+import { notifyFieldsAdded } from "../utils/notifyFieldsAdded";
 
 import { useProject } from "./useProject";
 
@@ -47,6 +48,7 @@ export function useJson() {
   const { projectDir, masterDir, schemaDir, menuToFileMap } = useProject();
   const [jsonData, setJsonData] = useState<Column[]>([]);
   const [isPreloading, setIsPreloading] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   async function loadJsonFile(
     menuItem: string,
@@ -101,10 +103,19 @@ export function useJson() {
           parsedData = JSON.parse(fileContents);
         }
       }
-      
+
       // Validate and fill missing required fields
       if (schema) {
-        const { data } = validateAndFillMissingFields(parsedData, schema);
+        const { data, addedFields } = validateAndFillMissingFields(
+          parsedData,
+          schema,
+        );
+
+        if (addedFields.length > 0) {
+          await notifyFieldsAdded(menuItem, addedFields);
+          setHasUnsavedChanges(true);
+        }
+
         parsedData = data;
       }
 
@@ -180,11 +191,17 @@ export function useJson() {
     setIsPreloading(false);
   }
 
+  function clearUnsavedChanges() {
+    setHasUnsavedChanges(false);
+  }
+
   return {
     jsonData,
     setJsonData,
     loadJsonFile,
     preloadAllData,
     isPreloading,
+    hasUnsavedChanges,
+    clearUnsavedChanges,
   };
 }

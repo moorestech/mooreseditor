@@ -13,6 +13,24 @@ export function deepMerge(target: any, source: any): any {
     return cloneValue(source);
   }
 
+  // Both are arrays: preserve target array and recursively merge each element
+  if (Array.isArray(target) && Array.isArray(source)) {
+    return target.map((item, index) => {
+      if (
+        index < source.length &&
+        item &&
+        typeof item === "object" &&
+        source[index] &&
+        typeof source[index] === "object" &&
+        !Array.isArray(item) &&
+        !Array.isArray(source[index])
+      ) {
+        return deepMerge(item, source[index]);
+      }
+      return item;
+    });
+  }
+
   const result: Record<string, any> = { ...target };
 
   for (const key of Object.keys(source)) {

@@ -9,6 +9,7 @@ import {
 } from "@tauri-apps/plugin-fs";
 
 import { createInitialValue } from "../utils/createInitialValue";
+import { validateAndFillMissingFields } from "../utils/dataValidator";
 import { getSampleJson } from "../utils/devFileSystem";
 
 import { useProject } from "./useProject";
@@ -92,16 +93,19 @@ export function useJson() {
           parsedData = generateDefaultJsonFromSchema(schema);
 
           // Write the default JSON to file
-          await writeTextFile(
-            jsonFilePath,
-            JSON.stringify(parsedData, null, 2),
-          );
+          await writeTextFile(jsonFilePath, JSON.stringify(parsedData, null, 2),);
           console.log(`Created new JSON file: ${jsonFilePath}`);
         } else {
           // Read existing file
           const fileContents = await readTextFile(jsonFilePath);
           parsedData = JSON.parse(fileContents);
         }
+      }
+      
+      // Validate and fill missing required fields
+      if (schema) {
+        const { data } = validateAndFillMissingFields(parsedData, schema);
+        parsedData = data;
       }
 
       if (!parsedData) {

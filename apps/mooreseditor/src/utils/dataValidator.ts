@@ -53,23 +53,27 @@ export function validateAndFillMissingFields(
       objectSchema.properties.forEach((prop) => {
         const { key, ...propSchema } = prop;
         if (key in mergedData && propSchema) {
-          // 配列の場合、各要素を再帰的に検証
+          // 配列の場合、object型の要素のみ再帰的に検証
           if ("type" in propSchema && propSchema.type === "array") {
             const arrayData = mergedData[key];
             if (Array.isArray(arrayData) && "items" in propSchema && propSchema.items) {
-              for (let i = 0; i < arrayData.length; i++) {
-                const { data: validatedItem, addedFields: itemAddedFields } =
-                  validateAndFillMissingFields(
-                    arrayData[i],
-                    propSchema.items as ValueSchema,
-                    arrayData, // 配列全体をexistingArrayとして渡す
-                  );
-                arrayData[i] = validatedItem;
+              // itemsがobject型の場合のみ再帰的に検証
+              // プリミティブ型（number, string等）の配列はそのまま保持
+              if ("type" in propSchema.items && propSchema.items.type === "object") {
+                for (let i = 0; i < arrayData.length; i++) {
+                  const { data: validatedItem, addedFields: itemAddedFields } =
+                    validateAndFillMissingFields(
+                      arrayData[i],
+                      propSchema.items as ValueSchema,
+                      arrayData, // 配列全体をexistingArrayとして渡す
+                    );
+                  arrayData[i] = validatedItem;
 
-                // 配列要素内で追加されたフィールドのパスを記録
-                itemAddedFields.forEach((field) => {
-                  allAddedFields.push(`${key}[${i}].${field}`);
-                });
+                  // 配列要素内で追加されたフィールドのパスを記録
+                  itemAddedFields.forEach((field) => {
+                    allAddedFields.push(`${key}[${i}].${field}`);
+                  });
+                }
               }
             }
           }

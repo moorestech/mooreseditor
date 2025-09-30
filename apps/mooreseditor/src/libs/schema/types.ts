@@ -25,6 +25,7 @@ export interface ArraySchema {
   minLength?: number;
   maxLength?: number;
   openedByDefault?: boolean;
+  default?: any[];
 }
 
 export interface StringSchema {

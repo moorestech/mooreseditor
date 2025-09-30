@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
-import * as yaml from "yaml";
 import * as fs from "fs";
 import * as path from "path";
+
+import { describe, it, expect } from "vitest";
+import * as yaml from "yaml";
 
 import { validateAndFillMissingFields } from "../dataValidator";
 

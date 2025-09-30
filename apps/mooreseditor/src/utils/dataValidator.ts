@@ -27,8 +27,9 @@ export function validateAndFillMissingFields(
   }
 
   // DataInitializerで必須フィールドのデフォルト構造を生成
+  // 既存データをコンテキストとして渡すことで、switch fieldの参照値を解決可能にする
   const initializer = new DataInitializer(existingArray || []);
-  const requiredDefaults = initializer.createRequiredValue(schema);
+  const requiredDefaults = initializer.createRequiredValue(schema, existingData);
 
   // deepMergeで既存データに不足フィールドを補完
   // 引数順序: (既存データ, デフォルト値) -> 既存データを優先し、不足分を補完
@@ -61,7 +62,7 @@ export function validateAndFillMissingFields(
                   validateAndFillMissingFields(
                     arrayData[i],
                     propSchema.items as ValueSchema,
-                    arrayData,
+                    arrayData, // 配列全体をexistingArrayとして渡す
                   );
                 arrayData[i] = validatedItem;
 
@@ -73,19 +74,23 @@ export function validateAndFillMissingFields(
             }
           }
           // ネストしたオブジェクトの場合、再帰的に検証
+          // ただし、optional: trueのフィールドはスキップ（既存データを保持）
           else if ("type" in propSchema && propSchema.type === "object") {
-            const { data: validatedValue, addedFields: nestedAddedFields } =
-              validateAndFillMissingFields(
-                mergedData[key],
-                propSchema as ValueSchema,
-                undefined,
-              );
-            mergedData[key] = validatedValue;
+            // optional: trueのフィールドで、かつ既存データが存在する場合はスキップ
+            if (!(propSchema.optional === true && mergedData[key])) {
+              const { data: validatedValue, addedFields: nestedAddedFields } =
+                validateAndFillMissingFields(
+                  mergedData[key],
+                  propSchema as ValueSchema,
+                  undefined,
+                );
+              mergedData[key] = validatedValue;
 
-            // ネストしたフィールド内で追加されたフィールドのパスを記録
-            nestedAddedFields.forEach((field) => {
-              allAddedFields.push(`${key}.${field}`);
-            });
+              // ネストしたフィールド内で追加されたフィールドのパスを記録
+              nestedAddedFields.forEach((field) => {
+                allAddedFields.push(`${key}.${field}`);
+              });
+            }
           }
           // Switch fieldの場合、switch値に基づいて適切なcaseのスキーマを取得して検証
           else if ("switch" in propSchema) {

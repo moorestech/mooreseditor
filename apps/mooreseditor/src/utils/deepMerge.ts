@@ -5,6 +5,11 @@
  * @returns The merged object
  */
 export function deepMerge(target: any, source: any): any {
+  // sourceがundefinedの場合、targetをそのまま返す（既存データを保持）
+  if (source === undefined) {
+    return target;
+  }
+
   if (!source || typeof source !== "object") {
     return source;
   }

@@ -12,6 +12,7 @@ export interface ObjectSchema {
   openedByDefault?: boolean;
   properties?: Array<ObjectPropertySchema>;
   ref?: string;
+  optional?: boolean;
 }
 
 export type ObjectPropertySchema = Schema & {
@@ -121,6 +122,7 @@ export interface SwitchSchema {
       when: string | number | boolean;
     } & ValueSchema
   >;
+  optional?: boolean;
 }
 
 export type PrimitiveSchema =

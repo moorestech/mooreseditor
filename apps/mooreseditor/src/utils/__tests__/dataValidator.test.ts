@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { validateAndFillMissingFields } from "../dataValidator";
 
-import type { ObjectSchema, SwitchSchema } from "../../libs/schema/types";
+import type { ObjectSchema } from "../../libs/schema/types";
 
 describe("dataValidator", () => {
   describe("switch field validation", () => {
@@ -42,7 +42,7 @@ describe("dataValidator", () => {
                 properties: [],
               },
             ],
-          } as SwitchSchema,
+          },
         ],
       };
 
@@ -99,7 +99,7 @@ describe("dataValidator", () => {
                       ],
                     },
                   ],
-                } as SwitchSchema,
+                },
               ],
             },
           },

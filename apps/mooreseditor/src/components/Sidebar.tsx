@@ -10,6 +10,7 @@ interface SidebarProps {
   loadFileData: (menuItem: string) => Promise<void>;
   openProjectDir: () => void;
   isEditing: boolean;
+  hasUnsavedChanges: boolean;
   schemas: Record<string, any>;
   isPreloading?: boolean;
 }
@@ -20,6 +21,7 @@ function Sidebar({
   loadFileData,
   openProjectDir,
   isEditing,
+  hasUnsavedChanges,
   schemas,
   isPreloading = false,
 }: SidebarProps) {
@@ -77,7 +79,7 @@ function Sidebar({
             marginLeft: "8px",
           }}
         >
-          moorestech {isEditing && "*"}
+          moorestech {(isEditing || hasUnsavedChanges) && "*"}
         </Text>
       </div>
       <Button

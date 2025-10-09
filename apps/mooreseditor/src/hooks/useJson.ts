@@ -202,6 +202,7 @@ export function useJson() {
     preloadAllData,
     isPreloading,
     hasUnsavedChanges,
+    setHasUnsavedChanges,
     clearUnsavedChanges,
   };
 }

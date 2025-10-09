@@ -5,12 +5,35 @@
  * @returns The merged object
  */
 export function deepMerge(target: any, source: any): any {
+  // sourceがundefinedの場合、targetをそのまま返す（既存データを保持）
+  if (source === undefined) {
+    return target;
+  }
+
   if (!source || typeof source !== "object") {
     return source;
   }
 
   if (!target || typeof target !== "object") {
     return cloneValue(source);
+  }
+
+  // Both are arrays: preserve target array and recursively merge each element
+  if (Array.isArray(target) && Array.isArray(source)) {
+    return target.map((item, index) => {
+      if (
+        index < source.length &&
+        item &&
+        typeof item === "object" &&
+        source[index] &&
+        typeof source[index] === "object" &&
+        !Array.isArray(item) &&
+        !Array.isArray(source[index])
+      ) {
+        return deepMerge(item, source[index]);
+      }
+      return item;
+    });
   }
 
   const result: Record<string, any> = { ...target };

@@ -5,6 +5,7 @@ import type {
   ValueSchema,
   ObjectSchema,
   ArraySchema,
+  SwitchSchema,
 } from "../libs/schema/types";
 
 /**
@@ -31,8 +32,13 @@ export class DataInitializer {
 
   /**
    * スキーマに基づいて必須フィールドのみを持つ初期値を生成
+   * @param schema スキーマ定義
+   * @param contextData switch fieldの参照値を解決するためのコンテキストデータ（オプション）
    */
-  public createRequiredValue(schema: Schema | ValueSchema): any {
+  public createRequiredValue(
+    schema: Schema | ValueSchema,
+    contextData?: any,
+  ): any {
     // スキーマがない場合はnullを返す
     if (!schema || !("type" in schema)) {
       return null;
@@ -58,7 +64,10 @@ export class DataInitializer {
 
     switch (valueSchema.type) {
       case "object":
-        result = this.generateObjectValue(valueSchema as ObjectSchema);
+        result = this.generateObjectValue(
+          valueSchema as ObjectSchema,
+          contextData,
+        );
         break;
 
       case "array":
@@ -104,16 +113,53 @@ export class DataInitializer {
 
   /**
    * object型の必須プロパティのみを生成
+   * @param schema オブジェクトスキーマ
+   * @param contextData switch fieldの参照値を解決するためのコンテキストデータ
    */
-  private generateObjectValue(schema: ObjectSchema): any {
+  private generateObjectValue(
+    schema: ObjectSchema,
+    contextData?: any,
+  ): any {
     const obj: any = {};
 
     if (schema.properties && Array.isArray(schema.properties)) {
       schema.properties.forEach((prop) => {
         const { key, ...propSchema } = prop;
 
-        // 必須フィールドのみ処理
-        if (this.isRequiredField(propSchema)) {
+        // Switch fieldの処理
+        if ("switch" in propSchema) {
+          const switchSchema = propSchema as SwitchSchema;
+          const switchPath = switchSchema.switch;
+
+          // 必須フィールドのみ処理
+          if (this.isRequiredField(propSchema)) {
+            // 相対パス（./）の場合、コンテキストデータから参照値を取得
+            if (switchPath.startsWith("./") && contextData) {
+              const referencedField = switchPath.slice(2);
+              const switchValue = contextData[referencedField];
+
+              // 一致するcaseを見つける
+              const matchedCase = switchSchema.cases?.find(
+                (c) => c.when === switchValue,
+              );
+
+              if (matchedCase && "type" in matchedCase) {
+                // そのcaseのスキーマで値を生成
+                const value = this.createRequiredValue(
+                  matchedCase as ValueSchema,
+                  contextData[key], // switch field内のデータをコンテキストとして渡す
+                );
+
+                // undefined以外の値の場合のみオブジェクトに追加
+                if (value !== undefined) {
+                  obj[key] = value;
+                }
+              }
+            }
+          }
+        }
+        // 通常のフィールドの処理
+        else if (this.isRequiredField(propSchema)) {
           const value = this.createRequiredValue(propSchema as ValueSchema);
 
           // undefined以外の値の場合のみオブジェクトに追加

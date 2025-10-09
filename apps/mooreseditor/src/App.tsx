@@ -19,8 +19,16 @@ const theme = createTheme({
 function App() {
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
     useProject();
-  const { jsonData, setJsonData, loadJsonFile, preloadAllData, isPreloading } =
-    useJson();
+  const {
+    jsonData,
+    setJsonData,
+    loadJsonFile,
+    preloadAllData,
+    isPreloading,
+    hasUnsavedChanges,
+    setHasUnsavedChanges,
+    clearUnsavedChanges,
+  } = useJson();
   const { schemas, loadSchema } = useSchema();
 
   const [nestedViews, setNestedViews] = useState<
@@ -78,7 +86,7 @@ function App() {
       if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault(); // Prevent browser's save dialog
 
-        if (isEditing && jsonData.length > 0) {
+        if ((isEditing || hasUnsavedChanges) && jsonData.length > 0) {
           // Save the current jsonData
           handleSave(jsonData);
         }
@@ -90,7 +98,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isEditing, jsonData]);
+  }, [isEditing, hasUnsavedChanges, jsonData]);
 
   async function handleSave(_data: any) {
     try {
@@ -111,6 +119,7 @@ function App() {
           );
         });
         setIsEditing(false);
+        clearUnsavedChanges();
         return;
       }
 
@@ -145,6 +154,7 @@ function App() {
       }
 
       setIsEditing(false);
+      clearUnsavedChanges();
     } catch (error) {
       console.error("保存中にエラーが発生しました:", error);
     }
@@ -195,6 +205,7 @@ function App() {
             }}
             openProjectDir={openProjectDir}
             isEditing={isEditing}
+            hasUnsavedChanges={hasUnsavedChanges}
             schemas={schemas}
           />
 
@@ -279,6 +290,7 @@ function App() {
                       console.log("Setting new jsonData:", updatedJsonData);
                       setJsonData(updatedJsonData);
                       setIsEditing(true);
+                      setHasUnsavedChanges(true);
                     }}
                     onRowSelect={(rowIndex) => {
                       // Get data from currentData
@@ -356,6 +368,7 @@ function App() {
                       updatedJsonData[targetIndex] = updatedItem;
                       setJsonData(updatedJsonData);
                       setIsEditing(true);
+                      setHasUnsavedChanges(true);
                     }}
                     onObjectArrayClick={(fullPath, schema) => {
                       console.log("FormView onObjectArrayClick:", {

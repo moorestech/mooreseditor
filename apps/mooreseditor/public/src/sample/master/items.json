@@ -321,7 +321,7 @@
     },
     {
       "itemGuid": "a9d9cdc5-ac74-4853-8d23-aafe2dd04605",
-      "name": "低品​質​鉄粉",
+      "name": "低品質鉄粉",
       "maxStack": 100,
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
@@ -712,7 +712,7 @@
     {
       "itemGuid": "296417d6-7499-49aa-ac6c-f2787114b833",
       "imagePath": "",
-      "name": "生石​灰石",
+      "name": "生石灰石",
       "maxStack": 100,
       "sortPriority": 870,
       "initialUnlocked": false,
@@ -745,6 +745,36 @@
       "name": "歯車ポンプ",
       "maxStack": 100,
       "sortPriority": 900,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "3a1b7457-29fd-4a70-a5ab-c6e77c290c3e",
+      "imagePath": "",
+      "name": "2x2",
+      "maxStack": 100,
+      "sortPriority": 911,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "00292137-5fbd-4a61-ab61-ef208450a9f5",
+      "imagePath": "",
+      "name": "3x3",
+      "maxStack": 100,
+      "sortPriority": 912,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "01daf403-b47b-4a0e-b277-d339fab300ec",
+      "imagePath": "",
+      "name": "4x4",
+      "maxStack": 100,
+      "sortPriority": 913,
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
       "handGrabModelAddressablePath": ""
@@ -789,16 +819,6 @@
       "name": "鋼鉄フレーム",
       "maxStack": 100,
       "sortPriority": 950,
-      "initialUnlocked": false,
-      "recipeViewType": "IsUnlocked",
-      "handGrabModelAddressablePath": ""
-    },
-    {
-      "itemGuid": "4f83e639-37bb-4d08-baa5-0ff146432c0b",
-      "imagePath": "",
-      "name": "モーター",
-      "maxStack": 100,
-      "sortPriority": 960,
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
       "handGrabModelAddressablePath": ""
@@ -856,7 +876,7 @@
     {
       "itemGuid": "d9cbebc7-6742-48bd-ad2b-2b45e4d4b435",
       "imagePath": "",
-      "name": "水素​還​元​炉",
+      "name": "水素還元炉",
       "maxStack": 100,
       "sortPriority": 1010,
       "initialUnlocked": false,
@@ -936,7 +956,7 @@
     {
       "itemGuid": "b1002714-bed8-4f25-87f9-88237a9376f8",
       "imagePath": "",
-      "name": "簡易​組立機",
+      "name": "簡易組立機",
       "maxStack": 100,
       "sortPriority": 1080,
       "initialUnlocked": false,
@@ -1006,7 +1026,7 @@
     {
       "itemGuid": "1eb89d18-53d1-4d8c-86b2-3b63a9880e1b",
       "imagePath": "",
-      "name": "トランジスタ製造装置",
+      "name": "電子部品製造装置",
       "maxStack": 100,
       "sortPriority": 1150,
       "initialUnlocked": false,
@@ -1086,7 +1106,7 @@
     {
       "itemGuid": "1110b0bb-cf52-4e5a-9303-055270218e99",
       "imagePath": "",
-      "name": "高​強度​鋼​鉄",
+      "name": "高強度鋼鉄",
       "maxStack": 100,
       "sortPriority": 1230,
       "initialUnlocked": false,
@@ -1129,6 +1149,26 @@
       "name": "チェイナーコンベア",
       "maxStack": 100,
       "sortPriority": 1270,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "ef8f0fae-2e88-4e91-9386-a70f3a572cb7",
+      "imagePath": "",
+      "name": "チェイナー上りコンベア",
+      "maxStack": 100,
+      "sortPriority": 1271,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "829fa968-9e21-4a53-af5c-5e41595ef0d9",
+      "imagePath": "",
+      "name": "チェイナー下りコンベア",
+      "maxStack": 100,
+      "sortPriority": 1272,
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
       "handGrabModelAddressablePath": ""
@@ -1196,7 +1236,7 @@
     {
       "itemGuid": "418f7c04-04bb-4e12-8432-2865d32c65f8",
       "imagePath": "",
-      "name": "超伝​導体​",
+      "name": "超伝導体",
       "maxStack": 100,
       "sortPriority": 1340,
       "initialUnlocked": false,
@@ -1236,7 +1276,7 @@
     {
       "itemGuid": "4a8f0136-6a0c-48ec-b75c-b882cbdd1bda",
       "imagePath": "",
-      "name": "真​空ポンプ",
+      "name": "真空ポンプ",
       "maxStack": 100,
       "sortPriority": 1380,
       "initialUnlocked": false,
@@ -1266,7 +1306,7 @@
     {
       "itemGuid": "6fb78a16-9b4a-48ad-954d-6406bf73c765",
       "imagePath": "",
-      "name": "重水​素​抽​出​装置",
+      "name": "重水素抽出装置",
       "maxStack": 100,
       "sortPriority": 1410,
       "initialUnlocked": false,
@@ -1276,7 +1316,7 @@
     {
       "itemGuid": "92fe76fc-19b9-4b2d-938e-1c906b07d37d",
       "imagePath": "",
-      "name": "重水素",
+      "name": "重水素タンク",
       "maxStack": 100,
       "sortPriority": 1420,
       "initialUnlocked": false,
@@ -1286,7 +1326,7 @@
     {
       "itemGuid": "29b1aefb-4546-4ce3-842f-bbb2c4ac9eab",
       "imagePath": "",
-      "name": "磁​気格​納箱",
+      "name": "磁気格納箱",
       "maxStack": 100,
       "sortPriority": 1430,
       "initialUnlocked": false,
@@ -1296,7 +1336,7 @@
     {
       "itemGuid": "aa96a24a-2e21-425b-bd0e-c7481b349123",
       "imagePath": "",
-      "name": "反物​質製​造​装置",
+      "name": "反物質製造装置",
       "maxStack": 100,
       "sortPriority": 1440,
       "initialUnlocked": false,
@@ -1326,7 +1366,7 @@
     {
       "itemGuid": "625b6026-dd76-40bf-9f87-58083f050146",
       "imagePath": "",
-      "name": "反物​質爆弾​",
+      "name": "反物質爆弾",
       "maxStack": 100,
       "sortPriority": 1470,
       "initialUnlocked": false,
@@ -1369,6 +1409,16 @@
       "name": "ロケット",
       "maxStack": 100,
       "sortPriority": 1510,
+      "initialUnlocked": false,
+      "recipeViewType": "IsUnlocked",
+      "handGrabModelAddressablePath": ""
+    },
+    {
+      "itemGuid": "53077e0e-77b2-4028-8fec-fc7190ef720f",
+      "imagePath": "",
+      "name": "半導体製造装置",
+      "maxStack": 100,
+      "sortPriority": 1520,
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
       "handGrabModelAddressablePath": ""

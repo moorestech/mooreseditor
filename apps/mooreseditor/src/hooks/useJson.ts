@@ -9,7 +9,9 @@ import {
 } from "@tauri-apps/plugin-fs";
 
 import { createInitialValue } from "../utils/createInitialValue";
+import { validateAndFillMissingFields } from "../utils/dataValidator";
 import { getSampleJson } from "../utils/devFileSystem";
+import { notifyFieldsAdded } from "../utils/notifyFieldsAdded";
 
 import { useProject } from "./useProject";
 
@@ -46,6 +48,7 @@ export function useJson() {
   const { projectDir, masterDir, schemaDir, menuToFileMap } = useProject();
   const [jsonData, setJsonData] = useState<Column[]>([]);
   const [isPreloading, setIsPreloading] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   async function loadJsonFile(
     menuItem: string,
@@ -92,16 +95,28 @@ export function useJson() {
           parsedData = generateDefaultJsonFromSchema(schema);
 
           // Write the default JSON to file
-          await writeTextFile(
-            jsonFilePath,
-            JSON.stringify(parsedData, null, 2),
-          );
+          await writeTextFile(jsonFilePath, JSON.stringify(parsedData, null, 2),);
           console.log(`Created new JSON file: ${jsonFilePath}`);
         } else {
           // Read existing file
           const fileContents = await readTextFile(jsonFilePath);
           parsedData = JSON.parse(fileContents);
         }
+      }
+
+      // Validate and fill missing required fields
+      if (schema) {
+        const { data, addedFields } = validateAndFillMissingFields(
+          parsedData,
+          schema,
+        );
+
+        if (addedFields.length > 0) {
+          await notifyFieldsAdded(menuItem, addedFields);
+          setHasUnsavedChanges(true);
+        }
+
+        parsedData = data;
       }
 
       if (!parsedData) {
@@ -176,11 +191,18 @@ export function useJson() {
     setIsPreloading(false);
   }
 
+  function clearUnsavedChanges() {
+    setHasUnsavedChanges(false);
+  }
+
   return {
     jsonData,
     setJsonData,
     loadJsonFile,
     preloadAllData,
     isPreloading,
+    hasUnsavedChanges,
+    setHasUnsavedChanges,
+    clearUnsavedChanges,
   };
 }

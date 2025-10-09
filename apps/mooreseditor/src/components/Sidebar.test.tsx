@@ -22,6 +22,7 @@ describe("Sidebar", () => {
     loadFileData: vi.fn(),
     openProjectDir: vi.fn(),
     isEditing: false,
+    hasUnsavedChanges: false,
     schemas: {},
   };
 

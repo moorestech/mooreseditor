@@ -1,6 +1,0 @@
-- Use dynamic, schema-driven logic—do not assume specific schema layouts.
-- Prefer try/catch fallbacks over environment conditionals when differing dev/prod behavior.
-- Default to ASCII in code unless existing file justifies Unicode; keep comments succinct and only when clarifying complex logic.
-- Key directories: src/components for UI, src/hooks for custom hooks, src/utils for helpers, src/libs/schema for schema typings.
-- Core React views: App.tsx (state management), FormView, TableView, EditView handling schema-bound editing flows.
-- Use Playwright debugging flow accessing http://localhost:1420 for UI validation.

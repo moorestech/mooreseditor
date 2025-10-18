@@ -1,3 +1,0 @@
-- mooreseditor is a Tauri desktop application for editing JSON master data from dynamically loaded YAML-based schemas. 
-- The app must stay schema-agnostic: never hardcode sample schema structures; every schema operation should work with arbitrary shapes.
-- Frontend is built with TypeScript/React inside a Turborepo monorepo (apps/, packages/).

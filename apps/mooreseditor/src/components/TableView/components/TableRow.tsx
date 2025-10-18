@@ -7,6 +7,8 @@ import { processSwitchFields } from "../../../utils/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 
+import { RowCopyPasteButtons } from "./RowCopyPasteButtons";
+
 import type { Column } from "../../../hooks/useJson";
 import type { ObjectSchema } from "../../../libs/schema/types";
 import type { EditingCell } from "../TableView.types";
@@ -197,6 +199,13 @@ export const TableRow: React.FC<TableRowProps> = ({
           </Button>
           {onDataChange && (
             <>
+              <RowCopyPasteButtons
+                row={row}
+                index={index}
+                arrayData={arrayData}
+                itemSchema={itemSchema}
+                onDataChange={onDataChange}
+              />
               <ActionIcon
                 color="gray"
                 variant="subtle"

@@ -19,6 +19,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 
 import { SortableRow } from "./components/SortableRow";
+import { useClipboardAppend } from "./hooks/useClipboardAppend";
 import { useTableEdit } from "./hooks/useTableEdit";
 
 import type { TableViewProps } from "./TableView.types";
@@ -98,6 +99,12 @@ export const TableView = ({
     return <Text>Invalid data</Text>;
   }
 
+  const { objectItemSchema, handlePasteNewItem } = useClipboardAppend({
+    schemaItems: schema.items,
+    arrayData,
+    onDataChange,
+  });
+
   return (
     <DndContext
       sensors={sensors}
@@ -163,14 +170,27 @@ export const TableView = ({
           </Table.Tbody>
         </Table>
         {onDataChange && (
-          <Button
-            variant="light"
-            size="sm"
-            leftSection={<IconPlus size={16} />}
-            onClick={addItem}
-          >
-            Add Item
-          </Button>
+          <Stack gap="xs">
+            <Button
+              variant="light"
+              size="sm"
+              leftSection={<IconPlus size={16} />}
+              onClick={addItem}
+            >
+              Add Item
+            </Button>
+            {objectItemSchema && (
+              <Button
+                variant="light"
+                size="sm"
+                onClick={() => {
+                  void handlePasteNewItem();
+                }}
+              >
+                クリップボードの内容を追加
+              </Button>
+            )}
+          </Stack>
         )}
       </Stack>
     </DndContext>

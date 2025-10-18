@@ -116,6 +116,7 @@ export const TableView = ({
           <Table.Thead>
             <Table.Tr>
               <Table.Th style={{ width: "40px" }}></Table.Th>
+              <Table.Th style={{ width: "140px" }}>Actions</Table.Th>
               <Table.Th style={{ width: "50px" }}>#</Table.Th>
               {columns.map((column) => {
                 // 文字数に基づいて最小幅を計算（文字あたり10px + パディング32px、最小120px）
@@ -126,7 +127,7 @@ export const TableView = ({
                   </Table.Th>
                 );
               })}
-              <Table.Th style={{ width: "80px" }}>Actions</Table.Th>
+              <Table.Th style={{ width: "60px" }}>Delete</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>

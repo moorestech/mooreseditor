@@ -1,0 +1,5 @@
+- `pnpm run tauri dev` — launch the Tauri desktop app in dev mode at http://localhost:1420.
+- `pnpm run lint` — run ESLint.
+- `pnpm run typecheck` — run TypeScript type checking.
+- `pnpm run test` — project unit tests.
+- `pnpm run test:e2e -- --reporter=list` — Playwright end-to-end suite (append file path or use :debug variants as needed).

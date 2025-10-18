@@ -1,0 +1,2 @@
+- After code changes, run `pnpm run lint`, `pnpm run typecheck`, and any impacted `pnpm run test` or `pnpm run test:e2e -- --reporter=list` suites as appropriate.
+- If using Playwright for manual verification, follow the standard flow: load http://localhost:1420, open FileOpen, modify data, save with Ctrl+S, and confirm console output.

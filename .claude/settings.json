@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm run build"
+          },
+          {
+            "type": "command",
+            "command": "pnpm run lint"
+          }
+        ]
+      }
+    ]
+  }
+}

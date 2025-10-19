@@ -9,12 +9,20 @@ import FormView from "./components/FormView";
 import Sidebar from "./components/Sidebar";
 import { TableView } from "./components/TableView";
 import { useJson } from "./hooks/useJson";
+import { useNestedViewScroll } from "./hooks/useNestedViewScroll";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
 
 const theme = createTheme({
   primaryColor: "orange",
 });
+
+type NestedView = {
+  type: "form" | "table";
+  schema: any;
+  data: any;
+  path: string[];
+};
 
 function App() {
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
@@ -31,11 +39,14 @@ function App() {
   } = useJson();
   const { schemas, loadSchema } = useSchema();
 
-  const [nestedViews, setNestedViews] = useState<
-    Array<{ type: "form" | "table"; schema: any; data: any; path: string[] }>
-  >([]);
+  const [nestedViews, setNestedViews] = useState<NestedView[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
+
+  const { scrollContainerRef, openNestedView } = useNestedViewScroll(
+    nestedViews,
+    setNestedViews,
+  );
 
   // Find the currently selected data from jsonData
   const currentData = jsonData.find((item) => item.title === selectedSchema);
@@ -217,6 +228,7 @@ function App() {
               overflowX: "auto",
               height: "100%",
             }}
+            ref={scrollContainerRef}
           >
             {nestedViews.map((view, index) => (
               <div
@@ -303,15 +315,12 @@ function App() {
                         selectedRowData &&
                         view.schema.items?.type === "object"
                       ) {
-                        setNestedViews((prev) => [
-                          ...prev.slice(0, index + 1),
-                          {
-                            type: "form",
-                            schema: view.schema.items,
-                            data: selectedRowData,
-                            path: [...view.path, rowIndex.toString()],
-                          },
-                        ]);
+                        openNestedView(index, {
+                          type: "form",
+                          schema: view.schema.items,
+                          data: selectedRowData,
+                          path: [...view.path, rowIndex.toString()],
+                        });
                       }
                     }}
                   />
@@ -391,15 +400,14 @@ function App() {
 
                       console.log("Data to display:", dataAtPath);
 
-                      setNestedViews((prev) => [
-                        ...prev.slice(0, index + 1),
-                        {
-                          type: "table",
-                          schema: schema,
-                          data: dataAtPath || [],
-                          path: fullPath,
-                        },
-                      ]);
+                      const nextView: NestedView = {
+                        type: "table",
+                        schema: schema,
+                        data: dataAtPath || [],
+                        path: fullPath,
+                      };
+
+                      openNestedView(index, nextView);
                     }}
                   />
                 )}

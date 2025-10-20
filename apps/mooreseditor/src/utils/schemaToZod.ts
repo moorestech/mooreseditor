@@ -140,15 +140,15 @@ export function schemaToZod(schema: Schema): ZodType<any> {
 
     case "object": {
       const objectSchema = valueSchema as ObjectSchema;
-      if (objectSchema.properties) {
-        const shape: Record<string, ZodType> = {};
-        objectSchema.properties.forEach((prop) => {
-          const { key, ...propSchema } = prop;
-          shape[key] = schemaToZod(propSchema as Schema);
-        });
-        return z.object(shape).optional();
-      }
-      return z.object({}).optional();
+      const shape: Record<string, ZodType> = {};
+
+      objectSchema.properties?.forEach((prop) => {
+        const { key, ...propSchema } = prop;
+        shape[key] = schemaToZod(propSchema as Schema);
+      });
+
+      const baseObject = z.object(shape).passthrough();
+      return valueSchema.optional === false ? baseObject : baseObject.optional();
     }
 
     default:

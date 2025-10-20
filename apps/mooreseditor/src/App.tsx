@@ -315,12 +315,16 @@ function App() {
                         selectedRowData &&
                         view.schema.items?.type === "object"
                       ) {
-                        openNestedView(index, {
-                          type: "form",
-                          schema: view.schema.items,
-                          data: selectedRowData,
-                          path: [...view.path, rowIndex.toString()],
-                        });
+                        openNestedView(
+                          index,
+                          {
+                            type: "form",
+                            schema: view.schema.items,
+                            data: selectedRowData,
+                            path: [...view.path, rowIndex.toString()],
+                          },
+                          { forceScroll: true },
+                        );
                       }
                     }}
                   />

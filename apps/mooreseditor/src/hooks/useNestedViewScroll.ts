@@ -5,6 +5,10 @@ interface ScrollManagedView {
   path: string[];
 }
 
+type OpenNestedViewOptions = {
+  forceScroll?: boolean;
+};
+
 export function useNestedViewScroll<T extends ScrollManagedView>(
   nestedViews: T[],
   setNestedViews: React.Dispatch<React.SetStateAction<T[]>>,
@@ -13,7 +17,7 @@ export function useNestedViewScroll<T extends ScrollManagedView>(
   const shouldScrollToEndRef = useRef(false);
 
   const openNestedView = useCallback(
-    (parentIndex: number, view: T) => {
+    (parentIndex: number, view: T, options?: OpenNestedViewOptions) => {
       setNestedViews((prev) => {
         const baseViews = prev.slice(0, parentIndex + 1);
         const existingChild = prev[parentIndex + 1];
@@ -25,7 +29,7 @@ export function useNestedViewScroll<T extends ScrollManagedView>(
             (segment, index) => segment === view.path[index],
           );
 
-        shouldScrollToEndRef.current = !isSameChild;
+        shouldScrollToEndRef.current = options?.forceScroll || !isSameChild;
 
         return [...baseViews, view];
       });

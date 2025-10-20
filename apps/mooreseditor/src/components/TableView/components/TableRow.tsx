@@ -7,6 +7,8 @@ import { processSwitchFields } from "../../../utils/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 
+import { RowCopyPasteButtons } from "./RowCopyPasteButtons";
+
 import type { Column } from "../../../hooks/useJson";
 import type { ObjectSchema } from "../../../libs/schema/types";
 import type { EditingCell } from "../TableView.types";
@@ -52,6 +54,42 @@ export const TableRow: React.FC<TableRowProps> = ({
 }) => {
   return (
     <>
+      <Table.Td>
+        <Group gap="sm" wrap="nowrap">
+          <Button
+            size="xs"
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              onRowSelect?.(index);
+            }}
+          >
+            Edit
+          </Button>
+          {onDataChange && (
+            <>
+              <RowCopyPasteButtons
+                row={row}
+                index={index}
+                arrayData={arrayData}
+                itemSchema={itemSchema}
+                onDataChange={onDataChange}
+              />
+              <ActionIcon
+                color="gray"
+                variant="subtle"
+                size="sm"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  duplicateItem(index);
+                }}
+                title="複製"
+              >
+                <IconCopy size={16} />
+              </ActionIcon>
+            </>
+          )}
+        </Group>
+      </Table.Td>
       <Table.Td>{index}</Table.Td>
       {columns.map((column) => {
         const value = row[column.key];
@@ -185,45 +223,20 @@ export const TableRow: React.FC<TableRowProps> = ({
         );
       })}
       <Table.Td>
-        <Group gap="sm" wrap="nowrap">
-          <Button
-            size="xs"
+        {onDataChange && (
+          <ActionIcon
+            color="red"
+            variant="subtle"
+            size="sm"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
-              onRowSelect?.(index);
+              removeItem(index);
             }}
+            title="削除"
           >
-            Edit
-          </Button>
-          {onDataChange && (
-            <>
-              <ActionIcon
-                color="gray"
-                variant="subtle"
-                size="sm"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  duplicateItem(index);
-                }}
-                title="複製"
-              >
-                <IconCopy size={16} />
-              </ActionIcon>
-              <ActionIcon
-                color="red"
-                variant="subtle"
-                size="sm"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  removeItem(index);
-                }}
-                title="削除"
-              >
-                <IconTrash size={16} />
-              </ActionIcon>
-            </>
-          )}
-        </Group>
+            <IconTrash size={16} />
+          </ActionIcon>
+        )}
       </Table.Td>
     </>
   );

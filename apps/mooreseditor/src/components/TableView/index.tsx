@@ -19,6 +19,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 
 import { SortableRow } from "./components/SortableRow";
+import { useClipboardAppend } from "./hooks/useClipboardAppend";
 import { useTableEdit } from "./hooks/useTableEdit";
 
 import type { TableViewProps } from "./TableView.types";
@@ -98,6 +99,12 @@ export const TableView = ({
     return <Text>Invalid data</Text>;
   }
 
+  const { objectItemSchema, handlePasteNewItem } = useClipboardAppend({
+    schemaItems: schema.items,
+    arrayData,
+    onDataChange,
+  });
+
   return (
     <DndContext
       sensors={sensors}
@@ -109,6 +116,7 @@ export const TableView = ({
           <Table.Thead>
             <Table.Tr>
               <Table.Th style={{ width: "40px" }}></Table.Th>
+              <Table.Th style={{ width: "140px" }}>Actions</Table.Th>
               <Table.Th style={{ width: "50px" }}>#</Table.Th>
               {columns.map((column) => {
                 // 文字数に基づいて最小幅を計算（文字あたり10px + パディング32px、最小120px）
@@ -119,7 +127,7 @@ export const TableView = ({
                   </Table.Th>
                 );
               })}
-              <Table.Th style={{ width: "80px" }}>Actions</Table.Th>
+              <Table.Th style={{ width: "60px" }}>Delete</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -163,14 +171,27 @@ export const TableView = ({
           </Table.Tbody>
         </Table>
         {onDataChange && (
-          <Button
-            variant="light"
-            size="sm"
-            leftSection={<IconPlus size={16} />}
-            onClick={addItem}
-          >
-            Add Item
-          </Button>
+          <Stack gap="xs">
+            <Button
+              variant="light"
+              size="sm"
+              leftSection={<IconPlus size={16} />}
+              onClick={addItem}
+            >
+              Add Item
+            </Button>
+            {objectItemSchema && (
+              <Button
+                variant="light"
+                size="sm"
+                onClick={() => {
+                  void handlePasteNewItem();
+                }}
+              >
+                クリップボードの内容を追加
+              </Button>
+            )}
+          </Stack>
         )}
       </Stack>
     </DndContext>

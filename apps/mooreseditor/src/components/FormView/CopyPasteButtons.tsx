@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ActionIcon, Tooltip } from "@mantine/core";
-import { IconCopy, IconClipboard } from "@tabler/icons-react";
+import { IconClipboardCopy, IconClipboard } from "@tabler/icons-react";
 
 interface CopyPasteButtonsProps {
   onCopy: () => void;
@@ -16,7 +16,7 @@ export const CopyPasteButtons: React.FC<CopyPasteButtonsProps> = ({
     <>
       <Tooltip label="値をコピー" withArrow position="top">
         <ActionIcon variant="subtle" color="gray" onClick={onCopy} size="sm">
-          <IconCopy size={14} />
+          <IconClipboardCopy size={14} />
         </ActionIcon>
       </Tooltip>
       <Tooltip label="値をペースト" withArrow position="top">

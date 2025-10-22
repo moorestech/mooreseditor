@@ -75,7 +75,7 @@ function collectGuidValues(
         );
       });
       break;
-    case "array":
+    case "array": {
       if (!Array.isArray(data)) {
         return;
       }
@@ -84,6 +84,7 @@ function collectGuidValues(
         collectGuidValues(item, arraySchema.items, [...path, "*"], guidMap);
       });
       break;
+    }
     default:
       break;
   }

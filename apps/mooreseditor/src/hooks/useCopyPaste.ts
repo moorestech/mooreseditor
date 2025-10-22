@@ -5,11 +5,17 @@ import { schemaToZod } from "../utils/schemaToZod";
 
 import type { Schema } from "../libs/schema/types";
 
-export function useCopyPaste(
+export interface CopyPasteChangeFeedback {
+  successMessage?: string;
+}
+
+type ChangeHandlerResult = void | CopyPasteChangeFeedback;
+
+type ChangeHandler = (
   value: any,
-  onChange: (value: any) => void,
-  schema: Schema,
-) {
+) => ChangeHandlerResult | Promise<ChangeHandlerResult>;
+
+export function useCopyPaste(value: any, onChange: ChangeHandler, schema: Schema) {
   const handleCopy = useCallback(async () => {
     try {
       const json = JSON.stringify({ value, schema: { type: schema } }, null, 2);
@@ -57,8 +63,16 @@ export function useCopyPaste(
       const validationResult = zodSchema.safeParse(dataToValidate);
 
       if (validationResult.success) {
-        onChange(validationResult.data);
-        await showNotification("ペースト成功", "値を貼り付けました", "success");
+        const changeResult = await onChange(validationResult.data);
+        const successMessage =
+          changeResult && typeof changeResult === "object"
+            ? changeResult.successMessage
+            : undefined;
+        await showNotification(
+          "ペースト成功",
+          successMessage ?? "値を貼り付けました",
+          "success",
+        );
       } else {
         const firstError = validationResult.error.errors[0];
         const errorMessage = firstError?.message || "不明なエラー";

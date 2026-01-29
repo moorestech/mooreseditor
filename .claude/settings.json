@@ -15,5 +15,8 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "playwright-skill@playwright-skill": true
   }
 }

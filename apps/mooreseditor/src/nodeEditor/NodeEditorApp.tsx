@@ -16,7 +16,60 @@ import { useNodeOperations } from "./hooks/useNodeOperations";
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
 
 import type { NodeEditorViewProps } from "./types/props";
+import type { SchemaMeta } from "./utils/schemaMeta";
+import type { Column } from "../hooks/useJson";
 import type { OnNodesChange, OnEdgesChange, Node as ReactFlowNode } from "@xyflow/react";
+
+/**
+ * Resolve display names from master data at render time.
+ * This ensures names are always up-to-date even if data loads after the graph.
+ */
+function resolveDisplayNames(
+  nodes: ReactFlowNode[],
+  jsonData: Column[],
+  schemaMetas: Map<string, SchemaMeta>,
+): ReactFlowNode[] {
+  return nodes.map((node) => {
+    if (node.type === "note" || !node.data.masterGuid) return node;
+
+    // Map node type to schema ID dynamically
+    const schemaId = findSchemaIdForNodeType(node.type!, schemaMetas);
+    if (!schemaId) return node;
+
+    const meta = schemaMetas.get(schemaId);
+    if (!meta?.guidField || !meta?.nameField) return node;
+
+    const col = jsonData.find((c) => c.title === schemaId);
+    const arr = col?.data?.[meta.dataArrayPath];
+    if (!Array.isArray(arr)) return node;
+
+    const record = arr.find(
+      (r: any) => r[meta.guidField!] === node.data.masterGuid,
+    );
+    if (!record) return node;
+
+    const displayName = record[meta.nameField!];
+    if (!displayName || displayName === node.data.displayName) return node;
+
+    return { ...node, data: { ...node.data, displayName } };
+  });
+}
+
+/**
+ * Find the schema ID that corresponds to a node type by checking
+ * which schema contains a record matching the node type convention.
+ */
+function findSchemaIdForNodeType(
+  nodeType: string,
+  schemaMetas: Map<string, SchemaMeta>,
+): string | null {
+  // Try exact match first (e.g., "research" -> "research")
+  if (schemaMetas.has(nodeType)) return nodeType;
+  // Try pluralized (e.g., "item" -> "items", "block" -> "blocks")
+  const plural = nodeType + "s";
+  if (schemaMetas.has(plural)) return plural;
+  return null;
+}
 
 export default function NodeEditorApp(props: NodeEditorViewProps) {
   const { state, dispatch } = useNodeEditorContext();
@@ -27,6 +80,12 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
 
   // Load graph data
   useNodeGraph(props.projectDir, props.jsonData, schemaMetas);
+
+  // Resolve display names at render time so they stay current with loaded data
+  const resolvedNodes = useMemo(
+    () => resolveDisplayNames(state.nodes, props.jsonData, schemaMetas),
+    [state.nodes, props.jsonData, schemaMetas],
+  );
 
   const { addNode, deleteSelected, onConnect, updateNodeData, hasSelection } =
     useNodeOperations();
@@ -64,7 +123,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
   );
 
   const selectedNode = state.selectedNodeId
-    ? state.nodes.find((n) => n.id === state.selectedNodeId) ?? null
+    ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
 
   return (
@@ -84,7 +143,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
           hasSelection={hasSelection}
         />
         <NodeCanvas
-          nodes={state.nodes}
+          nodes={resolvedNodes}
           edges={state.edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}

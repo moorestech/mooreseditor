@@ -52,13 +52,18 @@ export function extractSchemaMeta(
       );
       if (guidProp) meta.guidField = guidProp.key;
 
-      // Name field: first type: string field that isn't the GUID
-      const nameProp = meta.elementSchema.properties?.find(
+      // Name field: prefer a string field whose key contains "name",
+      // otherwise fall back to first string field that isn't the GUID
+      const stringProps = meta.elementSchema.properties?.filter(
         (p) =>
           "type" in p &&
           (p as any).type === "string" &&
           p.key !== meta.guidField,
       );
+      const nameByKey = stringProps?.find((p) =>
+        p.key.toLowerCase().includes("name"),
+      );
+      const nameProp = nameByKey ?? stringProps?.[0];
       if (nameProp) meta.nameField = nameProp.key;
     }
   }

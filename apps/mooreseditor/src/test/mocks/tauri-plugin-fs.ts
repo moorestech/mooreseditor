@@ -9,3 +9,5 @@ export const removeFile = vi.fn();
 export const removeDir = vi.fn();
 export const copyFile = vi.fn();
 export const renameFile = vi.fn();
+export const mkdir = vi.fn();
+export const create = vi.fn();

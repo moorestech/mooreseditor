@@ -42,12 +42,20 @@ function App() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [mode, setMode] = useState<"editor" | "node">("editor");
+  const [nodeEditorMounted, setNodeEditorMounted] = useState(false);
   const nodeEditorRef = useRef<NodeEditorHandle>(null);
 
   // Preload all data when menuToFileMap changes (after File Open)
   useEffect(() => {
     preloadAllData(loadSchema);
   }, [menuToFileMap, projectDir, masterDir, schemaDir]);
+
+  // Keep NodeEditorView mounted once it's been visited
+  useEffect(() => {
+    if (mode === "node" && !nodeEditorMounted) {
+      setNodeEditorMounted(true);
+    }
+  }, [mode, nodeEditorMounted]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -192,7 +200,7 @@ function App() {
           </div>
         </AppShell.Header>
         <AppShell.Main>
-          {mode === "editor" ? (
+          <div style={{ display: mode === "editor" ? "block" : "none" }}>
             <EditorView
               menuToFileMap={menuToFileMap}
               jsonData={jsonData}
@@ -206,24 +214,27 @@ function App() {
               hasUnsavedChanges={hasUnsavedChanges}
               onMarkDirty={markDirty}
             />
-          ) : (
-            <React.Suspense
-              fallback={
-                <div style={{ padding: 16 }}>Loading Node Editor...</div>
-              }
-            >
-              <NodeEditorView
-                ref={nodeEditorRef}
-                jsonData={jsonData}
-                setJsonData={setJsonData}
-                schemas={schemas}
-                loadSchema={loadSchema}
-                projectDir={projectDir}
-                masterDir={masterDir}
-                onMarkDirty={() => setHasUnsavedChanges(true)}
-                onRequestSave={saveAll}
-              />
-            </React.Suspense>
+          </div>
+          {nodeEditorMounted && (
+            <div style={{ display: mode === "node" ? "block" : "none" }}>
+              <React.Suspense
+                fallback={
+                  <div style={{ padding: 16 }}>Loading Node Editor...</div>
+                }
+              >
+                <NodeEditorView
+                  ref={nodeEditorRef}
+                  jsonData={jsonData}
+                  setJsonData={setJsonData}
+                  schemas={schemas}
+                  loadSchema={loadSchema}
+                  projectDir={projectDir}
+                  masterDir={masterDir}
+                  onMarkDirty={() => setHasUnsavedChanges(true)}
+                  onRequestSave={saveAll}
+                />
+              </React.Suspense>
+            </div>
           )}
         </AppShell.Main>
       </AppShell>

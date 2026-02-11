@@ -7,26 +7,43 @@ import {
   Text,
   ScrollArea,
   Stack,
+  Tooltip,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import type { Column } from "../../../hooks/useJson";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 
+type NodeType = "item" | "block" | "research" | "note";
+
+interface NodeTypeEntry {
+  label: string;
+  type: NodeType;
+  schemaId: string;
+}
+
 interface AddNodeMenuProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: "item" | "block" | "research" | "note",
+    type: NodeType,
     masterGuid?: string,
     displayName?: string,
   ) => void;
+  nodeTypes: NodeTypeEntry[];
+  color: string;
+  tooltip: string;
+  showNoteOption?: boolean;
 }
 
 export default function AddNodeMenu({
   jsonData,
   schemaMetas,
   onAddNode,
+  nodeTypes,
+  color,
+  tooltip,
+  showNoteOption = false,
 }: AddNodeMenuProps) {
   const [search, setSearch] = useState("");
 
@@ -45,18 +62,14 @@ export default function AddNodeMenu({
       .filter((r) => r.guid);
   }
 
-  const nodeTypes = [
-    { label: "Item", type: "item" as const, schemaId: "items" },
-    { label: "Block", type: "block" as const, schemaId: "blocks" },
-    { label: "Research", type: "research" as const, schemaId: "research" },
-  ];
-
   return (
     <Menu shadow="md" width={280} position="bottom-start">
       <Menu.Target>
-        <ActionIcon variant="filled" size="lg" color="blue">
-          <IconPlus size={18} />
-        </ActionIcon>
+        <Tooltip label={tooltip}>
+          <ActionIcon variant="filled" size="lg" color={color}>
+            <IconPlus size={18} />
+          </ActionIcon>
+        </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
         <TextInput
@@ -96,10 +109,14 @@ export default function AddNodeMenu({
               </div>
             );
           })}
-          <Menu.Divider />
-          <Menu.Item onClick={() => onAddNode("note")}>
-            <Text size="xs">Add Note</Text>
-          </Menu.Item>
+          {showNoteOption && (
+            <>
+              <Menu.Divider />
+              <Menu.Item onClick={() => onAddNode("note")}>
+                <Text size="xs">Add Note</Text>
+              </Menu.Item>
+            </>
+          )}
         </ScrollArea.Autosize>
       </Menu.Dropdown>
     </Menu>

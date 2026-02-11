@@ -1,11 +1,19 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconNote, IconTrash } from "@tabler/icons-react";
 
 import AddNodeMenu from "./AddNodeMenu";
 
 import type { Column } from "../../../hooks/useJson";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 
+const ITEM_NODE_TYPES = [
+  { label: "Item", type: "item" as const, schemaId: "items" },
+  { label: "Block", type: "block" as const, schemaId: "blocks" },
+];
+
+const RESEARCH_NODE_TYPES = [
+  { label: "Research", type: "research" as const, schemaId: "research" },
+];
 
 interface NodeToolbarProps {
   jsonData: Column[];
@@ -44,7 +52,28 @@ export default function NodeToolbar({
         jsonData={jsonData}
         schemaMetas={schemaMetas}
         onAddNode={onAddNode}
+        nodeTypes={ITEM_NODE_TYPES}
+        color="blue"
+        tooltip="Add Item / Block"
       />
+      <AddNodeMenu
+        jsonData={jsonData}
+        schemaMetas={schemaMetas}
+        onAddNode={onAddNode}
+        nodeTypes={RESEARCH_NODE_TYPES}
+        color="cyan"
+        tooltip="Add Research"
+      />
+      <Tooltip label="Add Note">
+        <ActionIcon
+          variant="light"
+          color="pink"
+          size="lg"
+          onClick={() => onAddNode("note")}
+        >
+          <IconNote size={18} />
+        </ActionIcon>
+      </Tooltip>
       <Tooltip label="Delete selected">
         <ActionIcon
           variant="light"

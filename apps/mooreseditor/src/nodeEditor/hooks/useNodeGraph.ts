@@ -7,9 +7,14 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
+import { normalizeRecipeRefsFromEdgeData } from "../utils/recipeEdge";
 
 import type { Column } from "../../hooks/useJson";
-import type { GraphNode, GraphEdge, NodeGraphFile } from "../types/nodeGraph";
+import type {
+  GraphNode,
+  GraphEdge,
+  NodeGraphFile,
+} from "../types/nodeGraph";
 import type { SchemaMeta } from "../utils/schemaMeta";
 import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
 
@@ -17,7 +22,11 @@ import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react
  * Map edgeType to React Flow component type key
  */
 function mapEdgeType(edgeType: string): string {
-  if (edgeType === "craftRecipe" || edgeType === "machineRecipe") {
+  if (
+    edgeType === "recipe" ||
+    edgeType === "craftRecipe" ||
+    edgeType === "machineRecipe"
+  ) {
     return "recipe";
   }
   return "arrow";
@@ -72,16 +81,20 @@ function toReactFlowNodes(
  * Convert persistent GraphEdge[] to React Flow edges
  */
 function toReactFlowEdges(graphEdges: GraphEdge[]): ReactFlowEdge[] {
-  return graphEdges.map((ge) => ({
-    id: ge.id,
-    source: ge.source,
-    target: ge.target,
-    type: mapEdgeType(ge.edgeType),
-    data: {
-      edgeType: ge.edgeType,
-      ...("masterGuid" in ge ? { masterGuid: ge.masterGuid } : {}),
-    },
-  }));
+  return graphEdges.map((ge) => {
+    const recipeRefs = normalizeRecipeRefsFromEdgeData(ge);
+    const isRecipe = recipeRefs.length > 0;
+    return {
+      id: ge.id,
+      source: ge.source,
+      target: ge.target,
+      type: mapEdgeType(ge.edgeType),
+      data: {
+        edgeType: isRecipe ? "recipe" : ge.edgeType,
+        ...(isRecipe ? { recipeRefs } : {}),
+      },
+    };
+  });
 }
 
 export function useNodeGraph(

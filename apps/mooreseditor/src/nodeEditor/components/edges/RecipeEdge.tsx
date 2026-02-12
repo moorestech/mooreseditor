@@ -26,8 +26,32 @@ export default function RecipeEdge({
     targetPosition,
   });
 
-  const edgeType = (data?.edgeType as string) || "";
-  const label = edgeType === "craftRecipe" ? "Craft" : edgeType === "machineRecipe" ? "Machine" : "Recipe";
+  const edgeData = (data || {}) as {
+    edgeType?: string;
+    recipeRefs?: Array<{ edgeType?: string; masterGuid?: string }>;
+    recipeLabels?: string[];
+  };
+  const recipeLabels = Array.isArray(edgeData.recipeLabels)
+    ? edgeData.recipeLabels.filter(
+        (label): label is string => typeof label === "string" && label.length > 0,
+      )
+    : [];
+
+  const fallbackLabel = (() => {
+    const recipeRefs = Array.isArray(edgeData.recipeRefs) ? edgeData.recipeRefs : [];
+    if (recipeRefs.length > 0) {
+      return `${recipeRefs.length} recipe${recipeRefs.length > 1 ? "s" : ""}`;
+    }
+    if (edgeData.edgeType === "craftRecipe") return "Craft";
+    if (edgeData.edgeType === "machineRecipe") return "Machine";
+    return "Recipe";
+  })();
+  const displayLines = recipeLabels.length > 0
+    ? recipeLabels.slice(0, 3)
+    : [fallbackLabel];
+  if (recipeLabels.length > 3) {
+    displayLines.push(`+${recipeLabels.length - 3} more`);
+  }
 
   return (
     <>
@@ -50,10 +74,15 @@ export default function RecipeEdge({
             borderRadius: 4,
             border: "1px solid #f59e0b",
             pointerEvents: "all",
+            maxWidth: 220,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
           className="nodrag nopan"
+          title={displayLines.join("\n")}
         >
-          {label}
+          {displayLines.join(" | ")}
         </div>
       </EdgeLabelRenderer>
     </>

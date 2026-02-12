@@ -8,68 +8,24 @@ import {
 
 
 import NodeCanvas from "./components/canvas/NodeCanvas";
+import EdgeTypeDialog from "./components/dialogs/EdgeTypeDialog";
 import PropertiesPanel from "./components/panels/PropertiesPanel";
 import NodeToolbar from "./components/toolbar/NodeToolbar";
 import { useNodeEditorContext } from "./context/NodeEditorContext";
 import { useNodeGraph } from "./hooks/useNodeGraph";
 import { useNodeOperations } from "./hooks/useNodeOperations";
+import {
+  resolveDisplayNames,
+  resolveEdgeRecipeLabels,
+} from "./utils/nodeRenderResolvers";
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
 
 import type { NodeEditorViewProps } from "./types/props";
-import type { SchemaMeta } from "./utils/schemaMeta";
-import type { Column } from "../hooks/useJson";
-import type { OnNodesChange, OnEdgesChange, Node as ReactFlowNode } from "@xyflow/react";
-
-/**
- * Resolve display names from master data at render time.
- * This ensures names are always up-to-date even if data loads after the graph.
- */
-function resolveDisplayNames(
-  nodes: ReactFlowNode[],
-  jsonData: Column[],
-  schemaMetas: Map<string, SchemaMeta>,
-): ReactFlowNode[] {
-  return nodes.map((node) => {
-    if (node.type === "note" || !node.data.masterGuid) return node;
-
-    // Map node type to schema ID dynamically
-    const schemaId = findSchemaIdForNodeType(node.type!, schemaMetas);
-    if (!schemaId) return node;
-
-    const meta = schemaMetas.get(schemaId);
-    if (!meta?.guidField || !meta?.nameField) return node;
-
-    const col = jsonData.find((c) => c.title === schemaId);
-    const arr = col?.data?.[meta.dataArrayPath];
-    if (!Array.isArray(arr)) return node;
-
-    const record = arr.find(
-      (r: any) => r[meta.guidField!] === node.data.masterGuid,
-    );
-    if (!record) return node;
-
-    const displayName = record[meta.nameField!];
-    if (!displayName || displayName === node.data.displayName) return node;
-
-    return { ...node, data: { ...node.data, displayName } };
-  });
-}
-
-/**
- * Find the schema ID that corresponds to a node type by checking
- * which schema contains a record matching the node type convention.
- */
-function findSchemaIdForNodeType(
-  nodeType: string,
-  schemaMetas: Map<string, SchemaMeta>,
-): string | null {
-  // Try exact match first (e.g., "research" -> "research")
-  if (schemaMetas.has(nodeType)) return nodeType;
-  // Try pluralized (e.g., "item" -> "items", "block" -> "blocks")
-  const plural = nodeType + "s";
-  if (schemaMetas.has(plural)) return plural;
-  return null;
-}
+import type {
+  OnNodesChange,
+  OnEdgesChange,
+  Node as ReactFlowNode,
+} from "@xyflow/react";
 
 export default function NodeEditorApp(props: NodeEditorViewProps) {
   const { state, dispatch } = useNodeEditorContext();
@@ -86,9 +42,21 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     () => resolveDisplayNames(state.nodes, props.jsonData, schemaMetas),
     [state.nodes, props.jsonData, schemaMetas],
   );
+  const resolvedEdges = useMemo(
+    () => resolveEdgeRecipeLabels(state.edges, props.jsonData, schemaMetas),
+    [state.edges, props.jsonData, schemaMetas],
+  );
 
-  const { addNode, deleteSelected, onConnect, updateNodeData, hasSelection } =
-    useNodeOperations();
+  const {
+    addNode,
+    deleteSelected,
+    onConnect,
+    updateNodeData,
+    hasSelection,
+    pendingConnection,
+    confirmConnection,
+    cancelConnection,
+  } = useNodeOperations();
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => {
@@ -121,9 +89,19 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     },
     [dispatch],
   );
+  const handleMarkDirty = useCallback(() => {
+    props.onMarkDirty();
+    dispatch({ type: "SET_DIRTY", dirty: true });
+  }, [props, dispatch]);
 
   const selectedNode = state.selectedNodeId
     ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
+    : null;
+  const sourceNode = pendingConnection?.source
+    ? resolvedNodes.find((node) => node.id === pendingConnection.source) ?? null
+    : null;
+  const targetNode = pendingConnection?.target
+    ? resolvedNodes.find((node) => node.id === pendingConnection.target) ?? null
     : null;
 
   return (
@@ -144,7 +122,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
         />
         <NodeCanvas
           nodes={resolvedNodes}
-          edges={state.edges}
+          edges={resolvedEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
@@ -161,6 +139,17 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
         schemaMetas={schemaMetas}
         onMarkDirty={props.onMarkDirty}
         onNodeDataChange={updateNodeData}
+      />
+      <EdgeTypeDialog
+        opened={pendingConnection !== null}
+        onConfirm={confirmConnection}
+        onCancel={cancelConnection}
+        jsonData={props.jsonData}
+        setJsonData={props.setJsonData}
+        schemaMetas={schemaMetas}
+        sourceNode={sourceNode}
+        targetNode={targetNode}
+        onMarkDirty={handleMarkDirty}
       />
     </div>
   );

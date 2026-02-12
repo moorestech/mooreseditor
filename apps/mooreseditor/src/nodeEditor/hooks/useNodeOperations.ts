@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { MarkerType } from "@xyflow/react";
 
@@ -10,10 +10,12 @@ import {
   createNoteNode,
 } from "../utils/nodeFactory";
 
+import type { ConnectionDecision } from "../types/connection";
 import type { Connection } from "@xyflow/react";
 
 export function useNodeOperations() {
   const { state, dispatch } = useNodeEditorContext();
+  const [pendingConnection, setPendingConnection] = useState<Connection | null>(null);
 
   const addNode = useCallback(
     (
@@ -76,18 +78,46 @@ export function useNodeOperations() {
 
   const onConnect = useCallback(
     (connection: Connection) => {
+      if (!connection.source || !connection.target) {
+        return;
+      }
+      setPendingConnection(connection);
+    },
+    [],
+  );
+
+  const confirmConnection = useCallback(
+    (decision: ConnectionDecision) => {
+      if (!pendingConnection) return;
+      if (decision.edgeType === "recipe" && decision.recipeRefs.length === 0) {
+        return;
+      }
+      if (!pendingConnection.source || !pendingConnection.target) {
+        return;
+      }
+
+      const isRecipe =
+        decision.edgeType === "recipe" && decision.recipeRefs.length > 0;
       const newEdge = {
         id: `edge-${Date.now()}`,
-        source: connection.source,
-        target: connection.target,
-        type: "arrow",
-        data: { edgeType: "dependency" },
-        markerEnd: { type: MarkerType.ArrowClosed },
+        source: pendingConnection.source,
+        target: pendingConnection.target,
+        type: isRecipe ? "recipe" : "arrow",
+        data: {
+          edgeType: isRecipe ? "recipe" : decision.edgeType,
+          ...(isRecipe ? { recipeRefs: decision.recipeRefs } : {}),
+        },
+        ...(isRecipe ? {} : { markerEnd: { type: MarkerType.ArrowClosed } }),
       };
       dispatch({ type: "SET_EDGES", edges: [...state.edges, newEdge] });
+      setPendingConnection(null);
     },
-    [state.edges, dispatch],
+    [pendingConnection, state.edges, dispatch],
   );
+
+  const cancelConnection = useCallback(() => {
+    setPendingConnection(null);
+  }, []);
 
   const updateNodeData = useCallback(
     (nodeId: string, data: Record<string, unknown>) => {
@@ -106,5 +136,8 @@ export function useNodeOperations() {
     onConnect,
     updateNodeData,
     hasSelection,
+    pendingConnection,
+    confirmConnection,
+    cancelConnection,
   };
 }

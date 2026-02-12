@@ -18,10 +18,23 @@ export function validateAndMigrate(data: unknown): NodeGraphFile | null {
         n.position?.y !== undefined,
     );
 
-    // Validate required edge fields
-    const validEdges = obj.edges.filter(
-      (e: any) => e.id && e.source && e.target && e.edgeType,
-    );
+    // Validate required edge fields and normalize recipe edge payload
+    const validEdges = obj.edges
+      .filter((e: any) => e.id && e.source && e.target && e.edgeType)
+      .map((e: any) => {
+        if (e.edgeType === "recipe") {
+          const recipes = Array.isArray(e.recipes)
+            ? e.recipes.filter(
+                (r: any) =>
+                  (r?.edgeType === "craftRecipe" || r?.edgeType === "machineRecipe") &&
+                  typeof r?.masterGuid === "string" &&
+                  r.masterGuid.length > 0,
+              )
+            : [];
+          return { ...e, recipes };
+        }
+        return e;
+      });
 
     return {
       version: 1,

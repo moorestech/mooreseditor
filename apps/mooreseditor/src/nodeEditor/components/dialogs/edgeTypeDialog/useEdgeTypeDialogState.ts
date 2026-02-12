@@ -20,6 +20,7 @@ import type { ObjectSchema } from "../../../../libs/schema/types";
 import type { RecipeEdgeType } from "../../../types/nodeGraph";
 
 export function useEdgeTypeDialogState({
+  opened,
   onConfirm,
   onCancel,
   jsonData,
@@ -28,6 +29,7 @@ export function useEdgeTypeDialogState({
   sourceNode,
   targetNode,
   onMarkDirty,
+  initialRecipeRefs,
 }: EdgeTypeDialogProps) {
   const [mode, setMode] = useState<EdgeDialogMode>("dependency");
   const [craftRecipeGuids, setCraftRecipeGuids] = useState<string[]>([]);
@@ -35,6 +37,24 @@ export function useEdgeTypeDialogState({
   const [editingRecipeKey, setEditingRecipeKey] = useState<string | null>(null);
   const [objectArrayEditor, setObjectArrayEditor] =
     useState<ObjectArrayEditorState | null>(null);
+
+  // Initialize from existing edge data when editing
+  useEffect(() => {
+    if (!opened) return;
+    if (initialRecipeRefs && initialRecipeRefs.length > 0) {
+      setMode("recipe");
+      setCraftRecipeGuids(
+        initialRecipeRefs
+          .filter((r) => r.edgeType === "craftRecipe")
+          .map((r) => r.masterGuid),
+      );
+      setMachineRecipeGuids(
+        initialRecipeRefs
+          .filter((r) => r.edgeType === "machineRecipe")
+          .map((r) => r.masterGuid),
+      );
+    }
+  }, [opened, initialRecipeRefs]);
 
   const recipeOptions = useMemo(
     () => buildRecipeOptions(jsonData, schemaMetas),

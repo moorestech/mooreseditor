@@ -1,8 +1,12 @@
+import { useContext } from "react";
+
 import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
 } from "@xyflow/react";
+
+import { EdgeEditContext } from "../../context/EdgeEditContext";
 
 import type { EdgeProps } from "@xyflow/react";
 
@@ -17,6 +21,8 @@ export default function RecipeEdge({
   data,
   selected,
 }: EdgeProps) {
+  const requestEditEdge = useContext(EdgeEditContext);
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -53,6 +59,10 @@ export default function RecipeEdge({
     displayLines.push(`+${recipeLabels.length - 3} more`);
   }
 
+  const handleDoubleClick = () => {
+    requestEditEdge?.(id);
+  };
+
   return (
     <>
       <BaseEdge
@@ -78,9 +88,11 @@ export default function RecipeEdge({
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            cursor: "pointer",
           }}
           className="nodrag nopan"
           title={displayLines.join("\n")}
+          onDoubleClick={handleDoubleClick}
         >
           {displayLines.join(" | ")}
         </div>

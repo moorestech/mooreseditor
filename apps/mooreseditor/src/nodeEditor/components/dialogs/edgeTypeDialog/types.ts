@@ -2,7 +2,7 @@ import type { Column } from "../../../../hooks/useJson";
 import type { ArraySchema } from "../../../../libs/schema/types";
 import type { ObjectPropertySchema } from "../../../../libs/schema/types";
 import type { ConnectionDecision } from "../../../types/connection";
-import type { RecipeEdgeType } from "../../../types/nodeGraph";
+import type { RecipeEdgeType, RecipeReference } from "../../../types/nodeGraph";
 import type { SchemaMeta } from "../../../utils/schemaMeta";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
@@ -18,6 +18,7 @@ export interface EdgeTypeDialogProps {
   sourceNode: ReactFlowNode | null;
   targetNode: ReactFlowNode | null;
   onMarkDirty: () => void;
+  initialRecipeRefs?: RecipeReference[];
 }
 
 export interface NodeSchemaRef {

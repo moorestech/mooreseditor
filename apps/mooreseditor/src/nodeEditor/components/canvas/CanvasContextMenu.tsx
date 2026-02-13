@@ -141,6 +141,21 @@ export default function CanvasContextMenu({
       />
       <ScrollArea.Autosize mah={350}>
         <Stack gap={0}>
+          <UnstyledButton
+            role="menuitem"
+            onClick={() => handleAddNode("note")}
+            px="sm"
+            py={4}
+            style={{
+              display: "block",
+              width: "100%",
+              borderRadius: 4,
+            }}
+            className="context-menu-item"
+          >
+            <Text size="xs">Add Memo</Text>
+          </UnstyledButton>
+          <Divider my={4} />
           {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
             const records = getRecords(schemaId, jsonData, schemaMetas).filter(
               (r) =>
@@ -183,20 +198,6 @@ export default function CanvasContextMenu({
               </div>
             );
           })}
-          <UnstyledButton
-            role="menuitem"
-            onClick={() => handleAddNode("note")}
-            px="sm"
-            py={4}
-            style={{
-              display: "block",
-              width: "100%",
-              borderRadius: 4,
-            }}
-            className="context-menu-item"
-          >
-            <Text size="xs">Add Memo</Text>
-          </UnstyledButton>
         </Stack>
       </ScrollArea.Autosize>
       <style>{`

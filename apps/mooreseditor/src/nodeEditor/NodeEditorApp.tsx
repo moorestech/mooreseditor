@@ -4,9 +4,11 @@ import "@xyflow/react/dist/style.css";
 import {
   applyNodeChanges,
   applyEdgeChanges,
+  useReactFlow,
 } from "@xyflow/react";
 
 
+import CanvasContextMenu from "./components/canvas/CanvasContextMenu";
 import NodeCanvas from "./components/canvas/NodeCanvas";
 import EdgeTypeDialog from "./components/dialogs/EdgeTypeDialog";
 import PropertiesPanel from "./components/panels/PropertiesPanel";
@@ -23,6 +25,7 @@ import { RECIPE_SCHEMA_MAP, normalizeRecipeRefsFromEdgeData } from "./utils/reci
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
 
 import type { Column } from "../hooks/useJson";
+import type { ContextMenuPosition } from "./components/canvas/CanvasContextMenu";
 import type { ConnectionDecision } from "./types/connection";
 import type { NodeEditorViewProps } from "./types/props";
 import type { SchemaMeta } from "./utils/schemaMeta";
@@ -103,6 +106,10 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
 
   // State for editing an existing edge
   const [editingEdge, setEditingEdge] = useState<ReactFlowEdge | null>(null);
+
+  // State for right-click context menu
+  const [contextMenuPos, setContextMenuPos] = useState<ContextMenuPosition | null>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   // Load graph data
   useNodeGraph(props.projectDir, props.jsonData, schemaMetas);
@@ -228,6 +235,28 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     setEditingEdge(null);
   }, []);
 
+  // --- Context menu ---
+  const handlePaneContextMenu = useCallback(
+    (event: MouseEvent | React.MouseEvent) => {
+      event.preventDefault();
+      const flowPos = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      setContextMenuPos({
+        screenX: event.clientX,
+        screenY: event.clientY,
+        flowX: flowPos.x,
+        flowY: flowPos.y,
+      });
+    },
+    [screenToFlowPosition],
+  );
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenuPos(null);
+  }, []);
+
   // --- Delete selected (toolbar) with recipe cleanup ---
   const handleDeleteSelected = useCallback(() => {
     const selectedNodeIds = new Set(
@@ -320,8 +349,16 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             onConnect={onConnect}
             onNodeSelect={handleNodeSelect}
             onEdgeDoubleClick={handleEdgeDoubleClick}
+            onPaneContextMenu={handlePaneContextMenu}
             viewport={state.viewport}
             onViewportChange={handleViewportChange}
+          />
+          <CanvasContextMenu
+            position={contextMenuPos}
+            onClose={closeContextMenu}
+            jsonData={props.jsonData}
+            schemaMetas={schemaMetas}
+            onAddNode={addNode}
           />
         </div>
         <PropertiesPanel

@@ -118,18 +118,7 @@ export function useNodeGraph(
       const content = await readTextFile(filePath);
       graphFile = validateAndMigrate(JSON.parse(content));
     } catch {
-      // Dev fallback: fetch
-      try {
-        const response = await fetch(
-          "/src/sample/.mooreseditor/nodeGraph.v1.json",
-        );
-        if (response.ok) {
-          const data = await response.json();
-          graphFile = validateAndMigrate(data);
-        }
-      } catch {
-        // No file exists, will use import
-      }
+      // File doesn't exist yet — will fall through to importFromMaster
     }
 
     if (graphFile) {

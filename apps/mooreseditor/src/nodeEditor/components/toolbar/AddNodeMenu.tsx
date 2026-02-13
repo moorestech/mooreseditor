@@ -11,6 +11,8 @@ import {
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
+import { getRecords } from "../../utils/recordLookup";
+
 import type { Column } from "../../../hooks/useJson";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 
@@ -47,21 +49,6 @@ export default function AddNodeMenu({
 }: AddNodeMenuProps) {
   const [search, setSearch] = useState("");
 
-  // Get records for a given schema type
-  function getRecords(schemaId: string) {
-    const meta = schemaMetas.get(schemaId);
-    if (!meta?.guidField) return [];
-    const col = jsonData.find((c) => c.title === schemaId);
-    const arr = col?.data?.[meta.dataArrayPath];
-    if (!Array.isArray(arr)) return [];
-    return arr
-      .map((r: any) => ({
-        guid: r[meta.guidField!] as string,
-        name: (meta.nameField ? r[meta.nameField] : r[meta.guidField!]) as string,
-      }))
-      .filter((r) => r.guid);
-  }
-
   return (
     <Menu shadow="md" width={280} position="bottom-start">
       <Menu.Target>
@@ -81,7 +68,7 @@ export default function AddNodeMenu({
         />
         <ScrollArea.Autosize mah={400}>
           {nodeTypes.map(({ label, type, schemaId }) => {
-            const records = getRecords(schemaId).filter((r) =>
+            const records = getRecords(schemaId, jsonData, schemaMetas).filter((r) =>
               search ? r.name?.toLowerCase().includes(search.toLowerCase()) : true,
             );
             if (records.length === 0 && search) return null;

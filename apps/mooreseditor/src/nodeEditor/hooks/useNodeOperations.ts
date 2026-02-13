@@ -22,13 +22,16 @@ export function useNodeOperations() {
       type: "item" | "block" | "research" | "note",
       masterGuid?: string,
       displayName?: string,
+      targetPosition?: { x: number; y: number },
     ) => {
-      // Place new nodes near the center of the current viewport
-      const centerX = -state.viewport.x / state.viewport.zoom + 400;
-      const centerY = -state.viewport.y / state.viewport.zoom + 300;
-      const position = {
-        x: centerX + Math.random() * 100 - 50,
-        y: centerY + Math.random() * 100 - 50,
+      if (type !== "note" && !masterGuid) {
+        return;
+      }
+
+      // Use provided position or place near the center of the current viewport
+      const position = targetPosition ?? {
+        x: -state.viewport.x / state.viewport.zoom + 400 + Math.random() * 100 - 50,
+        y: -state.viewport.y / state.viewport.zoom + 300 + Math.random() * 100 - 50,
       };
 
       let newNode;

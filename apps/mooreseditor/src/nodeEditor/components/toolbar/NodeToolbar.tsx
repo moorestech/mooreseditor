@@ -64,10 +64,10 @@ export default function NodeToolbar({
         color="cyan"
         tooltip="Add Research"
       />
-      <Tooltip label="Add Note">
+      <Tooltip label="Add Memo">
         <ActionIcon
           variant="light"
-          color="pink"
+          color="yellow"
           size="lg"
           onClick={() => onAddNode("note")}
         >

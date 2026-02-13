@@ -195,7 +195,7 @@ export default function CanvasContextMenu({
             }}
             className="context-menu-item"
           >
-            <Text size="xs">Add Note</Text>
+            <Text size="xs">Add Memo</Text>
           </UnstyledButton>
         </Stack>
       </ScrollArea.Autosize>

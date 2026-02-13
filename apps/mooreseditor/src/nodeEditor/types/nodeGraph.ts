@@ -30,6 +30,8 @@ export interface ResearchGraphNode extends BaseGraphNode {
 export interface NoteGraphNode extends BaseGraphNode {
   type: "note";
   text: string;
+  width?: number;
+  height?: number;
 }
 
 // --- Edges ---

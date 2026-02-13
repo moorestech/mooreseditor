@@ -54,6 +54,7 @@ export function createNoteNode(
     id: generateNodeId(),
     type: "note",
     position,
-    data: { text },
+    data: { text, width: 200, height: 150 },
+    style: { width: 200, height: 150 },
   };
 }

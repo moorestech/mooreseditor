@@ -12,12 +12,12 @@ export default function NoteProperties({
   return (
     <Stack gap="sm">
       <Text size="sm" fw={600}>
-        Note
+        Memo
       </Text>
       <Textarea
         value={text}
         onChange={(e) => onTextChange(e.currentTarget.value)}
-        placeholder="Enter note text..."
+        placeholder="Enter memo text..."
         autosize
         minRows={3}
         maxRows={10}

@@ -100,7 +100,7 @@ export default function AddNodeMenu({
             <>
               <Menu.Divider />
               <Menu.Item onClick={() => onAddNode("note")}>
-                <Text size="xs">Add Note</Text>
+                <Text size="xs">Add Memo</Text>
               </Menu.Item>
             </>
           )}

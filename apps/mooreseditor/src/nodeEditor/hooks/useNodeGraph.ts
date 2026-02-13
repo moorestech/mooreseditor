@@ -42,11 +42,14 @@ function toReactFlowNodes(
 ): ReactFlowNode[] {
   return graphNodes.map((gn) => {
     if (gn.type === "note") {
+      const w = gn.width ?? 200;
+      const h = gn.height ?? 150;
       return {
         id: gn.id,
         type: "note",
         position: gn.position,
-        data: { text: gn.text },
+        data: { text: gn.text, width: w, height: h },
+        style: { width: w, height: h },
       };
     }
 

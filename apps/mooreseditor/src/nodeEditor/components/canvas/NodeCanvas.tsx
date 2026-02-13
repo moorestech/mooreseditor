@@ -12,7 +12,7 @@ import DependencyEdge from "../edges/DependencyEdge";
 import RecipeEdge from "../edges/RecipeEdge";
 import BlockNode from "../nodes/BlockNode";
 import ItemNode from "../nodes/ItemNode";
-import NoteNode from "../nodes/NoteNode";
+import MemoNode from "../nodes/MemoNode";
 import ResearchNode from "../nodes/ResearchNode";
 
 import CanvasControls from "./CanvasControls";
@@ -31,7 +31,7 @@ const nodeTypes = {
   item: ItemNode,
   block: BlockNode,
   research: ResearchNode,
-  note: NoteNode,
+  note: MemoNode,
 };
 
 const edgeTypes = {

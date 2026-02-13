@@ -51,7 +51,15 @@ function normalizeRecipeRefs(edge: ReactFlowEdge): RecipeReference[] {
 function toSerializableNode(node: ReactFlowNode) {
   const base = { id: node.id, position: node.position };
   if (node.type === "note") {
-    return { ...base, type: "note" as const, text: (node.data.text as string) || "" };
+    const w = node.data.width as number | undefined;
+    const h = node.data.height as number | undefined;
+    return {
+      ...base,
+      type: "note" as const,
+      text: (node.data.text as string) || "",
+      ...(w != null ? { width: w } : {}),
+      ...(h != null ? { height: h } : {}),
+    };
   }
   return {
     ...base,

@@ -124,3 +124,5 @@ fabric.properties
 
 /test-results
 /playwright-report
+.playwright-mcp
+.artifacts

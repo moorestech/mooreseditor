@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
 import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
 
@@ -90,6 +91,18 @@ export async function saveProjectData({
   if (nodeGraphData) {
     try {
       const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
+
+      // Dotfiles (directories starting with '.') are not matched by the parent
+      // directory's glob pattern in Tauri FS scope. Explicitly add .mooreseditor
+      // to the allowed scope before creating/writing.
+      try {
+        await invoke("add_project_to_scope", {
+          projectPath: mooreseditorDir,
+        });
+      } catch {
+        // Scope addition failed — likely in dev/browser environment
+      }
+
       const isDirExists = await exists(mooreseditorDir);
       if (!isDirExists) {
         await mkdir(mooreseditorDir, { recursive: true });

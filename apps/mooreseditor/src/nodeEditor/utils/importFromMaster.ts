@@ -4,8 +4,9 @@ import type { Node as ReactFlowNode } from "@xyflow/react";
 
 
 /**
- * Import research nodes from master data, using UIPosition for positioning.
+ * Import research nodes from master data.
  * This generates an initial graph from existing master data.
+ * Node positions default to (0,0) and are managed exclusively by nodeGraph.v1.json.
  */
 export function importResearchFromMaster(
   jsonData: Column[],
@@ -23,12 +24,7 @@ export function importResearchFromMaster(
     const guid = record[researchMeta.guidField];
     if (!guid) continue;
 
-    // Use UIPosition from graphViewSettings if available
-    const uiPos = record.graphViewSettings?.UIPosition;
-    const position = {
-      x: Array.isArray(uiPos) ? uiPos[0] : 0,
-      y: Array.isArray(uiPos) ? uiPos[1] : 0,
-    };
+    const position = { x: 0, y: 0 };
 
     const displayName = researchMeta.nameField
       ? record[researchMeta.nameField]

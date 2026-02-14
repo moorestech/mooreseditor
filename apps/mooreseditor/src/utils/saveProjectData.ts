@@ -4,6 +4,20 @@ import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
 import type { Column } from "../hooks/useJson";
 import type { NodeGraphFile } from "../nodeEditor/types/nodeGraph";
 
+async function writeViaDevServer(
+  filePath: string,
+  content: string,
+): Promise<void> {
+  const res = await fetch("/api/dev-fs/write", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: filePath, content }),
+  });
+  if (!res.ok) {
+    throw new Error(`Dev FS write failed: ${res.status}`);
+  }
+}
+
 interface SaveProjectDataParams {
   columns: Column[];
   nodeGraphData?: NodeGraphFile | null;
@@ -32,6 +46,26 @@ export async function saveProjectData({
     if (nodeGraphData) {
       console.log("nodeGraph:", JSON.stringify(nodeGraphData, null, 2));
     }
+
+    // Dev mode: also write files via dev server for E2E verification
+    try {
+      for (const column of columns) {
+        await writeViaDevServer(
+          `master/${column.title}.json`,
+          JSON.stringify(column.data, null, 2),
+        );
+      }
+      if (nodeGraphData) {
+        await writeViaDevServer(
+          ".mooreseditor/nodeGraph.v1.json",
+          JSON.stringify(nodeGraphData, null, 2),
+        );
+        console.log("nodeGraph saved via dev server");
+      }
+    } catch {
+      // Dev server API not available — ignore
+    }
+
     onSuccess();
     return;
   }

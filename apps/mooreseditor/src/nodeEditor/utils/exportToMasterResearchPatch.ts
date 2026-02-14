@@ -60,15 +60,6 @@ export function patchResearchColumn(
       record.prevResearchNodeGuids = dependencies;
     }
 
-    const graphViewSettings = record.graphViewSettings || {
-      UIScale: [1, 1, 1],
-      IconItem: "",
-    };
-    record.graphViewSettings = {
-      ...graphViewSettings,
-      UIPosition: [node.position.x, node.position.y],
-    };
-
     const unlockGuids = unlockMap.get(masterGuid) ?? [];
     record.clearedActions = updateClearedActions(
       record.clearedActions || [],

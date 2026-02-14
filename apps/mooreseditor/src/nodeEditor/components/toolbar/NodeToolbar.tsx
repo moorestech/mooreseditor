@@ -69,6 +69,7 @@ export default function NodeToolbar({
           variant="light"
           color="yellow"
           size="lg"
+          aria-label="Add Memo"
           onClick={() => onAddNode("note")}
         >
           <IconNote size={18} />

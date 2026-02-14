@@ -126,3 +126,4 @@ fabric.properties
 /playwright-report
 .playwright-mcp
 .artifacts
+.envrc

@@ -46,6 +46,18 @@ const MENU_WIDTH = 260;
 const MENU_MAX_HEIGHT = 420;
 
 const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
+const HORIZONTAL_SECTION_TYPES: ReadonlySet<string> = new Set([
+  "item",
+  "research",
+]);
+
+type MenuRecord = ReturnType<typeof getRecords>[number];
+
+interface MenuSection {
+  label: string;
+  type: "item" | "block" | "research";
+  records: MenuRecord[];
+}
 
 export default function CanvasContextMenu({
   position,
@@ -160,32 +172,46 @@ export default function CanvasContextMenu({
             <Text size="xs">Add Memo</Text>
           </UnstyledButton>
           <Divider my={4} />
-          {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
-            const records = getRecords(schemaId, jsonData, schemaMetas).filter(
-              (r) => {
-                if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
-                  return false;
-                if (search && !r.name?.toLowerCase().includes(search.toLowerCase()))
-                  return false;
-                return true;
-              },
+          {(() => {
+            const sections: MenuSection[] = NODE_TYPE_SECTIONS.map(
+              ({ label, type, schemaId }) => ({
+                label,
+                type,
+                records: getRecords(schemaId, jsonData, schemaMetas).filter((r) => {
+                  if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
+                    return false;
+                  if (
+                    search &&
+                    !r.name?.toLowerCase().includes(search.toLowerCase())
+                  )
+                    return false;
+                  return true;
+                }),
+              }),
+            ).filter((section) => !(search && section.records.length === 0));
+
+            const horizontalSections = sections.filter((section) =>
+              HORIZONTAL_SECTION_TYPES.has(section.type),
             );
-            if (records.length === 0 && search) return null;
-            return (
-              <div key={type}>
+            const verticalSections = sections.filter(
+              (section) => !HORIZONTAL_SECTION_TYPES.has(section.type),
+            );
+
+            const renderSection = (section: MenuSection) => (
+              <>
                 <Text size="xs" fw={700} c="dimmed" px="xs" py={4}>
-                  {label}
+                  {section.label}
                 </Text>
-                {records.length === 0 ? (
+                {section.records.length === 0 ? (
                   <Text size="xs" c="dimmed" px="sm">
                     No records
                   </Text>
                 ) : (
-                  records.map((r) => (
+                  section.records.map((r) => (
                     <UnstyledButton
                       key={r.guid}
                       role="menuitem"
-                      onClick={() => handleAddNode(type, r.guid, r.name)}
+                      onClick={() => handleAddNode(section.type, r.guid, r.name)}
                       px="sm"
                       py={4}
                       style={{
@@ -201,13 +227,46 @@ export default function CanvasContextMenu({
                     </UnstyledButton>
                   ))
                 )}
-                <Divider my={4} />
-              </div>
+              </>
             );
-          })}
+
+            return (
+              <>
+                {horizontalSections.length > 0 && (
+                  <>
+                    <div className="context-menu-horizontal-sections">
+                      {horizontalSections.map((section) => (
+                        <div
+                          key={section.type}
+                          className="context-menu-horizontal-section"
+                        >
+                          {renderSection(section)}
+                        </div>
+                      ))}
+                    </div>
+                    <Divider my={4} />
+                  </>
+                )}
+                {verticalSections.map((section) => (
+                  <div key={section.type}>
+                    {renderSection(section)}
+                    <Divider my={4} />
+                  </div>
+                ))}
+              </>
+            );
+          })()}
         </Stack>
       </ScrollArea.Autosize>
       <style>{`
+        .context-menu-horizontal-sections {
+          display: flex;
+          gap: 4px;
+        }
+        .context-menu-horizontal-section {
+          min-width: 0;
+          flex: 1;
+        }
         .context-menu-item:hover,
         .context-menu-item:focus-visible {
           background-color: var(--mantine-color-blue-light);

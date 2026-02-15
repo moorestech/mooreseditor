@@ -2,6 +2,8 @@ import { memo } from "react";
 
 import { Handle, Position } from "@xyflow/react";
 
+import { nodeSourceHandleStyle, nodeTargetHandleStyle } from "./handleStyles";
+
 import type { NodeProps } from "@xyflow/react";
 
 const ItemNode = memo(({ data, selected }: NodeProps) => {
@@ -19,9 +21,9 @@ const ItemNode = memo(({ data, selected }: NodeProps) => {
         fontWeight: 500,
       }}
     >
-      <Handle type="target" position={Position.Left} />
+      <Handle type="target" position={Position.Left} style={nodeTargetHandleStyle} />
       <div>{(data.displayName as string) || "Item"}</div>
-      <Handle type="source" position={Position.Right} />
+      <Handle type="source" position={Position.Right} style={nodeSourceHandleStyle} />
     </div>
   );
 });

@@ -25,6 +25,7 @@ interface NodeToolbarProps {
   ) => void;
   onDeleteSelected: () => void;
   hasSelection: boolean;
+  existingNodeGuids: Set<string>;
 }
 
 export default function NodeToolbar({
@@ -33,6 +34,7 @@ export default function NodeToolbar({
   onAddNode,
   onDeleteSelected,
   hasSelection,
+  existingNodeGuids,
 }: NodeToolbarProps) {
   return (
     <Group
@@ -55,6 +57,7 @@ export default function NodeToolbar({
         nodeTypes={ITEM_NODE_TYPES}
         color="blue"
         tooltip="Add Item / Block"
+        existingNodeGuids={existingNodeGuids}
       />
       <AddNodeMenu
         jsonData={jsonData}
@@ -63,6 +66,7 @@ export default function NodeToolbar({
         nodeTypes={RESEARCH_NODE_TYPES}
         color="cyan"
         tooltip="Add Research"
+        existingNodeGuids={existingNodeGuids}
       />
       <Tooltip label="Add Memo">
         <ActionIcon

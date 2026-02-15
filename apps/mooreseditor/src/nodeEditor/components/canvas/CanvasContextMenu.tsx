@@ -33,6 +33,7 @@ interface CanvasContextMenuProps {
     displayName?: string,
     position?: { x: number; y: number },
   ) => void;
+  existingNodeGuids: Set<string>;
 }
 
 const NODE_TYPE_SECTIONS = [
@@ -44,12 +45,15 @@ const NODE_TYPE_SECTIONS = [
 const MENU_WIDTH = 260;
 const MENU_MAX_HEIGHT = 420;
 
+const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
+
 export default function CanvasContextMenu({
   position,
   onClose,
   jsonData,
   schemaMetas,
   onAddNode,
+  existingNodeGuids,
 }: CanvasContextMenuProps) {
   const [search, setSearch] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
@@ -158,10 +162,13 @@ export default function CanvasContextMenu({
           <Divider my={4} />
           {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
             const records = getRecords(schemaId, jsonData, schemaMetas).filter(
-              (r) =>
-                search
-                  ? r.name?.toLowerCase().includes(search.toLowerCase())
-                  : true,
+              (r) => {
+                if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
+                  return false;
+                if (search && !r.name?.toLowerCase().includes(search.toLowerCase()))
+                  return false;
+                return true;
+              },
             );
             if (records.length === 0 && search) return null;
             return (

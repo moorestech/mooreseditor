@@ -24,6 +24,8 @@ interface NodeTypeEntry {
   schemaId: string;
 }
 
+const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
+
 interface AddNodeMenuProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
@@ -36,6 +38,7 @@ interface AddNodeMenuProps {
   color: string;
   tooltip: string;
   showNoteOption?: boolean;
+  existingNodeGuids: Set<string>;
 }
 
 export default function AddNodeMenu({
@@ -46,6 +49,7 @@ export default function AddNodeMenu({
   color,
   tooltip,
   showNoteOption = false,
+  existingNodeGuids,
 }: AddNodeMenuProps) {
   const [search, setSearch] = useState("");
 
@@ -68,8 +72,14 @@ export default function AddNodeMenu({
         />
         <ScrollArea.Autosize mah={400}>
           {nodeTypes.map(({ label, type, schemaId }) => {
-            const records = getRecords(schemaId, jsonData, schemaMetas).filter((r) =>
-              search ? r.name?.toLowerCase().includes(search.toLowerCase()) : true,
+            const records = getRecords(schemaId, jsonData, schemaMetas).filter(
+              (r) => {
+                if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
+                  return false;
+                if (search && !r.name?.toLowerCase().includes(search.toLowerCase()))
+                  return false;
+                return true;
+              },
             );
             if (records.length === 0 && search) return null;
             return (

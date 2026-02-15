@@ -320,6 +320,20 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     }
   }, [editingEdge, handleEdgeEditCancel, cancelConnection]);
 
+  // Collect masterGuids of item/research nodes already on the graph
+  const existingNodeGuids = useMemo(() => {
+    const guids = new Set<string>();
+    for (const node of state.nodes) {
+      if (
+        (node.type === "item" || node.type === "research") &&
+        node.data?.masterGuid
+      ) {
+        guids.add(node.data.masterGuid as string);
+      }
+    }
+    return guids;
+  }, [state.nodes]);
+
   const selectedNode = state.selectedNodeId
     ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
@@ -340,6 +354,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             onAddNode={addNode}
             onDeleteSelected={handleDeleteSelected}
             hasSelection={hasSelection}
+            existingNodeGuids={existingNodeGuids}
           />
           <NodeCanvas
             nodes={resolvedNodes}
@@ -362,6 +377,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             jsonData={props.jsonData}
             schemaMetas={schemaMetas}
             onAddNode={addNode}
+            existingNodeGuids={existingNodeGuids}
           />
         </div>
         <PropertiesPanel

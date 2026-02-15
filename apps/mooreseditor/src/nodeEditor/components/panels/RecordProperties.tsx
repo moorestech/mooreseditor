@@ -13,6 +13,7 @@ interface RecordPropertiesProps {
   meta: SchemaMeta;
   jsonData: Column[];
   onRecordChange: (newRecordData: any) => void;
+  onObjectArrayClick?: (path: string[], schema: Schema) => void;
 }
 
 export default function RecordProperties({
@@ -21,6 +22,7 @@ export default function RecordProperties({
   meta,
   jsonData,
   onRecordChange,
+  onObjectArrayClick,
 }: RecordPropertiesProps) {
   // Find the record in jsonData
   const col = jsonData.find((c) => c.title === schemaId);
@@ -64,6 +66,8 @@ export default function RecordProperties({
         data={record}
         jsonData={jsonData}
         onDataChange={onRecordChange}
+        onObjectArrayClick={onObjectArrayClick}
+        autoOpenObjectArrays={false}
       />
     </Stack>
   );

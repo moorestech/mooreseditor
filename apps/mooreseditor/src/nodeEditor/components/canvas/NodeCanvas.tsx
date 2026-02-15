@@ -48,6 +48,9 @@ interface NodeCanvasProps {
   onNodeSelect: (node: ReactFlowNode | null) => void;
   onEdgeDoubleClick?: (event: React.MouseEvent, edge: ReactFlowEdge) => void;
   onPaneContextMenu?: (event: MouseEvent | React.MouseEvent) => void;
+  onPaneClick?: (event: MouseEvent | React.MouseEvent) => void;
+  onNodeClick?: (event: React.MouseEvent, node: ReactFlowNode) => void;
+  onEdgeClick?: (event: React.MouseEvent, edge: ReactFlowEdge) => void;
   viewport: Viewport;
   onViewportChange: (viewport: Viewport) => void;
 }
@@ -61,6 +64,9 @@ export default function NodeCanvas({
   onNodeSelect,
   onEdgeDoubleClick,
   onPaneContextMenu,
+  onPaneClick,
+  onNodeClick,
+  onEdgeClick,
   viewport,
   onViewportChange,
 }: NodeCanvasProps) {
@@ -94,6 +100,9 @@ export default function NodeCanvas({
       onSelectionChange={handleSelectionChange}
       onEdgeDoubleClick={onEdgeDoubleClick}
       onPaneContextMenu={onPaneContextMenu}
+      onPaneClick={onPaneClick}
+      onNodeClick={onNodeClick}
+      onEdgeClick={onEdgeClick}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       defaultEdgeOptions={defaultEdgeOptions}

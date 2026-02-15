@@ -350,6 +350,9 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             onNodeSelect={handleNodeSelect}
             onEdgeDoubleClick={handleEdgeDoubleClick}
             onPaneContextMenu={handlePaneContextMenu}
+            onPaneClick={closeContextMenu}
+            onNodeClick={closeContextMenu}
+            onEdgeClick={closeContextMenu}
             viewport={state.viewport}
             onViewportChange={handleViewportChange}
           />

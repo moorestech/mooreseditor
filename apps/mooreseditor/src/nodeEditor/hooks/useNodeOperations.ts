@@ -84,9 +84,28 @@ export function useNodeOperations() {
       if (!connection.source || !connection.target) {
         return;
       }
+
+      const sourceNode = state.nodes.find((node) => node.id === connection.source);
+      const targetNode = state.nodes.find((node) => node.id === connection.target);
+      const isResearchToResearch =
+        sourceNode?.type === "research" && targetNode?.type === "research";
+
+      if (isResearchToResearch) {
+        const newEdge = {
+          id: `edge-${Date.now()}`,
+          source: connection.source,
+          target: connection.target,
+          type: "arrow",
+          data: { edgeType: "dependency" },
+          markerEnd: { type: MarkerType.ArrowClosed },
+        };
+        dispatch({ type: "SET_EDGES", edges: [...state.edges, newEdge] });
+        return;
+      }
+
       setPendingConnection(connection);
     },
-    [],
+    [state.nodes, state.edges, dispatch],
   );
 
   const confirmConnection = useCallback(

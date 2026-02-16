@@ -4161,7 +4161,8 @@
                   0,
                   -1
                 ]
-              ]
+              ],
+              "connectOption": {}
             },
             {
               "connectType": "Inventory",
@@ -4176,7 +4177,8 @@
                   0,
                   -1
                 ]
-              ]
+              ],
+              "connectOption": {}
             }
           ],
           "outputConnects": [
@@ -4193,7 +4195,8 @@
                   0,
                   0
                 ]
-              ]
+              ],
+              "connectOption": {}
             }
           ]
         },
@@ -4772,7 +4775,8 @@
                 "connectTankIndex": 0
               }
             }
-          ]
+          ],
+          "outflowConnects": []
         }
       }
     },
@@ -4938,7 +4942,8 @@
         "fluidInventoryConnectors": {
           "inflowConnects": [],
           "outflowConnects": []
-        }
+        },
+        "requiredPower": 5
       }
     }
   ]

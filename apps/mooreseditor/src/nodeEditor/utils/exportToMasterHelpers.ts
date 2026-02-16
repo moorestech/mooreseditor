@@ -9,11 +9,11 @@ export function updateClearedActions(
   unlockItemGuids: string[],
 ): any[] {
   const preserved = existingActions.filter(
-    (a: any) => a.challengeActionType !== "unlockItemRecipeView",
+    (a: any) => a.gameActionType !== "unlockItemRecipeView",
   );
   preserved.push({
-    challengeActionType: "unlockItemRecipeView",
-    challengeActionParam: {
+    gameActionType: "unlockItemRecipeView",
+    gameActionParam: {
       unlockItemGuids,
     },
   });

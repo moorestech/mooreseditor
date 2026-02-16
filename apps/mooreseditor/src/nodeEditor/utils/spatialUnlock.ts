@@ -34,10 +34,9 @@ function getItemGuidForNode(
 /**
  * Calculate which items/blocks are spatially unlocked by each research node.
  *
- * For each research node, find items/blocks in the rectangular area:
- * - x > research.x (strictly greater)
- * - y >= research.y (greater or equal)
- * - x < nearest research to the right (or infinity if none)
+ * For each research node, find items/blocks in two zones:
+ * 1. Right zone: x > research.x, x < nearest research to the right, y >= research.y
+ * 2. Below zone: y > research.y, y < nearest research below, x <= research.x
  *
  * Returns: Map<researchMasterGuid, itemGuid[]>
  */
@@ -72,15 +71,43 @@ export function calculateUnlockedItems(
 
     const rightX = rightBoundary?.position.x ?? Infinity;
 
+    // Find the nearest research node in the +Y direction
+    const bottomBoundary = sorted
+      .filter((s) => s.id !== r.id && s.position.y > r.position.y)
+      .sort((a, b) => {
+        const distA =
+          Math.abs(a.position.y - r.position.y) +
+          Math.abs(a.position.x - r.position.x);
+        const distB =
+          Math.abs(b.position.y - r.position.y) +
+          Math.abs(b.position.x - r.position.x);
+        return distA - distB;
+      })[0];
+
+    const bottomY = bottomBoundary?.position.y ?? Infinity;
+
     const unlocked: string[] = [];
+    const seen = new Set<string>();
+
     for (const node of itemBlockNodes) {
-      if (
+      // Right zone: to the right of R, bounded by next research right
+      const inRightZone =
         node.position.x > r.position.x &&
         node.position.x < rightX &&
-        node.position.y >= r.position.y
-      ) {
+        node.position.y >= r.position.y;
+
+      // Below zone: below R, bounded by next research below
+      const inBelowZone =
+        node.position.y > r.position.y &&
+        node.position.y < bottomY &&
+        node.position.x <= r.position.x;
+
+      if (inRightZone || inBelowZone) {
         const itemGuid = getItemGuidForNode(node, jsonData, schemaMetas);
-        if (itemGuid) unlocked.push(itemGuid);
+        if (itemGuid && !seen.has(itemGuid)) {
+          seen.add(itemGuid);
+          unlocked.push(itemGuid);
+        }
       }
     }
 

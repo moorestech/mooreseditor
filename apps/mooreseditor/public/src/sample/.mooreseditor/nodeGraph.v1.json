@@ -1,113 +1,77 @@
 {
   "version": 1,
   "viewport": {
-    "x": 159,
-    "y": -12,
-    "zoom": 1
+    "x": -661.9652813807884,
+    "y": 80.80085872136749,
+    "zoom": 1.4034553384246862
   },
   "nodes": [
     {
-      "id": "research-0f97e445",
+      "id": "node-1771236113242-7",
       "position": {
-        "x": 0,
-        "y": 0
+        "x": 380,
+        "y": 60
       },
       "type": "research",
       "masterGuid": "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
     },
     {
-      "id": "research-a3d1c63b",
+      "id": "node-1771236115825-8",
       "position": {
-        "x": 800,
-        "y": 800
+        "x": 900,
+        "y": 20
       },
       "type": "research",
-      "masterGuid": "a3d1c63b-b14c-44ba-aae9-22f7c621b72d"
+      "masterGuid": "c60a3c61-ada0-4209-992c-aad365b7773c"
     },
     {
-      "id": "research-d4e0b2bb",
+      "id": "node-1771236118833-9",
       "position": {
-        "x": 800,
-        "y": 0
+        "x": 900,
+        "y": 340
       },
       "type": "research",
-      "masterGuid": "d4e0b2bb-9f20-4e0f-bfef-26c7f9449cd0"
+      "masterGuid": "1aa089df-c987-40c8-a2cc-3ad4d6e19964"
     },
     {
-      "id": "research-db40b978",
+      "id": "node-1771236131966-10",
       "position": {
-        "x": 1600,
-        "y": 0
-      },
-      "type": "research",
-      "masterGuid": "db40b978-097e-4fdc-b4a1-617c62e32e24"
-    },
-    {
-      "id": "research-cb0ff934",
-      "position": {
-        "x": 2400,
-        "y": 800
-      },
-      "type": "research",
-      "masterGuid": "cb0ff934-2972-48f5-9241-c2b2d61f2bf9"
-    },
-    {
-      "id": "research-ad802d42",
-      "position": {
-        "x": 2400,
-        "y": 0
-      },
-      "type": "research",
-      "masterGuid": "ad802d42-b548-40d4-9e3b-bc7181174271"
-    },
-    {
-      "id": "item-4abdae31",
-      "position": {
-        "x": 200,
-        "y": 100
+        "x": 580,
+        "y": 200
       },
       "type": "item",
-      "masterGuid": "4abdae31-6e3b-42c5-a097-4cf6021751ca"
+      "masterGuid": "44cb69e9-c703-4393-94c4-bad4477da10f"
     },
     {
-      "id": "item-5c5b7ee0",
+      "id": "node-1771236139233-11",
       "position": {
-        "x": 200,
-        "y": 250
+        "x": 1060,
+        "y": 120
       },
       "type": "item",
-      "masterGuid": "5c5b7ee0-d1ea-420e-951e-2b2b49fee81b"
+      "masterGuid": "967a60e2-41a0-4866-9901-0baab7a350aa"
+    },
+    {
+      "id": "node-1771236154899-12",
+      "position": {
+        "x": 1060,
+        "y": 420
+      },
+      "type": "item",
+      "masterGuid": "ad76f181-50da-4c7d-a98f-e55f2387c47d"
     }
   ],
   "edges": [
     {
-      "id": "dep-1",
-      "source": "research-0f97e445",
-      "target": "research-a3d1c63b",
+      "id": "edge-1771236122266",
+      "source": "node-1771236113242-7",
+      "target": "node-1771236115825-8",
       "edgeType": "dependency"
     },
     {
-      "id": "dep-2",
-      "source": "research-0f97e445",
-      "target": "research-d4e0b2bb",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-3",
-      "source": "research-d4e0b2bb",
-      "target": "research-db40b978",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-4",
-      "source": "research-db40b978",
-      "target": "research-cb0ff934",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-5",
-      "source": "research-db40b978",
-      "target": "research-ad802d42",
+      "id": "edge-1771236124058",
+      "source": "node-1771236113242-7",
+      "target": "node-1771236118833-9",
       "edgeType": "dependency"
     }
   ]

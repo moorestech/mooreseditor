@@ -53,7 +53,8 @@
                 "unlockItemGuids": [
                   "6afafbc9-5a2c-4444-b8c8-9ea047da9ffa"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "49ab89d7-bbe2-4735-b253-fbc55889c583",
@@ -67,7 +68,8 @@
                 "skitAddressablePath": "Vanilla/Skit/skits/100_start_game",
                 "playSkitType": "normal",
                 "playSortPriority": 0
-              }
+              },
+              "gameActionType": ""
             },
             {
               "challengeActionType": "playSkit",
@@ -75,7 +77,8 @@
                 "skitAddressablePath": "Vanilla/Skit/skits/200_star_background",
                 "playSkitType": "background",
                 "playSortPriority": 1
-              }
+              },
+              "gameActionType": ""
             }
           ]
         },
@@ -106,7 +109,8 @@
                   "b74c4061-93fa-48e8-a82d-adbcb6c7e0c4",
                   "91458a7e-5eaa-47fd-b79e-8390af20bb84"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "taskParam": {
@@ -189,7 +193,8 @@
                   "5def2be9-1bfa-4d6b-b827-8d82712bf70b",
                   "f5f66872-a7a2-4da6-90c0-fc26e904757c"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "c78e8e4b-84e6-4859-8541-daa255c09d48",
@@ -280,7 +285,8 @@
                   "92e8bb57-30ae-41dc-8a57-5336faeee8fb",
                   "945912f1-d1ca-42ec-aff8-5e6a00e4a544"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "tutorials": [
@@ -457,7 +463,8 @@
                   "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84",
                   "619638d5-13f0-4c04-b4e6-5113e946be7e"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "tutorials": [],
@@ -504,7 +511,8 @@
                   "ba3cf978-dc21-47f9-810e-50f1c26015ed",
                   "19fb4202-de45-49f1-a480-3d154309dd99"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
@@ -579,7 +587,8 @@
                   "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84",
                   "86670a2a-ab7c-46f4-bedf-1b30d1da111e"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
@@ -652,7 +661,8 @@
                 "unlockItemGuids": [
                   "38cfc079-3835-4530-b539-449c5200dd59"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -693,7 +703,8 @@
                 "unlockItemGuids": [
                   "98383d78-6da1-47ca-bc94-f5e12f50c140"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "5f19ddab-619c-4749-9160-ea86846c055e",
@@ -737,7 +748,8 @@
                 "unlockItemGuids": [
                   "d9a19e4f-bc3b-4b2e-93b2-d6be5a5c6f44"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -782,7 +794,8 @@
                   "dfd0ae76-ae7d-46cd-8abc-0c69407645a2",
                   "3acc3fa4-44c9-44ff-bf45-3f01a8acf4c3"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -857,7 +870,8 @@
                 "unlockItemGuids": [
                   "8b67462b-227a-465b-8d86-de683b5e98a1"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
@@ -937,7 +951,8 @@
                   "57f116bb-c374-410b-bc00-23b285575d7b",
                   "44cb69e9-c703-4393-94c4-bad4477da10f"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],

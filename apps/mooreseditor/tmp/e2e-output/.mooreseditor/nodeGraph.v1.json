@@ -1,22 +1,132 @@
 {
   "version": 1,
   "viewport": {
-    "x": 0,
-    "y": 0,
-    "zoom": 0.8
+    "x": -2709.8664874570813,
+    "y": 9.463431985662382,
+    "zoom": 1.2577298170079507
   },
   "nodes": [
     {
-      "id": "node-1771033027386-1",
+      "id": "research-0f97e445",
       "position": {
-        "x": 374.8296896844436,
-        "y": 272.28630280142795
+        "x": 0,
+        "y": 0
       },
-      "type": "note",
-      "text": "",
-      "width": 200,
-      "height": 150
+      "type": "research",
+      "masterGuid": "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
+    },
+    {
+      "id": "research-a3d1c63b",
+      "position": {
+        "x": 800,
+        "y": 800
+      },
+      "type": "research",
+      "masterGuid": "a3d1c63b-b14c-44ba-aae9-22f7c621b72d"
+    },
+    {
+      "id": "research-d4e0b2bb",
+      "position": {
+        "x": 800,
+        "y": 0
+      },
+      "type": "research",
+      "masterGuid": "d4e0b2bb-9f20-4e0f-bfef-26c7f9449cd0"
+    },
+    {
+      "id": "research-db40b978",
+      "position": {
+        "x": 1600,
+        "y": 0
+      },
+      "type": "research",
+      "masterGuid": "db40b978-097e-4fdc-b4a1-617c62e32e24"
+    },
+    {
+      "id": "research-cb0ff934",
+      "position": {
+        "x": 2400,
+        "y": 220
+      },
+      "type": "research",
+      "masterGuid": "cb0ff934-2972-48f5-9241-c2b2d61f2bf9"
+    },
+    {
+      "id": "research-ad802d42",
+      "position": {
+        "x": 2320,
+        "y": 20
+      },
+      "type": "research",
+      "masterGuid": "ad802d42-b548-40d4-9e3b-bc7181174271"
+    },
+    {
+      "id": "item-4abdae31",
+      "position": {
+        "x": 200,
+        "y": 100
+      },
+      "type": "item",
+      "masterGuid": "4abdae31-6e3b-42c5-a097-4cf6021751ca"
+    },
+    {
+      "id": "item-5c5b7ee0",
+      "position": {
+        "x": 200,
+        "y": 250
+      },
+      "type": "item",
+      "masterGuid": "5c5b7ee0-d1ea-420e-951e-2b2b49fee81b"
+    },
+    {
+      "id": "node-1771235805202-1",
+      "position": {
+        "x": 2520,
+        "y": 160
+      },
+      "type": "item",
+      "masterGuid": "b7170f72-402f-4025-b2a1-6214f7cb42ae"
+    },
+    {
+      "id": "node-1771235811056-2",
+      "position": {
+        "x": 2560,
+        "y": 300
+      },
+      "type": "item",
+      "masterGuid": "6afafbc9-5a2c-4444-b8c8-9ea047da9ffa"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "id": "dep-1",
+      "source": "research-0f97e445",
+      "target": "research-a3d1c63b",
+      "edgeType": "dependency"
+    },
+    {
+      "id": "dep-2",
+      "source": "research-0f97e445",
+      "target": "research-d4e0b2bb",
+      "edgeType": "dependency"
+    },
+    {
+      "id": "dep-3",
+      "source": "research-d4e0b2bb",
+      "target": "research-db40b978",
+      "edgeType": "dependency"
+    },
+    {
+      "id": "dep-4",
+      "source": "research-db40b978",
+      "target": "research-cb0ff934",
+      "edgeType": "dependency"
+    },
+    {
+      "id": "dep-5",
+      "source": "research-db40b978",
+      "target": "research-ad802d42",
+      "edgeType": "dependency"
+    }
+  ]
 }

@@ -1,6 +1,11 @@
 import { createInitialValue } from "../../../../utils/createInitialValue";
-import { RECIPE_SCHEMA_MAP } from "../../../utils/recipeEdge";
-
+import {
+  RECIPE_SCHEMA_MAP,
+  buildForeignNameResolver,
+  buildSchemaRecordIndex,
+  buildSingleRecipeSummary,
+} from "../../../utils/recipeEdge";
+import { OUTPUT_KEY_RE, INPUT_KEY_RE } from "../../../utils/recipeEdgeConstants";
 
 import type {
   EditableRecipe,
@@ -12,9 +17,6 @@ import type { Column } from "../../../../hooks/useJson";
 import type { ObjectSchema } from "../../../../libs/schema/types";
 import type { RecipeEdgeType, RecipeReference } from "../../../types/nodeGraph";
 import type { SchemaMeta } from "../../../utils/schemaMeta";
-
-const OUTPUT_KEY_RE = /(output|result|product|target|to)/i;
-const INPUT_KEY_RE = /(input|required|material|consume|source|from)/i;
 
 function pickGuidForForeignKey(
   propertyKey: string,
@@ -108,6 +110,12 @@ export function buildRecipeOptions(
     machineRecipe: [],
   };
 
+  const resolveForeignName = buildForeignNameResolver(jsonData, schemaMetas);
+  const recipeRecords = new Map<string, Map<string, Record<string, unknown>>>();
+  for (const schemaId of Object.values(RECIPE_SCHEMA_MAP)) {
+    recipeRecords.set(schemaId, buildSchemaRecordIndex(schemaId, jsonData, schemaMetas));
+  }
+
   (Object.entries(RECIPE_SCHEMA_MAP) as Array<[RecipeEdgeType, string]>).forEach(
     ([recipeType, schemaId]) => {
       const meta = schemaMetas.get(schemaId);
@@ -125,11 +133,12 @@ export function buildRecipeOptions(
           const guid = record[meta.guidField];
           if (typeof guid !== "string" || guid.length === 0) return null;
 
-          const name = meta.nameField ? record[meta.nameField] : null;
-          const label =
-            typeof name === "string" && name.length > 0
-              ? name
-              : `${guid.slice(0, 8)}...`;
+          const label = buildSingleRecipeSummary(
+            { edgeType: recipeType, masterGuid: guid },
+            recipeRecords,
+            schemaMetas,
+            resolveForeignName,
+          );
           return { value: guid, label };
         })
         .filter((option): option is { value: string; label: string } => option !== null);
@@ -144,6 +153,12 @@ export function buildEditableRecipes(
   jsonData: Column[],
   schemaMetas: Map<string, SchemaMeta>,
 ): EditableRecipe[] {
+  const resolveForeignName = buildForeignNameResolver(jsonData, schemaMetas);
+  const recipeRecords = new Map<string, Map<string, Record<string, unknown>>>();
+  for (const schemaId of Object.values(RECIPE_SCHEMA_MAP)) {
+    recipeRecords.set(schemaId, buildSchemaRecordIndex(schemaId, jsonData, schemaMetas));
+  }
+
   return recipeRefs
     .map((ref) => {
       const schemaId = RECIPE_SCHEMA_MAP[ref.edgeType];
@@ -162,12 +177,13 @@ export function buildEditableRecipes(
       ) as Record<string, unknown> | undefined;
       if (!record) return null;
 
-      const rawName = schemaMeta.nameField ? record[schemaMeta.nameField] : ref.masterGuid;
-      const displayName =
-        typeof rawName === "string" && rawName.length > 0
-          ? rawName
-          : `${ref.masterGuid.slice(0, 8)}...`;
       const typeLabel = ref.edgeType === "craftRecipe" ? "Craft" : "Machine";
+      const summary = buildSingleRecipeSummary(
+        ref,
+        recipeRecords,
+        schemaMetas,
+        resolveForeignName,
+      );
 
       return {
         key: `${ref.edgeType}:${ref.masterGuid}`,
@@ -176,7 +192,7 @@ export function buildEditableRecipes(
         schemaId,
         schemaMeta,
         record,
-        label: `${typeLabel}: ${displayName}`,
+        label: `${typeLabel}: ${summary}`,
       };
     })
     .filter((entry): entry is EditableRecipe => entry !== null);

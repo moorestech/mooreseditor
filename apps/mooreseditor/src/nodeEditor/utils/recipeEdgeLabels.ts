@@ -5,7 +5,7 @@ import type { Column } from "../../hooks/useJson";
 import type { ObjectPropertySchema, ObjectSchema } from "../../libs/schema/types";
 import type { RecipeReference } from "../types/nodeGraph";
 
-function buildSchemaRecordIndex(
+export function buildSchemaRecordIndex(
   schemaId: string,
   jsonData: Column[],
   schemaMetas: Map<string, SchemaMeta>,
@@ -29,7 +29,7 @@ function buildSchemaRecordIndex(
   return index;
 }
 
-function buildForeignNameResolver(
+export function buildForeignNameResolver(
   jsonData: Column[],
   schemaMetas: Map<string, SchemaMeta>,
 ) {
@@ -114,7 +114,7 @@ function buildArrayIngredientLabels(
     .filter((value): value is string => value !== null);
 }
 
-function buildSingleRecipeSummary(
+export function buildSingleRecipeSummary(
   recipeRef: RecipeReference,
   recipeRecords: Map<string, Map<string, Record<string, unknown>>>,
   schemaMetas: Map<string, SchemaMeta>,
@@ -159,7 +159,7 @@ function buildSingleRecipeSummary(
   }
 
   if (recipeRef.edgeType === "craftRecipe" && outputs.length > 0 && inputs.length > 0) {
-    return `${outputs.join(" + ")} <= ${inputs.join(" + ")}`;
+    return `${outputs.join(" + ")}←${inputs.join(" + ")}`;
   }
 
   if (outputs.length > 0) {

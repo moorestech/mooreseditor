@@ -23,7 +23,7 @@ properties:
         displayElementPath: /data/[*]/name
     - key: time
       type: number
-      default: 1
+      default: 3
     - key: inputItems
       type: array
       items:
@@ -38,6 +38,10 @@ properties:
         - key: count
           type: integer
           default: 1
+        - key: isRemain
+          type: boolean
+          default: false
+          optional: true
     - key: inputFluids
       type: array
       items:

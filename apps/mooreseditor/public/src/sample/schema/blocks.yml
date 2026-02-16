@@ -34,6 +34,12 @@ defineInterface:
   - key: requiredRpm
     type: number
     default: 5
+- interfaceName: IMinerParam
+  properties:
+  - key: outputItemSlotCount
+    type: integer
+  - key: mineSettings
+    ref: mineSettings
 - interfaceName: IInventoryConnectors
   properties:
   - key: inventoryConnectors
@@ -42,6 +48,24 @@ defineInterface:
   properties:
     - key: gear
       ref: gear
+- interfaceName: IGearOverloadParam
+  properties:
+  - key: overloadMaxRpm
+    type: number
+    default: 0
+  - key: overloadMaxTorque
+    type: number
+    default: 0
+  - key: destructionCheckInterval
+    type: number
+    default: 1
+  - key: baseDestructionProbability
+    type: number
+    default: 0
+- interfaceName: IFuelItemSlotParam
+  properties:
+  - key: fuelItemSlotCount
+    type: integer
 
 properties:
 - key: data
@@ -68,13 +92,15 @@ properties:
       - ElectricMiner
       - Gear
       - Shaft
+      - GearChainPole
       - GearMachine
       - SimpleGearGenerator
-      - SteamGearGenerator
+      - FuelGearGenerator
       - GearBeltConveyor
       - GearMiner
       - GearMapObjectMiner
       - ItemShooter
+      - ItemShooterAccelerator
       - CraftChainerTransporter
       - CraftChainerCrafter
       - CraftChainerProviderChest
@@ -134,6 +160,7 @@ properties:
         type: object
         implementationInterface:
         - IChestParam
+        - IInventoryConnectors
         properties:
         - key: itemSlotCount
           type: integer
@@ -174,13 +201,20 @@ properties:
         - key: poleConnectionRange
           type: integer
           default: 5
+        - key: poleConnectionHeightRange
+          type: integer
+          default: 5
         - key: machineConnectionRange
+          type: integer
+          default: 5
+        - key: machineConnectionHeightRange
           type: integer
           default: 5
       - when: ElectricGenerator
         type: object
         implementationInterface:
         - IInventoryConnectors
+        - IFuelItemSlotParam
         properties:
         - key: fuelItemSlotCount
           type: integer
@@ -240,6 +274,7 @@ properties:
       - when: ElectricMiner
         type: object
         implementationInterface:
+        - IMinerParam
         - IInventoryConnectors
         properties:
         - key: requiredPower
@@ -254,6 +289,8 @@ properties:
           ref: inventoryConnects
       - when: Gear
         type: object
+        implementationInterface:
+        - IGearOverloadParam
         properties:
         - key: teethCount
           type: integer
@@ -261,16 +298,54 @@ properties:
         - key: requireTorque
           type: number
           default: 1
+        - key: overloadMaxRpm
+          type: number
+          default: 0
+        - key: overloadMaxTorque
+          type: number
+          default: 0
+        - key: destructionCheckInterval
+          type: number
+          default: 1
+        - key: baseDestructionProbability
+          type: number
+          default: 0
         - key: gear
           ref: gear
       - when: Shaft
         type: object
         implementationInterface:
         - IGearConnectors
+        - IGearOverloadParam
         properties:
         - key: requireTorque
           type: number
           default: 1
+        - key: overloadMaxRpm
+          type: number
+          default: 0
+        - key: overloadMaxTorque
+          type: number
+          default: 0
+        - key: destructionCheckInterval
+          type: number
+          default: 1
+        - key: baseDestructionProbability
+          type: number
+          default: 0
+        - key: gear
+          ref: gear
+      - when: GearChainPole
+        type: object
+        implementationInterface:
+        - IGearConnectors
+        properties:
+        - key: maxConnectionDistance
+          type: number
+          default: 50
+        - key: maxConnectionCount
+          type: integer
+          default: 5
         - key: gear
           ref: gear
       - when: GearMachine
@@ -327,10 +402,12 @@ properties:
           default: 1
         - key: gear
           ref: gear
-      - when: SteamGearGenerator
+      - when: FuelGearGenerator
         type: object
         implementationInterface:
         - IGearConnectors
+        - IInventoryConnectors
+        - IFuelItemSlotParam
         properties:
         - key: teethCount
           type: integer
@@ -379,6 +456,29 @@ properties:
             - key: consumptionTime
               type: number
               default: 1
+        - key: fuelItemSlotCount
+          type: integer
+          default: 2
+        - key: gearFuelItems
+          type: array
+          optional: true
+          items:
+            type: object
+            properties:
+            - key: itemGuid
+              type: uuid
+              foreignKey:
+                schemaId: items
+                foreignKeyIdPath: /data/[*]/itemGuid
+                displayElementPath: /data/[*]/name
+            - key: amount
+              type: integer
+              default: 1
+            - key: consumptionTime
+              type: number
+              default: 1
+        - key: inventoryConnectors
+          ref: inventoryConnects
         - key: fluidInventoryConnectors
           ref: fluidInventoryConnects
       - when: GearBeltConveyor
@@ -431,10 +531,51 @@ properties:
           - Down
         - key: inventoryConnectors
           ref: inventoryConnects
+      - when: ItemShooterAccelerator
+        type: object
+        implementationInterface:
+        - IInventoryConnectors
+        - IGearConnectors
+        properties:
+        - key: inventoryItemNum
+          type: integer
+          default: 4
+        - key: initialShootSpeed
+          type: number
+          default: 3
+        - key: itemShootSpeed
+          type: number
+          default: 2
+        - key: acceleration
+          type: number
+          default: 0
+        - key: poweredAcceleration
+          type: number
+          default: 2
+        - key: maxAccelerationMultiplier
+          type: number
+          default: 4
+        - key: requireTorque
+          type: number
+          default: 2
+        - key: requiredRpm
+          type: number
+          default: 5
+        - key: slopeType
+          type: enum
+          options:
+          - Straight
+          - Up
+          - Down
+        - key: inventoryConnectors
+          ref: inventoryConnects
+        - key: gear
+          ref: gear
       - when: GearMiner
         type: object
         implementationInterface:
         - IGearMachineParam
+        - IMinerParam
         - IInventoryConnectors
         - IGearConnectors
         properties:
@@ -539,17 +680,44 @@ properties:
           ref: inventoryConnects
       - when: TrainRail
         type: object
-        properties: []
+        properties:
+        - key: railPosition
+          type: vector3
+          default:
+          - 1.0
+          - 1.0
+          - 1.0
+        - key: controlPointLength
+          type: number
+          default: 0.5
       - when: TrainStation
         type: object
         implementationInterface:
         - IInventoryConnectors
         properties:
-        - key: stationDistance
-          type: integer
-          default: 5
+        - key: entryRailPosition
+          type: vector3
+          default:
+          - 1.0
+          - 1.0
+          - 1.0
+        - key: exitRailPosition
+          type: vector3
+          default:
+          - 1.0
+          - 1.0
+          - 1.0
+        - key: entryControlPointLength
+          type: number
+          default: 0.5
+        - key: exitControlPointLength
+          type: number
+          default: 0.5
         - key: itemSlotCount
           type: integer
+        - key: loadingAnimeSpeed
+          type: number
+          default: 1
         - key: inventoryConnectors
           ref: inventoryConnects
       - when: TrainCargoPlatform
@@ -557,18 +725,30 @@ properties:
         implementationInterface:
         - IInventoryConnectors
         properties:
-        - key: platformDistance
-          type: integer
-          default: 5
-        - key: inputSlotCount
-          type: integer
-          default: 10
-        - key: outputSlotCount
-          type: integer
-          default: 10
-        - key: loadingSpeed
+        - key: entryRailPosition
+          type: vector3
+          default:
+          - 1.0
+          - 1.0
+          - 1.0
+        - key: exitRailPosition
+          type: vector3
+          default:
+          - 1.0
+          - 1.0
+          - 1.0
+        - key: frontControlPointLength
           type: number
-          default: 20
+          default: 0.5
+        - key: backControlPointLength
+          type: number
+          default: 0.5
+        - key: itemSlotCount
+          type: integer
+          default: 10
+        - key: loadingAnimeSpeed
+          type: number
+          default: 1
         - key: inventoryConnectors
           ref: inventoryConnects
       - when: FluidPipe
@@ -689,3 +869,18 @@ properties:
       type: boolean
       default: false
       optional: true
+
+- key: gearChainItems
+  type: array
+  items:
+    type: object
+    properties:
+    - key: itemGuid
+      type: uuid
+      foreignKey:
+        schemaId: items
+        foreignKeyIdPath: /data/[*]/itemGuid
+        displayElementPath: /data/[*]/name
+    - key: consumptionPerLength
+      type: number
+      default: 1

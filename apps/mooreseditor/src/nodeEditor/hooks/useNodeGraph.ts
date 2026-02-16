@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
+import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
@@ -107,43 +108,66 @@ export function useNodeGraph(
 ) {
   const { dispatch } = useNodeEditorContext();
   const hasLoaded = useRef(false);
+  const isLoading = useRef(false);
+  const prevProjectDir = useRef<string | null>(null);
 
   const loadGraph = useCallback(async () => {
-    if (!projectDir || hasLoaded.current) return;
-    hasLoaded.current = true;
-
-    let graphFile: NodeGraphFile | null = null;
-
-    try {
-      // Production: Tauri FS
-      const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
-      const filePath = await path.join(mooreseditorDir, "nodeGraph.v1.json");
-      const content = await readTextFile(filePath);
-      graphFile = validateAndMigrate(JSON.parse(content));
-    } catch {
-      // File doesn't exist yet — will fall through to importFromMaster
+    if (!projectDir || hasLoaded.current || isLoading.current) {
+      return;
     }
+    isLoading.current = true;
+    try {
+      let graphFile: NodeGraphFile | null = null;
 
-    if (graphFile) {
-      const nodes = toReactFlowNodes(graphFile.nodes, jsonData, schemaMetas);
-      const edges = toReactFlowEdges(graphFile.edges);
-      dispatch({
-        type: "LOAD_GRAPH",
-        nodes,
-        edges,
-        viewport: graphFile.viewport,
-      });
-    } else {
-      // Import from master data (research nodes)
-      const importedNodes = importResearchFromMaster(jsonData, schemaMetas);
-      dispatch({
-        type: "LOAD_GRAPH",
-        nodes: importedNodes,
-        edges: [],
-        viewport: { x: 0, y: 0, zoom: 0.8 },
-      });
+      try {
+        // Production: Tauri FS
+        const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
+        const filePath = await path.join(mooreseditorDir, "nodeGraph.v1.json");
+        try {
+          await invoke("add_project_to_scope", { projectPath: mooreseditorDir });
+        } catch {
+          // Scope addition failed — likely in dev/browser environment
+        }
+        const content = await readTextFile(filePath);
+        const parsed = JSON.parse(content);
+        graphFile = validateAndMigrate(parsed);
+      } catch {
+        // File doesn't exist yet — will fall through to importFromMaster
+      }
+
+      if (graphFile) {
+        const nodes = toReactFlowNodes(graphFile.nodes, jsonData, schemaMetas);
+        const edges = toReactFlowEdges(graphFile.edges);
+        dispatch({
+          type: "LOAD_GRAPH",
+          nodes,
+          edges,
+          viewport: graphFile.viewport,
+        });
+        hasLoaded.current = true;
+      } else {
+        // Import from master data (research nodes)
+        const importedNodes = importResearchFromMaster(jsonData, schemaMetas);
+        dispatch({
+          type: "LOAD_GRAPH",
+          nodes: importedNodes,
+          edges: [],
+          viewport: { x: 0, y: 0, zoom: 0.8 },
+        });
+        hasLoaded.current = true;
+      }
+    } finally {
+      isLoading.current = false;
     }
   }, [projectDir, jsonData, schemaMetas, dispatch]);
+
+  useEffect(() => {
+    if (prevProjectDir.current !== projectDir) {
+      prevProjectDir.current = projectDir;
+      hasLoaded.current = false;
+      isLoading.current = false;
+    }
+  }, [projectDir]);
 
   useEffect(() => {
     if (projectDir && jsonData.length > 0 && schemaMetas.size > 0) {
@@ -151,5 +175,10 @@ export function useNodeGraph(
     }
   }, [projectDir, jsonData.length, schemaMetas.size, loadGraph]);
 
-  return { reload: () => { hasLoaded.current = false; loadGraph(); } };
+  return {
+    reload: () => {
+      hasLoaded.current = false;
+      loadGraph();
+    },
+  };
 }

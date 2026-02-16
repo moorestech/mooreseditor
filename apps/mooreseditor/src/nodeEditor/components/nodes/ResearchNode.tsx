@@ -12,8 +12,6 @@ const ResearchNode = memo(({ data, selected }: NodeProps) => {
         (value): value is string => typeof value === "string" && value.length > 0,
       )
     : [];
-  const visibleConsumeLabels = consumeLabels.slice(0, 2);
-  const hiddenConsumeCount = consumeLabels.length - visibleConsumeLabels.length;
 
   return (
     <div
@@ -34,7 +32,7 @@ const ResearchNode = memo(({ data, selected }: NodeProps) => {
         Research
       </div>
       <div>{(data.displayName as string) || "Research"}</div>
-      {visibleConsumeLabels.length > 0 ? (
+      {consumeLabels.length > 0 ? (
         <div
           style={{
             marginTop: 6,
@@ -46,13 +44,9 @@ const ResearchNode = memo(({ data, selected }: NodeProps) => {
             lineHeight: 1.3,
           }}
         >
-          <div style={{ opacity: 0.75, marginBottom: 2 }}>Consume</div>
-          {visibleConsumeLabels.map((label) => (
+          {consumeLabels.map((label) => (
             <div key={label}>{label}</div>
           ))}
-          {hiddenConsumeCount > 0 ? (
-            <div style={{ opacity: 0.7 }}>+{hiddenConsumeCount} more</div>
-          ) : null}
         </div>
       ) : null}
       <Handle type="source" position={Position.Right} style={nodeSourceHandleStyle} />

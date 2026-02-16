@@ -18,6 +18,10 @@ import { useNodeEditorContext } from "./context/NodeEditorContext";
 import { useNodeGraph } from "./hooks/useNodeGraph";
 import { useNodeOperations } from "./hooks/useNodeOperations";
 import {
+  canCreateMasterRecordForNode,
+  createMasterRecordForNode,
+} from "./utils/masterRecordCreation";
+import {
   resolveDisplayNames,
   resolveEdgeRecipeLabels,
 } from "./utils/nodeRenderResolvers";
@@ -334,6 +338,28 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     return guids;
   }, [state.nodes]);
 
+  const hasCreatableNodesInContextMenu = useMemo(
+    () =>
+      canCreateMasterRecordForNode("item", props.jsonData, schemaMetas) ||
+      canCreateMasterRecordForNode("research", props.jsonData, schemaMetas),
+    [props.jsonData, schemaMetas],
+  );
+
+  const handleCreateAndAddNode = useCallback(
+    (type: "item" | "research", position: { x: number; y: number }) => {
+      const created = createMasterRecordForNode(type, props.jsonData, schemaMetas);
+      if (!created) {
+        return false;
+      }
+
+      props.setJsonData(created.updatedColumns);
+      addNode(type, created.masterGuid, created.displayName, position);
+      props.onMarkDirty();
+      return true;
+    },
+    [props.jsonData, props.onMarkDirty, props.setJsonData, schemaMetas, addNode],
+  );
+
   const selectedNode = state.selectedNodeId
     ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
@@ -377,6 +403,9 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             jsonData={props.jsonData}
             schemaMetas={schemaMetas}
             onAddNode={addNode}
+            onCreateAndAddNode={
+              hasCreatableNodesInContextMenu ? handleCreateAndAddNode : undefined
+            }
             existingNodeGuids={existingNodeGuids}
           />
         </div>

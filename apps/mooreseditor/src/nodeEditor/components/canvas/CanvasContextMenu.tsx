@@ -33,6 +33,10 @@ interface CanvasContextMenuProps {
     displayName?: string,
     position?: { x: number; y: number },
   ) => void;
+  onCreateAndAddNode?: (
+    type: "item" | "research",
+    position: { x: number; y: number },
+  ) => boolean;
   existingNodeGuids: Set<string>;
 }
 
@@ -46,18 +50,6 @@ const MENU_WIDTH = 260;
 const MENU_MAX_HEIGHT = 420;
 
 const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
-const HORIZONTAL_SECTION_TYPES: ReadonlySet<string> = new Set([
-  "item",
-  "research",
-]);
-
-type MenuRecord = ReturnType<typeof getRecords>[number];
-
-interface MenuSection {
-  label: string;
-  type: "item" | "block" | "research";
-  records: MenuRecord[];
-}
 
 export default function CanvasContextMenu({
   position,
@@ -65,6 +57,7 @@ export default function CanvasContextMenu({
   jsonData,
   schemaMetas,
   onAddNode,
+  onCreateAndAddNode,
   existingNodeGuids,
 }: CanvasContextMenuProps) {
   const [search, setSearch] = useState("");
@@ -117,6 +110,20 @@ export default function CanvasContextMenu({
     [position, onAddNode, onClose],
   );
 
+  const handleCreateAndAddNode = useCallback(
+    (type: "item" | "research") => {
+      if (!position || !onCreateAndAddNode) return;
+      const isCreated = onCreateAndAddNode(type, {
+        x: position.flowX,
+        y: position.flowY,
+      });
+      if (isCreated) {
+        onClose();
+      }
+    },
+    [position, onClose, onCreateAndAddNode],
+  );
+
   if (!position) return null;
 
   // Adjust position so menu doesn't overflow viewport
@@ -157,6 +164,39 @@ export default function CanvasContextMenu({
       />
       <ScrollArea.Autosize mah={350}>
         <Stack gap={0}>
+          {onCreateAndAddNode && (
+            <>
+              <UnstyledButton
+                role="menuitem"
+                onClick={() => handleCreateAndAddNode("item")}
+                px="sm"
+                py={4}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  borderRadius: 4,
+                }}
+                className="context-menu-item"
+              >
+                <Text size="xs">Add New Item</Text>
+              </UnstyledButton>
+              <UnstyledButton
+                role="menuitem"
+                onClick={() => handleCreateAndAddNode("research")}
+                px="sm"
+                py={4}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  borderRadius: 4,
+                }}
+                className="context-menu-item"
+              >
+                <Text size="xs">Add New Research</Text>
+              </UnstyledButton>
+              <Divider my={4} />
+            </>
+          )}
           <UnstyledButton
             role="menuitem"
             onClick={() => handleAddNode("note")}
@@ -172,46 +212,32 @@ export default function CanvasContextMenu({
             <Text size="xs">Add Memo</Text>
           </UnstyledButton>
           <Divider my={4} />
-          {(() => {
-            const sections: MenuSection[] = NODE_TYPE_SECTIONS.map(
-              ({ label, type, schemaId }) => ({
-                label,
-                type,
-                records: getRecords(schemaId, jsonData, schemaMetas).filter((r) => {
-                  if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
-                    return false;
-                  if (
-                    search &&
-                    !r.name?.toLowerCase().includes(search.toLowerCase())
-                  )
-                    return false;
-                  return true;
-                }),
-              }),
-            ).filter((section) => !(search && section.records.length === 0));
-
-            const horizontalSections = sections.filter((section) =>
-              HORIZONTAL_SECTION_TYPES.has(section.type),
+          {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
+            const records = getRecords(schemaId, jsonData, schemaMetas).filter(
+              (r) => {
+                if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
+                  return false;
+                if (search && !r.name?.toLowerCase().includes(search.toLowerCase()))
+                  return false;
+                return true;
+              },
             );
-            const verticalSections = sections.filter(
-              (section) => !HORIZONTAL_SECTION_TYPES.has(section.type),
-            );
-
-            const renderSection = (section: MenuSection) => (
-              <>
+            if (records.length === 0 && search) return null;
+            return (
+              <div key={type}>
                 <Text size="xs" fw={700} c="dimmed" px="xs" py={4}>
-                  {section.label}
+                  {label}
                 </Text>
-                {section.records.length === 0 ? (
+                {records.length === 0 ? (
                   <Text size="xs" c="dimmed" px="sm">
                     No records
                   </Text>
                 ) : (
-                  section.records.map((r) => (
+                  records.map((r) => (
                     <UnstyledButton
                       key={r.guid}
                       role="menuitem"
-                      onClick={() => handleAddNode(section.type, r.guid, r.name)}
+                      onClick={() => handleAddNode(type, r.guid, r.name)}
                       px="sm"
                       py={4}
                       style={{
@@ -227,46 +253,13 @@ export default function CanvasContextMenu({
                     </UnstyledButton>
                   ))
                 )}
-              </>
+                <Divider my={4} />
+              </div>
             );
-
-            return (
-              <>
-                {horizontalSections.length > 0 && (
-                  <>
-                    <div className="context-menu-horizontal-sections">
-                      {horizontalSections.map((section) => (
-                        <div
-                          key={section.type}
-                          className="context-menu-horizontal-section"
-                        >
-                          {renderSection(section)}
-                        </div>
-                      ))}
-                    </div>
-                    <Divider my={4} />
-                  </>
-                )}
-                {verticalSections.map((section) => (
-                  <div key={section.type}>
-                    {renderSection(section)}
-                    <Divider my={4} />
-                  </div>
-                ))}
-              </>
-            );
-          })()}
+          })}
         </Stack>
       </ScrollArea.Autosize>
       <style>{`
-        .context-menu-horizontal-sections {
-          display: flex;
-          gap: 4px;
-        }
-        .context-menu-horizontal-section {
-          min-width: 0;
-          flex: 1;
-        }
         .context-menu-item:hover,
         .context-menu-item:focus-visible {
           background-color: var(--mantine-color-blue-light);

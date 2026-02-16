@@ -1,12 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import "@xyflow/react/dist/style.css";
-import {
-  applyNodeChanges,
-  applyEdgeChanges,
-  useReactFlow,
-} from "@xyflow/react";
-
 
 import CanvasContextMenu from "./components/canvas/CanvasContextMenu";
 import NodeCanvas from "./components/canvas/NodeCanvas";
@@ -15,105 +9,26 @@ import PropertiesPanel from "./components/panels/PropertiesPanel";
 import NodeToolbar from "./components/toolbar/NodeToolbar";
 import { EdgeEditContext } from "./context/EdgeEditContext";
 import { useNodeEditorContext } from "./context/NodeEditorContext";
+import { useContextMenu } from "./hooks/useContextMenu";
+import { useDeleteHandler } from "./hooks/useDeleteHandler";
+import { useEdgeEditing } from "./hooks/useEdgeEditing";
+import { useGraphChangeHandlers } from "./hooks/useGraphChangeHandlers";
 import { useNodeGraph } from "./hooks/useNodeGraph";
 import { useNodeOperations } from "./hooks/useNodeOperations";
-import {
-  canCreateMasterRecordForNode,
-  createMasterRecordForNode,
-} from "./utils/masterRecordCreation";
 import {
   resolveDisplayNames,
   resolveEdgeRecipeLabels,
 } from "./utils/nodeRenderResolvers";
-import { RECIPE_SCHEMA_MAP, normalizeRecipeRefsFromEdgeData } from "./utils/recipeEdge";
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
 
-import type { Column } from "../hooks/useJson";
-import type { ContextMenuPosition } from "./components/canvas/CanvasContextMenu";
-import type { ConnectionDecision } from "./types/connection";
 import type { NodeEditorViewProps } from "./types/props";
-import type { SchemaMeta } from "./utils/schemaMeta";
-import type {
-  OnNodesChange,
-  OnEdgesChange,
-  Node as ReactFlowNode,
-  Edge as ReactFlowEdge,
-} from "@xyflow/react";
-
-/**
- * Remove recipe records from jsonData for the given edges.
- * Only removes recipes that are not referenced by any other remaining edge.
- */
-function removeRecipesFromJsonData(
-  edgesToRemove: ReactFlowEdge[],
-  allEdges: ReactFlowEdge[],
-  jsonData: Column[],
-  schemaMetas: Map<string, SchemaMeta>,
-): Column[] {
-  const refsToRemove = edgesToRemove.flatMap((e) =>
-    normalizeRecipeRefsFromEdgeData(e.data),
-  );
-  if (refsToRemove.length === 0) return jsonData;
-
-  // Collect recipe refs still in use by other edges
-  const removingIds = new Set(edgesToRemove.map((e) => e.id));
-  const refsStillInUse = new Set<string>();
-  for (const edge of allEdges) {
-    if (removingIds.has(edge.id)) continue;
-    for (const ref of normalizeRecipeRefsFromEdgeData(edge.data)) {
-      refsStillInUse.add(`${ref.edgeType}:${ref.masterGuid}`);
-    }
-  }
-
-  const refsToActuallyRemove = refsToRemove.filter(
-    (ref) => !refsStillInUse.has(`${ref.edgeType}:${ref.masterGuid}`),
-  );
-  if (refsToActuallyRemove.length === 0) return jsonData;
-
-  let result = [...jsonData];
-  for (const ref of refsToActuallyRemove) {
-    const schemaId = RECIPE_SCHEMA_MAP[ref.edgeType];
-    const schemaMeta = schemaMetas.get(schemaId);
-    if (!schemaMeta?.guidField) continue;
-
-    const colIndex = result.findIndex((col) => col.title === schemaId);
-    if (colIndex === -1) continue;
-
-    const col = result[colIndex];
-    const rows = Array.isArray(col.data?.[schemaMeta.dataArrayPath])
-      ? (col.data[schemaMeta.dataArrayPath] as Record<string, unknown>[])
-      : [];
-    const filteredRows = rows.filter(
-      (row) =>
-        row &&
-        typeof row === "object" &&
-        (row as Record<string, unknown>)[schemaMeta.guidField!] !==
-          ref.masterGuid,
-    );
-
-    result = [...result];
-    result[colIndex] = {
-      ...col,
-      data: { ...col.data, [schemaMeta.dataArrayPath]: filteredRows },
-    };
-  }
-
-  return result;
-}
 
 export default function NodeEditorApp(props: NodeEditorViewProps) {
-  const { state, dispatch } = useNodeEditorContext();
+  const { state } = useNodeEditorContext();
   const schemaMetas = useMemo(
     () => buildSchemaMetaMap(props.schemas),
     [props.schemas],
   );
-
-  // State for editing an existing edge
-  const [editingEdge, setEditingEdge] = useState<ReactFlowEdge | null>(null);
-
-  // State for right-click context menu
-  const [contextMenuPos, setContextMenuPos] = useState<ContextMenuPosition | null>(null);
-  const { screenToFlowPosition } = useReactFlow();
 
   // Load graph data
   useNodeGraph(props.projectDir, props.jsonData, schemaMetas);
@@ -128,6 +43,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     [state.edges, props.jsonData, schemaMetas],
   );
 
+  // Core operations
   const {
     addNode,
     deleteSelected,
@@ -139,253 +55,64 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     cancelConnection,
   } = useNodeOperations();
 
-  const onNodesChange: OnNodesChange = useCallback(
-    (changes) => {
-      const newNodes = applyNodeChanges(changes, state.nodes);
-      dispatch({ type: "SET_NODES", nodes: newNodes });
-      props.onMarkDirty();
-    },
-    [state.nodes, dispatch, props],
-  );
+  // Graph change handlers
+  const {
+    onNodesChange,
+    onEdgesChange,
+    handleNodeSelect,
+    handleViewportChange,
+    handleMarkDirty,
+  } = useGraphChangeHandlers({
+    schemaMetas,
+    setJsonData: props.setJsonData,
+    onMarkDirty: props.onMarkDirty,
+  });
 
-  const onEdgesChange: OnEdgesChange = useCallback(
-    (changes) => {
-      // Delete associated recipes when edges are removed
-      const removeChanges = changes.filter((c) => c.type === "remove");
-      if (removeChanges.length > 0) {
-        const edgesToRemove = removeChanges
-          .map((c) => state.edges.find((e) => e.id === c.id))
-          .filter((e): e is ReactFlowEdge => e != null);
-        if (edgesToRemove.length > 0) {
-          props.setJsonData((prev) =>
-            removeRecipesFromJsonData(edgesToRemove, state.edges, prev, schemaMetas),
-          );
-        }
-      }
+  // Edge editing + dialog state
+  const {
+    handleEdgeDoubleClick,
+    handleRequestEditEdge,
+    isEdgeDialogOpen,
+    dialogSourceNode,
+    dialogTargetNode,
+    dialogInitialRecipeRefs,
+    handleDialogConfirm,
+    handleDialogCancel,
+  } = useEdgeEditing({
+    resolvedNodes,
+    pendingConnection,
+    confirmConnection,
+    cancelConnection,
+    onMarkDirty: handleMarkDirty,
+  });
 
-      const newEdges = applyEdgeChanges(changes, state.edges);
-      dispatch({ type: "SET_EDGES", edges: newEdges });
-      props.onMarkDirty();
-    },
-    [state.edges, dispatch, props, schemaMetas],
-  );
+  // Delete handler + keyboard shortcut
+  const { handleDeleteSelected } = useDeleteHandler({
+    schemaMetas,
+    setJsonData: props.setJsonData,
+    deleteSelected,
+    hasSelection,
+    isDialogOpen: isEdgeDialogOpen,
+  });
 
-  const handleNodeSelect = useCallback(
-    (node: ReactFlowNode | null) => {
-      dispatch({ type: "SET_SELECTED_NODE", nodeId: node?.id ?? null });
-    },
-    [dispatch],
-  );
-
-  const handleViewportChange = useCallback(
-    (viewport: { x: number; y: number; zoom: number }) => {
-      dispatch({ type: "SET_VIEWPORT", viewport });
-    },
-    [dispatch],
-  );
-  const handleMarkDirty = useCallback(() => {
-    props.onMarkDirty();
-    dispatch({ type: "SET_DIRTY", dirty: true });
-  }, [props, dispatch]);
-
-  // --- Edge double-click to edit ---
-  const handleEdgeDoubleClick = useCallback(
-    (_event: React.MouseEvent, edge: ReactFlowEdge) => {
-      if (edge.type === "recipe") {
-        setEditingEdge(edge);
-      }
-    },
-    [],
-  );
-
-  // Callback for RecipeEdge label double-click (via context)
-  const handleRequestEditEdge = useCallback(
-    (edgeId: string) => {
-      const edge = state.edges.find((e) => e.id === edgeId);
-      if (edge?.type === "recipe") {
-        setEditingEdge(edge);
-      }
-    },
-    [state.edges],
-  );
-
-  const handleEdgeEditConfirm = useCallback(
-    (decision: ConnectionDecision) => {
-      if (!editingEdge) return;
-
-      if (decision.edgeType === "recipe" && decision.recipeRefs.length > 0) {
-        const updatedEdges = state.edges.map((e) =>
-          e.id === editingEdge.id
-            ? {
-                ...e,
-                type: "recipe",
-                data: {
-                  edgeType: "recipe",
-                  recipeRefs: decision.recipeRefs,
-                },
-              }
-            : e,
-        );
-        dispatch({ type: "SET_EDGES", edges: updatedEdges });
-      }
-
-      setEditingEdge(null);
-      handleMarkDirty();
-    },
-    [editingEdge, state.edges, dispatch, handleMarkDirty],
-  );
-
-  const handleEdgeEditCancel = useCallback(() => {
-    setEditingEdge(null);
-  }, []);
-
-  // --- Context menu ---
-  const handlePaneContextMenu = useCallback(
-    (event: MouseEvent | React.MouseEvent) => {
-      event.preventDefault();
-      const flowPos = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-      setContextMenuPos({
-        screenX: event.clientX,
-        screenY: event.clientY,
-        flowX: flowPos.x,
-        flowY: flowPos.y,
-      });
-    },
-    [screenToFlowPosition],
-  );
-
-  const closeContextMenu = useCallback(() => {
-    setContextMenuPos(null);
-  }, []);
-
-  // --- Delete selected (toolbar) with recipe cleanup ---
-  const handleDeleteSelected = useCallback(() => {
-    const selectedNodeIds = new Set(
-      state.nodes.filter((n) => n.selected).map((n) => n.id),
-    );
-    const selectedEdgeIds = new Set(
-      state.edges.filter((e) => e.selected).map((e) => e.id),
-    );
-
-    const edgesToRemove = state.edges.filter(
-      (e) =>
-        selectedEdgeIds.has(e.id) ||
-        selectedNodeIds.has(e.source) ||
-        selectedNodeIds.has(e.target),
-    );
-
-    if (edgesToRemove.length > 0) {
-      props.setJsonData((prev) =>
-        removeRecipesFromJsonData(edgesToRemove, state.edges, prev, schemaMetas),
-      );
-    }
-
-    deleteSelected();
-  }, [state.nodes, state.edges, deleteSelected, props, schemaMetas]);
-
-  // --- Delete key handler ---
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Ignore if a dialog is open or if typing in an input field
-      if (editingEdge || pendingConnection) return;
-      if (
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      if (event.key === "Delete" || event.key === "Backspace") {
-        if (hasSelection) {
-          event.preventDefault();
-          handleDeleteSelected();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [editingEdge, pendingConnection, hasSelection, handleDeleteSelected]);
-
-  // --- Dialog state ---
-  const isEdgeDialogOpen = pendingConnection !== null || editingEdge !== null;
-
-  const dialogSourceNode = editingEdge
-    ? (resolvedNodes.find((n) => n.id === editingEdge.source) ?? null)
-    : pendingConnection?.source
-      ? (resolvedNodes.find((n) => n.id === pendingConnection.source) ?? null)
-      : null;
-
-  const dialogTargetNode = editingEdge
-    ? (resolvedNodes.find((n) => n.id === editingEdge.target) ?? null)
-    : pendingConnection?.target
-      ? (resolvedNodes.find((n) => n.id === pendingConnection.target) ?? null)
-      : null;
-
-  const dialogInitialRecipeRefs = editingEdge
-    ? normalizeRecipeRefsFromEdgeData(editingEdge.data)
-    : undefined;
-
-  const handleDialogConfirm = useCallback(
-    (decision: ConnectionDecision) => {
-      if (editingEdge) {
-        handleEdgeEditConfirm(decision);
-      } else {
-        confirmConnection(decision);
-      }
-    },
-    [editingEdge, handleEdgeEditConfirm, confirmConnection],
-  );
-
-  const handleDialogCancel = useCallback(() => {
-    if (editingEdge) {
-      handleEdgeEditCancel();
-    } else {
-      cancelConnection();
-    }
-  }, [editingEdge, handleEdgeEditCancel, cancelConnection]);
-
-  // Collect masterGuids of item/research nodes already on the graph
-  const existingNodeGuids = useMemo(() => {
-    const guids = new Set<string>();
-    for (const node of state.nodes) {
-      if (
-        (node.type === "item" || node.type === "research") &&
-        node.data?.masterGuid
-      ) {
-        guids.add(node.data.masterGuid as string);
-      }
-    }
-    return guids;
-  }, [state.nodes]);
-
-  const hasCreatableNodesInContextMenu = useMemo(
-    () =>
-      canCreateMasterRecordForNode("item", props.jsonData, schemaMetas) ||
-      canCreateMasterRecordForNode("research", props.jsonData, schemaMetas),
-    [props.jsonData, schemaMetas],
-  );
-
-  const handleCreateAndAddNode = useCallback(
-    (type: "item" | "research", position: { x: number; y: number }) => {
-      const created = createMasterRecordForNode(type, props.jsonData, schemaMetas);
-      if (!created) {
-        return false;
-      }
-
-      props.setJsonData(created.updatedColumns);
-      addNode(type, created.masterGuid, created.displayName, position);
-      props.onMarkDirty();
-      return true;
-    },
-    [props.jsonData, props.onMarkDirty, props.setJsonData, schemaMetas, addNode],
-  );
+  // Context menu + node creation
+  const {
+    contextMenuPos,
+    handlePaneContextMenu,
+    closeContextMenu,
+    existingNodeGuids,
+    hasCreatableNodesInContextMenu,
+    handleCreateAndAddNode,
+  } = useContextMenu({
+    jsonData: props.jsonData,
+    schemaMetas,
+    setJsonData: props.setJsonData,
+    onMarkDirty: props.onMarkDirty,
+    addNode,
+  });
 
   const selectedNode = state.selectedNodeId
-    ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
+    ? (resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null)
     : null;
 
   return (

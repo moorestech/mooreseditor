@@ -42,10 +42,8 @@ export function useForeignKeyData(
       // The column.data is already the actual data array
       const foreignData = column.data;
 
-      console.log("Creating ForeignKeyResolver with:", { foreignData, config });
       const resolver = new ForeignKeyResolver(foreignData, config);
       const resolvedOptions = resolver.getAllOptions();
-      console.log("Resolver options:", resolvedOptions);
 
       return resolvedOptions;
     }, [config, jsonData]);

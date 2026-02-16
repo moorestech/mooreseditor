@@ -20,33 +20,17 @@ export class ForeignKeyResolver {
   constructor(
     private rootData: any,
     private config: ForeignKeyConfig,
-  ) {
-    console.log("ForeignKeyResolver initialized with:", {
-      dataKeys: Object.keys(this.rootData || {}),
-      dataType: typeof this.rootData,
-      config,
-    });
-  }
+  ) {}
 
   /**
    * Get all available options for the foreign key dropdown
    */
   getAllOptions(): ForeignKeyOption[] {
-    console.log("getAllOptions called, expanding paths:", {
-      foreignKeyIdPath: this.config.foreignKeyIdPath,
-      displayElementPath: this.config.displayElementPath,
-    });
-
     const idResults = this.expandAllPaths(this.config.foreignKeyIdPath, true);
     const displayResults = this.expandAllPaths(
       this.config.displayElementPath,
       true,
     );
-
-    console.log("Path expansion results:", {
-      idResults: idResults.length,
-      displayResults: displayResults.length,
-    });
 
     return this.pairResults(idResults, displayResults);
   }
@@ -79,21 +63,16 @@ export class ForeignKeyResolver {
   ): PathResult[] {
     const results: PathResult[] = [];
 
-    console.log("expandAllPaths called with:", pathPattern);
-
     // Handle path splitting with array notation
     // Convert /data/[*]/itemGuid to segments ['data[*]', 'itemGuid']
     // First remove leading slash
     const normalizedPath = pathPattern.startsWith("/")
       ? pathPattern.slice(1)
       : pathPattern;
-    console.log("Normalized path:", normalizedPath);
 
     // Simple approach: replace [*] pattern to merge it with previous segment
     const mergedPath = normalizedPath.replace(/\/\[\*\]/g, "[*]");
     const segments = mergedPath.split("/");
-
-    console.log("Path segments:", segments);
 
     // Get hierarchy collection paths from config
     const hierarchyPaths: string[][] = [];
@@ -120,7 +99,6 @@ export class ForeignKeyResolver {
       hierarchyPaths,
     );
 
-    console.log("expandAllPaths results:", results);
     return results;
   }
 
@@ -164,17 +142,10 @@ export class ForeignKeyResolver {
     }
 
     const segment = segments[segmentIndex];
-    console.log(
-      `Processing segment ${segmentIndex}: "${segment}", current data type:`,
-      typeof currentData,
-    );
 
     // Handle standalone [*] segment (like /[*]/itemGuid)
     if (segment === "[*]") {
       if (Array.isArray(currentData)) {
-        console.log(
-          `Expanding array at root level with ${currentData.length} elements`,
-        );
         currentData.forEach((item, index) => {
           const newPath = [...currentPath, index.toString()];
           const newIndices = new Map(currentIndices);
@@ -191,11 +162,6 @@ export class ForeignKeyResolver {
             hierarchyPaths,
           );
         });
-      } else {
-        console.log(
-          `Expected array at root level but got:`,
-          typeof currentData,
-        );
       }
       return;
     }
@@ -207,9 +173,6 @@ export class ForeignKeyResolver {
       const arrayData = currentData?.[arrayName];
 
       if (Array.isArray(arrayData)) {
-        console.log(
-          `Expanding ${arrayName} array with ${arrayData.length} elements`,
-        );
         // Expand all array elements
         arrayData.forEach((item, index) => {
           const newPath = [...currentPath, arrayName, index.toString()];
@@ -256,16 +219,10 @@ export class ForeignKeyResolver {
             hierarchyPaths,
           );
         });
-      } else {
-        console.log(
-          `Expected ${arrayName} to be an array but got:`,
-          typeof arrayData,
-        );
       }
     } else {
       // Regular property access
       const nextData = currentData?.[segment];
-      console.log(`Accessing property "${segment}", got:`, typeof nextData);
       if (nextData !== undefined) {
         this.expandPathRecursive(
           nextData,

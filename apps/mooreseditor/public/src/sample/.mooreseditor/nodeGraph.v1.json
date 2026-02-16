@@ -1,16 +1,16 @@
 {
   "version": 1,
   "viewport": {
-    "x": -494.9652813807884,
-    "y": 82.80085872136749,
-    "zoom": 1.4034553384246862
+    "x": -68,
+    "y": 173,
+    "zoom": 1
   },
   "nodes": [
     {
       "id": "node-1771236113242-7",
       "position": {
-        "x": 380,
-        "y": 60
+        "x": 140,
+        "y": 20
       },
       "type": "research",
       "masterGuid": "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
@@ -19,7 +19,7 @@
       "id": "node-1771236115825-8",
       "position": {
         "x": 860,
-        "y": 20
+        "y": 0
       },
       "type": "research",
       "masterGuid": "c60a3c61-ada0-4209-992c-aad365b7773c"
@@ -36,8 +36,8 @@
     {
       "id": "node-1771236131966-10",
       "position": {
-        "x": 580,
-        "y": 200
+        "x": 340,
+        "y": 160
       },
       "type": "item",
       "masterGuid": "44cb69e9-c703-4393-94c4-bad4477da10f"
@@ -59,6 +59,24 @@
       },
       "type": "item",
       "masterGuid": "ad76f181-50da-4c7d-a98f-e55f2387c47d"
+    },
+    {
+      "id": "node-1771236983446-1",
+      "position": {
+        "x": 560,
+        "y": 180
+      },
+      "type": "research",
+      "masterGuid": "6b248a5f-edcc-4d59-b8d3-05d8e4941fd4"
+    },
+    {
+      "id": "node-1771236998146-2",
+      "position": {
+        "x": 680,
+        "y": 280
+      },
+      "type": "item",
+      "masterGuid": "57f116bb-c374-410b-bc00-23b285575d7b"
     }
   ],
   "edges": [

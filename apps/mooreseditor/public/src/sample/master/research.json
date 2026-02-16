@@ -49,7 +49,8 @@
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
             "unlockItemGuids": [
-              "44cb69e9-c703-4393-94c4-bad4477da10f"
+              "44cb69e9-c703-4393-94c4-bad4477da10f",
+              "57f116bb-c374-410b-bc00-23b285575d7b"
             ]
           }
         }
@@ -81,6 +82,35 @@
           "gameActionParam": {
             "unlockItemGuids": [
               "ad76f181-50da-4c7d-a98f-e55f2387c47d"
+            ]
+          }
+        }
+      ],
+      "graphViewSettings": {
+        "UIPosition": [
+          0,
+          0
+        ],
+        "UIScale": [
+          1,
+          1,
+          1
+        ],
+        "IconItem": ""
+      }
+    },
+    {
+      "researchNodeGuid": "6b248a5f-edcc-4d59-b8d3-05d8e4941fd4",
+      "researchNodeName": "砂鉄",
+      "researchNodeDescription": "New Research Description",
+      "consumeItems": [],
+      "prevResearchNodeGuids": [],
+      "clearedActions": [
+        {
+          "gameActionType": "unlockItemRecipeView",
+          "gameActionParam": {
+            "unlockItemGuids": [
+              "57f116bb-c374-410b-bc00-23b285575d7b"
             ]
           }
         }

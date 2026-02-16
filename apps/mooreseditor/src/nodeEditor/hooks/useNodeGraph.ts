@@ -19,6 +19,8 @@ import type {
 import type { SchemaMeta } from "../utils/schemaMeta";
 import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
 
+const isDev = import.meta.env.DEV;
+
 /**
  * Map edgeType to React Flow component type key
  */
@@ -132,7 +134,18 @@ export function useNodeGraph(
         const parsed = JSON.parse(content);
         graphFile = validateAndMigrate(parsed);
       } catch {
-        // File doesn't exist yet — will fall through to importFromMaster
+        // Tauri FS failed — try dev HTTP fallback
+        if (isDev && projectDir === "SampleProject") {
+          try {
+            const response = await fetch("/src/sample/.mooreseditor/nodeGraph.v1.json");
+            if (response.ok) {
+              const parsed = await response.json();
+              graphFile = validateAndMigrate(parsed);
+            }
+          } catch {
+            // HTTP fetch also failed — will fall through to importFromMaster
+          }
+        }
       }
 
       if (graphFile) {

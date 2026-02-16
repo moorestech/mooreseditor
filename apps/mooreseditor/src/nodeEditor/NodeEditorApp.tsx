@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import "@xyflow/react/dist/style.css";
 import {
@@ -285,6 +285,30 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
 
     deleteSelected();
   }, [state.nodes, state.edges, deleteSelected, props, schemaMetas]);
+
+  // --- Delete key handler ---
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore if a dialog is open or if typing in an input field
+      if (editingEdge || pendingConnection) return;
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      if (event.key === "Delete" || event.key === "Backspace") {
+        if (hasSelection) {
+          event.preventDefault();
+          handleDeleteSelected();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [editingEdge, pendingConnection, hasSelection, handleDeleteSelected]);
 
   // --- Dialog state ---
   const isEdgeDialogOpen = pendingConnection !== null || editingEdge !== null;

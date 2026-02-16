@@ -1,131 +1,95 @@
 {
   "version": 1,
   "viewport": {
-    "x": -2709.8664874570813,
-    "y": 9.463431985662382,
-    "zoom": 1.2577298170079507
+    "x": -68,
+    "y": 173,
+    "zoom": 1
   },
   "nodes": [
     {
-      "id": "research-0f97e445",
+      "id": "node-1771236113242-7",
       "position": {
-        "x": 0,
-        "y": 0
+        "x": 140,
+        "y": 20
       },
       "type": "research",
       "masterGuid": "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
     },
     {
-      "id": "research-a3d1c63b",
+      "id": "node-1771236115825-8",
       "position": {
-        "x": 800,
-        "y": 800
-      },
-      "type": "research",
-      "masterGuid": "a3d1c63b-b14c-44ba-aae9-22f7c621b72d"
-    },
-    {
-      "id": "research-d4e0b2bb",
-      "position": {
-        "x": 800,
+        "x": 860,
         "y": 0
       },
       "type": "research",
-      "masterGuid": "d4e0b2bb-9f20-4e0f-bfef-26c7f9449cd0"
+      "masterGuid": "c60a3c61-ada0-4209-992c-aad365b7773c"
     },
     {
-      "id": "research-db40b978",
+      "id": "node-1771236118833-9",
       "position": {
-        "x": 1600,
-        "y": 0
+        "x": 900,
+        "y": 340
       },
       "type": "research",
-      "masterGuid": "db40b978-097e-4fdc-b4a1-617c62e32e24"
+      "masterGuid": "1aa089df-c987-40c8-a2cc-3ad4d6e19964"
     },
     {
-      "id": "research-cb0ff934",
+      "id": "node-1771236131966-10",
       "position": {
-        "x": 2400,
-        "y": 220
-      },
-      "type": "research",
-      "masterGuid": "cb0ff934-2972-48f5-9241-c2b2d61f2bf9"
-    },
-    {
-      "id": "research-ad802d42",
-      "position": {
-        "x": 2320,
-        "y": 20
-      },
-      "type": "research",
-      "masterGuid": "ad802d42-b548-40d4-9e3b-bc7181174271"
-    },
-    {
-      "id": "item-4abdae31",
-      "position": {
-        "x": 200,
-        "y": 100
-      },
-      "type": "item",
-      "masterGuid": "4abdae31-6e3b-42c5-a097-4cf6021751ca"
-    },
-    {
-      "id": "item-5c5b7ee0",
-      "position": {
-        "x": 200,
-        "y": 250
-      },
-      "type": "item",
-      "masterGuid": "5c5b7ee0-d1ea-420e-951e-2b2b49fee81b"
-    },
-    {
-      "id": "node-1771235805202-1",
-      "position": {
-        "x": 2520,
+        "x": 340,
         "y": 160
       },
       "type": "item",
-      "masterGuid": "b7170f72-402f-4025-b2a1-6214f7cb42ae"
+      "masterGuid": "44cb69e9-c703-4393-94c4-bad4477da10f"
     },
     {
-      "id": "node-1771235811056-2",
+      "id": "node-1771236139233-11",
       "position": {
-        "x": 2560,
-        "y": 300
+        "x": 1060,
+        "y": 120
       },
       "type": "item",
-      "masterGuid": "6afafbc9-5a2c-4444-b8c8-9ea047da9ffa"
+      "masterGuid": "967a60e2-41a0-4866-9901-0baab7a350aa"
+    },
+    {
+      "id": "node-1771236154899-12",
+      "position": {
+        "x": 1060,
+        "y": 420
+      },
+      "type": "item",
+      "masterGuid": "ad76f181-50da-4c7d-a98f-e55f2387c47d"
+    },
+    {
+      "id": "node-1771236983446-1",
+      "position": {
+        "x": 560,
+        "y": 180
+      },
+      "type": "research",
+      "masterGuid": "6b248a5f-edcc-4d59-b8d3-05d8e4941fd4"
+    },
+    {
+      "id": "node-1771236998146-2",
+      "position": {
+        "x": 680,
+        "y": 280
+      },
+      "type": "item",
+      "masterGuid": "57f116bb-c374-410b-bc00-23b285575d7b"
     }
   ],
   "edges": [
     {
-      "id": "dep-1",
-      "source": "research-0f97e445",
-      "target": "research-a3d1c63b",
+      "id": "edge-1771236122266",
+      "source": "node-1771236113242-7",
+      "target": "node-1771236115825-8",
       "edgeType": "dependency"
     },
     {
-      "id": "dep-2",
-      "source": "research-0f97e445",
-      "target": "research-d4e0b2bb",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-3",
-      "source": "research-d4e0b2bb",
-      "target": "research-db40b978",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-4",
-      "source": "research-db40b978",
-      "target": "research-cb0ff934",
-      "edgeType": "dependency"
-    },
-    {
-      "id": "dep-5",
-      "source": "research-db40b978",
-      "target": "research-ad802d42",
+      "id": "edge-1771236124058",
+      "source": "node-1771236113242-7",
+      "target": "node-1771236118833-9",
       "edgeType": "dependency"
     }
   ]

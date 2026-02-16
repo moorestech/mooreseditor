@@ -1422,19 +1422,6 @@
       "initialUnlocked": false,
       "recipeViewType": "IsUnlocked",
       "handGrabModelAddressablePath": ""
-    },
-    {
-      "itemGuid": "b7170f72-402f-4025-b2a1-6214f7cb42ae",
-      "imagePath": "",
-      "name": "New Item",
-      "maxStack": 100,
-      "sortPriority": 1530,
-      "initialUnlocked": false,
-      "recipeViewType": "IsUnlocked",
-      "addressablePaths": {
-        "handGrabModel": "",
-        "entityModel": ""
-      }
     }
   ]
 }

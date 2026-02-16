@@ -34,9 +34,11 @@ function getItemGuidForNode(
 /**
  * Calculate which items/blocks are spatially unlocked by each research node.
  *
- * For each research node, find items/blocks in two zones:
- * 1. Right zone: x > research.x, x < nearest research to the right, y >= research.y
- * 2. Below zone: y > research.y, y < nearest research below, x <= research.x
+ * Each item/block is assigned to the nearest eligible research node by
+ * Manhattan distance. An item is eligible for a research node R if it falls
+ * in one of two zones:
+ * 1. Right zone: item.x > R.x AND item.y >= R.y
+ * 2. Below zone: item.y > R.y AND item.x <= R.x
  *
  * Returns: Map<researchMasterGuid, itemGuid[]>
  */
@@ -48,70 +50,44 @@ export function calculateUnlockedItems(
 ): Map<string, string[]> {
   const result = new Map<string, string[]>();
 
-  // Sort research nodes by X (ascending), then Y (ascending) for tie-breaking
-  const sorted = [...researchNodes].sort((a, b) =>
-    a.position.x !== b.position.x
-      ? a.position.x - b.position.x
-      : a.position.y - b.position.y,
-  );
+  // Initialize result map with empty arrays for all research nodes
+  for (const r of researchNodes) {
+    result.set(r.data.masterGuid as string, []);
+  }
 
-  for (const r of sorted) {
-    // Find the nearest research node in the +X direction
-    const rightBoundary = sorted
-      .filter((s) => s.id !== r.id && s.position.x > r.position.x)
-      .sort((a, b) => {
-        const distA =
-          Math.abs(a.position.x - r.position.x) +
-          Math.abs(a.position.y - r.position.y);
-        const distB =
-          Math.abs(b.position.x - r.position.x) +
-          Math.abs(b.position.y - r.position.y);
-        return distA - distB;
-      })[0];
+  // For each item/block node, find the nearest eligible research node
+  for (const node of itemBlockNodes) {
+    let nearestResearch: ReactFlowNode | null = null;
+    let minDist = Infinity;
 
-    const rightX = rightBoundary?.position.x ?? Infinity;
-
-    // Find the nearest research node in the +Y direction
-    const bottomBoundary = sorted
-      .filter((s) => s.id !== r.id && s.position.y > r.position.y)
-      .sort((a, b) => {
-        const distA =
-          Math.abs(a.position.y - r.position.y) +
-          Math.abs(a.position.x - r.position.x);
-        const distB =
-          Math.abs(b.position.y - r.position.y) +
-          Math.abs(b.position.x - r.position.x);
-        return distA - distB;
-      })[0];
-
-    const bottomY = bottomBoundary?.position.y ?? Infinity;
-
-    const unlocked: string[] = [];
-    const seen = new Set<string>();
-
-    for (const node of itemBlockNodes) {
-      // Right zone: to the right of R, bounded by next research right
+    for (const r of researchNodes) {
       const inRightZone =
-        node.position.x > r.position.x &&
-        node.position.x < rightX &&
-        node.position.y >= r.position.y;
+        node.position.x > r.position.x && node.position.y >= r.position.y;
 
-      // Below zone: below R, bounded by next research below
       const inBelowZone =
-        node.position.y > r.position.y &&
-        node.position.y < bottomY &&
-        node.position.x <= r.position.x;
+        node.position.y > r.position.y && node.position.x <= r.position.x;
 
       if (inRightZone || inBelowZone) {
-        const itemGuid = getItemGuidForNode(node, jsonData, schemaMetas);
-        if (itemGuid && !seen.has(itemGuid)) {
-          seen.add(itemGuid);
-          unlocked.push(itemGuid);
+        const dist =
+          Math.abs(node.position.x - r.position.x) +
+          Math.abs(node.position.y - r.position.y);
+        if (dist < minDist) {
+          minDist = dist;
+          nearestResearch = r;
         }
       }
     }
 
-    result.set(r.data.masterGuid as string, unlocked);
+    if (nearestResearch) {
+      const itemGuid = getItemGuidForNode(node, jsonData, schemaMetas);
+      if (itemGuid) {
+        const masterGuid = nearestResearch.data.masterGuid as string;
+        const list = result.get(masterGuid)!;
+        if (!list.includes(itemGuid)) {
+          list.push(itemGuid);
+        }
+      }
+    }
   }
 
   return result;

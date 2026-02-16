@@ -294,4 +294,89 @@ describe("calculateUnlockedItems", () => {
       expect(result.get("r2")).toEqual(["i2"]);
     });
   });
+
+  describe("real-world scenario: nodeGraph.v1.json layout", () => {
+    it("assigns items to nearest eligible research (iron ingot bug fix)", () => {
+      // Reproduces the actual node layout from nodeGraph.v1.json:
+      //   R1 "低品質鉄の加工" at (140, 20)
+      //   R2 "鉄インゴット" at (860, 0)
+      //   R3 "鉄の加工" at (900, 340)
+      //   R4 "砂鉄" at (560, 180)
+      //   I1 "低品質鉄塊" at (340, 160)
+      //   I2 "鉄インゴット" at (1060, 120)
+      //   I3 "鉄板" at (1060, 420)
+      //   I4 "砂鉄" at (680, 280)
+      const research = [
+        makeResearch("r1", 140, 20, "low-quality-iron-research"),
+        makeResearch("r2", 860, 0, "iron-ingot-research"),
+        makeResearch("r3", 900, 340, "iron-processing-research"),
+        makeResearch("r4", 560, 180, "sand-iron-research"),
+      ];
+      const items = [
+        makeItem("i1", 340, 160, "low-quality-iron-item"),
+        makeItem("i2", 1060, 120, "iron-ingot-item"),
+        makeItem("i3", 1060, 420, "iron-plate-item"),
+        makeItem("i4", 680, 280, "sand-iron-item"),
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+
+      // R1 should unlock the item to its right: 低品質鉄塊
+      expect(result.get("low-quality-iron-research")).toEqual([
+        "low-quality-iron-item",
+      ]);
+      // R2 should unlock the item to its right: 鉄インゴット
+      expect(result.get("iron-ingot-research")).toEqual(["iron-ingot-item"]);
+      // R3 should unlock the item to its right: 鉄板
+      expect(result.get("iron-processing-research")).toEqual([
+        "iron-plate-item",
+      ]);
+      // R4 should unlock the item to its right: 砂鉄
+      expect(result.get("sand-iron-research")).toEqual(["sand-iron-item"]);
+    });
+
+    it("does not assign far-left items to a right-side research via below zone", () => {
+      // R2 at (860, 0) should NOT pick up I1 at (340, 160) just because
+      // I1 is below R2 and x <= 860 — I1 is much closer to R1 at (140, 20)
+      const research = [
+        makeResearch("r1", 140, 20),
+        makeResearch("r2", 860, 0),
+      ];
+      const items = [makeItem("i1", 340, 160)];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      expect(result.get("r1")).toEqual(["i1"]);
+      expect(result.get("r2")).toEqual([]);
+    });
+
+    it("does not block right-zone items by a distant below research node", () => {
+      // R2 at (860, 0) has R3 at (900, 340) to its right but far below.
+      // R3 should NOT prevent I2 at (1060, 120) from being assigned to R2
+      // because I2 is much closer to R2 than to R3.
+      const research = [
+        makeResearch("r2", 860, 0),
+        makeResearch("r3", 900, 340),
+      ];
+      const items = [
+        makeItem("i2", 1060, 120), // right of both, but closest to R2
+        makeItem("i3", 1060, 420), // right of both, but closest to R3
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      expect(result.get("r2")).toEqual(["i2"]);
+      expect(result.get("r3")).toEqual(["i3"]);
+    });
+  });
 });

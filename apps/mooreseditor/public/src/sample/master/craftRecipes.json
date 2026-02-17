@@ -1040,6 +1040,19 @@
           "isRemain": false
         }
       ]
+    },
+    {
+      "craftRecipeGuid": "71df74bd-52a0-4e62-9d55-6f3e83162739",
+      "craftResultItemGuid": "57f116bb-c374-410b-bc00-23b285575d7b",
+      "craftResultCount": 2,
+      "craftTime": 1,
+      "initialUnlocked": true,
+      "requiredItems": [
+        {
+          "itemGuid": "44cb69e9-c703-4393-94c4-bad4477da10f",
+          "count": 1
+        }
+      ]
     }
   ]
 }

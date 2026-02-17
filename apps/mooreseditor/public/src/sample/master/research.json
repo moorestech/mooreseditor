@@ -49,8 +49,7 @@
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
             "unlockItemGuids": [
-              "44cb69e9-c703-4393-94c4-bad4477da10f",
-              "57f116bb-c374-410b-bc00-23b285575d7b"
+              "967a60e2-41a0-4866-9901-0baab7a350aa"
             ]
           }
         }

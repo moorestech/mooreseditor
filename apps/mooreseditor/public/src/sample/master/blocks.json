@@ -5,11 +5,7 @@
       "sortPriority": 100,
       "maxStack": 100,
       "name": "キャンプファイア",
-      "blockSize": [
-        2,
-        1,
-        2
-      ],
+      "blockSize": [2, 1, 2],
       "blockType": "ElectricMachine",
       "blockParam": {
         "requiredPower": 0,
@@ -41,11 +37,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "小さな歯車",
       "blockType": "Gear",
       "blockParam": {
@@ -54,56 +46,24 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 1, 0],
+                [0, -1, 0]
               ],
               "connectorGuid": "17e36d29-ccc5-4cba-9c0e-cc7a89aae1cd"
             },
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectType": "Gear",
               "connectOption": {
@@ -125,11 +85,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        2,
-        5,
-        2
-      ],
+      "blockSize": [2, 5, 2],
       "name": "木の風車",
       "blockType": "SimpleGearGenerator",
       "blockParam": {
@@ -140,37 +96,17 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[-1, 0, 0]],
               "connectorGuid": "94c0fd10-e9bf-449b-b15d-5814f9caa658"
             },
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[1, 0, 0]],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
@@ -187,11 +123,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "ふるい",
       "blockType": "GearMachine",
       "blockParam": {
@@ -203,70 +135,30 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "4f9ba3c9-7d58-4e0f-89fe-50ffcc0d8a5a"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": true,
@@ -279,36 +171,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "70f9bab8-7c54-4786-b6d4-82eed7b719fd"
             }
@@ -333,11 +205,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "遠心分離機",
       "blockType": "GearMachine",
       "blockParam": {
@@ -349,70 +217,30 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "30019221-8920-481f-b948-e54900ea52e6"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": true,
@@ -425,36 +253,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "0ae1a799-9d1a-42d5-a4ee-1e408658100d"
             }
@@ -479,11 +287,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "釜",
       "blockType": "ElectricMachine",
       "blockParam": {
@@ -516,11 +320,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "シャフト",
       "blockType": "Shaft",
       "blockParam": {
@@ -528,26 +328,14 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "ba70000a-f6ec-4170-9e7b-0293f97854f0"
             }
@@ -571,11 +359,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        2,
-        5,
-        2
-      ],
+      "blockSize": [2, 5, 2],
       "name": "水車",
       "blockType": "SimpleGearGenerator",
       "blockParam": {
@@ -586,37 +370,17 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[-1, 0, 0]],
               "connectorGuid": "aa2392d2-f0d7-4ebd-b38a-dc95f703196a"
             },
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[1, 0, 0]],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
@@ -632,11 +396,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "itemGuid": "4abdae31-6e3b-42c5-a097-4cf6021751ca",
       "blockType": "GearMachine",
       "blockParam": {
@@ -648,70 +408,30 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "60df80ed-1c5f-4d5a-87e6-d30bbddf3d26"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": true,
@@ -724,36 +444,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectorGuid": "993d2d11-dc40-4e01-8f0b-24c123358a73"
             }
@@ -778,11 +478,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "石の粉砕機",
       "itemGuid": "2895b52f-8285-41a8-82d2-4fbd43786a65",
       "blockGuid": "a334d703-9442-4910-a8f8-b914df50df4e",
@@ -796,74 +492,34 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "407a2913-5605-49a4-9865-75a4aec4c435"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "ac605df3-b0e4-4124-8163-049eab35ca68"
             }
@@ -872,36 +528,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "5b33282b-34b2-4e76-b79b-8615e78e9b02"
             }
@@ -924,11 +560,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "直線歯車ベルトコンベア",
       "blockType": "GearBeltConveyor",
       "blockParam": {
@@ -938,56 +570,20 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  -1,
-                  0
-                ],
-                [
-                  1,
-                  -1,
-                  0
-                ]
+                [0, 0, 1],
+                [0, 0, -1],
+                [-1, 0, 0],
+                [0, -1, -1],
+                [0, -1, 1],
+                [1, 0, 0],
+                [-1, -1, 0],
+                [1, -1, 0]
               ],
               "connectorGuid": "31deab11-bf74-412d-94d8-8ca3c5c05888"
             }
@@ -996,43 +592,15 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  -1,
-                  0
-                ],
-                [
-                  1,
-                  -1,
-                  0
-                ]
+                [0, 0, -1],
+                [0, -1, -1],
+                [1, 0, 0],
+                [-1, 0, 0],
+                [-1, -1, 0],
+                [1, -1, 0]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1042,23 +610,11 @@
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1081,11 +637,7 @@
       "enableConveyorPlacement": true
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "上り歯車ベルトコンベア",
       "blockType": "GearBeltConveyor",
       "blockParam": {
@@ -1095,31 +647,15 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  1,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ]
+                [0, 1, 1],
+                [0, 0, -1],
+                [0, -1, -1]
               ],
               "connectorGuid": "6e425b09-5949-4a2c-9e8d-e4cd249ad96c"
             }
@@ -1128,19 +664,9 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  1
-                ]
-              ],
+              "directions": [[0, 1, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -1149,23 +675,11 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ]
+                [0, 0, -1],
+                [0, -1, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1184,11 +698,7 @@
       "enableConveyorPlacement": true
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "下り歯車ベルトコンベア",
       "blockType": "GearBeltConveyor",
       "blockParam": {
@@ -1198,36 +708,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  1,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, 0, -1],
+                [0, 1, -1],
+                [0, -1, 1]
               ],
               "connectorGuid": "ceb6062d-9444-46e7-ab02-0f9f1d0d0280"
             }
@@ -1236,23 +726,11 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1262,19 +740,9 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  -1
-                ]
-              ],
+              "directions": [[0, 1, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -1292,11 +760,7 @@
       "enableConveyorPlacement": true
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "直進アイテムシューター",
       "blockType": "ItemShooter",
       "blockParam": {
@@ -1307,23 +771,11 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1333,33 +785,13 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ]
+                [0, 0, -1],
+                [0, -1, -1],
+                [1, 0, 0],
+                [-1, 0, 0]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1381,11 +813,7 @@
       "enableConveyorPlacement": true
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "下りアイテムシューター",
       "blockType": "ItemShooter",
       "blockParam": {
@@ -1396,23 +824,11 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1422,19 +838,9 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  -1
-                ]
-              ],
+              "directions": [[0, 1, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -1450,11 +856,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "name": "上りアイテムシューター",
       "blockType": "ItemShooter",
       "blockParam": {
@@ -1465,19 +867,9 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  1
-                ]
-              ],
+              "directions": [[0, 1, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -1486,23 +878,11 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ]
+                [0, 0, -1],
+                [0, -1, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -1519,11 +899,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        3,
-        3,
-        1
-      ],
+      "blockSize": [3, 3, 1],
       "name": "大きな歯車",
       "blockType": "Gear",
       "blockParam": {
@@ -1532,42 +908,20 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                1,
-                1,
-                0
-              ],
+              "offset": [1, 1, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectorGuid": "3bd6bcd4-9bb5-444d-bcc7-8355964cded3"
             },
             {
-              "offset": [
-                0,
-                1,
-                0
-              ],
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [0, 1, 0],
+              "directions": [[-1, 0, 0]],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
@@ -1575,18 +929,8 @@
               "connectorGuid": "aa23ce78-a839-4295-9368-4896397f08f1"
             },
             {
-              "offset": [
-                2,
-                1,
-                0
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [2, 1, 0],
+              "directions": [[1, 0, 0]],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
@@ -1594,37 +938,17 @@
               "connectorGuid": "f6b3b17a-53a9-4658-becc-f3505505a6d5"
             },
             {
-              "offset": [
-                1,
-                2,
-                0
-              ],
+              "offset": [1, 2, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
               },
-              "directions": [
-                [
-                  0,
-                  1,
-                  0
-                ]
-              ],
+              "directions": [[0, 1, 0]],
               "connectorGuid": "b4dd9882-398c-4a16-8acb-cfcee8e1f55d"
             },
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  -1,
-                  0
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, -1, 0]],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
@@ -1648,11 +972,7 @@
     {
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        2,
-        1,
-        2
-      ],
+      "blockSize": [2, 1, 2],
       "itemGuid": "c7c08b65-254f-40e8-9779-87a77739fc56",
       "blockType": "GearMiner",
       "blockParam": {
@@ -1663,19 +983,9 @@
           "inputConnects": [],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -1699,41 +1009,21 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[-1, 0, 0]],
               "connectorGuid": "d56bc314-7b81-47a2-8c08-e1a22a221765"
             },
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": true
               },
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[1, 0, 0]],
               "connectorGuid": "5e92ef82-b60f-4935-9bab-c91208a1ba8f"
             }
           ]
@@ -1749,11 +1039,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "time": 1,
       "blockType": "GearMachine",
       "blockParam": {
@@ -1765,11 +1051,7 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
@@ -1781,19 +1063,9 @@
           ],
           "outputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                2
-              ],
+              "offset": [1, 0, 2],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
@@ -1805,36 +1077,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectorGuid": "a31ef461-b677-4397-90db-408e39616162"
             }
@@ -1860,11 +1112,7 @@
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory"
     },
     {
-      "blockSize": [
-        3,
-        2,
-        3
-      ],
+      "blockSize": [3, 2, 3],
       "itemGuid": "741bbdde-ea03-4eff-83bd-0a8e860c6e36",
       "blockPrefabAddressablesPath": "Vanilla/Block/bronze_sawmill",
       "name": "原木加工機",
@@ -1879,41 +1127,21 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "directions": [[0, 0, -1]],
               "connectorGuid": "0dc3564e-e985-423a-81d9-10448777f752"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                2
-              ],
+              "offset": [1, 0, 2],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
@@ -1925,36 +1153,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectorGuid": "ee43800b-058b-4c90-9b2b-362a2019f6a3"
             }
@@ -1976,11 +1184,7 @@
       "blockUIAddressablesPath": "Vanilla/UI/Block/GearMachineBlockInventory"
     },
     {
-      "blockSize": [
-        3,
-        3,
-        7
-      ],
+      "blockSize": [3, 3, 7],
       "name": "ふいご付き精錬炉",
       "blockType": "GearMachine",
       "blockParam": {
@@ -1993,42 +1197,22 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "connectOption": {
                 "inventoryOptions": []
               },
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "directions": [[0, 0, -1]],
               "connectorGuid": "11638407-16f1-4e84-a763-935ce1f3c35f"
             }
           ],
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                6
-              ],
+              "offset": [1, 0, 6],
               "connectOption": {
                 "inventoryOptions": []
               },
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "directions": [[0, 0, 1]],
               "connectorGuid": "1851a73d-76d8-437d-a494-bb7991967036"
             }
           ]
@@ -2037,40 +1221,20 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                0,
-                0,
-                1
-              ],
+              "offset": [0, 0, 1],
               "connectOption": {
                 "isReverse": false
               },
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[-1, 0, 0]],
               "connectorGuid": "9cb2df7d-4d45-47fe-b4b6-a9e3ac5d696f"
             },
             {
               "connectType": "Gear",
-              "offset": [
-                3,
-                0,
-                1
-              ],
+              "offset": [3, 0, 1],
               "connectOption": {
                 "isReverse": false
               },
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "directions": [[1, 0, 0]],
               "connectorGuid": "7ee3f0c1-70db-44a9-8381-63f5e969772d"
             }
           ]
@@ -2097,37 +1261,21 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockType": "Shaft",
       "blockParam": {
         "requireTorque": 0,
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ]
+                [0, 1, 0],
+                [0, -1, 0]
               ],
               "connectorGuid": "23494293-f0bc-40f5-bda4-88ca61e505bc"
             }
@@ -2146,11 +1294,7 @@
       "overrideVerticalBlock": {}
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockUIAddressablesPath": "Vanilla/UI/Block/GearEnergyTransformerUI",
       "itemGuid": "6713e841-9756-497c-a60d-327ed1e1edc8",
       "name": "シャフトボックス",
@@ -2160,46 +1304,18 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [0, 1, 0],
+                [0, -1, 0],
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectorGuid": "0a47cf76-3182-4907-ad87-53386f2d2b03"
             }
@@ -2219,11 +1335,7 @@
       "name": "核融合炉",
       "blockType": "Block",
       "itemGuid": "43497878-788b-40e7-987c-4064b1a2642a",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/FusionReactor",
       "blockUIAddressablesPath": "",
       "blockParam": {}
@@ -2233,11 +1345,7 @@
       "name": "直進高速ベルトコンベア",
       "blockType": "BeltConveyor",
       "itemGuid": "8bbac63f-a589-4c92-a8d1-b6268cf8ade5",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Fast_BeltConveyor_Straight",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -2252,43 +1360,15 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  -1,
-                  0
-                ],
-                [
-                  1,
-                  -1,
-                  0
-                ]
+                [0, 0, -1],
+                [0, -1, -1],
+                [1, 0, 0],
+                [-1, 0, 0],
+                [-1, -1, 0],
+                [1, -1, 0]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2298,23 +1378,11 @@
           ],
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2331,11 +1399,7 @@
       "name": "上り高速ベルトコンベア",
       "blockType": "BeltConveyor",
       "itemGuid": "ec0fddf7-e8de-48aa-8cbd-f20dd1b57506",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Fast_BeltConveyor_Up",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -2350,19 +1414,9 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  1
-                ]
-              ],
+              "directions": [[0, 1, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -2371,23 +1425,11 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ]
+                [0, 0, -1],
+                [0, -1, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2404,11 +1446,7 @@
       "name": "下り高速ベルトコンベア",
       "blockType": "BeltConveyor",
       "itemGuid": "47ba2417-5968-472c-8cdf-6125f855909b",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Fast_BeltConveyor_Down",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -2423,23 +1461,11 @@
         "inventoryConnectors": {
           "outputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2449,19 +1475,9 @@
           ],
           "inputConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  1,
-                  -1
-                ]
-              ],
+              "directions": [[0, 1, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -2477,11 +1493,7 @@
       "name": "チェスト",
       "blockType": "Chest",
       "itemGuid": "0c5396c1-b7b2-4cc6-a406-18433f58de56",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/iron chest",
       "blockUIAddressablesPath": "Vanilla/UI/Block/ChestBlockInventory",
       "overrideVerticalBlock": {
@@ -2495,32 +1507,12 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2531,32 +1523,12 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -2572,11 +1544,7 @@
       "name": "無限歯車ジェネレーター",
       "blockType": "SimpleGearGenerator",
       "itemGuid": "0d033e0e-537a-4cc1-b7c6-a183ed33f73d",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/SmallSimpleGeneretor",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -2592,42 +1560,14 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1],
+                [0, 1, 0],
+                [0, -1, 0]
               ],
               "connectOption": {
                 "isReverse": false
@@ -2643,11 +1583,7 @@
       "name": "ベースキャンプ1",
       "blockType": "BaseCamp",
       "itemGuid": "b1101477-9a08-4c9e-8751-43577d1a45a2",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/BaseCamp1",
       "blockUIAddressablesPath": "Vanilla/UI/Block/BaseCampInventory",
       "overrideVerticalBlock": {
@@ -2675,11 +1611,7 @@
       "name": "ベースキャンプ2",
       "blockType": "BaseCamp",
       "itemGuid": "7d0b5ea8-fb7d-4209-a3c7-2089a70e323e",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/BaseCamp2",
       "blockUIAddressablesPath": "Vanilla/UI/Block/BaseCampInventory",
       "overrideVerticalBlock": {
@@ -2707,11 +1639,7 @@
       "name": "鉄の採掘機",
       "blockType": "GearMiner",
       "itemGuid": "93b2a5cc-3cbc-4072-9770-7337c4904906",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/iron_miner",
       "blockUIAddressablesPath": "Vanilla/UI/Block/GearMinerBlockInventory",
       "overrideVerticalBlock": {
@@ -2743,32 +1671,12 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": false
@@ -2782,18 +1690,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -2804,11 +1702,7 @@
       }
     },
     {
-      "blockSize": [
-        3,
-        2,
-        3
-      ],
+      "blockSize": [3, 2, 3],
       "itemGuid": "3321e27b-38b7-4de0-9a20-e8a1c7fd2cc8",
       "blockPrefabAddressablesPath": "Vanilla/Block/iron_crasher",
       "name": "鉄の粉砕機",
@@ -2823,41 +1717,21 @@
         "inventoryConnectors": {
           "inputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "connectType": "Inventory",
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
               },
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "directions": [[0, 0, -1]],
               "connectorGuid": "0f2e9512-a27b-4686-907c-c77a1592eb2f"
             }
           ],
           "outputConnects": [
             {
-              "offset": [
-                1,
-                0,
-                2
-              ],
+              "offset": [1, 0, 2],
               "connectType": "Inventory",
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "isReverse": true,
                 "inventoryOptions": []
@@ -2869,36 +1743,16 @@
         "gear": {
           "gearConnects": [
             {
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "connectType": "Gear",
               "connectOption": {
                 "isReverse": false
               },
               "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ]
+                [-1, 0, 0],
+                [1, 0, 0],
+                [0, 0, -1],
+                [0, 0, 1]
               ],
               "connectorGuid": "1abf6980-58d4-4f71-843c-d8b9c82d2ca0"
             }
@@ -2924,11 +1778,7 @@
       "name": "鉄のパイプ",
       "blockType": "FluidPipe",
       "itemGuid": "83e24258-bd99-4b0d-afc7-e6174c0366f2",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/PipeStraightWindow",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -2942,42 +1792,14 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1],
+                [0, 1, 0],
+                [0, -1, 0]
               ],
               "connectOption": {
                 "flowCapacity": 5,
@@ -2989,42 +1811,14 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  1,
-                  0
-                ],
-                [
-                  0,
-                  -1,
-                  0
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1],
+                [0, 1, 0],
+                [0, -1, 0]
               ],
               "connectOption": {
                 "flowCapacity": 5,
@@ -3046,11 +1840,7 @@
       "name": "ボイラー",
       "blockType": "ElectricMachine",
       "itemGuid": "b62e1cf2-ab6c-4a43-b134-74e3d85e3caa",
-      "blockSize": [
-        3,
-        5,
-        3
-      ],
+      "blockSize": [3, 5, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Boyler",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -3070,18 +1860,8 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                2,
-                0,
-                1
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [2, 0, 1],
+              "directions": [[1, 0, 0]],
               "connectOption": {
                 "flowCapacity": 10,
                 "connectTankIndex": 0
@@ -3092,18 +1872,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                1
-              ],
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [0, 0, 1],
+              "directions": [[-1, 0, 0]],
               "connectOption": {
                 "flowCapacity": 10,
                 "connectTankIndex": 0
@@ -3116,18 +1886,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3143,11 +1903,7 @@
       "name": "蒸気機関",
       "blockType": "SteamGearGenerator",
       "itemGuid": "2b40caf7-bec9-45f8-81a5-a95a10c311de",
-      "blockSize": [
-        2,
-        5,
-        11
-      ],
+      "blockSize": [2, 5, 11],
       "blockPrefabAddressablesPath": "Vanilla/Block/static steam engine",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3166,18 +1922,8 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                1,
-                2,
-                8
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [1, 2, 8],
+              "directions": [[1, 0, 0]],
               "connectOption": {
                 "isReverse": false
               }
@@ -3196,18 +1942,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                1
-              ],
-              "directions": [
-                [
-                  -1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [0, 0, 1],
+              "directions": [[-1, 0, 0]],
               "connectOption": {
                 "flowCapacity": 10,
                 "connectTankIndex": 0
@@ -3223,11 +1959,7 @@
       "name": "歯車ポンプ",
       "blockType": "GearPump",
       "itemGuid": "9afa0b21-b918-4d38-82c7-5013fab65845",
-      "blockSize": [
-        2,
-        1,
-        2
-      ],
+      "blockSize": [2, 1, 2],
       "blockPrefabAddressablesPath": "Vanilla/Block/GearPump",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3252,32 +1984,12 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "flowCapacity": 5,
@@ -3291,32 +2003,12 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                1,
-                0,
-                0
-              ],
+              "offset": [1, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": false
@@ -3332,11 +2024,7 @@
       "name": "研究テーブル",
       "blockType": "Block",
       "itemGuid": "06aff80a-2edd-499c-9292-141ca365b17a",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockParam": {},
       "blockPrefabAddressablesPath": "Vanilla/Block/BaseCamp2",
       "blockUIAddressablesPath": "Vanilla/UI/Block/ResearchTable/ResearchTreeUI"
@@ -3346,11 +2034,7 @@
       "name": "電柱",
       "blockType": "ElectricPole",
       "itemGuid": "f7460000-36c0-4dfa-b97b-046750df6855",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Electric_pole",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3371,11 +2055,7 @@
       "name": "電気採掘機",
       "blockType": "GearMiner",
       "itemGuid": "d3f6e08d-761e-4156-abec-e32c8423f595",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Electric_miner",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MinerBlockInventory",
       "overrideVerticalBlock": {
@@ -3407,32 +2087,12 @@
           "gearConnects": [
             {
               "connectType": "Gear",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "isReverse": false
@@ -3446,18 +2106,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3472,11 +2122,7 @@
       "name": "水素還元炉",
       "blockType": "ElectricMachine",
       "itemGuid": "d9cbebc7-6742-48bd-ad2b-2b45e4d4b435",
-      "blockSize": [
-        3,
-        1,
-        3
-      ],
+      "blockSize": [3, 1, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Hydrogen_reduction_furnace",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -3493,18 +2139,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3514,18 +2150,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                2
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [1, 0, 2],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3547,11 +2173,7 @@
       "name": "真空ポンプ",
       "blockType": "ElectricMachine",
       "itemGuid": "78a0b523-a27b-44f3-8f99-12e33f425ef8",
-      "blockSize": [
-        3,
-        2,
-        3
-      ],
+      "blockSize": [3, 2, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Vacuum_pump",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -3568,18 +2190,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3589,18 +2201,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                2
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [1, 0, 2],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -3615,18 +2217,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 10,
                 "connectTankIndex": 0
@@ -3643,11 +2235,7 @@
       "name": "石油採掘機",
       "blockType": "ElectricPump",
       "itemGuid": "3e34cc08-4c08-4e7e-9efd-81c492574380",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/OilWell",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3676,18 +2264,8 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                1,
-                1,
-                8
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [1, 1, 8],
+              "directions": [[1, 0, 0]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3703,11 +2281,7 @@
       "name": "タンク",
       "blockType": "FluidPipe",
       "itemGuid": "884a085e-d4a7-4abd-b504-f7db263f1bd6",
-      "blockSize": [
-        8,
-        8,
-        9
-      ],
+      "blockSize": [8, 8, 9],
       "blockPrefabAddressablesPath": "Vanilla/Block/OilTank",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3721,18 +2295,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                2,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [2, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3743,18 +2307,8 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                5,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [5, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3771,11 +2325,7 @@
       "name": "2x2",
       "blockType": "Block",
       "itemGuid": "3a1b7457-29fd-4a70-a5ab-c6e77c290c3e",
-      "blockSize": [
-        2,
-        2,
-        2
-      ],
+      "blockSize": [2, 2, 2],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/2x2",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3792,11 +2342,7 @@
       "name": "3x3",
       "blockType": "Block",
       "itemGuid": "00292137-5fbd-4a61-ab61-ef208450a9f5",
-      "blockSize": [
-        3,
-        3,
-        3
-      ],
+      "blockSize": [3, 3, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/3x3",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3812,11 +2358,7 @@
       "name": "4x4",
       "blockType": "Block",
       "itemGuid": "01daf403-b47b-4a0e-b277-d339fab300ec",
-      "blockSize": [
-        4,
-        4,
-        4
-      ],
+      "blockSize": [4, 4, 4],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/4x4",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -3831,11 +2373,7 @@
       "name": "蒸留塔",
       "blockType": "ElectricMachine",
       "itemGuid": "cb996e54-eb0a-4f82-ab49-c3e6aa51be65",
-      "blockSize": [
-        7,
-        16,
-        11
-      ],
+      "blockSize": [7, 16, 11],
       "blockPrefabAddressablesPath": "Vanilla/Block/OilRefinery",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -3859,18 +2397,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                3,
-                1,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 1, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3881,18 +2409,8 @@
           "outflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                1,
-                1,
-                10
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [1, 1, 10],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3901,18 +2419,8 @@
             },
             {
               "connectType": "Fluid",
-              "offset": [
-                3,
-                1,
-                10
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [3, 1, 10],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "connectTankIndex": 1,
                 "flowCapacity": 100
@@ -3921,18 +2429,8 @@
             },
             {
               "connectType": "Fluid",
-              "offset": [
-                5,
-                1,
-                10
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [5, 1, 10],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 2
@@ -3948,11 +2446,7 @@
       "name": "化学プラント",
       "blockType": "ElectricMachine",
       "itemGuid": "c7f4e03c-cf17-4e68-8e11-8ef1f49a0800",
-      "blockSize": [
-        7,
-        16,
-        11
-      ],
+      "blockSize": [7, 16, 11],
       "blockPrefabAddressablesPath": "Vanilla/Block/Chemical Plants",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -3972,18 +2466,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                3,
-                1,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 1, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -3998,18 +2482,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                10
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [3, 0, 10],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4024,11 +2498,7 @@
       "name": "電子部品製造装置",
       "blockType": "ElectricMachine",
       "itemGuid": "1eb89d18-53d1-4d8c-86b2-3b63a9880e1b",
-      "blockSize": [
-        7,
-        3,
-        6
-      ],
+      "blockSize": [7, 3, 6],
       "blockPrefabAddressablesPath": "Vanilla/Block/Electronic_component_manufacturing_equipment",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -4045,18 +2515,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4064,18 +2524,8 @@
             },
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4083,18 +2533,8 @@
             },
             {
               "connectType": "Inventory",
-              "offset": [
-                5,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [5, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4104,18 +2544,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                5
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [3, 0, 5],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4137,11 +2567,7 @@
       "name": "アーク炉",
       "blockType": "ElectricMachine",
       "itemGuid": "d30f78dd-536d-4d23-a09e-30f9770ca096",
-      "blockSize": [
-        5,
-        3,
-        6
-      ],
+      "blockSize": [5, 3, 6],
       "blockPrefabAddressablesPath": "Vanilla/Block/Arc_furnace",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -4158,18 +2584,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4177,18 +2593,8 @@
             },
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4196,18 +2602,8 @@
             },
             {
               "connectType": "Inventory",
-              "offset": [
-                5,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [5, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4217,18 +2613,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                5
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [3, 0, 5],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4250,11 +2636,7 @@
       "name": "半導体製造装置",
       "blockType": "ElectricMachine",
       "itemGuid": "53077e0e-77b2-4028-8fec-fc7190ef720f",
-      "blockSize": [
-        4,
-        4,
-        4
-      ],
+      "blockSize": [4, 4, 4],
       "blockPrefabAddressablesPath": "Vanilla/Block/Semiconductor_Manufacturing_Equipment",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -4271,35 +2653,15 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {},
               "connectorGuid": "4dfefed1-4414-4d81-aa9d-119dd0c85d81"
             },
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {},
               "connectorGuid": "9298c478-07a2-4b72-85fe-114f116c8364"
             }
@@ -4307,18 +2669,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                3,
-                0,
-                3
-              ],
-              "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ]
-              ],
+              "offset": [3, 0, 3],
+              "directions": [[1, 0, 0]],
               "connectOption": {},
               "connectorGuid": "1e2181f8-f20d-408c-8782-37dbb1ac2a6c"
             }
@@ -4338,11 +2690,7 @@
       "name": "チェイナーコンベア",
       "blockType": "CraftChainerTransporter",
       "itemGuid": "22aee05f-f45b-48e7-929a-aa642a73e794",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Fast_BeltConveyor_Cross",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -4359,32 +2707,12 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ]
+                [0, 0, -1],
+                [0, -1, -1],
+                [1, 0, 0],
+                [-1, 0, 0]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4395,27 +2723,11 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ]
+                [0, 0, 1],
+                [1, 0, 0],
+                [-1, 0, 0]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4431,11 +2743,7 @@
       "name": "チェイナー上りコンベア",
       "blockType": "CraftChainerTransporter",
       "itemGuid": "ef8f0fae-2e88-4e91-9386-a70f3a572cb7",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Chainer_Fast_BeltConveyor_Up",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -4451,22 +2759,10 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ],
-                [
-                  0,
-                  -1,
-                  -1
-                ]
+                [0, 0, -1],
+                [0, -1, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4477,18 +2773,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  1,
-                  1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 1, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4506,11 +2792,7 @@
       "name": "チェイナー下りコンベア",
       "blockType": "CraftChainerTransporter",
       "itemGuid": "829fa968-9e21-4a53-af5c-5e41595ef0d9",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Chainer_Fast_BeltConveyor_Down",
       "blockUIAddressablesPath": "",
       "overrideVerticalBlock": {
@@ -4526,18 +2808,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  1,
-                  -1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 1, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4547,22 +2819,10 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  -1,
-                  1
-                ]
+                [0, 0, 1],
+                [0, -1, 1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4580,11 +2840,7 @@
       "name": "チェイナー供給チェスト",
       "blockType": "CraftChainerProviderChest",
       "itemGuid": "c29398db-5f77-41be-b536-51dc916d56e2",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/CraftChainerProviderChest",
       "blockUIAddressablesPath": "Vanilla/UI/Block/ChestBlockInventory",
       "overrideVerticalBlock": {
@@ -4599,32 +2855,12 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4635,32 +2871,12 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {
                 "inventoryOptions": []
@@ -4676,11 +2892,7 @@
       "name": "チェイナークラフター",
       "blockType": "CraftChainerCrafter",
       "itemGuid": "513bac94-7339-45b7-93e6-5d4437bd6ad3",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/CraftChainerCrafter",
       "blockUIAddressablesPath": "Vanilla/UI/Block/CraftChainerCrafterInventory",
       "overrideVerticalBlock": {
@@ -4695,32 +2907,12 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {},
               "connectorGuid": "74a6f77b-0c8f-469e-b012-8e52b394e13b"
@@ -4729,32 +2921,12 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {},
               "connectorGuid": "6f05942c-198c-4b41-9b3d-617332717550"
@@ -4768,11 +2940,7 @@
       "name": "チェイナーメインコンピュータ",
       "blockType": "CraftChainerMainComputer",
       "itemGuid": "20d09467-1ae7-4daa-a762-44392ba370f0",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Old/CraftChainerMainComputer",
       "blockUIAddressablesPath": "Vanilla/UI/Block/CraftChainerMainComputerInventory",
       "overrideVerticalBlock": {
@@ -4787,32 +2955,12 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {},
               "connectorGuid": "700f0685-050f-4fc9-907b-c63b26fd758a"
@@ -4821,32 +2969,12 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                0,
-                0,
-                0
-              ],
+              "offset": [0, 0, 0],
               "directions": [
-                [
-                  1,
-                  0,
-                  0
-                ],
-                [
-                  -1,
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0,
-                  1
-                ],
-                [
-                  0,
-                  0,
-                  -1
-                ]
+                [1, 0, 0],
+                [-1, 0, 0],
+                [0, 0, 1],
+                [0, 0, -1]
               ],
               "connectOption": {},
               "connectorGuid": "4af27e75-3e7a-4515-bbda-6a5ecc0e356f"
@@ -4860,11 +2988,7 @@
       "name": "ガソリンエンジン発電機",
       "blockType": "ElectricGenerator",
       "itemGuid": "bbc4a5a0-a1f2-4029-8a20-c9343e90389a",
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "blockPrefabAddressablesPath": "Vanilla/Block/Engine_Generator",
       "blockUIAddressablesPath": "Vanilla/UI/Block/GeneratorBlockInventory",
       "overrideVerticalBlock": {
@@ -4894,18 +3018,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                3,
-                1,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [3, 1, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 100,
                 "connectTankIndex": 0
@@ -4922,11 +3036,7 @@
       "name": "重水素抽出装置",
       "blockType": "ElectricMachine",
       "itemGuid": "6fb78a16-9b4a-48ad-954d-6406bf73c765",
-      "blockSize": [
-        3,
-        2,
-        3
-      ],
+      "blockSize": [3, 2, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Deuterium_extraction_equipment",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -4943,18 +3053,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                2,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [2, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4964,18 +3064,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                2
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [1, 0, 2],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -4990,18 +3080,8 @@
           "inflowConnects": [
             {
               "connectType": "Fluid",
-              "offset": [
-                0,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [0, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "flowCapacity": 10,
                 "connectTankIndex": 0
@@ -5018,11 +3098,7 @@
       "name": "反物質製造装置",
       "blockType": "ElectricMachine",
       "itemGuid": "78a0b523-a27b-44f3-8f99-12e33f425ef8",
-      "blockSize": [
-        3,
-        4,
-        3
-      ],
+      "blockSize": [3, 4, 3],
       "blockPrefabAddressablesPath": "Vanilla/Block/Antimatter_manufacturing_equipment",
       "blockUIAddressablesPath": "Vanilla/UI/Block/MachineBlockInventory",
       "overrideVerticalBlock": {
@@ -5038,18 +3114,8 @@
           "inputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                0
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  -1
-                ]
-              ],
+              "offset": [1, 0, 0],
+              "directions": [[0, 0, -1]],
               "connectOption": {
                 "inventoryOptions": []
               },
@@ -5059,18 +3125,8 @@
           "outputConnects": [
             {
               "connectType": "Inventory",
-              "offset": [
-                1,
-                0,
-                2
-              ],
-              "directions": [
-                [
-                  0,
-                  0,
-                  1
-                ]
-              ],
+              "offset": [1, 0, 2],
+              "directions": [[0, 0, 1]],
               "connectOption": {
                 "inventoryOptions": []
               },

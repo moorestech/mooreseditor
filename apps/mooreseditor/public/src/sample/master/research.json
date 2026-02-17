@@ -9,22 +9,13 @@
         {
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
-            "unlockItemGuids": [
-              "44cb69e9-c703-4393-94c4-bad4477da10f"
-            ]
+            "unlockItemGuids": ["44cb69e9-c703-4393-94c4-bad4477da10f"]
           }
         }
       ],
       "graphViewSettings": {
-        "UIPosition": [
-          0,
-          0
-        ],
-        "UIScale": [
-          1,
-          1,
-          1
-        ],
+        "UIPosition": [0, 0],
+        "UIScale": [1, 1, 1],
         "IconItem": ""
       },
       "prevResearchNodeGuids": [],
@@ -41,29 +32,18 @@
       "researchNodeName": "鉄インゴット",
       "researchNodeDescription": "New Research Description",
       "consumeItems": [],
-      "prevResearchNodeGuids": [
-        "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
-      ],
+      "prevResearchNodeGuids": ["0f97e445-1ac0-4313-b3c3-6c32b24eaaed"],
       "clearedActions": [
         {
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
-            "unlockItemGuids": [
-              "967a60e2-41a0-4866-9901-0baab7a350aa"
-            ]
+            "unlockItemGuids": ["967a60e2-41a0-4866-9901-0baab7a350aa"]
           }
         }
       ],
       "graphViewSettings": {
-        "UIPosition": [
-          0,
-          0
-        ],
-        "UIScale": [
-          1,
-          1,
-          1
-        ],
+        "UIPosition": [0, 0],
+        "UIScale": [1, 1, 1],
         "IconItem": ""
       }
     },
@@ -72,29 +52,18 @@
       "researchNodeName": "鉄の加工",
       "researchNodeDescription": "New Research Description",
       "consumeItems": [],
-      "prevResearchNodeGuids": [
-        "0f97e445-1ac0-4313-b3c3-6c32b24eaaed"
-      ],
+      "prevResearchNodeGuids": ["0f97e445-1ac0-4313-b3c3-6c32b24eaaed"],
       "clearedActions": [
         {
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
-            "unlockItemGuids": [
-              "ad76f181-50da-4c7d-a98f-e55f2387c47d"
-            ]
+            "unlockItemGuids": ["ad76f181-50da-4c7d-a98f-e55f2387c47d"]
           }
         }
       ],
       "graphViewSettings": {
-        "UIPosition": [
-          0,
-          0
-        ],
-        "UIScale": [
-          1,
-          1,
-          1
-        ],
+        "UIPosition": [0, 0],
+        "UIScale": [1, 1, 1],
         "IconItem": ""
       }
     },
@@ -108,22 +77,13 @@
         {
           "gameActionType": "unlockItemRecipeView",
           "gameActionParam": {
-            "unlockItemGuids": [
-              "57f116bb-c374-410b-bc00-23b285575d7b"
-            ]
+            "unlockItemGuids": ["57f116bb-c374-410b-bc00-23b285575d7b"]
           }
         }
       ],
       "graphViewSettings": {
-        "UIPosition": [
-          0,
-          0
-        ],
-        "UIScale": [
-          1,
-          1,
-          1
-        ],
+        "UIPosition": [0, 0],
+        "UIScale": [1, 1, 1],
         "IconItem": ""
       }
     }

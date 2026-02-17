@@ -6,15 +6,15 @@ type: array
 items:
   type: object
   properties:
-  - key: fluidGuid
-    type: uuid
-    foreignKey:
-      schemaId: fluids
-      foreignKeyIdPath: /data/[*]/fluidGuid
-      displayElementPath: /data/[*]/name
-  - key: amount
-    type: number
-    default: 5
-  - key: generateTime
-    type: number
-    default: 1
+    - key: fluidGuid
+      type: uuid
+      foreignKey:
+        schemaId: fluids
+        foreignKeyIdPath: /data/[*]/fluidGuid
+        displayElementPath: /data/[*]/name
+    - key: amount
+      type: number
+      default: 5
+    - key: generateTime
+      type: number
+      default: 1

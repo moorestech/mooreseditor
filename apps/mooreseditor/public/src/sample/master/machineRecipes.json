@@ -199,11 +199,7 @@
       "outputFluids": []
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
@@ -254,11 +250,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "time": 5,
       "blockGuid": "a334d703-9442-4910-a8f8-b914df50df4e",
       "inputItems": [
@@ -301,11 +293,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "machineRecipeGuid": "172400d3-9768-42c4-8e3f-b5656ba7f234",
       "inputFluids": [],
       "outputFluids": []

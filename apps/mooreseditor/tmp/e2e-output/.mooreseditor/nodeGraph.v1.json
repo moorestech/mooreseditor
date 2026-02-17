@@ -1,8 +1,8 @@
 {
   "version": 1,
   "viewport": {
-    "x": -68,
-    "y": 173,
+    "x": -154,
+    "y": 65,
     "zoom": 1
   },
   "nodes": [
@@ -64,7 +64,7 @@
       "id": "node-1771236983446-1",
       "position": {
         "x": 560,
-        "y": 180
+        "y": 160
       },
       "type": "research",
       "masterGuid": "6b248a5f-edcc-4d59-b8d3-05d8e4941fd4"
@@ -77,6 +77,15 @@
       },
       "type": "item",
       "masterGuid": "57f116bb-c374-410b-bc00-23b285575d7b"
+    },
+    {
+      "id": "node-1771298387117-1",
+      "position": {
+        "x": 515.258023825709,
+        "y": 271.27674676565044
+      },
+      "type": "placeholder",
+      "text": "テスト鉄"
     }
   ],
   "edges": [
@@ -91,6 +100,22 @@
       "source": "node-1771236113242-7",
       "target": "node-1771236118833-9",
       "edgeType": "dependency"
+    },
+    {
+      "id": "edge-1771249339379",
+      "source": "node-1771236131966-10",
+      "target": "node-1771236998146-2",
+      "edgeType": "recipe",
+      "recipes": [
+        {
+          "edgeType": "craftRecipe",
+          "masterGuid": "71df74bd-52a0-4e62-9d55-6f3e83162739"
+        },
+        {
+          "edgeType": "machineRecipe",
+          "masterGuid": "c2db5016-e239-4b96-bdab-edacbdd93658"
+        }
+      ]
     }
   ]
 }

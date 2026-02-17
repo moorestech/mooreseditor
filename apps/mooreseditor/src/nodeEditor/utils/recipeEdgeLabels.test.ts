@@ -7,10 +7,10 @@ import {
   buildRecipeEdgeLabels,
 } from "./recipeEdgeLabels";
 
-import type { Column } from "../../hooks/useJson";
 import type { SchemaMeta } from "./schemaMeta";
-import type { RecipeReference } from "../types/nodeGraph";
+import type { Column } from "../../hooks/useJson";
 import type { ObjectSchema } from "../../libs/schema/types";
+import type { RecipeReference } from "../types/nodeGraph";
 
 // --- Test fixtures ---
 

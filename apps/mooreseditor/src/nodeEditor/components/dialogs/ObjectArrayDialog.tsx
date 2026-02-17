@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Modal, Stack } from "@mantine/core";
 
@@ -7,6 +7,12 @@ import { TableView } from "../../../components/TableView";
 
 import type { Column } from "../../../hooks/useJson";
 import type { ArraySchema, Schema } from "../../../libs/schema/types";
+
+interface NestedDialogState {
+  label: string;
+  schema: ArraySchema;
+  path: string[];
+}
 
 interface ObjectArrayDialogProps {
   opened: boolean;
@@ -28,26 +34,19 @@ export default function ObjectArrayDialog({
   onDataChange,
 }: ObjectArrayDialogProps) {
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
-  const [nestedArrayState, setNestedArrayState] = useState<{
-    path: string[];
-    schema: ArraySchema;
-    label: string;
-  } | null>(null);
+  const [nestedDialog, setNestedDialog] = useState<NestedDialogState | null>(
+    null,
+  );
 
   const handleClose = useCallback(() => {
     setSelectedRowIndex(null);
-    setNestedArrayState(null);
+    setNestedDialog(null);
     onClose();
   }, [onClose]);
 
   const handleRowSelect = useCallback((rowIndex: number) => {
     setSelectedRowIndex(rowIndex);
   }, []);
-
-  // Reset nested state when selected row changes
-  useEffect(() => {
-    setNestedArrayState(null);
-  }, [selectedRowIndex]);
 
   const handleRowDataChange = useCallback(
     (newRowData: any) => {
@@ -59,50 +58,59 @@ export default function ObjectArrayDialog({
     [data, selectedRowIndex, onDataChange],
   );
 
+  // Handler for nested object array clicks within the FormView
   const handleNestedObjectArrayClick = useCallback(
     (path: string[], nestedSchema: Schema) => {
-      if ("type" in nestedSchema && nestedSchema.type === "array") {
-        setNestedArrayState({
-          path,
+      if (
+        "type" in nestedSchema &&
+        nestedSchema.type === "array" &&
+        "items" in nestedSchema
+      ) {
+        const fieldLabel = path[path.length - 1] || "items";
+        setNestedDialog({
+          label: fieldLabel,
           schema: nestedSchema as ArraySchema,
-          label: path[path.length - 1] || "items",
+          path,
         });
       }
     },
     [],
   );
 
+  // Get nested data from the selected row using the nested dialog path
   const getNestedData = useCallback((): any[] => {
-    if (!nestedArrayState || selectedRowIndex === null) return [];
-    const rowData = data[selectedRowIndex];
-    let result: any = rowData;
-    for (const key of nestedArrayState.path) {
-      result = result?.[key];
+    if (selectedRowIndex === null || !nestedDialog) return [];
+    let current: any = data[selectedRowIndex];
+    for (const key of nestedDialog.path) {
+      if (current == null) return [];
+      current = current[key];
     }
-    return Array.isArray(result) ? result : [];
-  }, [nestedArrayState, selectedRowIndex, data]);
+    return Array.isArray(current) ? current : [];
+  }, [data, selectedRowIndex, nestedDialog]);
 
+  // Handle data changes in the nested dialog
   const handleNestedDataChange = useCallback(
     (newNestedData: any[]) => {
-      if (!nestedArrayState || selectedRowIndex === null) return;
-      const currentRowData = data[selectedRowIndex];
-      const updatedRowData = { ...currentRowData };
-
-      // Navigate to the nested path and update the value
-      let target: any = updatedRowData;
-      for (let i = 0; i < nestedArrayState.path.length - 1; i++) {
-        const key = nestedArrayState.path[i];
-        target[key] = Array.isArray(target[key])
-          ? [...target[key]]
-          : { ...target[key] };
-        target = target[key];
+      if (selectedRowIndex === null || !nestedDialog) return;
+      const rowData = { ...data[selectedRowIndex] };
+      // Navigate to the parent and set the data at the last key
+      let current: any = rowData;
+      const pathKeys = nestedDialog.path;
+      for (let i = 0; i < pathKeys.length - 1; i++) {
+        if (current[pathKeys[i]] == null) {
+          current[pathKeys[i]] = {};
+        } else {
+          current[pathKeys[i]] = { ...current[pathKeys[i]] };
+        }
+        current = current[pathKeys[i]];
       }
-      target[nestedArrayState.path[nestedArrayState.path.length - 1]] =
-        newNestedData;
+      current[pathKeys[pathKeys.length - 1]] = newNestedData;
 
-      handleRowDataChange(updatedRowData);
+      const newData = [...data];
+      newData[selectedRowIndex] = rowData;
+      onDataChange(newData);
     },
-    [nestedArrayState, selectedRowIndex, data, handleRowDataChange],
+    [data, selectedRowIndex, nestedDialog, onDataChange],
   );
 
   const hasItemSchema =
@@ -146,12 +154,12 @@ export default function ObjectArrayDialog({
             )}
         </Stack>
       </Modal>
-      {nestedArrayState && (
+      {nestedDialog && (
         <ObjectArrayDialog
-          opened={true}
-          onClose={() => setNestedArrayState(null)}
-          label={nestedArrayState.label}
-          schema={nestedArrayState.schema}
+          opened={nestedDialog !== null}
+          onClose={() => setNestedDialog(null)}
+          label={nestedDialog.label}
+          schema={nestedDialog.schema}
           data={getNestedData()}
           jsonData={jsonData}
           onDataChange={handleNestedDataChange}

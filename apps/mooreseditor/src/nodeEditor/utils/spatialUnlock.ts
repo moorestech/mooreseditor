@@ -60,13 +60,13 @@ export function calculateUnlockedItems(
     let minDist = Infinity;
 
     for (const r of researchNodes) {
-      const inRightZone =
+      const isInRightZone =
         node.position.x > r.position.x && node.position.y >= r.position.y;
 
-      const inBelowZone =
+      const isInBelowZone =
         node.position.y > r.position.y && node.position.x <= r.position.x;
 
-      if (inRightZone || inBelowZone) {
+      if (isInRightZone || isInBelowZone) {
         const dist =
           Math.abs(node.position.x - r.position.x) +
           Math.abs(node.position.y - r.position.y);

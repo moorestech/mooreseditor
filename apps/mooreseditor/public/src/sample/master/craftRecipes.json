@@ -4,9 +4,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "earnItemHps": [
-        0
-      ],
+      "earnItemHps": [0],
       "hp": 100,
       "mapObjectName": "mapObjectName",
       "craftTime": 3,
@@ -131,14 +129,8 @@
       "initialUnlocked": true,
       "craftTime": 1,
       "craftResultCount": 1,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
-      "earnItemHps": [
-        0
-      ],
+      "blockSize": [1, 1, 1],
+      "earnItemHps": [0],
       "hp": 100,
       "mapObjectName": "mapObjectName",
       "craftResultItemGuid": "619638d5-13f0-4c04-b4e6-5113e946be7e",
@@ -377,11 +369,7 @@
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "craftTime": 3,
       "craftResultCount": 1,
       "craftResultItemGuid": "1da13d89-8aa1-42f7-8d7f-96ef0d216c2b",
@@ -439,11 +427,7 @@
       "craftRecipeGuid": "f02d6821-dd4d-47b1-b746-5e4df7a9c93c"
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
@@ -499,11 +483,7 @@
       "craftRecipeGuid": "f7bde99b-b5b0-4353-bd49-7f2926b8b8c6"
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": true,
       "craftTime": 0.7,
       "craftResultCount": 1,

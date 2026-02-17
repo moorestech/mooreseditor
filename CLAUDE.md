@@ -38,6 +38,7 @@ pnpm run test
 ```
 
 ### E2Eテストの実行
+
 ```bash
 # 基本的な実行（必ず --reporter=list を付ける）
 pnpm run test:e2e -- --reporter=list

@@ -1,4 +1,5 @@
 # Coding Conventions
+
 - Treat schemas as fully dynamic; never hard-code shape assumptions outside their definitions.
 - Prefer descriptive, type-safe utilities; extend existing hooks/libs for schema-aware logic.
 - Error handling: attempt production path first (e.g., filesystem reads), catch errors for dev fallbacks instead of environment conditionals.

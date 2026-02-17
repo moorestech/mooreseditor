@@ -1,4 +1,5 @@
 # Suggested Commands
+
 - `pnpm install` – install workspace dependencies.
 - `pnpm run dev` – run Turbo dev pipeline (delegates to package dev scripts).
 - `pnpm run tauri dev` or `pnpm --filter @mooreseditor/mooreseditor tauri dev` – launch Tauri app at http://localhost:1420.

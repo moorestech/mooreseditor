@@ -110,13 +110,9 @@ export default function EditorView({
         isPreloading={isPreloading}
         loadFileData={async (menuItem) => {
           // Check if already loaded
-          const existingData = jsonData.find(
-            (item) => item.title === menuItem,
-          );
+          const existingData = jsonData.find((item) => item.title === menuItem);
           if (existingData) {
-            console.log(
-              `${menuItem} is already loaded. Using cached data.`,
-            );
+            console.log(`${menuItem} is already loaded. Using cached data.`);
             setSelectedSchema(menuItem);
             setNestedViews([]);
             return;
@@ -149,9 +145,7 @@ export default function EditorView({
             key={index}
             style={{
               borderRight:
-                index < nestedViews.length - 1
-                  ? "1px solid #E2E2E2"
-                  : "none",
+                index < nestedViews.length - 1 ? "1px solid #E2E2E2" : "none",
               padding: "16px",
               width: "fit-content",
               height: "100%",
@@ -226,10 +220,7 @@ export default function EditorView({
                     dataRef = dataRef?.[key];
                   }
                   const selectedRowData = dataRef?.[rowIndex];
-                  if (
-                    selectedRowData &&
-                    view.schema.items?.type === "object"
-                  ) {
+                  if (selectedRowData && view.schema.items?.type === "object") {
                     openNestedView(
                       index,
                       {

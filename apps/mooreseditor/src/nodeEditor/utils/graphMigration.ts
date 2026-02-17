@@ -26,7 +26,8 @@ export function validateAndMigrate(data: unknown): NodeGraphFile | null {
           const recipes = Array.isArray(e.recipes)
             ? e.recipes.filter(
                 (r: any) =>
-                  (r?.edgeType === "craftRecipe" || r?.edgeType === "machineRecipe") &&
+                  (r?.edgeType === "craftRecipe" ||
+                    r?.edgeType === "machineRecipe") &&
                   typeof r?.masterGuid === "string" &&
                   r.masterGuid.length > 0,
               )

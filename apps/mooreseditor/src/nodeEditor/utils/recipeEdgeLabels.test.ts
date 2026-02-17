@@ -58,7 +58,11 @@ function makeCraftRecipeElementSchema(): ObjectSchema {
       {
         key: "outputItem",
         type: "uuid",
-        foreignKey: { schemaId: "items", foreignKeyIdPath: "", displayElementPath: "" },
+        foreignKey: {
+          schemaId: "items",
+          foreignKeyIdPath: "",
+          displayElementPath: "",
+        },
       },
       { key: "outputCount", type: "integer" },
       {
@@ -70,7 +74,11 @@ function makeCraftRecipeElementSchema(): ObjectSchema {
             {
               key: "itemGuid",
               type: "uuid",
-              foreignKey: { schemaId: "items", foreignKeyIdPath: "", displayElementPath: "" },
+              foreignKey: {
+                schemaId: "items",
+                foreignKeyIdPath: "",
+                displayElementPath: "",
+              },
             },
             { key: "itemCount", type: "integer" },
           ],
@@ -88,7 +96,11 @@ function makeMachineRecipeElementSchema(): ObjectSchema {
       {
         key: "resultItem",
         type: "uuid",
-        foreignKey: { schemaId: "items", foreignKeyIdPath: "", displayElementPath: "" },
+        foreignKey: {
+          schemaId: "items",
+          foreignKeyIdPath: "",
+          displayElementPath: "",
+        },
       },
       { key: "resultCount", type: "integer" },
     ],
@@ -151,7 +163,11 @@ function makeMachineRecipesColumn(): Column {
 }
 
 function makeAllColumns(): Column[] {
-  return [makeItemsColumn(), makeCraftRecipesColumn(), makeMachineRecipesColumn()];
+  return [
+    makeItemsColumn(),
+    makeCraftRecipesColumn(),
+    makeMachineRecipesColumn(),
+  ];
 }
 
 function makeAllSchemaMetas(): Map<string, SchemaMeta> {
@@ -172,12 +188,22 @@ describe("buildSchemaRecordIndex", () => {
     const index = buildSchemaRecordIndex("items", jsonData, metas);
 
     expect(index.size).toBe(3);
-    expect(index.get(ITEM_GUID_A)).toEqual({ itemGuid: ITEM_GUID_A, name: "Iron Ore" });
-    expect(index.get(ITEM_GUID_B)).toEqual({ itemGuid: ITEM_GUID_B, name: "Coal" });
+    expect(index.get(ITEM_GUID_A)).toEqual({
+      itemGuid: ITEM_GUID_A,
+      name: "Iron Ore",
+    });
+    expect(index.get(ITEM_GUID_B)).toEqual({
+      itemGuid: ITEM_GUID_B,
+      name: "Coal",
+    });
   });
 
   it("returns empty map for unknown schema", () => {
-    const index = buildSchemaRecordIndex("nonexistent", makeAllColumns(), makeAllSchemaMetas());
+    const index = buildSchemaRecordIndex(
+      "nonexistent",
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     expect(index.size).toBe(0);
   });
 
@@ -192,24 +218,36 @@ describe("buildSchemaRecordIndex", () => {
 
 describe("buildForeignNameResolver", () => {
   it("resolves guid to name", () => {
-    const resolver = buildForeignNameResolver(makeAllColumns(), makeAllSchemaMetas());
+    const resolver = buildForeignNameResolver(
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     expect(resolver("items", ITEM_GUID_A)).toBe("Iron Ore");
     expect(resolver("items", ITEM_GUID_B)).toBe("Coal");
     expect(resolver("items", ITEM_GUID_C)).toBe("Iron Ingot");
   });
 
   it("returns null for unknown guid", () => {
-    const resolver = buildForeignNameResolver(makeAllColumns(), makeAllSchemaMetas());
+    const resolver = buildForeignNameResolver(
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     expect(resolver("items", "unknown-guid")).toBeNull();
   });
 
   it("returns null for unknown schema", () => {
-    const resolver = buildForeignNameResolver(makeAllColumns(), makeAllSchemaMetas());
+    const resolver = buildForeignNameResolver(
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     expect(resolver("nonexistent", ITEM_GUID_A)).toBeNull();
   });
 
   it("caches results on second call", () => {
-    const resolver = buildForeignNameResolver(makeAllColumns(), makeAllSchemaMetas());
+    const resolver = buildForeignNameResolver(
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     const first = resolver("items", ITEM_GUID_A);
     const second = resolver("items", ITEM_GUID_A);
     expect(first).toBe(second);
@@ -228,7 +266,10 @@ describe("buildForeignNameResolver", () => {
 });
 
 describe("buildSingleRecipeSummary", () => {
-  function makeRecipeRecords(): Map<string, Map<string, Record<string, unknown>>> {
+  function makeRecipeRecords(): Map<
+    string,
+    Map<string, Record<string, unknown>>
+  > {
     const craftIndex = new Map<string, Record<string, unknown>>();
     craftIndex.set(RECIPE_GUID_1, {
       recipeGuid: RECIPE_GUID_1,
@@ -257,31 +298,63 @@ describe("buildSingleRecipeSummary", () => {
   }
 
   it("produces 'output <= input1 + input2' for craftRecipe", () => {
-    const ref: RecipeReference = { edgeType: "craftRecipe", masterGuid: RECIPE_GUID_1 };
-    const result = buildSingleRecipeSummary(ref, makeRecipeRecords(), makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "craftRecipe",
+      masterGuid: RECIPE_GUID_1,
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      makeRecipeRecords(),
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     // outputItem resolves to Iron Ingot, inputMaterials resolves to Iron Ore x2 + Coal x3
     expect(result).toBe("Iron Ingot <= Iron Ore x2 + Coal x3");
   });
 
   it("produces output name for machineRecipe", () => {
-    const ref: RecipeReference = { edgeType: "machineRecipe", masterGuid: RECIPE_GUID_2 };
-    const result = buildSingleRecipeSummary(ref, makeRecipeRecords(), makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "machineRecipe",
+      masterGuid: RECIPE_GUID_2,
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      makeRecipeRecords(),
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     // resultItem resolves to Iron Ingot with resultCount 5
     expect(result).toBe("Iron Ingot x5");
   });
 
   it("falls back to 'Craft:shortGuid' when record not found", () => {
-    const ref: RecipeReference = { edgeType: "craftRecipe", masterGuid: "missing-guid-1234-5678" };
-    const result = buildSingleRecipeSummary(ref, makeRecipeRecords(), makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "craftRecipe",
+      masterGuid: "missing-guid-1234-5678",
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      makeRecipeRecords(),
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     expect(result).toBe("Craft:missing-");
   });
 
   it("falls back to 'Machine:shortGuid' when record not found", () => {
-    const ref: RecipeReference = { edgeType: "machineRecipe", masterGuid: "missing-guid-1234-5678" };
-    const result = buildSingleRecipeSummary(ref, makeRecipeRecords(), makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "machineRecipe",
+      masterGuid: "missing-guid-1234-5678",
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      makeRecipeRecords(),
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     expect(result).toBe("Machine:missing-");
   });
@@ -297,8 +370,16 @@ describe("buildSingleRecipeSummary", () => {
       ["craftRecipes", craftIndex],
       ["machineRecipes", new Map<string, Record<string, unknown>>()],
     ]);
-    const ref: RecipeReference = { edgeType: "craftRecipe", masterGuid: RECIPE_GUID_1 };
-    const result = buildSingleRecipeSummary(ref, records, makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "craftRecipe",
+      masterGuid: RECIPE_GUID_1,
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      records,
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     expect(result).toBe("My Recipe");
   });
@@ -313,8 +394,16 @@ describe("buildSingleRecipeSummary", () => {
       ["craftRecipes", craftIndex],
       ["machineRecipes", new Map<string, Record<string, unknown>>()],
     ]);
-    const ref: RecipeReference = { edgeType: "craftRecipe", masterGuid: RECIPE_GUID_1 };
-    const result = buildSingleRecipeSummary(ref, records, makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "craftRecipe",
+      masterGuid: RECIPE_GUID_1,
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      records,
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     expect(result).toBe("recipe-1");
   });
@@ -330,8 +419,16 @@ describe("buildSingleRecipeSummary", () => {
       ["craftRecipes", new Map<string, Record<string, unknown>>()],
       ["machineRecipes", machineIndex],
     ]);
-    const ref: RecipeReference = { edgeType: "machineRecipe", masterGuid: RECIPE_GUID_2 };
-    const result = buildSingleRecipeSummary(ref, records, makeAllSchemaMetas(), makeResolver());
+    const ref: RecipeReference = {
+      edgeType: "machineRecipe",
+      masterGuid: RECIPE_GUID_2,
+    };
+    const result = buildSingleRecipeSummary(
+      ref,
+      records,
+      makeAllSchemaMetas(),
+      makeResolver(),
+    );
 
     expect(result).toBe("Iron Ingot");
   });
@@ -343,7 +440,11 @@ describe("buildRecipeEdgeLabels", () => {
       { edgeType: "craftRecipe", masterGuid: RECIPE_GUID_1 },
       { edgeType: "machineRecipe", masterGuid: RECIPE_GUID_2 },
     ];
-    const labels = buildRecipeEdgeLabels(refs, makeAllColumns(), makeAllSchemaMetas());
+    const labels = buildRecipeEdgeLabels(
+      refs,
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
 
     expect(labels).toHaveLength(2);
     expect(labels[0]).toBe("Iron Ingot <= Iron Ore x2 + Coal x3");
@@ -351,7 +452,11 @@ describe("buildRecipeEdgeLabels", () => {
   });
 
   it("returns empty array for empty refs", () => {
-    const labels = buildRecipeEdgeLabels([], makeAllColumns(), makeAllSchemaMetas());
+    const labels = buildRecipeEdgeLabels(
+      [],
+      makeAllColumns(),
+      makeAllSchemaMetas(),
+    );
     expect(labels).toHaveLength(0);
   });
 });

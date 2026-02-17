@@ -4,7 +4,9 @@ import type { GraphEdge, RecipeReference } from "../types/nodeGraph";
  * Type-safe extraction of recipe refs from a persistent GraphEdge.
  * Use this when loading from nodeGraph.v1.json (where the type is known).
  */
-export function extractRecipeRefsFromGraphEdge(ge: GraphEdge): RecipeReference[] {
+export function extractRecipeRefsFromGraphEdge(
+  ge: GraphEdge,
+): RecipeReference[] {
   if (ge.edgeType === "recipe") return ge.recipes;
   if (ge.edgeType === "craftRecipe" || ge.edgeType === "machineRecipe") {
     return [{ edgeType: ge.edgeType, masterGuid: ge.masterGuid }];
@@ -27,7 +29,9 @@ function parseRecipeRef(value: unknown): RecipeReference | null {
   return null;
 }
 
-export function normalizeRecipeRefsFromEdgeData(data: unknown): RecipeReference[] {
+export function normalizeRecipeRefsFromEdgeData(
+  data: unknown,
+): RecipeReference[] {
   if (!data || typeof data !== "object") return [];
 
   const edgeData = data as {
@@ -45,7 +49,8 @@ export function normalizeRecipeRefsFromEdgeData(data: unknown): RecipeReference[
   }
 
   if (
-    (edgeData.edgeType === "craftRecipe" || edgeData.edgeType === "machineRecipe") &&
+    (edgeData.edgeType === "craftRecipe" ||
+      edgeData.edgeType === "machineRecipe") &&
     typeof edgeData.masterGuid === "string" &&
     edgeData.masterGuid.length > 0
   ) {

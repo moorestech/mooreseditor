@@ -38,7 +38,10 @@ interface EdgeRecipeSectionProps {
   objectArrayEditor: ObjectArrayEditorState | null;
   setObjectArrayEditor: (value: ObjectArrayEditorState | null) => void;
   onCreateRecipe: (recipeType: RecipeEdgeType) => void;
-  onEditRecipe: (recipeKey: string, nextRecord: Record<string, unknown>) => void;
+  onEditRecipe: (
+    recipeKey: string,
+    nextRecord: Record<string, unknown>,
+  ) => void;
 }
 
 export default function EdgeRecipeSection({
@@ -147,7 +150,8 @@ export default function EdgeRecipeSection({
                         objectArrayEditor.path,
                         nextArray,
                       ),
-                    )}
+                    )
+                  }
                 />
               </Stack>
             ) : (
@@ -157,7 +161,10 @@ export default function EdgeRecipeSection({
                 jsonData={jsonData}
                 autoOpenObjectArrays={false}
                 onDataChange={(nextData) =>
-                  onEditRecipe(editingRecipe.key, nextData as Record<string, unknown>)
+                  onEditRecipe(
+                    editingRecipe.key,
+                    nextData as Record<string, unknown>,
+                  )
                 }
                 onObjectArrayClick={(path, schema) => {
                   if ("type" in schema && schema.type === "array") {

@@ -78,12 +78,16 @@ export function useEdgeEditing({
 
   const dialogSourceNode = useMemo(() => {
     const sourceId = editingEdge?.source ?? pendingConnection?.source;
-    return sourceId ? (resolvedNodes.find((n) => n.id === sourceId) ?? null) : null;
+    return sourceId
+      ? resolvedNodes.find((n) => n.id === sourceId) ?? null
+      : null;
   }, [editingEdge, pendingConnection, resolvedNodes]);
 
   const dialogTargetNode = useMemo(() => {
     const targetId = editingEdge?.target ?? pendingConnection?.target;
-    return targetId ? (resolvedNodes.find((n) => n.id === targetId) ?? null) : null;
+    return targetId
+      ? resolvedNodes.find((n) => n.id === targetId) ?? null
+      : null;
   }, [editingEdge, pendingConnection, resolvedNodes]);
 
   const dialogInitialRecipeRefs = editingEdge

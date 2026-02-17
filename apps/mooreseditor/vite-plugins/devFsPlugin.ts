@@ -21,7 +21,7 @@ function resolveTargetPath(projectRoot: string, relativePath: string): string {
 function sendJson(
   res: ServerResponse,
   statusCode: number,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): void {
   res.writeHead(statusCode, { "Content-Type": "application/json" });
   res.end(JSON.stringify(data));

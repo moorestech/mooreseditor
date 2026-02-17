@@ -21,9 +21,17 @@ const ItemNode = memo(({ data, selected }: NodeProps) => {
         fontWeight: 500,
       }}
     >
-      <Handle type="target" position={Position.Left} style={nodeTargetHandleStyle} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={nodeTargetHandleStyle}
+      />
       <div>{(data.displayName as string) || "Item"}</div>
-      <Handle type="source" position={Position.Right} style={nodeSourceHandleStyle} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={nodeSourceHandleStyle}
+      />
     </div>
   );
 });

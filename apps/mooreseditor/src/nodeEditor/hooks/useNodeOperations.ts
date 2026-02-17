@@ -15,7 +15,9 @@ import type { Connection } from "@xyflow/react";
 
 export function useNodeOperations() {
   const { state, dispatch } = useNodeEditorContext();
-  const [pendingConnection, setPendingConnection] = useState<Connection | null>(null);
+  const [pendingConnection, setPendingConnection] = useState<Connection | null>(
+    null,
+  );
 
   const addNode = useCallback(
     (
@@ -30,8 +32,16 @@ export function useNodeOperations() {
 
       // Use provided position or place near the center of the current viewport
       const position = targetPosition ?? {
-        x: -state.viewport.x / state.viewport.zoom + 400 + Math.random() * 100 - 50,
-        y: -state.viewport.y / state.viewport.zoom + 300 + Math.random() * 100 - 50,
+        x:
+          -state.viewport.x / state.viewport.zoom +
+          400 +
+          Math.random() * 100 -
+          50,
+        y:
+          -state.viewport.y / state.viewport.zoom +
+          300 +
+          Math.random() * 100 -
+          50,
       };
 
       let newNode;
@@ -85,8 +95,12 @@ export function useNodeOperations() {
         return;
       }
 
-      const sourceNode = state.nodes.find((node) => node.id === connection.source);
-      const targetNode = state.nodes.find((node) => node.id === connection.target);
+      const sourceNode = state.nodes.find(
+        (node) => node.id === connection.source,
+      );
+      const targetNode = state.nodes.find(
+        (node) => node.id === connection.target,
+      );
       const isResearchToResearch =
         sourceNode?.type === "research" && targetNode?.type === "research";
 
@@ -149,8 +163,7 @@ export function useNodeOperations() {
   );
 
   const hasSelection =
-    state.nodes.some((n) => n.selected) ||
-    state.edges.some((e) => e.selected);
+    state.nodes.some((n) => n.selected) || state.edges.some((e) => e.selected);
 
   return {
     addNode,

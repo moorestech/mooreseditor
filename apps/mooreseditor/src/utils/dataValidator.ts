@@ -29,7 +29,10 @@ export function validateAndFillMissingFields(
   // DataInitializerで必須フィールドのデフォルト構造を生成
   // 既存データをコンテキストとして渡すことで、switch fieldの参照値を解決可能にする
   const initializer = new DataInitializer(existingArray || []);
-  const requiredDefaults = initializer.createRequiredValue(schema, existingData);
+  const requiredDefaults = initializer.createRequiredValue(
+    schema,
+    existingData,
+  );
 
   // deepMergeで既存データに不足フィールドを補完
   // 引数順序: (既存データ, デフォルト値) -> 既存データを優先し、不足分を補完
@@ -56,10 +59,17 @@ export function validateAndFillMissingFields(
           // 配列の場合、object型の要素のみ再帰的に検証
           if ("type" in propSchema && propSchema.type === "array") {
             const arrayData = mergedData[key];
-            if (Array.isArray(arrayData) && "items" in propSchema && propSchema.items) {
+            if (
+              Array.isArray(arrayData) &&
+              "items" in propSchema &&
+              propSchema.items
+            ) {
               // itemsがobject型の場合のみ再帰的に検証
               // プリミティブ型（number, string等）の配列はそのまま保持
-              if ("type" in propSchema.items && propSchema.items.type === "object") {
+              if (
+                "type" in propSchema.items &&
+                propSchema.items.type === "object"
+              ) {
                 for (let i = 0; i < arrayData.length; i++) {
                   const { data: validatedItem, addedFields: itemAddedFields } =
                     validateAndFillMissingFields(
@@ -162,11 +172,7 @@ function findAddedFields(
   }
 
   // マージ後のデータがオブジェクトの場合
-  if (
-    typeof merged === "object" &&
-    merged !== null &&
-    !Array.isArray(merged)
-  ) {
+  if (typeof merged === "object" && merged !== null && !Array.isArray(merged)) {
     for (const key in merged) {
       const newPath = path ? `${path}.${key}` : key;
 
@@ -182,7 +188,11 @@ function findAddedFields(
         !Array.isArray(original[key])
       ) {
         // ネストしたオブジェクトの場合、再帰的に検出
-        const nestedAdded = findAddedFields(original[key], merged[key], newPath);
+        const nestedAdded = findAddedFields(
+          original[key],
+          merged[key],
+          newPath,
+        );
         added.push(...nestedAdded);
       }
     }

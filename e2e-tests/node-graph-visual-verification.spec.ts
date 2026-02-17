@@ -6,8 +6,7 @@ import { test, expect } from "@playwright/test";
  * that the node graph feature works end-to-end.
  */
 
-const ARTIFACTS_DIR =
-  ".artifacts/node-graph-system/images";
+const ARTIFACTS_DIR = ".artifacts/node-graph-system/images";
 
 test.describe("Node Graph System - Visual Verification", () => {
   test("Full workflow: load project, switch to Node Graph, add memo, save, switch back", async ({
@@ -41,9 +40,7 @@ test.describe("Node Graph System - Visual Verification", () => {
     });
 
     // --- Step 3: Wait for "Node Graph" radio to become enabled ---
-    const nodeGraphInput = page.locator(
-      'input[type="radio"][value="node"]',
-    );
+    const nodeGraphInput = page.locator('input[type="radio"][value="node"]');
     await expect(nodeGraphInput).not.toBeDisabled({ timeout: 30000 });
 
     await page.screenshot({
@@ -139,15 +136,13 @@ test.describe("Node Graph System - Visual Verification", () => {
     });
 
     // --- Step 10: Switch back to Editor mode ---
-    const editorInput = page.locator(
-      'input[type="radio"][value="editor"]',
-    );
+    const editorInput = page.locator('input[type="radio"][value="editor"]');
     await editorInput.dispatchEvent("click");
 
     // Wait for Editor mode to be active
-    await expect(
-      page.getByRole("button", { name: "File Open" }),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole("button", { name: "File Open" })).toBeVisible({
+      timeout: 5000,
+    });
 
     // Confirm the Editor sidebar has loaded with data categories
     await expect(page.getByText("blocks").first()).toBeVisible({

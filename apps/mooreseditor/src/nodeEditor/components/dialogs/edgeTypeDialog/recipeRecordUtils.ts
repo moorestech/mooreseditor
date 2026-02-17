@@ -5,7 +5,10 @@ import {
   buildSchemaRecordIndex,
   buildSingleRecipeSummary,
 } from "../../../utils/recipeEdge";
-import { OUTPUT_KEY_RE, INPUT_KEY_RE } from "../../../utils/recipeEdgeConstants";
+import {
+  OUTPUT_KEY_RE,
+  INPUT_KEY_RE,
+} from "../../../utils/recipeEdgeConstants";
 
 import type {
   EditableRecipe,
@@ -24,8 +27,10 @@ function pickGuidForForeignKey(
   sourceRef: NodeSchemaRef,
   targetRef: NodeSchemaRef,
 ): string | null {
-  const sourceMatch = sourceRef.schemaId === foreignSchemaId ? sourceRef.guid : null;
-  const targetMatch = targetRef.schemaId === foreignSchemaId ? targetRef.guid : null;
+  const sourceMatch =
+    sourceRef.schemaId === foreignSchemaId ? sourceRef.guid : null;
+  const targetMatch =
+    targetRef.schemaId === foreignSchemaId ? targetRef.guid : null;
 
   if (sourceMatch && !targetMatch) return sourceMatch;
   if (targetMatch && !sourceMatch) return targetMatch;
@@ -47,7 +52,11 @@ export function hydrateRecipeRecord(
   for (const property of elementSchema.properties ?? []) {
     if (!("type" in property)) continue;
 
-    if (property.type === "uuid" && "foreignKey" in property && property.foreignKey) {
+    if (
+      property.type === "uuid" &&
+      "foreignKey" in property &&
+      property.foreignKey
+    ) {
       const current = next[property.key];
       if (typeof current === "string" && current.length > 0) continue;
 
@@ -76,13 +85,14 @@ export function hydrateRecipeRecord(
     );
     if (fkProps.length === 0) continue;
 
-    const candidate = fkProps.find((fkProp) =>
-      !!pickGuidForForeignKey(
-        `${property.key}.${fkProp.key}`,
-        fkProp.foreignKey.schemaId,
-        sourceRef,
-        targetRef,
-      ),
+    const candidate = fkProps.find(
+      (fkProp) =>
+        !!pickGuidForForeignKey(
+          `${property.key}.${fkProp.key}`,
+          fkProp.foreignKey.schemaId,
+          sourceRef,
+          targetRef,
+        ),
     );
     if (!candidate) continue;
 
@@ -94,7 +104,10 @@ export function hydrateRecipeRecord(
     );
     if (!guid) continue;
 
-    const itemDefaults = createInitialValue(itemSchema) as Record<string, unknown>;
+    const itemDefaults = createInitialValue(itemSchema) as Record<
+      string,
+      unknown
+    >;
     next[property.key] = [{ ...itemDefaults, [candidate.key]: guid }];
   }
 
@@ -113,37 +126,42 @@ export function buildRecipeOptions(
   const resolveForeignName = buildForeignNameResolver(jsonData, schemaMetas);
   const recipeRecords = new Map<string, Map<string, Record<string, unknown>>>();
   for (const schemaId of Object.values(RECIPE_SCHEMA_MAP)) {
-    recipeRecords.set(schemaId, buildSchemaRecordIndex(schemaId, jsonData, schemaMetas));
+    recipeRecords.set(
+      schemaId,
+      buildSchemaRecordIndex(schemaId, jsonData, schemaMetas),
+    );
   }
 
-  (Object.entries(RECIPE_SCHEMA_MAP) as Array<[RecipeEdgeType, string]>).forEach(
-    ([recipeType, schemaId]) => {
-      const meta = schemaMetas.get(schemaId);
-      if (!meta?.guidField) return;
+  (
+    Object.entries(RECIPE_SCHEMA_MAP) as Array<[RecipeEdgeType, string]>
+  ).forEach(([recipeType, schemaId]) => {
+    const meta = schemaMetas.get(schemaId);
+    if (!meta?.guidField) return;
 
-      const column = jsonData.find((entry) => entry.title === schemaId);
-      const rows = column?.data?.[meta.dataArrayPath];
-      if (!Array.isArray(rows)) return;
+    const column = jsonData.find((entry) => entry.title === schemaId);
+    const rows = column?.data?.[meta.dataArrayPath];
+    if (!Array.isArray(rows)) return;
 
-      optionsByType[recipeType] = rows
-        .map((row) => {
-          if (!row || typeof row !== "object") return null;
+    optionsByType[recipeType] = rows
+      .map((row) => {
+        if (!row || typeof row !== "object") return null;
 
-          const record = row as Record<string, unknown>;
-          const guid = record[meta.guidField];
-          if (typeof guid !== "string" || guid.length === 0) return null;
+        const record = row as Record<string, unknown>;
+        const guid = record[meta.guidField];
+        if (typeof guid !== "string" || guid.length === 0) return null;
 
-          const label = buildSingleRecipeSummary(
-            { edgeType: recipeType, masterGuid: guid },
-            recipeRecords,
-            schemaMetas,
-            resolveForeignName,
-          );
-          return { value: guid, label };
-        })
-        .filter((option): option is { value: string; label: string } => option !== null);
-    },
-  );
+        const label = buildSingleRecipeSummary(
+          { edgeType: recipeType, masterGuid: guid },
+          recipeRecords,
+          schemaMetas,
+          resolveForeignName,
+        );
+        return { value: guid, label };
+      })
+      .filter(
+        (option): option is { value: string; label: string } => option !== null,
+      );
+  });
 
   return optionsByType;
 }
@@ -156,7 +174,10 @@ export function buildEditableRecipes(
   const resolveForeignName = buildForeignNameResolver(jsonData, schemaMetas);
   const recipeRecords = new Map<string, Map<string, Record<string, unknown>>>();
   for (const schemaId of Object.values(RECIPE_SCHEMA_MAP)) {
-    recipeRecords.set(schemaId, buildSchemaRecordIndex(schemaId, jsonData, schemaMetas));
+    recipeRecords.set(
+      schemaId,
+      buildSchemaRecordIndex(schemaId, jsonData, schemaMetas),
+    );
   }
 
   return recipeRefs
@@ -173,7 +194,8 @@ export function buildEditableRecipes(
         (row) =>
           row &&
           typeof row === "object" &&
-          (row as Record<string, unknown>)[schemaMeta.guidField!] === ref.masterGuid,
+          (row as Record<string, unknown>)[schemaMeta.guidField!] ===
+            ref.masterGuid,
       ) as Record<string, unknown> | undefined;
       if (!record) return null;
 

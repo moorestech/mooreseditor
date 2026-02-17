@@ -8,9 +8,7 @@ async function setupNodeGraphMode(
 ): Promise<void> {
   await page.getByRole("button", { name: "File Open" }).click();
 
-  const nodeGraphInput = page.locator(
-    'input[type="radio"][value="node"]',
-  );
+  const nodeGraphInput = page.locator('input[type="radio"][value="node"]');
   await expect(nodeGraphInput).not.toBeDisabled({ timeout: 30000 });
   await nodeGraphInput.dispatchEvent("click");
 
@@ -44,9 +42,7 @@ test.describe("Context Menu - Close on Click", () => {
     await expect(contextMenu).not.toBeVisible({ timeout: 3000 });
   });
 
-  test("Context menu closes when left-clicking on a node", async ({
-    page,
-  }) => {
+  test("Context menu closes when left-clicking on a node", async ({ page }) => {
     await setupNodeGraphMode(page);
 
     const canvas = page.locator(".react-flow__pane");

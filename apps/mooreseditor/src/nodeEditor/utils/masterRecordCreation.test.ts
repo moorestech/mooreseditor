@@ -58,9 +58,9 @@ describe("masterRecordCreation", () => {
       },
     ];
 
-    vi
-      .spyOn(globalThis.crypto, "randomUUID")
-      .mockReturnValue("11111111-1111-4111-8111-111111111111");
+    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
+      "11111111-1111-4111-8111-111111111111",
+    );
 
     const result = createMasterRecordForNode("item", columns, schemaMetas);
 
@@ -86,9 +86,9 @@ describe("masterRecordCreation", () => {
       },
     ];
 
-    vi
-      .spyOn(globalThis.crypto, "randomUUID")
-      .mockReturnValue("22222222-2222-4222-8222-222222222222");
+    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
+      "22222222-2222-4222-8222-222222222222",
+    );
 
     const result = createMasterRecordForNode("research", columns, schemaMetas);
 

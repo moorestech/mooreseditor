@@ -140,7 +140,9 @@ function App() {
           {isNodeEditorMounted && (
             <div style={{ display: mode === "node" ? "block" : "none" }}>
               <React.Suspense
-                fallback={<div style={{ padding: 16 }}>Loading Node Editor...</div>}
+                fallback={
+                  <div style={{ padding: 16 }}>Loading Node Editor...</div>
+                }
               >
                 <NodeEditorView
                   ref={nodeEditorRef}

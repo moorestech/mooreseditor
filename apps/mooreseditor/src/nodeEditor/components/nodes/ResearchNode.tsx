@@ -9,7 +9,8 @@ import type { NodeProps } from "@xyflow/react";
 const ResearchNode = memo(({ data, selected }: NodeProps) => {
   const consumeLabels = Array.isArray(data.consumeLabels)
     ? data.consumeLabels.filter(
-        (value): value is string => typeof value === "string" && value.length > 0,
+        (value): value is string =>
+          typeof value === "string" && value.length > 0,
       )
     : [];
 
@@ -27,7 +28,11 @@ const ResearchNode = memo(({ data, selected }: NodeProps) => {
         fontWeight: 600,
       }}
     >
-      <Handle type="target" position={Position.Left} style={nodeTargetHandleStyle} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={nodeTargetHandleStyle}
+      />
       <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 2 }}>
         Research
       </div>
@@ -49,7 +54,11 @@ const ResearchNode = memo(({ data, selected }: NodeProps) => {
           ))}
         </div>
       ) : null}
-      <Handle type="source" position={Position.Right} style={nodeSourceHandleStyle} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={nodeSourceHandleStyle}
+      />
     </div>
   );
 });

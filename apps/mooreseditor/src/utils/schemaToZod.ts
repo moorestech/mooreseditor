@@ -148,7 +148,9 @@ export function schemaToZod(schema: Schema): ZodType<any> {
       });
 
       const baseObject = z.object(shape).passthrough();
-      return valueSchema.optional === false ? baseObject : baseObject.optional();
+      return valueSchema.optional === false
+        ? baseObject
+        : baseObject.optional();
     }
 
     default:

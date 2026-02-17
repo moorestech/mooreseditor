@@ -35,7 +35,8 @@ export function useContextMenu({
   const { state } = useNodeEditorContext();
   const { screenToFlowPosition } = useReactFlow();
 
-  const [contextMenuPos, setContextMenuPos] = useState<ContextMenuPosition | null>(null);
+  const [contextMenuPos, setContextMenuPos] =
+    useState<ContextMenuPosition | null>(null);
 
   const handlePaneContextMenu = useCallback(
     (event: MouseEvent | React.MouseEvent) => {

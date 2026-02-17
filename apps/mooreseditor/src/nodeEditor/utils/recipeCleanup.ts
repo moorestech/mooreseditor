@@ -1,4 +1,7 @@
-import { RECIPE_SCHEMA_MAP, normalizeRecipeRefsFromEdgeData } from "./recipeEdge";
+import {
+  RECIPE_SCHEMA_MAP,
+  normalizeRecipeRefsFromEdgeData,
+} from "./recipeEdge";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";

@@ -40,7 +40,12 @@ export function useDeleteHandler({
 
     if (edgesToRemove.length > 0) {
       setJsonData((prev) =>
-        removeRecipesFromJsonData(edgesToRemove, state.edges, prev, schemaMetas),
+        removeRecipesFromJsonData(
+          edgesToRemove,
+          state.edges,
+          prev,
+          schemaMetas,
+        ),
       );
     }
 

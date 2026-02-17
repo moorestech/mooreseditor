@@ -180,7 +180,10 @@ export default function PropertiesPanel({
               <NoteProperties
                 text={(selectedNode.data.text as string) || ""}
                 onTextChange={(text) => {
-                  onNodeDataChange(selectedNode.id, { ...selectedNode.data, text });
+                  onNodeDataChange(selectedNode.id, {
+                    ...selectedNode.data,
+                    text,
+                  });
                   onMarkDirty();
                 }}
               />
@@ -211,7 +214,12 @@ export default function PropertiesPanel({
                     jsonData={jsonData}
                     onRecordChange={updater}
                     onObjectArrayClick={(path, arraySchema) => {
-                      handleObjectArrayClick(path, arraySchema, schemaId, masterGuid);
+                      handleObjectArrayClick(
+                        path,
+                        arraySchema,
+                        schemaId,
+                        masterGuid,
+                      );
                     }}
                   />
                 );

@@ -1,8 +1,18 @@
-import { BLOCK_KEY_RE, COUNT_KEY_RE, INPUT_KEY_RE, OUTPUT_KEY_RE, RECIPE_SCHEMA_MAP, shortGuid } from "./recipeEdgeConstants";
+import {
+  BLOCK_KEY_RE,
+  COUNT_KEY_RE,
+  INPUT_KEY_RE,
+  OUTPUT_KEY_RE,
+  RECIPE_SCHEMA_MAP,
+  shortGuid,
+} from "./recipeEdgeConstants";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
-import type { ObjectPropertySchema, ObjectSchema } from "../../libs/schema/types";
+import type {
+  ObjectPropertySchema,
+  ObjectSchema,
+} from "../../libs/schema/types";
 import type { RecipeReference } from "../types/nodeGraph";
 
 export function buildSchemaRecordIndex(
@@ -85,7 +95,12 @@ function buildArrayIngredientLabels(
   resolveForeignName: (schemaId: string, guid: string) => string | null,
 ): string[] {
   if (!("type" in property) || property.type !== "array") return [];
-  if (!("items" in property) || !property.items || property.items.type !== "object") return [];
+  if (
+    !("items" in property) ||
+    !property.items ||
+    property.items.type !== "object"
+  )
+    return [];
 
   const rows = record[key];
   if (!Array.isArray(rows)) return [];
@@ -125,7 +140,8 @@ export function buildSingleRecipeSummary(
   const record = recipeRecords.get(schemaId)?.get(recipeRef.masterGuid);
 
   if (!meta?.elementSchema || !record) {
-    const typeLabel = recipeRef.edgeType === "craftRecipe" ? "Craft" : "Machine";
+    const typeLabel =
+      recipeRef.edgeType === "craftRecipe" ? "Craft" : "Machine";
     return `${typeLabel}:${shortGuid(recipeRef.masterGuid)}`;
   }
 
@@ -136,11 +152,16 @@ export function buildSingleRecipeSummary(
   for (const property of meta.elementSchema.properties ?? []) {
     if (!("type" in property)) continue;
 
-    if (property.type === "uuid" && "foreignKey" in property && property.foreignKey) {
+    if (
+      property.type === "uuid" &&
+      "foreignKey" in property &&
+      property.foreignKey
+    ) {
       const guid = record[property.key];
       if (typeof guid !== "string" || guid.length === 0) continue;
       const label =
-        resolveForeignName(property.foreignKey.schemaId, guid) ?? shortGuid(guid);
+        resolveForeignName(property.foreignKey.schemaId, guid) ??
+        shortGuid(guid);
 
       if (OUTPUT_KEY_RE.test(property.key)) {
         const countValue = findCountField(record);
@@ -152,7 +173,12 @@ export function buildSingleRecipeSummary(
     }
 
     if (property.type !== "array") continue;
-    const entries = buildArrayIngredientLabels(property.key, property, record, resolveForeignName);
+    const entries = buildArrayIngredientLabels(
+      property.key,
+      property,
+      record,
+      resolveForeignName,
+    );
     if (entries.length === 0) continue;
 
     if (OUTPUT_KEY_RE.test(property.key)) {
@@ -202,6 +228,11 @@ export function buildRecipeEdgeLabels(
   }
 
   return recipeRefs.map((ref) =>
-    buildSingleRecipeSummary(ref, recipeRecords, schemaMetas, resolveForeignName),
+    buildSingleRecipeSummary(
+      ref,
+      recipeRecords,
+      schemaMetas,
+      resolveForeignName,
+    ),
   );
 }

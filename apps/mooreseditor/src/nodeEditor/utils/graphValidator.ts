@@ -1,4 +1,7 @@
-import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
+import type {
+  Node as ReactFlowNode,
+  Edge as ReactFlowEdge,
+} from "@xyflow/react";
 
 export function validateGraph(
   nodes: ReactFlowNode[],

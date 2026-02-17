@@ -33,9 +33,7 @@ async function setupNodeGraphMode(
 
   // Wait for the "Node Graph" radio to become enabled (preloading complete)
   // Mantine SegmentedControl uses hidden radio inputs; wait for the input to be enabled
-  const nodeGraphInput = page.locator(
-    'input[type="radio"][value="node"]',
-  );
+  const nodeGraphInput = page.locator('input[type="radio"][value="node"]');
   await expect(nodeGraphInput).not.toBeDisabled({ timeout: 30000 });
 
   // Dispatch click event directly on the hidden radio input.
@@ -65,10 +63,9 @@ async function addMemoNode(
   await page.getByRole("button", { name: "Add Memo" }).click();
 
   // Wait for the new node to appear
-  await expect(page.locator(".react-flow__node")).toHaveCount(
-    nodesBefore + 1,
-    { timeout: 5000 },
-  );
+  await expect(page.locator(".react-flow__node")).toHaveCount(nodesBefore + 1, {
+    timeout: 5000,
+  });
 }
 
 /**
@@ -87,8 +84,7 @@ async function saveAndWaitForDevFs(
           log.includes("nodeGraph saved via dev server"),
         ),
       {
-        message:
-          "Expected console to contain 'nodeGraph saved via dev server'",
+        message: "Expected console to contain 'nodeGraph saved via dev server'",
         timeout: 15000,
       },
     )
@@ -222,12 +218,14 @@ test.describe("Node Graph Save - nodeGraph.v1.json", () => {
     await editorInput.dispatchEvent("click");
 
     // Wait for Editor mode to be active (the sidebar with data categories should be visible)
-    await expect(
-      page.getByRole("button", { name: "File Open" }),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole("button", { name: "File Open" })).toBeVisible({
+      timeout: 5000,
+    });
 
     // Confirm the Editor sidebar has loaded with data categories
-    await expect(page.getByText("blocks").first()).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("blocks").first()).toBeVisible({
+      timeout: 5000,
+    });
 
     // Verify the nodeGraph.v1.json file still exists after mode switch
     const existsResponse = await page.request.get("/api/dev-fs/exists", {
@@ -248,7 +246,9 @@ test.describe("Node Graph Save - nodeGraph.v1.json", () => {
     expect(nodesAfter.some((n) => n.type === "note")).toBe(true);
 
     // Verify the node count hasn't decreased (file wasn't corrupted or truncated)
-    const nodesBefore = (nodeGraphBefore.nodes as Array<Record<string, unknown>>).length;
+    const nodesBefore = (
+      nodeGraphBefore.nodes as Array<Record<string, unknown>>
+    ).length;
     expect(nodesAfter.length).toBeGreaterThanOrEqual(nodesBefore);
   });
 });

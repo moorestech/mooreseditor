@@ -7,7 +7,6 @@ import {
   MarkerType,
 } from "@xyflow/react";
 
-
 import DependencyEdge from "../edges/DependencyEdge";
 import RecipeEdge from "../edges/RecipeEdge";
 import BlockNode from "../nodes/BlockNode";

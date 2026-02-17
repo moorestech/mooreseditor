@@ -2,7 +2,10 @@ import { updateClearedActions } from "./exportToMasterHelpers";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
-import type { Edge as ReactFlowEdge, Node as ReactFlowNode } from "@xyflow/react";
+import type {
+  Edge as ReactFlowEdge,
+  Node as ReactFlowNode,
+} from "@xyflow/react";
 
 export function buildResearchDependencyMap(
   nodes: ReactFlowNode[],
@@ -38,19 +41,22 @@ export function patchResearchColumn(
   const researchMeta = schemaMetas.get("research");
   if (!researchMeta) return columns;
 
-  const researchColumnIndex = columns.findIndex((col) => col.title === "research");
+  const researchColumnIndex = columns.findIndex(
+    (col) => col.title === "research",
+  );
   if (researchColumnIndex === -1) return columns;
 
   const nextColumns = [...columns];
   const currentColumn = { ...nextColumns[researchColumnIndex] };
-  const dataArray = [...(currentColumn.data?.[researchMeta.dataArrayPath] || [])];
+  const dataArray = [
+    ...(currentColumn.data?.[researchMeta.dataArrayPath] || []),
+  ];
 
   for (const node of researchNodes) {
     const masterGuid = node.data.masterGuid as string;
     const recordIndex = dataArray.findIndex(
       (record: any) =>
-        researchMeta.guidField &&
-        record[researchMeta.guidField] === masterGuid,
+        researchMeta.guidField && record[researchMeta.guidField] === masterGuid,
     );
     if (recordIndex === -1) continue;
 

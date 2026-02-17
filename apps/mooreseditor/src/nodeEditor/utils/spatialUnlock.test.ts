@@ -101,10 +101,7 @@ describe("calculateUnlockedItems", () => {
     });
 
     it("is bounded by the nearest research node to the right", () => {
-      const research = [
-        makeResearch("r1", 0, 0),
-        makeResearch("r2", 400, 0),
-      ];
+      const research = [makeResearch("r1", 0, 0), makeResearch("r2", 400, 0)];
       const items = [
         makeItem("i1", 200, 0), // between r1 and r2
         makeItem("i2", 500, 0), // past r2
@@ -253,10 +250,7 @@ describe("calculateUnlockedItems", () => {
 
   describe("multiple research nodes", () => {
     it("each research node independently collects its unlocked items", () => {
-      const research = [
-        makeResearch("r1", 0, 0),
-        makeResearch("r2", 800, 0),
-      ];
+      const research = [makeResearch("r1", 0, 0), makeResearch("r2", 800, 0)];
       const items = [
         makeItem("i1", 200, 0), // right of r1, left of r2
         makeItem("i2", 1000, 0), // right of r2
@@ -276,10 +270,7 @@ describe("calculateUnlockedItems", () => {
       //  r2 at (0, 400)
       //  item at (0, 200) → below r1, above r2 → only r1
       //  item at (0, 500) → below r2 → only r2
-      const research = [
-        makeResearch("r1", 0, 0),
-        makeResearch("r2", 0, 400),
-      ];
+      const research = [makeResearch("r1", 0, 0), makeResearch("r2", 0, 400)];
       const items = [
         makeItem("i1", 0, 200), // below r1, bounded by r2
         makeItem("i2", 0, 500), // below r2

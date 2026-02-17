@@ -2,7 +2,6 @@ import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
-
 /**
  * Get the itemGuid for a given node.
  * For item nodes, the masterGuid is the itemGuid directly.

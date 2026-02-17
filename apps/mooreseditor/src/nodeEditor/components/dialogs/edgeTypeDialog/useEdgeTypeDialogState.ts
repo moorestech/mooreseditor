@@ -4,7 +4,11 @@ import { createInitialValue } from "../../../../utils/createInitialValue";
 import { RECIPE_SCHEMA_MAP } from "../../../utils/recipeEdge";
 
 import { getNodeLabel, getNodeSchemaRef } from "./nodeRefs";
-import { buildEditableRecipes, buildRecipeOptions, hydrateRecipeRecord } from "./recipeRecordUtils";
+import {
+  buildEditableRecipes,
+  buildRecipeOptions,
+  hydrateRecipeRecord,
+} from "./recipeRecordUtils";
 import {
   buildSelectedRecipeRefs,
   updateRecipeRecord,
@@ -74,7 +78,8 @@ export function useEdgeTypeDialogState({
   const editingRecipe = useMemo(
     () =>
       editingRecipeKey
-        ? editableRecipes.find((recipe) => recipe.key === editingRecipeKey) ?? null
+        ? editableRecipes.find((recipe) => recipe.key === editingRecipeKey) ??
+          null
         : null,
     [editableRecipes, editingRecipeKey],
   );
@@ -154,7 +159,9 @@ export function useEdgeTypeDialogState({
     );
 
     if (recipeType === "craftRecipe") {
-      setCraftRecipeGuids((prev) => (prev.includes(recipeGuid) ? prev : [...prev, recipeGuid]));
+      setCraftRecipeGuids((prev) =>
+        prev.includes(recipeGuid) ? prev : [...prev, recipeGuid],
+      );
     } else {
       setMachineRecipeGuids((prev) =>
         prev.includes(recipeGuid) ? prev : [...prev, recipeGuid],

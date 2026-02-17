@@ -1,5 +1,8 @@
 import type { RecipeReference, NodeGraphFile } from "../types/nodeGraph";
-import type { Edge as ReactFlowEdge, Node as ReactFlowNode } from "@xyflow/react";
+import type {
+  Edge as ReactFlowEdge,
+  Node as ReactFlowNode,
+} from "@xyflow/react";
 
 /**
  * Update clearedActions: upsert unlockItemRecipeView only, preserve all other action types.
@@ -83,7 +86,7 @@ function toSerializableEdge(edge: ReactFlowEdge) {
     id: edge.id,
     source: edge.source,
     target: edge.target,
-    edgeType: ((edge.data?.edgeType as "dependency" | "visual") || "visual"),
+    edgeType: (edge.data?.edgeType as "dependency" | "visual") || "visual",
   };
 }
 

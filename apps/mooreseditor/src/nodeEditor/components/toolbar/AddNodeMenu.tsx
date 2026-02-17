@@ -76,7 +76,10 @@ export default function AddNodeMenu({
               (r) => {
                 if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))
                   return false;
-                if (search && !r.name?.toLowerCase().includes(search.toLowerCase()))
+                if (
+                  search &&
+                  !r.name?.toLowerCase().includes(search.toLowerCase())
+                )
                   return false;
                 return true;
               },

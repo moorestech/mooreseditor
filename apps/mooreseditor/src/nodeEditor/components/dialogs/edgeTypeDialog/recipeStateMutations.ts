@@ -89,7 +89,8 @@ export function updateRecipeRecord(
     (row) =>
       row &&
       typeof row === "object" &&
-      (row as Record<string, unknown>)[recipe.schemaMeta.guidField!] === recipe.recipeGuid,
+      (row as Record<string, unknown>)[recipe.schemaMeta.guidField!] ===
+        recipe.recipeGuid,
   );
   if (rowIndex === -1) return prev;
 

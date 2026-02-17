@@ -112,7 +112,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
   });
 
   const selectedNode = state.selectedNodeId
-    ? (resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null)
+    ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
 
   return (
@@ -155,7 +155,9 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             schemaMetas={schemaMetas}
             onAddNode={addNode}
             onCreateAndAddNode={
-              hasCreatableNodesInContextMenu ? handleCreateAndAddNode : undefined
+              hasCreatableNodesInContextMenu
+                ? handleCreateAndAddNode
+                : undefined
             }
             existingNodeGuids={existingNodeGuids}
           />

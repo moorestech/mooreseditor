@@ -45,7 +45,12 @@ export function useGraphChangeHandlers({
           .filter((e): e is ReactFlowEdge => e != null);
         if (edgesToRemove.length > 0) {
           setJsonData((prev) =>
-            removeRecipesFromJsonData(edgesToRemove, state.edges, prev, schemaMetas),
+            removeRecipesFromJsonData(
+              edgesToRemove,
+              state.edges,
+              prev,
+              schemaMetas,
+            ),
           );
         }
       }

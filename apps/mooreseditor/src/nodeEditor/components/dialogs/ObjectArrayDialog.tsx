@@ -67,22 +67,24 @@ export default function ObjectArrayDialog({
           onDataChange={onDataChange}
           onRowSelect={hasItemSchema ? handleRowSelect : undefined}
         />
-        {selectedRowIndex !== null && hasItemSchema && data?.[selectedRowIndex] && (
-          <div
-            style={{
-              borderTop: "1px solid #e0e0e0",
-              paddingTop: 16,
-            }}
-          >
-            <FormView
-              schema={schema.items as Schema}
-              data={data[selectedRowIndex]}
-              jsonData={jsonData}
-              onDataChange={handleRowDataChange}
-              autoOpenObjectArrays={false}
-            />
-          </div>
-        )}
+        {selectedRowIndex !== null &&
+          hasItemSchema &&
+          data?.[selectedRowIndex] && (
+            <div
+              style={{
+                borderTop: "1px solid #e0e0e0",
+                paddingTop: 16,
+              }}
+            >
+              <FormView
+                schema={schema.items as Schema}
+                data={data[selectedRowIndex]}
+                jsonData={jsonData}
+                onDataChange={handleRowDataChange}
+                autoOpenObjectArrays={false}
+              />
+            </div>
+          )}
       </Stack>
     </Modal>
   );

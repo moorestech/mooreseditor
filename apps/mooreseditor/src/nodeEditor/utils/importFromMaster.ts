@@ -2,7 +2,6 @@ import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
-
 /**
  * Import research nodes from master data.
  * This generates an initial graph from existing master data.

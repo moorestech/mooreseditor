@@ -1,10 +1,6 @@
 import { useContext } from "react";
 
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  getBezierPath,
-} from "@xyflow/react";
+import { BaseEdge, EdgeLabelRenderer, getBezierPath } from "@xyflow/react";
 
 import { EdgeEditContext } from "../../context/EdgeEditContext";
 
@@ -39,12 +35,15 @@ export default function RecipeEdge({
   };
   const recipeLabels = Array.isArray(edgeData.recipeLabels)
     ? edgeData.recipeLabels.filter(
-        (label): label is string => typeof label === "string" && label.length > 0,
+        (label): label is string =>
+          typeof label === "string" && label.length > 0,
       )
     : [];
 
   const fallbackLabel = (() => {
-    const recipeRefs = Array.isArray(edgeData.recipeRefs) ? edgeData.recipeRefs : [];
+    const recipeRefs = Array.isArray(edgeData.recipeRefs)
+      ? edgeData.recipeRefs
+      : [];
     if (recipeRefs.length > 0) {
       return `${recipeRefs.length} recipe${recipeRefs.length > 1 ? "s" : ""}`;
     }
@@ -52,9 +51,8 @@ export default function RecipeEdge({
     if (edgeData.edgeType === "machineRecipe") return "Machine";
     return "Recipe";
   })();
-  const displayLines = recipeLabels.length > 0
-    ? recipeLabels.slice(0, 3)
-    : [fallbackLabel];
+  const displayLines =
+    recipeLabels.length > 0 ? recipeLabels.slice(0, 3) : [fallbackLabel];
   if (recipeLabels.length > 3) {
     displayLines.push(`+${recipeLabels.length - 3} more`);
   }

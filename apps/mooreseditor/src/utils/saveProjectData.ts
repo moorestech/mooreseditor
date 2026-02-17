@@ -42,7 +42,10 @@ export async function saveProjectData({
   if (projectDir === "SampleProject") {
     console.log("サンプルプロジェクトのため、保存はスキップされました");
     columns.forEach((column) => {
-      console.log(`${column.title}:`, JSON.stringify({ data: column.data }, null, 2));
+      console.log(
+        `${column.title}:`,
+        JSON.stringify({ data: column.data }, null, 2),
+      );
     });
     if (nodeGraphData) {
       console.log("nodeGraph:", JSON.stringify(nodeGraphData, null, 2));
@@ -108,8 +111,14 @@ export async function saveProjectData({
         await mkdir(mooreseditorDir, { recursive: true });
       }
 
-      const nodeGraphPath = await path.join(mooreseditorDir, "nodeGraph.v1.json");
-      await writeTextFile(nodeGraphPath, JSON.stringify(nodeGraphData, null, 2));
+      const nodeGraphPath = await path.join(
+        mooreseditorDir,
+        "nodeGraph.v1.json",
+      );
+      await writeTextFile(
+        nodeGraphPath,
+        JSON.stringify(nodeGraphData, null, 2),
+      );
       console.log(`nodeGraphが保存されました: ${nodeGraphPath}`);
     } catch (error) {
       errors.push(`nodeGraph: ${error}`);

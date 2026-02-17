@@ -166,13 +166,7 @@ function processArrayValue(
   regeneratedPaths: string[],
 ) {
   return data.map((item) =>
-    processValue(
-      item,
-      schema.items,
-      [...path, "*"],
-      guidMap,
-      regeneratedPaths,
-    ),
+    processValue(item, schema.items, [...path, "*"], guidMap, regeneratedPaths),
   );
 }
 
@@ -220,7 +214,5 @@ function pathToDisplay(path: string[]) {
   if (path.length === 0) {
     return "(root)";
   }
-  return path
-    .map((segment) => (segment === "*" ? "[*]" : segment))
-    .join(".");
+  return path.map((segment) => (segment === "*" ? "[*]" : segment)).join(".");
 }

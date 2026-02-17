@@ -9,7 +9,10 @@ import { calculateUnlockedItems } from "./spatialUnlock";
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
 import type { NodeGraphFile } from "../types/nodeGraph";
-import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
+import type {
+  Node as ReactFlowNode,
+  Edge as ReactFlowEdge,
+} from "@xyflow/react";
 
 /**
  * Export node graph data to master data (partial patch for research).

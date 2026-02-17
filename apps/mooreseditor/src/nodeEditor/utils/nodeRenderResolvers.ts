@@ -7,8 +7,14 @@ import { COUNT_KEY_RE, INPUT_KEY_RE, shortGuid } from "./recipeEdgeConstants";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
-import type { ObjectPropertySchema, ObjectSchema } from "../../libs/schema/types";
-import type { Edge as ReactFlowEdge, Node as ReactFlowNode } from "@xyflow/react";
+import type {
+  ObjectPropertySchema,
+  ObjectSchema,
+} from "../../libs/schema/types";
+import type {
+  Edge as ReactFlowEdge,
+  Node as ReactFlowNode,
+} from "@xyflow/react";
 
 function toCountSuffix(value: unknown): string {
   return typeof value === "number" && value !== 1 ? ` x${value}` : "";
@@ -67,7 +73,11 @@ function buildArrayConsumeLabels(
 ): string[] {
   if (!("type" in property) || property.type !== "array") return [];
   if (!INPUT_KEY_RE.test(key)) return [];
-  if (!("items" in property) || !property.items || property.items.type !== "object") {
+  if (
+    !("items" in property) ||
+    !property.items ||
+    property.items.type !== "object"
+  ) {
     return [];
   }
 
@@ -96,7 +106,8 @@ function buildArrayConsumeLabels(
           if (typeof guid !== "string" || guid.length === 0) return null;
 
           return (
-            resolveForeignName(fkProp.foreignKey.schemaId, guid) ?? shortGuid(guid)
+            resolveForeignName(fkProp.foreignKey.schemaId, guid) ??
+            shortGuid(guid)
           );
         })
         .filter((value): value is string => value !== null);

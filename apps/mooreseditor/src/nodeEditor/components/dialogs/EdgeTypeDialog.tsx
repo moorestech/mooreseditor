@@ -1,9 +1,19 @@
-import { Button, Group, Modal, SegmentedControl, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Modal,
+  SegmentedControl,
+  Stack,
+  Text,
+} from "@mantine/core";
 
 import EdgeRecipeSection from "./edgeTypeDialog/EdgeRecipeSection";
 import { useEdgeTypeDialogState } from "./edgeTypeDialog/useEdgeTypeDialogState";
 
-import type { EdgeDialogMode, EdgeTypeDialogProps } from "./edgeTypeDialog/types";
+import type {
+  EdgeDialogMode,
+  EdgeTypeDialogProps,
+} from "./edgeTypeDialog/types";
 
 export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
   const {

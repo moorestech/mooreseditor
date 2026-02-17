@@ -4,20 +4,18 @@ import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
-
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
 import { extractRecipeRefsFromGraphEdge } from "../utils/recipeEdge";
 
 import type { Column } from "../../hooks/useJson";
-import type {
-  GraphNode,
-  GraphEdge,
-  NodeGraphFile,
-} from "../types/nodeGraph";
+import type { GraphNode, GraphEdge, NodeGraphFile } from "../types/nodeGraph";
 import type { SchemaMeta } from "../utils/schemaMeta";
-import type { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
+import type {
+  Node as ReactFlowNode,
+  Edge as ReactFlowEdge,
+} from "@xyflow/react";
 
 const isDev = import.meta.env.DEV;
 
@@ -58,7 +56,11 @@ function toReactFlowNodes(
 
     // Look up display name from master data
     const schemaId =
-      gn.type === "item" ? "items" : gn.type === "block" ? "blocks" : "research";
+      gn.type === "item"
+        ? "items"
+        : gn.type === "block"
+          ? "blocks"
+          : "research";
     const meta = schemaMetas.get(schemaId);
     let displayName = gn.masterGuid.substring(0, 8);
     if (meta?.guidField && meta?.nameField) {
@@ -126,7 +128,9 @@ export function useNodeGraph(
         const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
         const filePath = await path.join(mooreseditorDir, "nodeGraph.v1.json");
         try {
-          await invoke("add_project_to_scope", { projectPath: mooreseditorDir });
+          await invoke("add_project_to_scope", {
+            projectPath: mooreseditorDir,
+          });
         } catch {
           // Scope addition failed — likely in dev/browser environment
         }
@@ -137,7 +141,9 @@ export function useNodeGraph(
         // Tauri FS failed — try dev HTTP fallback
         if (isDev && projectDir === "SampleProject") {
           try {
-            const response = await fetch("/src/sample/.mooreseditor/nodeGraph.v1.json");
+            const response = await fetch(
+              "/src/sample/.mooreseditor/nodeGraph.v1.json",
+            );
             if (response.ok) {
               const parsed = await response.json();
               graphFile = validateAndMigrate(parsed);

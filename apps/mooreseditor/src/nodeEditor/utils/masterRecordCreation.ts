@@ -25,9 +25,7 @@ function getSchemaIdForNodeType(nodeType: CreatableNodeType): string {
   return NODE_TYPE_TO_SCHEMA_ID[nodeType];
 }
 
-function normalizeRecord(
-  value: unknown,
-): Record<string, unknown> {
+function normalizeRecord(value: unknown): Record<string, unknown> {
   if (value && typeof value === "object" && !Array.isArray(value)) {
     return { ...(value as Record<string, unknown>) };
   }
@@ -85,7 +83,9 @@ export function createMasterRecordForNode(
 
   const targetColumn = columns[columnIndex];
   const existingValue = targetColumn.data?.[schemaMeta.dataArrayPath];
-  const existingRecords = Array.isArray(existingValue) ? [...existingValue] : [];
+  const existingRecords = Array.isArray(existingValue)
+    ? [...existingValue]
+    : [];
 
   const initialRecord = createInitialValue(
     schemaMeta.elementSchema,
@@ -96,7 +96,10 @@ export function createMasterRecordForNode(
 
   const currentGuidValue = newRecord[schemaMeta.guidField];
   let masterGuid: string;
-  if (typeof currentGuidValue === "string" && currentGuidValue.trim().length > 0) {
+  if (
+    typeof currentGuidValue === "string" &&
+    currentGuidValue.trim().length > 0
+  ) {
     masterGuid = currentGuidValue;
   } else {
     masterGuid = crypto.randomUUID();
@@ -111,14 +114,12 @@ export function createMasterRecordForNode(
     } else {
       const existingNames = existingRecords
         .map((record) => {
-          if (
-            !record ||
-            typeof record !== "object" ||
-            Array.isArray(record)
-          ) {
+          if (!record || typeof record !== "object" || Array.isArray(record)) {
             return null;
           }
-          const nameValue = (record as Record<string, unknown>)[schemaMeta.nameField];
+          const nameValue = (record as Record<string, unknown>)[
+            schemaMeta.nameField
+          ];
           return typeof nameValue === "string" && nameValue.trim().length > 0
             ? nameValue
             : null;

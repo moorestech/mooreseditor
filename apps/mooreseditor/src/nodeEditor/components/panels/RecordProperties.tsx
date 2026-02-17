@@ -6,7 +6,6 @@ import type { Column } from "../../../hooks/useJson";
 import type { Schema } from "../../../libs/schema/types";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 
-
 interface RecordPropertiesProps {
   schemaId: string;
   masterGuid: string;
@@ -35,9 +34,7 @@ export default function RecordProperties({
     );
   }
 
-  const record = dataArray.find(
-    (r: any) => r[meta.guidField!] === masterGuid,
-  );
+  const record = dataArray.find((r: any) => r[meta.guidField!] === masterGuid);
   if (!record) {
     return (
       <Text size="sm" c="dimmed">
@@ -59,7 +56,8 @@ export default function RecordProperties({
   return (
     <Stack gap="sm">
       <Text size="sm" fw={600}>
-        {schemaId}: {meta.nameField ? record[meta.nameField] : masterGuid.substring(0, 8)}
+        {schemaId}:{" "}
+        {meta.nameField ? record[meta.nameField] : masterGuid.substring(0, 8)}
       </Text>
       <FormView
         schema={elementSchema as Schema}

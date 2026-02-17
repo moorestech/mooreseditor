@@ -80,21 +80,32 @@ export default function RecipeEdge({
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 10,
             background: "#fff",
-            padding: "1px 6px",
+            padding: "2px 6px",
             borderRadius: 4,
             border: "1px solid #f59e0b",
             pointerEvents: "all",
-            maxWidth: 220,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            maxWidth: 280,
             cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
           }}
           className="nodrag nopan"
           title={displayLines.join("\n")}
           onDoubleClick={handleDoubleClick}
         >
-          {displayLines.join(" | ")}
+          {displayLines.map((line, i) => (
+            <div
+              key={i}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {line}
+            </div>
+          ))}
         </div>
       </EdgeLabelRenderer>
     </>

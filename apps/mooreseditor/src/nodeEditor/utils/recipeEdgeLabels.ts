@@ -1,4 +1,4 @@
-import { COUNT_KEY_RE, INPUT_KEY_RE, OUTPUT_KEY_RE, RECIPE_SCHEMA_MAP, shortGuid } from "./recipeEdgeConstants";
+import { BLOCK_KEY_RE, COUNT_KEY_RE, INPUT_KEY_RE, OUTPUT_KEY_RE, RECIPE_SCHEMA_MAP, shortGuid } from "./recipeEdgeConstants";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
@@ -131,6 +131,7 @@ export function buildSingleRecipeSummary(
 
   const outputs: string[] = [];
   const inputs: string[] = [];
+  let blockLabel: string | null = null;
 
   for (const property of meta.elementSchema.properties ?? []) {
     if (!("type" in property)) continue;
@@ -140,9 +141,12 @@ export function buildSingleRecipeSummary(
       if (typeof guid !== "string" || guid.length === 0) continue;
       const label =
         resolveForeignName(property.foreignKey.schemaId, guid) ?? shortGuid(guid);
-      const countValue = findCountField(record);
+
       if (OUTPUT_KEY_RE.test(property.key)) {
+        const countValue = findCountField(record);
         outputs.push(`${label}${toCountSuffix(countValue)}`);
+      } else if (BLOCK_KEY_RE.test(property.key)) {
+        blockLabel = label;
       }
       continue;
     }
@@ -158,20 +162,28 @@ export function buildSingleRecipeSummary(
     }
   }
 
-  if (recipeRef.edgeType === "craftRecipe" && outputs.length > 0 && inputs.length > 0) {
-    return `${outputs.join(" + ")}←${inputs.join(" + ")}`;
+  const inputStr = inputs.length > 0 ? inputs.join(" + ") : null;
+  const outputStr = outputs.length > 0 ? outputs.join(" + ") : null;
+
+  let recipe: string;
+  if (inputStr && outputStr) {
+    recipe = `${inputStr}→${outputStr}`;
+  } else if (outputStr) {
+    recipe = `→${outputStr}`;
+  } else if (inputStr) {
+    recipe = `${inputStr}→`;
+  } else {
+    const name = meta.nameField ? record[meta.nameField] : undefined;
+    if (typeof name === "string" && name.length > 0) {
+      return name;
+    }
+    return shortGuid(recipeRef.masterGuid);
   }
 
-  if (outputs.length > 0) {
-    return outputs.join(" + ");
+  if (blockLabel) {
+    return `${blockLabel}: ${recipe}`;
   }
-
-  const name = meta.nameField ? record[meta.nameField] : undefined;
-  if (typeof name === "string" && name.length > 0) {
-    return name;
-  }
-
-  return shortGuid(recipeRef.masterGuid);
+  return recipe;
 }
 
 export function buildRecipeEdgeLabels(

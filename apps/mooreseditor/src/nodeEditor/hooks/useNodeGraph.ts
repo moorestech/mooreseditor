@@ -8,7 +8,7 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
-import { normalizeRecipeRefsFromEdgeData } from "../utils/recipeEdge";
+import { extractRecipeRefsFromGraphEdge } from "../utils/recipeEdge";
 
 import type { Column } from "../../hooks/useJson";
 import type {
@@ -88,7 +88,7 @@ function toReactFlowNodes(
  */
 function toReactFlowEdges(graphEdges: GraphEdge[]): ReactFlowEdge[] {
   return graphEdges.map((ge) => {
-    const recipeRefs = normalizeRecipeRefsFromEdgeData(ge);
+    const recipeRefs = extractRecipeRefsFromGraphEdge(ge);
     const isRecipe = recipeRefs.length > 0;
     return {
       id: ge.id,

@@ -58,3 +58,15 @@ export function createNoteNode(
     style: { width: 200, height: 150 },
   };
 }
+
+export function createPlaceholderNode(
+  position: { x: number; y: number },
+  text: string = "",
+): ReactFlowNode {
+  return {
+    id: generateNodeId(),
+    type: "placeholder",
+    position,
+    data: { text },
+  };
+}

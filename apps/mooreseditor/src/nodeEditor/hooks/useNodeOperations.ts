@@ -8,6 +8,7 @@ import {
   createBlockNode,
   createResearchNode,
   createNoteNode,
+  createPlaceholderNode,
 } from "../utils/nodeFactory";
 
 import type { ConnectionDecision } from "../types/connection";
@@ -21,12 +22,12 @@ export function useNodeOperations() {
 
   const addNode = useCallback(
     (
-      type: "item" | "block" | "research" | "note",
+      type: "item" | "block" | "research" | "note" | "placeholder",
       masterGuid?: string,
       displayName?: string,
       targetPosition?: { x: number; y: number },
     ) => {
-      if (type !== "note" && !masterGuid) {
+      if (type !== "note" && type !== "placeholder" && !masterGuid) {
         return;
       }
 
@@ -57,6 +58,9 @@ export function useNodeOperations() {
           break;
         case "note":
           newNode = createNoteNode(position);
+          break;
+        case "placeholder":
+          newNode = createPlaceholderNode(position);
           break;
       }
 

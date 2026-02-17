@@ -54,6 +54,15 @@ function toReactFlowNodes(
       };
     }
 
+    if (gn.type === "placeholder") {
+      return {
+        id: gn.id,
+        type: "placeholder",
+        position: gn.position,
+        data: { text: gn.text },
+      };
+    }
+
     // Look up display name from master data
     const schemaId =
       gn.type === "item"

@@ -18,7 +18,7 @@ interface UseContextMenuParams {
   setJsonData: React.Dispatch<React.SetStateAction<Column[]>>;
   onMarkDirty: () => void;
   addNode: (
-    type: "item" | "block" | "research" | "note",
+    type: "item" | "block" | "research" | "note" | "placeholder",
     masterGuid?: string,
     displayName?: string,
     position?: { x: number; y: number },

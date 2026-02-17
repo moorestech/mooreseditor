@@ -64,6 +64,13 @@ function toSerializableNode(node: ReactFlowNode) {
       ...(h != null ? { height: h } : {}),
     };
   }
+  if (node.type === "placeholder") {
+    return {
+      ...base,
+      type: "placeholder" as const,
+      text: (node.data.text as string) || "",
+    };
+  }
   return {
     ...base,
     type: node.type as "item" | "block" | "research",

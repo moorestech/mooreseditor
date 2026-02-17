@@ -28,7 +28,7 @@ interface CanvasContextMenuProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: "item" | "block" | "research" | "note",
+    type: "item" | "block" | "research" | "note" | "placeholder",
     masterGuid?: string,
     displayName?: string,
     position?: { x: number; y: number },
@@ -96,7 +96,7 @@ export default function CanvasContextMenu({
 
   const handleAddNode = useCallback(
     (
-      type: "item" | "block" | "research" | "note",
+      type: "item" | "block" | "research" | "note" | "placeholder",
       masterGuid?: string,
       displayName?: string,
     ) => {
@@ -210,6 +210,20 @@ export default function CanvasContextMenu({
             className="context-menu-item"
           >
             <Text size="xs">Add Memo</Text>
+          </UnstyledButton>
+          <UnstyledButton
+            role="menuitem"
+            onClick={() => handleAddNode("placeholder")}
+            px="sm"
+            py={4}
+            style={{
+              display: "block",
+              width: "100%",
+              borderRadius: 4,
+            }}
+            className="context-menu-item"
+          >
+            <Text size="xs">Add Placeholder</Text>
           </UnstyledButton>
           <Divider my={4} />
           {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {

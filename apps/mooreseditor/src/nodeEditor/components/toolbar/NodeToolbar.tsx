@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
-import { IconNote, IconTrash } from "@tabler/icons-react";
+import { IconNote, IconPlaceholder, IconTrash } from "@tabler/icons-react";
 
 import AddNodeMenu from "./AddNodeMenu";
 
@@ -19,7 +19,7 @@ interface NodeToolbarProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: "item" | "block" | "research" | "note",
+    type: "item" | "block" | "research" | "note" | "placeholder",
     masterGuid?: string,
     displayName?: string,
   ) => void;
@@ -77,6 +77,17 @@ export default function NodeToolbar({
           onClick={() => onAddNode("note")}
         >
           <IconNote size={18} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Add Placeholder">
+        <ActionIcon
+          variant="light"
+          color="gray"
+          size="lg"
+          aria-label="Add Placeholder"
+          onClick={() => onAddNode("placeholder")}
+        >
+          <IconPlaceholder size={18} />
         </ActionIcon>
       </Tooltip>
       <Tooltip label="Delete selected">

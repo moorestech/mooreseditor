@@ -9,7 +9,8 @@ export type GraphNode =
   | ItemGraphNode
   | BlockGraphNode
   | ResearchGraphNode
-  | NoteGraphNode;
+  | NoteGraphNode
+  | PlaceholderGraphNode;
 
 interface BaseGraphNode {
   id: string;
@@ -32,6 +33,10 @@ export interface NoteGraphNode extends BaseGraphNode {
   text: string;
   width?: number;
   height?: number;
+}
+export interface PlaceholderGraphNode extends BaseGraphNode {
+  type: "placeholder";
+  text: string;
 }
 
 // --- Edges ---

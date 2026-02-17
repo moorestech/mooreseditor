@@ -176,7 +176,7 @@ export default function PropertiesPanel({
       >
         <ScrollArea style={{ flex: 1 }}>
           <Stack gap="md" p="md">
-            {nodeType === "note" ? (
+            {nodeType === "note" || nodeType === "placeholder" ? (
               <NoteProperties
                 text={(selectedNode.data.text as string) || ""}
                 onTextChange={(text) => {
@@ -186,6 +186,7 @@ export default function PropertiesPanel({
                   });
                   onMarkDirty();
                 }}
+                label={nodeType === "placeholder" ? "Placeholder" : "Memo"}
               />
             ) : nodeType && nodeTypeToSchemaId[nodeType] ? (
               (() => {

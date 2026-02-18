@@ -118,11 +118,10 @@ describe("calculateUnlockedItems", () => {
   });
 
   describe("below zone", () => {
-    it("includes items below research node with x <= research.x", () => {
+    it("includes items directly below research node (same x)", () => {
       const research = [makeResearch("r1", 200, 0)];
       const items = [
         makeItem("i1", 200, 300), // same x, below
-        makeItem("i2", 100, 300), // left of x, below
       ];
       const result = calculateUnlockedItems(
         research,
@@ -130,7 +129,21 @@ describe("calculateUnlockedItems", () => {
         emptyColumns,
         emptyMetas,
       );
-      expect(result.get("r1")).toEqual(["i1", "i2"]);
+      expect(result.get("r1")).toEqual(["i1"]);
+    });
+
+    it("excludes items to the left of all research from below zone", () => {
+      const research = [makeResearch("r1", 200, 0)];
+      const items = [
+        makeItem("i1", 100, 300), // left of all research
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      expect(result.get("r1")).toEqual([]);
     });
 
     it("excludes items above research node", () => {
@@ -199,8 +212,8 @@ describe("calculateUnlockedItems", () => {
       const research = [makeResearch("r1", 200, 200)];
       const items = [
         makeItem("right1", 400, 200), // right zone (x > 200, y >= 200)
-        makeItem("below1", 100, 400), // below zone (y > 200, x <= 200)
-        makeItem("below2", 200, 300), // below zone (y > 200, x <= 200)
+        makeItem("below1", 200, 400), // below zone (y > 200, x == 200)
+        makeItem("below2", 200, 300), // below zone (y > 200, x == 200)
       ];
       const result = calculateUnlockedItems(
         research,
@@ -286,6 +299,81 @@ describe("calculateUnlockedItems", () => {
     });
   });
 
+  describe("bounding-box priority: right zone over below zone", () => {
+    it("assigns item to right-zone research even when below-zone research is closer by distance", () => {
+      const research = [
+        makeResearch("r1", -840, 0, "原始研究1"),
+        makeResearch("r2", -200, 20, "原始研究2"),
+        makeResearch("r3", 240, 20, "原始研究3"),
+        makeResearch("r4", 700, 20, "原始研究4"),
+      ];
+      const items = [
+        makeItem("stone-axe", 40, 160, "石の斧"),
+        makeItem("wind-miner", 460, 160, "風力掘削機"),
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      expect(result.get("原始研究2")).toContain("石の斧");
+      expect(result.get("原始研究3")).not.toContain("石の斧");
+      expect(result.get("原始研究3")).toEqual(["風力掘削機"]);
+    });
+
+    it("falls back to below zone only when no right-zone match exists", () => {
+      const research = [
+        makeResearch("r1", -840, 0, "原始研究1"),
+        makeResearch("r2", -200, 20, "原始研究2"),
+      ];
+      const items = [makeItem("far-left-item", -2180, 100, "遠い左アイテム")];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      // Items to the left of all research should remain unassigned
+      expect(result.get("原始研究1")).toEqual([]);
+      expect(result.get("原始研究2")).toEqual([]);
+    });
+
+    it("handles full 原始研究 chain layout correctly", () => {
+      const research = [
+        makeResearch("r1", -840, 0, "原始研究1"),
+        makeResearch("r2", -200, 20, "原始研究2"),
+        makeResearch("r3", 240, 20, "原始研究3"),
+        makeResearch("r4", 700, 20, "原始研究4"),
+      ];
+      const items = [
+        makeItem("i-far-left-1", -2180, 100, "item-far-left-1"),
+        makeItem("i-far-left-2", -1040, 120, "item-far-left-2"),
+        makeItem("i-r1-right", -680, 160, "item-r1-right"),
+        makeItem("i-between-r1-r2", -440, 160, "item-between"),
+        makeItem("i-stone-axe", 40, 160, "stone-axe"),
+        makeItem("i-wind-miner", 460, 160, "wind-miner"),
+        makeItem("i-r4-right", 860, 140, "item-r4-right"),
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      // Items to the right of R1 are assigned to R1
+      expect(result.get("原始研究1")).toContain("item-r1-right");
+      expect(result.get("原始研究1")).toContain("item-between");
+      // Far-left items (x < minResearchX=-840) are NOT assigned
+      expect(result.get("原始研究1")).not.toContain("item-far-left-1");
+      expect(result.get("原始研究1")).not.toContain("item-far-left-2");
+      expect(result.get("原始研究1")).toHaveLength(2);
+      expect(result.get("原始研究2")).toEqual(["stone-axe"]);
+      expect(result.get("原始研究3")).toEqual(["wind-miner"]);
+      expect(result.get("原始研究4")).toEqual(["item-r4-right"]);
+    });
+  });
+
   describe("real-world scenario: nodeGraph.v1.json layout", () => {
     it("assigns items to nearest eligible research (iron ingot bug fix)", () => {
       // Reproduces the actual node layout from nodeGraph.v1.json:
@@ -368,6 +456,126 @@ describe("calculateUnlockedItems", () => {
       );
       expect(result.get("r2")).toEqual(["i2"]);
       expect(result.get("r3")).toEqual(["i3"]);
+    });
+  });
+
+  describe("full nodeGraph.v1.json integration: all real positions", () => {
+    // All research nodes from nodeGraph.v1.json with exact positions
+    const allResearch = [
+      makeResearch("r-原始研究1", -840, 0, "原始研究1"),
+      makeResearch("r-原始研究2", -200, 20, "原始研究2"),
+      makeResearch("r-原始研究3", 240, 40, "原始研究3"),
+      makeResearch("r-原始研究4", 700, 20, "原始研究4"),
+      makeResearch("r-原始研究5", 1260, 0, "原始研究5"),
+      makeResearch("r-原始研究6", 1820, 0, "原始研究6"),
+      makeResearch("r-原始研究7", 2420, -40, "原始研究7"),
+      makeResearch("r-燃料式風車", 3100, -240, "燃料式風車の作成"),
+      makeResearch("r-軸の変更", 3280, 280, "軸の変更"),
+      makeResearch(
+        "r-原始ロジスティクス",
+        3840,
+        -260,
+        "原始ロジスティクス改善",
+      ),
+      makeResearch("r-建築土台", 3840, 280, "建築土台"),
+      makeResearch("r-合板の作成", 4400, -260, "合板の作成"),
+      makeResearch("r-新しい燃料", 4400, 300, "新しい燃料"),
+    ];
+
+    // All item nodes from nodeGraph.v1.json with exact positions and masterGuids
+    const allItems = [
+      makeItem("i1", -2180, 100, "582040ec"),
+      makeItem("i2", -1860, 100, "76174235"),
+      makeItem("i3", -1620, 180, "aafce615"),
+      makeItem("i4", -1300, 200, "585f5d0b"),
+      makeItem("i5", -1040, 120, "ef4223f8"),
+      makeItem("i6", -780, 180, "44aaddd6"),
+      makeItem("i7", -420, 180, "60daab46"),
+      makeItem("i8", 40, 160, "4c5fefbd"), // 石の斧
+      makeItem("i9", 460, 200, "3a60a5d1"), // 風力掘削機
+      makeItem("i10", 860, 140, "71b9c6a0"),
+      makeItem("i11", 940, 240, "f7cde28a"),
+      makeItem("i12", 980, 320, "24a63965"),
+      makeItem("i13", 1460, 140, "6aa2962b"),
+      makeItem("i14", 1480, 240, "3177a8c4"),
+      makeItem("i15", 2020, 100, "3b2a5fd9"),
+      makeItem("i16", 2020, 220, "c68bcdf5"),
+      makeItem("i17", 2600, 140, "567ba546"),
+      makeItem("i18", 3220, -100, "a3cada69"),
+      makeItem("i19", 3440, 400, "e132cf99"),
+      makeItem("i20", 3440, 460, "cf749d82"),
+      makeItem("i21", 4040, -60, "cdcd04b4"),
+      makeItem("i22", 4020, 420, "a58e1f02"),
+      makeItem("i23", 4600, 420, "05c58e99"),
+      makeItem("i24", 4600, 480, "be7b32ed"),
+    ];
+
+    it("assigns every item to the correct research matching research.json", () => {
+      const result = calculateUnlockedItems(
+        allResearch,
+        allItems,
+        emptyColumns,
+        emptyMetas,
+      );
+
+      // 原始研究1: only 2 items to its RIGHT (Pass 1)
+      // Leftmost 5 items (x < -840) are NOT assigned (they belong to ダミー研究)
+      const r1 = result.get("原始研究1")!;
+      expect(r1).toContain("44aaddd6");
+      expect(r1).toContain("60daab46");
+      expect(r1).toHaveLength(2);
+
+      // 原始研究2: 石の斧 only
+      expect(result.get("原始研究2")).toEqual(["4c5fefbd"]);
+
+      // 原始研究3: 風力掘削機 only
+      expect(result.get("原始研究3")).toEqual(["3a60a5d1"]);
+
+      // 原始研究4: 3 items
+      const r4 = result.get("原始研究4")!;
+      expect(r4).toContain("71b9c6a0");
+      expect(r4).toContain("f7cde28a");
+      expect(r4).toContain("24a63965");
+      expect(r4).toHaveLength(3);
+
+      // 原始研究5: 2 items
+      const r5 = result.get("原始研究5")!;
+      expect(r5).toContain("6aa2962b");
+      expect(r5).toContain("3177a8c4");
+      expect(r5).toHaveLength(2);
+
+      // 原始研究6: 2 items
+      const r6 = result.get("原始研究6")!;
+      expect(r6).toContain("c68bcdf5");
+      expect(r6).toContain("3b2a5fd9");
+      expect(r6).toHaveLength(2);
+
+      // 原始研究7: 1 item
+      expect(result.get("原始研究7")).toEqual(["567ba546"]);
+
+      // 燃料式風車の作成: 1 item
+      expect(result.get("燃料式風車の作成")).toEqual(["a3cada69"]);
+
+      // 軸の変更: 2 items
+      const rAxis = result.get("軸の変更")!;
+      expect(rAxis).toContain("e132cf99");
+      expect(rAxis).toContain("cf749d82");
+      expect(rAxis).toHaveLength(2);
+
+      // 原始ロジスティクス改善: 1 item
+      expect(result.get("原始ロジスティクス改善")).toEqual(["cdcd04b4"]);
+
+      // 建築土台: 1 item
+      expect(result.get("建築土台")).toEqual(["a58e1f02"]);
+
+      // 合板の作成: empty
+      expect(result.get("合板の作成")).toEqual([]);
+
+      // 新しい燃料: 2 items
+      const rFuel = result.get("新しい燃料")!;
+      expect(rFuel).toContain("be7b32ed");
+      expect(rFuel).toContain("05c58e99");
+      expect(rFuel).toHaveLength(2);
     });
   });
 });

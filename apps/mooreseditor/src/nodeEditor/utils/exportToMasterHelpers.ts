@@ -1,3 +1,5 @@
+import { normalizeNoteColor } from "./noteColor";
+
 import type { RecipeReference, NodeGraphFile } from "../types/nodeGraph";
 import type {
   Edge as ReactFlowEdge,
@@ -56,10 +58,12 @@ function toSerializableNode(node: ReactFlowNode) {
   if (node.type === "note") {
     const w = node.data.width as number | undefined;
     const h = node.data.height as number | undefined;
+    const color = normalizeNoteColor(node.data.color);
     return {
       ...base,
       type: "note" as const,
       text: (node.data.text as string) || "",
+      color,
       ...(w != null ? { width: w } : {}),
       ...(h != null ? { height: h } : {}),
     };

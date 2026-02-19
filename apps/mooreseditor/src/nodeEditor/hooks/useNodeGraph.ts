@@ -7,6 +7,7 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
+import { normalizeNoteColor } from "../utils/noteColor";
 import { extractRecipeRefsFromGraphEdge } from "../utils/recipeEdge";
 
 import type { Column } from "../../hooks/useJson";
@@ -45,11 +46,12 @@ function toReactFlowNodes(
     if (gn.type === "note") {
       const w = gn.width ?? 200;
       const h = gn.height ?? 150;
+      const color = normalizeNoteColor(gn.color);
       return {
         id: gn.id,
         type: "note",
         position: gn.position,
-        data: { text: gn.text, width: w, height: h },
+        data: { text: gn.text, color, width: w, height: h },
         style: { width: w, height: h },
       };
     }

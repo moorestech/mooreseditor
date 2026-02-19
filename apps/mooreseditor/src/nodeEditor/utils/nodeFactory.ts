@@ -1,3 +1,5 @@
+import { DEFAULT_NOTE_COLOR } from "./noteColor";
+
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 let nodeIdCounter = 0;
@@ -54,7 +56,7 @@ export function createNoteNode(
     id: generateNodeId(),
     type: "note",
     position,
-    data: { text, width: 200, height: 150 },
+    data: { text, color: DEFAULT_NOTE_COLOR, width: 200, height: 150 },
     style: { width: 200, height: 150 },
   };
 }

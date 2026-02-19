@@ -187,6 +187,23 @@ export default function PropertiesPanel({
                   onMarkDirty();
                 }}
                 label={nodeType === "placeholder" ? "Placeholder" : "Memo"}
+                color={
+                  nodeType === "note"
+                    ? (selectedNode.data.color as string)
+                    : undefined
+                }
+                showColorPicker={nodeType === "note"}
+                onColorChange={
+                  nodeType === "note"
+                    ? (color) => {
+                        onNodeDataChange(selectedNode.id, {
+                          ...selectedNode.data,
+                          color,
+                        });
+                        onMarkDirty();
+                      }
+                    : undefined
+                }
               />
             ) : nodeType && nodeTypeToSchemaId[nodeType] ? (
               (() => {

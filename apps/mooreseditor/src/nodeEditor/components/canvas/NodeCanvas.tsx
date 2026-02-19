@@ -40,12 +40,18 @@ const edgeTypes = {
   arrow: DependencyEdge,
 };
 
+const UNBOUNDED_EXTENT: [[number, number], [number, number]] = [
+  [Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY],
+  [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY],
+];
+
 interface NodeCanvasProps {
   nodes: ReactFlowNode[];
   edges: ReactFlowEdge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: (connection: Connection) => void;
+  onReconnect: (oldEdge: ReactFlowEdge, connection: Connection) => void;
   onNodeSelect: (node: ReactFlowNode | null) => void;
   onEdgeDoubleClick?: (event: React.MouseEvent, edge: ReactFlowEdge) => void;
   onPaneContextMenu?: (event: MouseEvent | React.MouseEvent) => void;
@@ -62,6 +68,7 @@ export default function NodeCanvas({
   onNodesChange,
   onEdgesChange,
   onConnect,
+  onReconnect,
   onNodeSelect,
   onEdgeDoubleClick,
   onPaneContextMenu,
@@ -98,6 +105,7 @@ export default function NodeCanvas({
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect as OnConnect}
+      onReconnect={onReconnect}
       onSelectionChange={handleSelectionChange}
       onEdgeDoubleClick={onEdgeDoubleClick}
       onPaneContextMenu={onPaneContextMenu}
@@ -106,10 +114,14 @@ export default function NodeCanvas({
       onEdgeClick={onEdgeClick}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
+      edgesReconnectable
       defaultEdgeOptions={defaultEdgeOptions}
       defaultViewport={viewport}
       onMoveEnd={(_event, vp) => onViewportChange(vp)}
       fitView={!viewport.zoom}
+      minZoom={0.01}
+      translateExtent={UNBOUNDED_EXTENT}
+      nodeExtent={UNBOUNDED_EXTENT}
       snapToGrid
       snapGrid={[20, 20]}
       deleteKeyCode="Delete"

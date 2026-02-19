@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { MarkerType } from "@xyflow/react";
+import { MarkerType, reconnectEdge } from "@xyflow/react";
 
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import {
@@ -12,7 +12,7 @@ import {
 } from "../utils/nodeFactory";
 
 import type { ConnectionDecision } from "../types/connection";
-import type { Connection } from "@xyflow/react";
+import type { Connection, Edge as ReactFlowEdge } from "@xyflow/react";
 
 export function useNodeOperations() {
   const { state, dispatch } = useNodeEditorContext();
@@ -159,6 +159,41 @@ export function useNodeOperations() {
     setPendingConnection(null);
   }, []);
 
+  const onReconnect = useCallback(
+    (oldEdge: ReactFlowEdge, newConnection: Connection) => {
+      if (!newConnection.source || !newConnection.target) {
+        return false;
+      }
+
+      const nextSourceHandle = newConnection.sourceHandle ?? null;
+      const nextTargetHandle = newConnection.targetHandle ?? null;
+      const isConnectionUnchanged =
+        oldEdge.source === newConnection.source &&
+        oldEdge.target === newConnection.target &&
+        (oldEdge.sourceHandle ?? null) === nextSourceHandle &&
+        (oldEdge.targetHandle ?? null) === nextTargetHandle;
+
+      if (isConnectionUnchanged) {
+        return false;
+      }
+
+      const updatedEdges = reconnectEdge(
+        oldEdge,
+        {
+          ...newConnection,
+          sourceHandle: nextSourceHandle,
+          targetHandle: nextTargetHandle,
+        },
+        state.edges,
+        { shouldReplaceId: false },
+      );
+
+      dispatch({ type: "SET_EDGES", edges: updatedEdges });
+      return true;
+    },
+    [state.edges, dispatch],
+  );
+
   const updateNodeData = useCallback(
     (nodeId: string, data: Record<string, unknown>) => {
       dispatch({ type: "UPDATE_NODE_DATA", nodeId, data });
@@ -173,6 +208,7 @@ export function useNodeOperations() {
     addNode,
     deleteSelected,
     onConnect,
+    onReconnect,
     updateNodeData,
     hasSelection,
     pendingConnection,

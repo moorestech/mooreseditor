@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import "@xyflow/react/dist/style.css";
 
@@ -22,6 +22,7 @@ import {
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
 
 import type { NodeEditorViewProps } from "./types/props";
+import type { Connection, Edge as ReactFlowEdge } from "@xyflow/react";
 
 export default function NodeEditorApp(props: NodeEditorViewProps) {
   const { state } = useNodeEditorContext();
@@ -48,6 +49,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     addNode,
     deleteSelected,
     onConnect,
+    onReconnect,
     updateNodeData,
     hasSelection,
     pendingConnection,
@@ -115,6 +117,16 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
 
+  const handleEdgeReconnect = useCallback(
+    (oldEdge: ReactFlowEdge, newConnection: Connection) => {
+      const isReconnected = onReconnect(oldEdge, newConnection);
+      if (isReconnected) {
+        handleMarkDirty();
+      }
+    },
+    [onReconnect, handleMarkDirty],
+  );
+
   return (
     <EdgeEditContext.Provider value={handleRequestEditEdge}>
       <div
@@ -139,6 +151,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onReconnect={handleEdgeReconnect}
             onNodeSelect={handleNodeSelect}
             onEdgeDoubleClick={handleEdgeDoubleClick}
             onPaneContextMenu={handlePaneContextMenu}

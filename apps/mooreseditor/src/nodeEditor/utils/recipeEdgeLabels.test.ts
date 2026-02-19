@@ -297,7 +297,7 @@ describe("buildSingleRecipeSummary", () => {
     return buildForeignNameResolver(makeAllColumns(), makeAllSchemaMetas());
   }
 
-  it("produces 'output <= input1 + input2' for craftRecipe", () => {
+  it("produces vertical format for craftRecipe", () => {
     const ref: RecipeReference = {
       edgeType: "craftRecipe",
       masterGuid: RECIPE_GUID_1,
@@ -309,11 +309,10 @@ describe("buildSingleRecipeSummary", () => {
       makeResolver(),
     );
 
-    // outputItem resolves to Iron Ingot, inputMaterials resolves to Iron Ore x2 + Coal x3
-    expect(result).toBe("Iron Ingot <= Iron Ore x2 + Coal x3");
+    expect(result).toBe("Iron Ore 2\nCoal 3\n↓\nIron Ingot 1");
   });
 
-  it("produces output name for machineRecipe", () => {
+  it("produces vertical format for machineRecipe", () => {
     const ref: RecipeReference = {
       edgeType: "machineRecipe",
       masterGuid: RECIPE_GUID_2,
@@ -325,8 +324,7 @@ describe("buildSingleRecipeSummary", () => {
       makeResolver(),
     );
 
-    // resultItem resolves to Iron Ingot with resultCount 5
-    expect(result).toBe("Iron Ingot x5");
+    expect(result).toBe("↓\nIron Ingot 5");
   });
 
   it("falls back to 'Craft:shortGuid' when record not found", () => {
@@ -408,7 +406,7 @@ describe("buildSingleRecipeSummary", () => {
     expect(result).toBe("recipe-1");
   });
 
-  it("omits count suffix when count is 1", () => {
+  it("shows count value when count is 1", () => {
     const machineIndex = new Map<string, Record<string, unknown>>();
     machineIndex.set(RECIPE_GUID_2, {
       recipeGuid: RECIPE_GUID_2,
@@ -430,7 +428,7 @@ describe("buildSingleRecipeSummary", () => {
       makeResolver(),
     );
 
-    expect(result).toBe("Iron Ingot");
+    expect(result).toBe("↓\nIron Ingot 1");
   });
 });
 
@@ -447,8 +445,8 @@ describe("buildRecipeEdgeLabels", () => {
     );
 
     expect(labels).toHaveLength(2);
-    expect(labels[0]).toBe("Iron Ingot <= Iron Ore x2 + Coal x3");
-    expect(labels[1]).toBe("Iron Ingot x5");
+    expect(labels[0]).toBe("Iron Ore 2\nCoal 3\n↓\nIron Ingot 1");
+    expect(labels[1]).toBe("↓\nIron Ingot 5");
   });
 
   it("returns empty array for empty refs", () => {

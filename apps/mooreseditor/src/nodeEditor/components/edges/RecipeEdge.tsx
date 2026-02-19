@@ -51,11 +51,7 @@ export default function RecipeEdge({
     if (edgeData.edgeType === "machineRecipe") return "Machine";
     return "Recipe";
   })();
-  const displayLines =
-    recipeLabels.length > 0 ? recipeLabels.slice(0, 3) : [fallbackLabel];
-  if (recipeLabels.length > 3) {
-    displayLines.push(`+${recipeLabels.length - 3} more`);
-  }
+  const displayBlocks = recipeLabels.length > 0 ? recipeLabels : [fallbackLabel];
 
   const handleDoubleClick = () => {
     requestEditEdge?.(id);
@@ -86,22 +82,33 @@ export default function RecipeEdge({
             cursor: "pointer",
             display: "flex",
             flexDirection: "column",
-            gap: 1,
+            gap: 3,
           }}
           className="nodrag nopan"
-          title={displayLines.join("\n")}
+          title={displayBlocks.join("\n---\n")}
           onDoubleClick={handleDoubleClick}
         >
-          {displayLines.map((line, i) => (
-            <div
-              key={i}
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {line}
+          {displayBlocks.map((block, i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {i > 0 ? (
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "#666",
+                    lineHeight: 1.1,
+                  }}
+                >
+                  ---
+                </div>
+              ) : null}
+              <div
+                style={{
+                  whiteSpace: "pre-line",
+                  lineHeight: 1.3,
+                }}
+              >
+                {block}
+              </div>
             </div>
           ))}
         </div>

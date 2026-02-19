@@ -76,7 +76,7 @@ export function buildForeignNameResolver(
 }
 
 function toCountSuffix(value: unknown): string {
-  return typeof value === "number" && value !== 1 ? ` x${value}` : "";
+  return typeof value === "number" ? ` ${value}` : "";
 }
 
 function findCountField(row: Record<string, unknown>): unknown {
@@ -184,32 +184,29 @@ export function buildSingleRecipeSummary(
     if (OUTPUT_KEY_RE.test(property.key)) {
       outputs.push(...entries);
     } else if (INPUT_KEY_RE.test(property.key)) {
-      inputs.push(entries.join(" + "));
+      inputs.push(...entries);
     }
   }
 
-  const inputStr = inputs.length > 0 ? inputs.join(" + ") : null;
-  const outputStr = outputs.length > 0 ? outputs.join(" + ") : null;
-
-  let recipe: string;
-  if (inputStr && outputStr) {
-    recipe = `${inputStr}→${outputStr}`;
-  } else if (outputStr) {
-    recipe = `→${outputStr}`;
-  } else if (inputStr) {
-    recipe = `${inputStr}→`;
-  } else {
+  if (inputs.length === 0 && outputs.length === 0) {
     const name = meta.nameField ? record[meta.nameField] : undefined;
     if (typeof name === "string" && name.length > 0) {
       return name;
     }
+    if (blockLabel) {
+      return blockLabel;
+    }
     return shortGuid(recipeRef.masterGuid);
   }
 
+  const lines: string[] = [];
   if (blockLabel) {
-    return `${blockLabel}: ${recipe}`;
+    lines.push(blockLabel);
   }
-  return recipe;
+  lines.push(...inputs);
+  lines.push("↓");
+  lines.push(...outputs);
+  return lines.join("\n");
 }
 
 export function buildRecipeEdgeLabels(

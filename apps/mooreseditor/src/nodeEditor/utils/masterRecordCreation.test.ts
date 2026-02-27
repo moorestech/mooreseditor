@@ -1,4 +1,8 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+/**
+ * @deprecated Tests moved to domain/nodeGraph/__tests__/masterRecordCreation.test.ts
+ * This file is kept for backwards compatibility but re-tests through the re-export shim.
+ */
+import { describe, expect, it } from "vitest";
 
 import {
   canCreateMasterRecordForNode,
@@ -8,6 +12,9 @@ import {
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "../../hooks/useJson";
 import type { ObjectSchema } from "../../libs/schema/types";
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const itemElementSchema: ObjectSchema = {
   type: "object",
@@ -29,87 +36,23 @@ function buildSchemaMetaMap(): Map<string, SchemaMeta> {
         elementSchema: itemElementSchema,
       },
     ],
-    [
-      "research",
-      {
-        schemaId: "research",
-        guidField: "guid",
-        nameField: "name",
-        dataArrayPath: "data",
-        elementSchema: itemElementSchema,
-      },
-    ],
   ]);
 }
 
-describe("masterRecordCreation", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it("creates a new item record and returns node metadata", () => {
+describe("masterRecordCreation (via re-export)", () => {
+  it("creates a new record", () => {
     const schemaMetas = buildSchemaMetaMap();
-    const columns: Column[] = [
-      {
-        title: "items",
-        data: {
-          data: [],
-        },
-      },
-    ];
-
-    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
-      "11111111-1111-4111-8111-111111111111",
-    );
+    const columns: Column[] = [{ title: "items", data: { data: [] } }];
 
     const result = createMasterRecordForNode("item", columns, schemaMetas);
 
     expect(result).not.toBeNull();
-    expect(result?.masterGuid).toBe("11111111-1111-4111-8111-111111111111");
+    expect(result?.masterGuid).toMatch(UUID_RE);
     expect(result?.displayName).toBe("New Item");
-    expect(result?.updatedColumns[0].data.data).toEqual([
-      { guid: "11111111-1111-4111-8111-111111111111", name: "New Item" },
-    ]);
   });
 
-  it("generates unique default names for research records", () => {
+  it("returns null when column missing", () => {
     const schemaMetas = buildSchemaMetaMap();
-    const columns: Column[] = [
-      {
-        title: "research",
-        data: {
-          data: [
-            { guid: "r-1", name: "New Research" },
-            { guid: "r-2", name: "New Research 2" },
-          ],
-        },
-      },
-    ];
-
-    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
-      "22222222-2222-4222-8222-222222222222",
-    );
-
-    const result = createMasterRecordForNode("research", columns, schemaMetas);
-
-    expect(result).not.toBeNull();
-    expect(result?.displayName).toBe("New Research 3");
-    expect(result?.updatedColumns[0].data.data).toEqual([
-      { guid: "r-1", name: "New Research" },
-      { guid: "r-2", name: "New Research 2" },
-      { guid: "22222222-2222-4222-8222-222222222222", name: "New Research 3" },
-    ]);
-  });
-
-  it("returns null when the target column does not exist", () => {
-    const schemaMetas = buildSchemaMetaMap();
-    const columns: Column[] = [];
-
-    const result = createMasterRecordForNode("item", columns, schemaMetas);
-
-    expect(result).toBeNull();
-    expect(canCreateMasterRecordForNode("item", columns, schemaMetas)).toBe(
-      false,
-    );
+    expect(canCreateMasterRecordForNode("item", [], schemaMetas)).toBe(false);
   });
 });

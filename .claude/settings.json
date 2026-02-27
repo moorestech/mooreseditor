@@ -18,6 +18,7 @@
   },
   "enabledPlugins": {
     "playwright-skill@playwright-skill": true,
-    "reviw-plugin@reviw-plugins": true
+    "reviw-plugin@reviw-plugins": true,
+    "superpowers@superpowers-marketplace": true
   }
 }

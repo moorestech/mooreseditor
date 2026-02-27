@@ -1,11 +1,12 @@
-export { RECIPE_SCHEMA_MAP } from "./recipeEdgeConstants";
+/** @deprecated Import from "../../domain/nodeGraph/recipeEdge" instead. */
+export { RECIPE_SCHEMA_MAP } from "../../domain/nodeGraph/recipeEdge";
 export {
   extractRecipeRefsFromGraphEdge,
   normalizeRecipeRefsFromEdgeData,
-} from "./recipeEdgeRefs";
+} from "../../domain/nodeGraph/recipeEdge";
 export {
   buildRecipeEdgeLabels,
   buildForeignNameResolver,
   buildSchemaRecordIndex,
   buildSingleRecipeSummary,
-} from "./recipeEdgeLabels";
+} from "../../domain/nodeGraph/recipeEdge";

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import {
   AppShell,
@@ -8,16 +8,14 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
-import EditorView from "./components/EditorView";
-import { useJson } from "./hooks/useJson";
-import { useProject } from "./hooks/useProject";
-import { useSaveShortcut } from "./hooks/useSaveShortcut";
-import { useSchema } from "./hooks/useSchema";
-import { saveProjectData } from "./utils/saveProjectData";
+import EditorView from "./features/editor/EditorView";
+import { useEditorKeyboard } from "./features/editor/hooks/useEditorKeyboard";
+import { useAppStore } from "./stores/appStore";
+import { useDataStore } from "./stores/dataStore";
+import { useProjectStore } from "./stores/projectStore";
+import { useSchemaStore } from "./stores/schemaStore";
 
-import type { Column } from "./hooks/useJson";
 import type { NodeEditorHandle } from "./nodeEditor";
-import type { NodeGraphFile } from "./nodeEditor/types/nodeGraph";
 
 const NodeEditorView = React.lazy(() => import("./nodeEditor"));
 
@@ -26,66 +24,37 @@ const theme = createTheme({
 });
 
 function App() {
-  const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
-    useProject();
-  const {
-    jsonData,
-    setJsonData,
-    loadJsonFile,
-    preloadAllData,
-    isPreloading,
-    hasUnsavedChanges,
-    setHasUnsavedChanges,
-    clearUnsavedChanges,
-  } = useJson();
-  const { schemas, loadSchema } = useSchema();
+  const menuToFileMap = useProjectStore((s) => s.menuToFileMap);
+  const projectDir = useProjectStore((s) => s.projectDir);
+  const masterDir = useProjectStore((s) => s.masterDir);
+  const schemaDir = useProjectStore((s) => s.schemaDir);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [mode, setMode] = useState<"editor" | "node">("editor");
-  const [isNodeEditorMounted, setIsNodeEditorMounted] = useState(false);
+  const columns = useDataStore((s) => s.columns);
+  const isPreloading = useDataStore((s) => s.isPreloading);
+  const schemas = useSchemaStore((s) => s.schemas);
+
+  const mode = useAppStore((s) => s.mode);
+  const setMode = useAppStore((s) => s.setMode);
+  const isNodeEditorMounted = useAppStore((s) => s.isNodeEditorMounted);
+
   const nodeEditorRef = useRef<NodeEditorHandle>(null);
 
+  // Preload all data when project config changes
   useEffect(() => {
-    preloadAllData(loadSchema);
+    const { loadSchema } = useSchemaStore.getState();
+    void useDataStore
+      .getState()
+      .preloadAllData(
+        menuToFileMap,
+        projectDir || "",
+        masterDir,
+        schemaDir,
+        loadSchema,
+      );
   }, [menuToFileMap, projectDir, masterDir, schemaDir]);
 
-  useEffect(() => {
-    if (mode === "node" && !isNodeEditorMounted) {
-      setIsNodeEditorMounted(true);
-    }
-  }, [mode, isNodeEditorMounted]);
-
-  const saveAll = useCallback(
-    async (columns: Column[], nodeGraphData?: NodeGraphFile | null) => {
-      await saveProjectData({
-        columns,
-        nodeGraphData,
-        projectDir,
-        masterDir,
-        onSuccess: () => {
-          setIsEditing(false);
-          clearUnsavedChanges();
-        },
-      });
-    },
-    [projectDir, masterDir, clearUnsavedChanges],
-  );
-
-  useSaveShortcut({
-    mode,
-    canSaveEditor: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
-    onSaveEditor: () => {
-      void saveAll(jsonData);
-    },
-    onSaveNode: () => {
-      nodeEditorRef.current?.save();
-    },
-  });
-
-  const markDirty = () => {
-    setIsEditing(true);
-    setHasUnsavedChanges(true);
-  };
+  // Ctrl+S / Cmd+S keyboard shortcut
+  useEditorKeyboard(nodeEditorRef);
 
   return (
     <MantineProvider theme={theme}>
@@ -123,19 +92,7 @@ function App() {
         </AppShell.Header>
         <AppShell.Main>
           <div style={{ display: mode === "editor" ? "block" : "none" }}>
-            <EditorView
-              menuToFileMap={menuToFileMap}
-              jsonData={jsonData}
-              setJsonData={setJsonData}
-              schemas={schemas}
-              loadSchema={loadSchema}
-              loadJsonFile={loadJsonFile}
-              openProjectDir={openProjectDir}
-              isPreloading={isPreloading}
-              isEditing={isEditing}
-              hasUnsavedChanges={hasUnsavedChanges}
-              onMarkDirty={markDirty}
-            />
+            <EditorView />
           </div>
           {isNodeEditorMounted && (
             <div style={{ display: mode === "node" ? "block" : "none" }}>
@@ -146,14 +103,31 @@ function App() {
               >
                 <NodeEditorView
                   ref={nodeEditorRef}
-                  jsonData={jsonData}
-                  setJsonData={setJsonData}
+                  jsonData={columns}
+                  setJsonData={(action) => {
+                    if (typeof action === "function") {
+                      const prev = useDataStore.getState().columns;
+                      useDataStore.getState().setColumns(action(prev));
+                    } else {
+                      useDataStore.getState().setColumns(action);
+                    }
+                  }}
                   schemas={schemas}
-                  loadSchema={loadSchema}
+                  loadSchema={(name) =>
+                    useSchemaStore.getState().loadSchema(name, schemaDir || "")
+                  }
                   projectDir={projectDir}
                   masterDir={masterDir}
-                  onMarkDirty={() => setHasUnsavedChanges(true)}
-                  onRequestSave={saveAll}
+                  onMarkDirty={() => useDataStore.getState().markDirty()}
+                  onRequestSave={async (cols, nodeGraphData) => {
+                    await useAppStore.getState().saveAll({
+                      columns: cols,
+                      nodeGraphData,
+                      projectDir,
+                      masterDir,
+                    });
+                    useDataStore.getState().clearUnsavedChanges();
+                  }}
                 />
               </React.Suspense>
             </div>

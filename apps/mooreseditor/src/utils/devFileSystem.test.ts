@@ -151,18 +151,12 @@ properties:
       const schemaList = getSampleSchemaList();
 
       expect(schemaList).toEqual([
-        "blocks",
-        "challenges",
-        "characters",
-        "craftRecipes",
-        "fluids",
-        "items",
-        "machineRecipes",
         "mapObjects",
-        "modMeta",
-        "research",
+        "blocks",
+        "items",
+        "objectSample",
       ]);
-      expect(schemaList).toHaveLength(10);
+      expect(schemaList).toHaveLength(4);
     });
 
     it("should return an array", () => {
@@ -177,14 +171,13 @@ properties:
 
       expect(refSchemaList).toEqual([
         "blockConnectInfo",
-        "gameAction",
-        "fluidInventoryConnects",
-        "gearConnects",
         "inventoryConnects",
-        "mapObjectMineSettings",
+        "gear",
         "mineSettings",
+        "mapObjectMineSettings",
+        "fluidInventoryConnects",
       ]);
-      expect(refSchemaList).toHaveLength(7);
+      expect(refSchemaList).toHaveLength(6);
     });
 
     it("should return an array", () => {
@@ -198,7 +191,7 @@ properties:
       const schemaMap = getAllSampleSchemaMap();
 
       expect(schemaMap).toBeInstanceOf(Map);
-      expect(schemaMap.size).toBe(17); // 10 main + 7 ref schemas
+      expect(schemaMap.size).toBe(10); // 4 main + 6 ref schemas
     });
 
     it("should contain all main schemas", () => {
@@ -207,7 +200,7 @@ properties:
       expect(schemaMap.get("mapObjects")).toBe("mapObjects");
       expect(schemaMap.get("blocks")).toBe("blocks");
       expect(schemaMap.get("items")).toBe("items");
-      expect(schemaMap.get("research")).toBe("research");
+      expect(schemaMap.get("objectSample")).toBe("objectSample");
     });
 
     it("should contain all ref schemas with correct paths", () => {
@@ -215,7 +208,7 @@ properties:
 
       expect(schemaMap.get("ref/blockConnectInfo")).toBe("blockConnectInfo");
       expect(schemaMap.get("ref/inventoryConnects")).toBe("inventoryConnects");
-      expect(schemaMap.get("ref/gearConnects")).toBe("gearConnects");
+      expect(schemaMap.get("ref/gear")).toBe("gear");
       expect(schemaMap.get("ref/mineSettings")).toBe("mineSettings");
       expect(schemaMap.get("ref/mapObjectMineSettings")).toBe(
         "mapObjectMineSettings",

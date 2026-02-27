@@ -1,13 +1,23 @@
-/**
- * @deprecated Import from "../services/persistence" instead.
- *
- * This shim wraps the new SaveParams-based API to match the old callback-based interface.
- */
-
-import { saveProjectData as save } from "../services/persistence";
+import { invoke } from "@tauri-apps/api/core";
+import * as path from "@tauri-apps/api/path";
+import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
 
 import type { Column } from "../hooks/useJson";
 import type { NodeGraphFile } from "../nodeEditor/types/nodeGraph";
+
+async function writeViaDevServer(
+  filePath: string,
+  content: string,
+): Promise<void> {
+  const res = await fetch("/api/dev-fs/write", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: filePath, content }),
+  });
+  if (!res.ok) {
+    throw new Error(`Dev FS write failed: ${res.status}`);
+  }
+}
 
 interface SaveProjectDataParams {
   columns: Column[];
@@ -24,11 +34,101 @@ export async function saveProjectData({
   masterDir,
   onSuccess,
 }: SaveProjectDataParams): Promise<void> {
-  const result = await save({ columns, nodeGraphData, projectDir, masterDir });
-
-  if (result.success) {
-    onSuccess();
-  } else {
-    console.error("保存中にエラー:", result.errors);
+  if (!columns.length || !projectDir) {
+    console.error("保存に必要な情報が不足しています");
+    return;
   }
+
+  if (projectDir === "SampleProject") {
+    console.log("サンプルプロジェクトのため、保存はスキップされました");
+    columns.forEach((column) => {
+      console.log(
+        `${column.title}:`,
+        JSON.stringify({ data: column.data }, null, 2),
+      );
+    });
+    if (nodeGraphData) {
+      console.log("nodeGraph:", JSON.stringify(nodeGraphData, null, 2));
+    }
+
+    // Dev mode: also write files via dev server for E2E verification
+    try {
+      for (const column of columns) {
+        await writeViaDevServer(
+          `master/${column.title}.json`,
+          JSON.stringify(column.data, null, 2),
+        );
+      }
+      if (nodeGraphData) {
+        await writeViaDevServer(
+          ".mooreseditor/nodeGraph.v1.json",
+          JSON.stringify(nodeGraphData, null, 2),
+        );
+        console.log("nodeGraph saved via dev server");
+      }
+    } catch {
+      // Dev server API not available — ignore
+    }
+
+    onSuccess();
+    return;
+  }
+
+  const errors: string[] = [];
+
+  for (const column of columns) {
+    try {
+      if (!masterDir) {
+        errors.push(`${column.title}.json: Master directory is not set.`);
+        continue;
+      }
+
+      const jsonFilePath = await path.join(masterDir, `${column.title}.json`);
+      await writeTextFile(jsonFilePath, JSON.stringify(column.data, null, 2));
+      console.log(`データが保存されました: ${jsonFilePath}`);
+    } catch (error) {
+      errors.push(`${column.title}.json: ${error}`);
+    }
+  }
+
+  if (nodeGraphData) {
+    try {
+      const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
+
+      // Dotfiles (directories starting with '.') are not matched by the parent
+      // directory's glob pattern in Tauri FS scope. Explicitly add .mooreseditor
+      // to the allowed scope before creating/writing.
+      try {
+        await invoke("add_project_to_scope", {
+          projectPath: mooreseditorDir,
+        });
+      } catch {
+        // Scope addition failed — likely in dev/browser environment
+      }
+
+      const isDirExists = await exists(mooreseditorDir);
+      if (!isDirExists) {
+        await mkdir(mooreseditorDir, { recursive: true });
+      }
+
+      const nodeGraphPath = await path.join(
+        mooreseditorDir,
+        "nodeGraph.v1.json",
+      );
+      await writeTextFile(
+        nodeGraphPath,
+        JSON.stringify(nodeGraphData, null, 2),
+      );
+      console.log(`nodeGraphが保存されました: ${nodeGraphPath}`);
+    } catch (error) {
+      errors.push(`nodeGraph: ${error}`);
+    }
+  }
+
+  if (errors.length === 0) {
+    onSuccess();
+    return;
+  }
+
+  console.error("保存中にエラー:", errors);
 }

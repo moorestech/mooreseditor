@@ -124,6 +124,7 @@ export default function NodeCanvas({
       nodeExtent={UNBOUNDED_EXTENT}
       snapToGrid
       snapGrid={[20, 20]}
+      elevateEdgesOnSelect
       deleteKeyCode="Delete"
       style={{ width: "100%", height: "100%" }}
     >

@@ -51,7 +51,8 @@ export default function RecipeEdge({
     if (edgeData.edgeType === "machineRecipe") return "Machine";
     return "Recipe";
   })();
-  const displayBlocks = recipeLabels.length > 0 ? recipeLabels : [fallbackLabel];
+  const displayBlocks =
+    recipeLabels.length > 0 ? recipeLabels : [fallbackLabel];
 
   const handleDoubleClick = () => {
     requestEditEdge?.(id);
@@ -89,7 +90,10 @@ export default function RecipeEdge({
           onDoubleClick={handleDoubleClick}
         >
           {displayBlocks.map((block, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <div
+              key={i}
+              style={{ display: "flex", flexDirection: "column", gap: 2 }}
+            >
               {i > 0 ? (
                 <div
                   style={{
@@ -105,6 +109,7 @@ export default function RecipeEdge({
                 style={{
                   whiteSpace: "pre-line",
                   lineHeight: 1.3,
+                  textAlign: "center",
                 }}
               >
                 {block}

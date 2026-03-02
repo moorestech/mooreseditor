@@ -134,6 +134,7 @@ export function buildSingleRecipeSummary(
   recipeRecords: Map<string, Map<string, Record<string, unknown>>>,
   schemaMetas: Map<string, SchemaMeta>,
   resolveForeignName: (schemaId: string, guid: string) => string | null,
+  separator: string = "↓",
 ): string {
   const schemaId = RECIPE_SCHEMA_MAP[recipeRef.edgeType];
   const meta = schemaMetas.get(schemaId);
@@ -204,7 +205,7 @@ export function buildSingleRecipeSummary(
     lines.push(blockLabel);
   }
   lines.push(...inputs);
-  lines.push("↓");
+  lines.push(separator);
   lines.push(...outputs);
   return lines.join("\n");
 }

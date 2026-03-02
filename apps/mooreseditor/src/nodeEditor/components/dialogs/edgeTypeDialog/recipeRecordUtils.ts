@@ -155,6 +155,7 @@ export function buildRecipeOptions(
           recipeRecords,
           schemaMetas,
           resolveForeignName,
+          "→",
         );
         return { value: guid, label };
       })
@@ -205,6 +206,7 @@ export function buildEditableRecipes(
         recipeRecords,
         schemaMetas,
         resolveForeignName,
+        "→",
       );
 
       return {

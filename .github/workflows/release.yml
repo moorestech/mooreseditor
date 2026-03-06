@@ -77,7 +77,16 @@ jobs:
       # 3) タグ文字列から "v" を除いたバージョン番号を取得 -------------------
       - id: ver
         shell: bash
-        run: echo "ver=${GITHUB_REF_NAME#v}" >>"$GITHUB_OUTPUT"
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == v* ]]; then
+            echo "ver=${GITHUB_REF_NAME#v}" >>"$GITHUB_OUTPUT"
+            echo "tag=${GITHUB_REF_NAME}" >>"$GITHUB_OUTPUT"
+          else
+            # workflow_dispatch on a branch: read version from Cargo.toml
+            VER=$(grep -m1 '^version' apps/mooreseditor/src-tauri/Cargo.toml | sed 's/.*"\(.*\)".*/\1/')
+            echo "ver=${VER}" >>"$GITHUB_OUTPUT"
+            echo "tag=v${VER}-dev" >>"$GITHUB_OUTPUT"
+          fi
 
       # 4) リネーム + リリース作成/アップロード ------------------------------
       - name: Rename & upload asset
@@ -87,8 +96,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          TAG="${GITHUB_REF_NAME}"                 # 例: v1.2.3
-          VER="${TAG#v}"                           # → 1.2.3
+          VER="${{ steps.ver.outputs.ver }}"          # 例: 1.2.3
+          TAG="${{ steps.ver.outputs.tag }}"          # 例: v1.2.3 or v0.1.0-dev
 
           OS="${{ matrix.os }}"
           ARCH="${{ matrix.arch }}"

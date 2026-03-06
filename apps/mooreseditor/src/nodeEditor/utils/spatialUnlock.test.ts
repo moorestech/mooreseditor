@@ -459,6 +459,36 @@ describe("calculateUnlockedItems", () => {
     });
   });
 
+  describe("bug: items near 木材の組み立て stolen by 燃料式風車の作成", () => {
+    it("assigns items to nearest research by distance, not max R.x", () => {
+      // 木材の組み立て at (6400, 340) and 燃料式風車の作成 at (6480, -160)
+      // Items at (6580-6900, 560-700) should belong to 木材の組み立て (nearby)
+      // not 燃料式風車の作成 (slightly larger x but 800px above)
+      const research = [
+        makeResearch("r-wood", 6400, 340, "木材の組み立て"),
+        makeResearch("r-windmill", 6480, -160, "燃料式風車の作成"),
+      ];
+      const items = [
+        makeItem("i-reinforced", 6580, 640, "補強棒材"),
+        makeItem("i-assembler", 6900, 560, "木材組立機"),
+        makeItem("i-frame", 6900, 700, "木のフレーム"),
+      ];
+      const result = calculateUnlockedItems(
+        research,
+        items,
+        emptyColumns,
+        emptyMetas,
+      );
+      // All three should be assigned to 木材の組み立て, NOT 燃料式風車の作成
+      const woodUnlocks = result.get("木材の組み立て")!;
+      expect(woodUnlocks).toContain("補強棒材");
+      expect(woodUnlocks).toContain("木材組立機");
+      expect(woodUnlocks).toContain("木のフレーム");
+      expect(woodUnlocks).toHaveLength(3);
+      expect(result.get("燃料式風車の作成")).toEqual([]);
+    });
+  });
+
   describe("full nodeGraph.v1.json integration: all real positions", () => {
     // All research nodes from nodeGraph.v1.json with exact positions
     const allResearch = [

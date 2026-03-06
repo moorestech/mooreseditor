@@ -36,9 +36,9 @@ function getItemGuidForNode(
  * Uses a two-pass bounding-box algorithm:
  *
  * Pass 1 (Right zone / Bounding box):
- *   For each item, find the research with the largest R.x where
- *   R.x < item.x AND R.y <= item.y. This creates implicit "columns"
- *   bounded by consecutive research nodes on the x-axis.
+ *   For each item, find the nearest research (by Manhattan distance)
+ *   where R.x < item.x AND R.y <= item.y. This handles cases where
+ *   research nodes at similar x but different y levels compete.
  *
  * Pass 2 (Below zone):
  *   For items not assigned in Pass 1, find the nearest research node
@@ -64,18 +64,18 @@ export function calculateUnlockedItems(
   const assignedNodeIds = new Set<string>();
 
   // Pass 1: Bounding-box (right zone) assignment
-  // For each item, find the research with max R.x where R.x < item.x AND R.y <= item.y
+  // For each item, find the nearest research (by Manhattan distance) where R.x < item.x AND R.y <= item.y
   for (const node of itemBlockNodes) {
     let bestResearch: ReactFlowNode | null = null;
+    let bestDist = Infinity;
 
     for (const r of researchNodes) {
       if (r.position.x < node.position.x && r.position.y <= node.position.y) {
-        if (
-          !bestResearch ||
-          r.position.x > bestResearch.position.x ||
-          (r.position.x === bestResearch.position.x &&
-            r.position.y > bestResearch.position.y)
-        ) {
+        const dist =
+          Math.abs(node.position.x - r.position.x) +
+          Math.abs(node.position.y - r.position.y);
+        if (dist < bestDist) {
+          bestDist = dist;
           bestResearch = r;
         }
       }

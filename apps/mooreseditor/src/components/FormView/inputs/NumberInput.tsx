@@ -46,7 +46,6 @@ export const NumberInput: React.FC<FormInputProps<number>> = React.memo(
         onChange={handleChange}
         min={numSchema.min}
         max={numSchema.max}
-        decimalScale={2}
         thousandSeparator=","
       />
     );

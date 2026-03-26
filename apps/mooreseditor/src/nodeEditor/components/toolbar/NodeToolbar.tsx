@@ -1,5 +1,10 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
-import { IconNote, IconPlaceholder, IconTrash } from "@tabler/icons-react";
+import {
+  IconNote,
+  IconPhoto,
+  IconPlaceholder,
+  IconTrash,
+} from "@tabler/icons-react";
 
 import AddNodeMenu from "./AddNodeMenu";
 
@@ -24,6 +29,7 @@ interface NodeToolbarProps {
     displayName?: string,
   ) => void;
   onDeleteSelected: () => void;
+  onExportImage: () => void;
   hasSelection: boolean;
   existingNodeGuids: Set<string>;
 }
@@ -33,6 +39,7 @@ export default function NodeToolbar({
   schemaMetas,
   onAddNode,
   onDeleteSelected,
+  onExportImage,
   hasSelection,
   existingNodeGuids,
 }: NodeToolbarProps) {
@@ -99,6 +106,17 @@ export default function NodeToolbar({
           onClick={onDeleteSelected}
         >
           <IconTrash size={18} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Export as Image">
+        <ActionIcon
+          variant="light"
+          color="green"
+          size="lg"
+          aria-label="Export as Image"
+          onClick={onExportImage}
+        >
+          <IconPhoto size={18} />
         </ActionIcon>
       </Tooltip>
     </Group>

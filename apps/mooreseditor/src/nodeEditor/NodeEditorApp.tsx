@@ -13,6 +13,7 @@ import { useContextMenu } from "./hooks/useContextMenu";
 import { useDeleteHandler } from "./hooks/useDeleteHandler";
 import { useEdgeEditing } from "./hooks/useEdgeEditing";
 import { useGraphChangeHandlers } from "./hooks/useGraphChangeHandlers";
+import { useGraphImageExport } from "./hooks/useGraphImageExport";
 import { useNodeGraph } from "./hooks/useNodeGraph";
 import { useNodeOperations } from "./hooks/useNodeOperations";
 import {
@@ -43,6 +44,9 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     () => resolveEdgeRecipeLabels(state.edges, props.jsonData, schemaMetas),
     [state.edges, props.jsonData, schemaMetas],
   );
+
+  // Image export
+  const { exportAsImage } = useGraphImageExport();
 
   // Core operations
   const {
@@ -142,6 +146,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             schemaMetas={schemaMetas}
             onAddNode={addNode}
             onDeleteSelected={handleDeleteSelected}
+            onExportImage={exportAsImage}
             hasSelection={hasSelection}
             existingNodeGuids={existingNodeGuids}
           />

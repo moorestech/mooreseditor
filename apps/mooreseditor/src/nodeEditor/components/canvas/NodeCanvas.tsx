@@ -120,6 +120,7 @@ export default function NodeCanvas({
       onMoveEnd={(_event, vp) => onViewportChange(vp)}
       fitView={!viewport.zoom}
       minZoom={0.01}
+      maxZoom={5}
       translateExtent={UNBOUNDED_EXTENT}
       nodeExtent={UNBOUNDED_EXTENT}
       snapToGrid

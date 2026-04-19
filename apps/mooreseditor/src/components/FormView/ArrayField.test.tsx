@@ -7,6 +7,7 @@ import ArrayField from "./ArrayField";
 import type { Schema, ArraySchema } from "@/libs/schema/types";
 
 import { render, screen, fireEvent } from "@/test/utils/test-utils";
+import * as generateUuidModule from "@/utils/generateUuid";
 
 // Mock calculateAutoIncrement
 vi.mock("@/utils/autoIncrement", () => ({
@@ -339,12 +340,9 @@ describe("ArrayField", () => {
       { id: 2, uuid: "uuid-2", name: "Second" },
     ];
 
-    // Mock crypto.randomUUID
-    const originalRandomUUID = global.crypto?.randomUUID;
-    Object.defineProperty(global.crypto, "randomUUID", {
-      value: vi.fn(() => "new-uuid-123"),
-      configurable: true,
-    });
+    vi.spyOn(generateUuidModule, "generateUuid").mockReturnValue(
+      "new-uuid-123",
+    );
 
     render(
       <ArrayField
@@ -364,12 +362,6 @@ describe("ArrayField", () => {
     expect(newData[1].uuid).toBe("new-uuid-123"); // UUID is regenerated
     expect(newData[1].id).toBe(3); // ID is auto-incremented
 
-    // Restore original
-    if (originalRandomUUID) {
-      Object.defineProperty(global.crypto, "randomUUID", {
-        value: originalRandomUUID,
-        configurable: true,
-      });
-    }
+    vi.restoreAllMocks();
   });
 });

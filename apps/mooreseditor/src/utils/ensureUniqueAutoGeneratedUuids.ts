@@ -1,3 +1,5 @@
+import { generateUuid } from "./generateUuid";
+
 import type {
   ArraySchema,
   ObjectSchema,
@@ -186,7 +188,7 @@ function ensureUniqueGuidValue(
 
   let newValue = value;
   do {
-    newValue = crypto.randomUUID();
+    newValue = generateUuid();
   } while (guidSet.has(newValue));
 
   guidSet.add(newValue);

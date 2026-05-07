@@ -9,6 +9,7 @@ import {
 import { Notifications } from "@mantine/notifications";
 
 import EditorView from "./components/EditorView";
+import { SearchOverlay } from "./components/SearchOverlay";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSaveShortcut } from "./hooks/useSaveShortcut";
@@ -44,6 +45,7 @@ function App() {
   const [mode, setMode] = useState<"editor" | "node">("editor");
   const [isNodeEditorMounted, setIsNodeEditorMounted] = useState(false);
   const nodeEditorRef = useRef<NodeEditorHandle>(null);
+  const searchTargetRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     preloadAllData(loadSchema);
@@ -121,7 +123,7 @@ function App() {
             />
           </div>
         </AppShell.Header>
-        <AppShell.Main>
+        <AppShell.Main ref={searchTargetRef}>
           <div style={{ display: mode === "editor" ? "block" : "none" }}>
             <EditorView
               menuToFileMap={menuToFileMap}
@@ -158,6 +160,7 @@ function App() {
               </React.Suspense>
             </div>
           )}
+          <SearchOverlay targetRef={searchTargetRef} />
         </AppShell.Main>
       </AppShell>
     </MantineProvider>

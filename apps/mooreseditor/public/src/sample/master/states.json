@@ -1,0 +1,26 @@
+{
+  "titleImage": "title.png",
+  "startStateId": "intro_loop",
+  "endStateId": "ending_loop",
+  "states": [
+    {
+      "id": "intro_loop",
+      "kind": "loop",
+      "video": "intro.mp4",
+      "nextStateId": "scene_a"
+    },
+    {
+      "id": "scene_a",
+      "kind": "oneshot",
+      "video": "scene_a.mp4",
+      "nextStateId": "scene_b"
+    },
+    {
+      "id": "scene_b",
+      "kind": "loop",
+      "video": "scene_b.mp4",
+      "nextStateId": "ending_loop"
+    },
+    { "id": "ending_loop", "kind": "loop", "video": "ending.mp4" }
+  ]
+}

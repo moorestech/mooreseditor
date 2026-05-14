@@ -1,0 +1,41 @@
+id: states
+type: object
+isDefaultOpen: true
+properties:
+- key: titleImage
+  type: string
+- key: startStateId
+  type: string
+  foreignKey:
+    schemaId: states
+    foreignKeyIdPath: /states/[*]/id
+    displayElementPath: /states/[*]/id
+- key: endStateId
+  type: string
+  foreignKey:
+    schemaId: states
+    foreignKeyIdPath: /states/[*]/id
+    displayElementPath: /states/[*]/id
+- key: states
+  type: array
+  openedByDefault: true
+  items:
+    type: object
+    properties:
+    - key: id
+      type: string
+    - key: kind
+      type: enum
+      default: loop
+      options:
+      - loop
+      - oneshot
+    - key: video
+      type: string
+    - key: nextStateId
+      type: string
+      optional: true
+      foreignKey:
+        schemaId: states
+        foreignKeyIdPath: /states/[*]/id
+        displayElementPath: /states/[*]/id

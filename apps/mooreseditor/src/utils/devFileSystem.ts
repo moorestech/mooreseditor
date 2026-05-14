@@ -37,6 +37,7 @@ export function getSampleSchemaList(): string[] {
     "mapObjects",
     "modMeta",
     "research",
+    "states",
   ];
 }
 

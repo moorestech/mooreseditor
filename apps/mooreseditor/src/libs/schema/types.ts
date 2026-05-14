@@ -33,6 +33,7 @@ export interface StringSchema {
   optional?: boolean;
   default?: string;
   style?: StyleOptions;
+  foreignKey?: ForeignKeyConfig;
 }
 
 export interface EnumSchema {

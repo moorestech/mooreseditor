@@ -8,7 +8,12 @@ import {
 } from "../../../hooks/useForeignKeyData";
 
 import type { FormInputProps } from "./types";
-import type { UuidSchema } from "../../../libs/schema/types";
+import type { ForeignKeyConfig } from "../../../libs/schema/types";
+
+type ForeignKeyCapableSchema = {
+  foreignKey?: ForeignKeyConfig;
+  optional?: boolean;
+};
 
 export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
   value,
@@ -16,10 +21,10 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
   schema,
   jsonData,
 }) => {
-  const uuidSchema = schema as UuidSchema;
+  const fkSchema = schema as ForeignKeyCapableSchema;
 
   console.log("ForeignKeySelect rendered:", {
-    foreignKey: uuidSchema.foreignKey,
+    foreignKey: fkSchema.foreignKey,
     jsonData,
     value,
   });
@@ -29,7 +34,7 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
     loading: isLoading,
     error,
     displayValue,
-  } = useForeignKeyData(uuidSchema.foreignKey, jsonData || [], value);
+  } = useForeignKeyData(fkSchema.foreignKey, jsonData || [], value);
 
   console.log("ForeignKeySelect data:", {
     options,
@@ -83,15 +88,15 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
   const selectKey = useMemo(
     () =>
       buildForeignKeySelectKey(
-        uuidSchema.foreignKey,
+        fkSchema.foreignKey,
         value,
         displayValue,
         "foreign-key-select",
       ),
-    [uuidSchema.foreignKey, value, displayValue],
+    [fkSchema.foreignKey, value, displayValue],
   );
 
-  if (!uuidSchema.foreignKey) {
+  if (!fkSchema.foreignKey) {
     return <Text c="red">Foreign key configuration missing</Text>;
   }
 
@@ -115,9 +120,9 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
       data={selectData}
       value={value || ""}
       onChange={(val) => onChange(val || "")}
-      placeholder={`Select ${uuidSchema.foreignKey.schemaId}`}
+      placeholder={`Select ${fkSchema.foreignKey.schemaId}`}
       searchable
-      clearable={uuidSchema.optional}
+      clearable={fkSchema.optional}
       nothingFoundMessage="No options found"
       // Show current display value even if the ID is not in current options
       // This handles cases where the referenced item might have been deleted

@@ -1,6 +1,6 @@
 id: states
 type: object
-isDefaultOpen: true
+openedByDefault: true
 properties:
 - key: titleImage
   type: string

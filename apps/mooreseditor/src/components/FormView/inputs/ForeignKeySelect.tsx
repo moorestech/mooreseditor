@@ -23,25 +23,12 @@ export const ForeignKeySelect: React.FC<FormInputProps<string>> = ({
 }) => {
   const fkSchema = schema as ForeignKeyCapableSchema;
 
-  console.log("ForeignKeySelect rendered:", {
-    foreignKey: fkSchema.foreignKey,
-    jsonData,
-    value,
-  });
-
   const {
     options,
     loading: isLoading,
     error,
     displayValue,
   } = useForeignKeyData(fkSchema.foreignKey, jsonData || [], value);
-
-  console.log("ForeignKeySelect data:", {
-    options,
-    loading: isLoading,
-    error,
-    displayValue,
-  });
 
   // Convert options to Mantine Select format with groups
   const selectData = useMemo(() => {

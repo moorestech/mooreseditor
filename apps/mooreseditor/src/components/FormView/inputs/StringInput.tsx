@@ -63,19 +63,21 @@ const StringTextInput: React.FC<FormInputProps<string>> = React.memo(
   },
 );
 
-export const StringInput: React.FC<FormInputProps<string>> = (props) => {
-  const stringSchema = props.schema as StringSchema;
+export const StringInput: React.FC<FormInputProps<string>> = React.memo(
+  (props) => {
+    const stringSchema = props.schema as StringSchema;
 
-  if (stringSchema.foreignKey) {
-    return (
-      <ForeignKeySelect
-        value={props.value}
-        onChange={props.onChange}
-        schema={props.schema}
-        jsonData={props.jsonData}
-      />
-    );
-  }
+    if (stringSchema.foreignKey) {
+      return (
+        <ForeignKeySelect
+          value={props.value}
+          onChange={props.onChange}
+          schema={props.schema}
+          jsonData={props.jsonData}
+        />
+      );
+    }
 
-  return <StringTextInput {...props} />;
-};
+    return <StringTextInput {...props} />;
+  },
+);

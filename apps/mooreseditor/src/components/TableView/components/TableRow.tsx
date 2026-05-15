@@ -3,6 +3,7 @@ import React from "react";
 import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
 import { IconTrash, IconCopy } from "@tabler/icons-react";
 
+import { supportsForeignKey } from "../../../libs/schema/types";
 import { processSwitchFields } from "../../../utils/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
@@ -138,11 +139,8 @@ export const TableRow: React.FC<TableRowProps> = ({
           );
         }
 
-        // Handle foreign key display (uuid or string)
-        if (
-          (columnSchema.type === "uuid" || columnSchema.type === "string") &&
-          columnSchema.foreignKey
-        ) {
+        // Handle foreign key display
+        if (supportsForeignKey(columnSchema.type) && columnSchema.foreignKey) {
           return (
             <Table.Td
               key={column.key}

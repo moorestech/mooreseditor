@@ -57,6 +57,21 @@ export interface UuidSchema {
   foreignKey?: ForeignKeyConfig;
 }
 
+// foreignKey を付与できる schema type 一覧。
+// 新しく対応 type を増やすときは、ここに追記したうえで該当 *Schema interface に
+// `foreignKey?: ForeignKeyConfig` を生やす。これで dispatch 側の判定が自動追従する。
+export const FOREIGN_KEY_SUPPORTED_TYPES = ["uuid", "string"] as const;
+export type ForeignKeySupportedType =
+  (typeof FOREIGN_KEY_SUPPORTED_TYPES)[number];
+
+export function supportsForeignKey(
+  type: string | undefined,
+): type is ForeignKeySupportedType {
+  return (FOREIGN_KEY_SUPPORTED_TYPES as readonly string[]).includes(
+    type ?? "",
+  );
+}
+
 export interface IntegerSchema {
   type: "integer";
   optional?: boolean;

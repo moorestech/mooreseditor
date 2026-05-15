@@ -7,8 +7,10 @@ import {
   buildForeignKeySelectKey,
 } from "../../../hooks/useForeignKeyData";
 
-import type { UuidSchema } from "../../../libs/schema/types";
+import type { ForeignKeyConfig } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
+
+type ForeignKeyCapableColumn = { foreignKey?: ForeignKeyConfig };
 
 interface ForeignKeyEditCellProps extends CellEditProps {
   column: any;
@@ -22,7 +24,7 @@ export const ForeignKeyEditCell: React.FC<ForeignKeyEditCellProps> = ({
   onSave,
   onCancel,
 }) => {
-  const columnSchema = column as UuidSchema;
+  const columnSchema = column as ForeignKeyCapableColumn;
 
   const {
     options,

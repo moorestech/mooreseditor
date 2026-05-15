@@ -4,15 +4,17 @@ import { Text } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
 
-import type { UuidSchema } from "../../../libs/schema/types";
+import type { ForeignKeyConfig } from "../../../libs/schema/types";
 import type { ColumnDisplayProps } from "../TableView.types";
+
+type ForeignKeyCapableColumn = { foreignKey?: ForeignKeyConfig };
 
 export const ForeignKeyDisplayCell: React.FC<ColumnDisplayProps> = ({
   column,
   value,
   jsonData,
 }) => {
-  const columnSchema = column as UuidSchema;
+  const columnSchema = column as ForeignKeyCapableColumn;
 
   const {
     displayValue,

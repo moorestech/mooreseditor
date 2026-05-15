@@ -138,8 +138,11 @@ export const TableRow: React.FC<TableRowProps> = ({
           );
         }
 
-        // Handle foreign key display
-        if (columnSchema.type === "uuid" && columnSchema.foreignKey) {
+        // Handle foreign key display (uuid or string)
+        if (
+          (columnSchema.type === "uuid" || columnSchema.type === "string") &&
+          columnSchema.foreignKey
+        ) {
           return (
             <Table.Td
               key={column.key}

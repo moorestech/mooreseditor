@@ -28,8 +28,11 @@ export const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const columnSchema = column as any;
 
-  // Handle uuid with foreign key
-  if (columnSchema.type === "uuid" && columnSchema.foreignKey) {
+  // Handle foreign key edit (uuid or string)
+  if (
+    (columnSchema.type === "uuid" || columnSchema.type === "string") &&
+    columnSchema.foreignKey
+  ) {
     return (
       <ForeignKeyEditCell
         column={column}

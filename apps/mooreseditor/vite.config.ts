@@ -20,6 +20,17 @@ export default defineConfig(async () => ({
     },
   },
 
+  build: {
+    sourcemap: true,
+    minify: false,
+    cssMinify: false,
+    rollupOptions: {
+      output: {
+        sourcemapExcludeSources: false,
+      },
+    },
+  },
+
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent vite from obscuring rust errors

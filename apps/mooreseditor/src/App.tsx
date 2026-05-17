@@ -89,6 +89,17 @@ function App() {
     setHasUnsavedChanges(true);
   };
 
+  const handleActiveSearchMatchChange = useCallback(
+    (element: HTMLElement | null) => {
+      if (mode !== "node") {
+        return;
+      }
+
+      nodeEditorRef.current?.focusSearchMatch(element);
+    },
+    [mode],
+  );
+
   return (
     <MantineProvider theme={theme}>
       <Notifications
@@ -160,7 +171,10 @@ function App() {
               </React.Suspense>
             </div>
           )}
-          <SearchOverlay targetRef={searchTargetRef} />
+          <SearchOverlay
+            targetRef={searchTargetRef}
+            onActiveMatchChange={handleActiveSearchMatchChange}
+          />
         </AppShell.Main>
       </AppShell>
     </MantineProvider>

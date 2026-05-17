@@ -11,6 +11,7 @@ import Mark from "mark.js";
 
 interface SearchOverlayProps {
   targetRef: React.RefObject<HTMLElement | null>;
+  onActiveMatchChange?: (element: HTMLElement | null) => void;
 }
 
 const SEARCH_MATCH_CLASS = "mooreseditor-search-match";
@@ -50,7 +51,10 @@ function clearMarks(root: HTMLElement | null) {
   });
 }
 
-export function SearchOverlay({ targetRef }: SearchOverlayProps) {
+export function SearchOverlay({
+  targetRef,
+  onActiveMatchChange,
+}: SearchOverlayProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [matchElements, setMatchElements] = useState<HTMLElement[]>([]);
@@ -155,6 +159,8 @@ export function SearchOverlay({ targetRef }: SearchOverlayProps) {
     });
 
     const activeElement = matchElements[activeIndex];
+    onActiveMatchChange?.(activeElement ?? null);
+
     if (activeElement && typeof activeElement.scrollIntoView === "function") {
       activeElement.scrollIntoView({
         block: "center",
@@ -162,7 +168,7 @@ export function SearchOverlay({ targetRef }: SearchOverlayProps) {
         behavior: "smooth",
       });
     }
-  }, [activeIndex, matchElements]);
+  }, [activeIndex, matchElements, onActiveMatchChange]);
 
   useEffect(() => {
     return () => {

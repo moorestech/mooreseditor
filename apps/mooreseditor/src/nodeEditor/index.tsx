@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useMemo } from "react";
 
-import { ReactFlowProvider } from "@xyflow/react";
+import { ReactFlowProvider, useReactFlow } from "@xyflow/react";
 
 import NodeEditorApp from "./NodeEditorApp";
 import {
@@ -9,16 +9,19 @@ import {
 } from "./context/NodeEditorContext";
 import { useNodeExport } from "./hooks/useNodeExport";
 import { buildSchemaMetaMap } from "./utils/schemaMeta";
+import { getReactFlowNodeIdFromSearchMatch } from "./utils/searchFocus";
 
 import type { NodeEditorViewProps } from "./types/props";
 
 export interface NodeEditorHandle {
   save: () => void;
+  focusSearchMatch: (element: Element | null) => boolean;
 }
 
 const NodeEditorInner = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
   (props, ref) => {
-    const { state } = useNodeEditorContext();
+    const { state, dispatch } = useNodeEditorContext();
+    const { fitView } = useReactFlow();
     const schemaMetas = useMemo(
       () => buildSchemaMetaMap(props.schemas),
       [props.schemas],
@@ -30,12 +33,32 @@ const NodeEditorInner = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
       exportAndSave();
     }, [isDirty, state.nodes.length, exportAndSave]);
 
+    const focusSearchMatch = useCallback(
+      (element: Element | null) => {
+        const nodeId = getReactFlowNodeIdFromSearchMatch(element);
+        if (!nodeId) {
+          return false;
+        }
+
+        dispatch({ type: "SET_SELECTED_NODE", nodeId });
+        void fitView({
+          nodes: [{ id: nodeId }],
+          padding: 0.4,
+          duration: 250,
+          maxZoom: 1.1,
+        });
+        return true;
+      },
+      [dispatch, fitView],
+    );
+
     useImperativeHandle(
       ref,
       () => ({
         save,
+        focusSearchMatch,
       }),
-      [save],
+      [focusSearchMatch, save],
     );
 
     return <NodeEditorApp {...props} />;

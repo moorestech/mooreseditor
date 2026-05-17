@@ -1,71 +1,12 @@
-import { forwardRef, useCallback, useImperativeHandle, useMemo } from "react";
+import { forwardRef } from "react";
 
-import { ReactFlowProvider, useReactFlow } from "@xyflow/react";
+import { ReactFlowProvider } from "@xyflow/react";
 
-import NodeEditorApp from "./NodeEditorApp";
-import {
-  NodeEditorProvider,
-  useNodeEditorContext,
-} from "./context/NodeEditorContext";
-import { useNodeExport } from "./hooks/useNodeExport";
-import { buildSchemaMetaMap } from "./utils/schemaMeta";
-import { getReactFlowNodeIdFromSearchMatch } from "./utils/searchFocus";
+import NodeEditorInner from "./NodeEditorInner";
+import { NodeEditorProvider } from "./context/NodeEditorContext";
 
+import type { NodeEditorHandle } from "./NodeEditorInner";
 import type { NodeEditorViewProps } from "./types/props";
-
-export interface NodeEditorHandle {
-  save: () => void;
-  focusSearchMatch: (element: Element | null) => boolean;
-}
-
-const NodeEditorInner = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
-  (props, ref) => {
-    const { state, dispatch } = useNodeEditorContext();
-    const { fitView } = useReactFlow();
-    const schemaMetas = useMemo(
-      () => buildSchemaMetaMap(props.schemas),
-      [props.schemas],
-    );
-    const { exportAndSave, isDirty } = useNodeExport(props, schemaMetas);
-
-    const save = useCallback(() => {
-      if (!isDirty && state.nodes.length === 0) return;
-      exportAndSave();
-    }, [isDirty, state.nodes.length, exportAndSave]);
-
-    const focusSearchMatch = useCallback(
-      (element: Element | null) => {
-        const nodeId = getReactFlowNodeIdFromSearchMatch(element);
-        if (!nodeId) {
-          return false;
-        }
-
-        dispatch({ type: "SET_SELECTED_NODE", nodeId });
-        void fitView({
-          nodes: [{ id: nodeId }],
-          padding: 0.4,
-          duration: 250,
-          maxZoom: 1.1,
-        });
-        return true;
-      },
-      [dispatch, fitView],
-    );
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        save,
-        focusSearchMatch,
-      }),
-      [focusSearchMatch, save],
-    );
-
-    return <NodeEditorApp {...props} />;
-  },
-);
-
-NodeEditorInner.displayName = "NodeEditorInner";
 
 const NodeEditorView = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
   (props, ref) => {
@@ -81,4 +22,5 @@ const NodeEditorView = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
 
 NodeEditorView.displayName = "NodeEditorView";
 
+export type { NodeEditorHandle };
 export default NodeEditorView;

@@ -34,19 +34,28 @@ beforeEach(() => {
   installMatchMedia();
 });
 
-// Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+// Mock IntersectionObserver and ResizeObserver.
+// These must be reinstalled before every test because vi.restoreAllMocks()
+// can strip mockImplementation from vi.fn() instances that were registered
+// globally. The same pattern is used for matchMedia above.
+const installObserverMocks = () => {
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
-// Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+};
+
+installObserverMocks();
+beforeEach(() => {
+  installObserverMocks();
+});
 
 // Suppress console errors in tests
 const originalError = console.error;

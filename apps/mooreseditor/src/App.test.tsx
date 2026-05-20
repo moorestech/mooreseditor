@@ -56,6 +56,11 @@ vi.mock("@tauri-apps/api/path", () => ({
   ),
 }));
 
+// Mock the node-graph plugin so the lazy import resolves synchronously in tests.
+vi.mock("@mooreseditor/plugin-node-graph", () => ({
+  default: vi.fn(() => <div data-testid="node-editor-view" />),
+}));
+
 import App from "./App";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
@@ -127,11 +132,12 @@ describe("App (view host)", () => {
     expect(screen.getByTestId("search-overlay")).toBeInTheDocument();
   });
 
-  it("hides the tab bar when only one view is registered", () => {
+  it("shows the tab bar (Editor / Node Graph) when two views are registered", () => {
     render(<App />);
 
-    // SegmentedControl renders radio inputs; with a single view none exist.
-    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+    // SegmentedControl renders radio inputs; with two views both tabs exist.
+    const radios = screen.queryAllByRole("radio");
+    expect(radios.length).toBe(2);
   });
 
   it("preloads data on mount", () => {

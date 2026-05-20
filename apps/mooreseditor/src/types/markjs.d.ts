@@ -3,7 +3,12 @@ declare module "mark.js" {
     className?: string;
     exclude?: string[];
     separateWordSearch?: boolean;
-    filter?: (textNode: Text, term: string, totalCounter: number, counter: number) => boolean;
+    filter?: (
+      textNode: Text,
+      term: string,
+      totalCounter: number,
+      counter: number,
+    ) => boolean;
     done?: (counter: number) => void;
   }
 

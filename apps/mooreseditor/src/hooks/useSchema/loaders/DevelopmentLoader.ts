@@ -6,8 +6,8 @@ import {
 } from "../../../utils/devFileSystem";
 
 import type { SchemaLoader } from "./SchemaLoader";
-import type { Schema } from "../../../libs/schema/types";
 import type { SchemaDefinitions, SchemaLoadOptions } from "../types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 /**
  * 開発環境用のスキーマローダー

@@ -15,7 +15,6 @@ export default defineConfig(async () => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@/test": path.resolve(__dirname, "./src/test"),
-      "@/libs": path.resolve(__dirname, "./src/libs"),
       "~": path.resolve(__dirname, "./app"),
     },
   },

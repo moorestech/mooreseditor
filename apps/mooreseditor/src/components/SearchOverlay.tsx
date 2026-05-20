@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { ActionIcon, Group, Paper, Text, TextInput, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  Paper,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconChevronDown,
   IconChevronUp,
@@ -84,7 +91,8 @@ export function SearchOverlay({
 
       setActiveIndex(
         (currentIndex) =>
-          (currentIndex + direction + matchElements.length) % matchElements.length,
+          (currentIndex + direction + matchElements.length) %
+          matchElements.length,
       );
     },
     [matchElements.length],
@@ -93,7 +101,8 @@ export function SearchOverlay({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const isFindShortcut =
-        (event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === "f";
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLocaleLowerCase() === "f";
 
       if (isFindShortcut) {
         event.preventDefault();
@@ -261,7 +270,11 @@ export function SearchOverlay({
             </ActionIcon>
           </Tooltip>
           <Tooltip label="閉じる">
-            <ActionIcon aria-label="検索を閉じる" variant="subtle" onClick={closeSearch}>
+            <ActionIcon
+              aria-label="検索を閉じる"
+              variant="subtle"
+              onClick={closeSearch}
+            >
               <IconX size={16} />
             </ActionIcon>
           </Tooltip>

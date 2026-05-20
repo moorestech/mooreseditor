@@ -1,5 +1,4 @@
-import { DataInitializer } from "./dataInitializer";
-import { deepMerge } from "./deepMerge";
+import { DataInitializer, deepMerge } from "@mooreseditor/plugin-sdk";
 
 import type {
   Schema,
@@ -7,7 +6,7 @@ import type {
   ObjectSchema,
   SchemaContainer,
   SwitchSchema,
-} from "../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 /**
  * 既存データをスキーマに基づいて検証し、不足している必須フィールドを補完します

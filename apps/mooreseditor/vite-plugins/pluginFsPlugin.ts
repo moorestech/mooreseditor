@@ -14,11 +14,18 @@ import type { Plugin } from "vite";
  *
  * Provides three capabilities:
  *
- *  1. `/api/plugin-fs/read?path=<absPath>`  (dev only)
- *     Serves files located underneath an allowed root (`plugins/` at the
+ *  1. `/api/plugin-fs/read?path=<path>` + `/api/plugin-fs/file?path=<path>`
+ *     (dev only)
+ *     Serve files located underneath an allowed root (`plugins/` at the
  *     monorepo root). Unlike `devFsPlugin` (limited to `tmp/e2e-output`),
- *     this endpoint is scoped to the plugin distribution directory so the
+ *     these endpoints are scoped to the plugin distribution directory so the
  *     host can fetch plugin manifests / bundles during development.
+ *     `/read` returns JSON `{ content }` (text); `/file` returns the raw
+ *     bytes with a correct `Content-Type` (used for the dynamically
+ *     `import()`-ed entry JS and injected CSS). Relative `path` values are
+ *     resolved against the *monorepo root* (the form `mooreseditor.config.yaml`
+ *     uses, e.g. `./plugins/node-graph`); the result is then allow-list
+ *     checked against `plugins/` — traversal outside it returns 403.
  *
  *  2. `/shared/<dep>.js`  (dev: virtual module via Vite's serve pipeline)
  *     A "shared dependency bridge". Returns a tiny ESM module that
@@ -117,8 +124,62 @@ function parseQueryParam(url: string, param: string): string | null {
 /**
  * Dev-server side: `/api/plugin-fs/read` + virtual `/shared/*.js`.
  */
+/** Map a file extension to the Content-Type used for `/api/plugin-fs/file`. */
+function contentTypeFor(filePath: string): string {
+  const ext = path.extname(filePath).toLowerCase();
+  switch (ext) {
+    case ".js":
+    case ".mjs":
+      // Dynamically imported by the host -> must be a JS MIME type.
+      return "text/javascript; charset=utf-8";
+    case ".css":
+      return "text/css; charset=utf-8";
+    case ".json":
+      return "application/json; charset=utf-8";
+    default:
+      return "application/octet-stream";
+  }
+}
+
 export function pluginFsPlugin(): Plugin {
+  // `allowedRoot` is the security boundary: every served file MUST live under
+  // `<monorepo>/plugins`. `repoRoot` is the *resolution base* for relative
+  // paths — `mooreseditor.config.yaml` declares plugin dirs as
+  // monorepo-root-relative (e.g. `./plugins/node-graph`), so a relative
+  // request path must be resolved against the monorepo root, then still be
+  // allow-list-checked against `allowedRoot`.
   let allowedRoot = "";
+  let repoRoot = "";
+
+  /**
+   * Resolve a request `path` query value to an absolute, allow-listed file
+   * path. Returns `{ resolved }` on success or `{ error: { status, message } }`.
+   */
+  function resolvePluginPath(
+    filePath: string,
+  ):
+    | { resolved: string; error?: undefined }
+    | { resolved?: undefined; error: { status: number; message: string } } {
+    const resolved = path.isAbsolute(filePath)
+      ? path.resolve(filePath)
+      : path.resolve(repoRoot, filePath);
+    // Allow-list: must live under the plugins/ directory.
+    if (
+      resolved !== allowedRoot &&
+      !resolved.startsWith(allowedRoot + path.sep)
+    ) {
+      return {
+        error: {
+          status: 403,
+          message: `Path outside allowed root: ${filePath}`,
+        },
+      };
+    }
+    if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+      return { error: { status: 404, message: `File not found: ${filePath}` } };
+    }
+    return { resolved };
+  }
 
   return {
     name: "plugin-fs-plugin",
@@ -126,7 +187,8 @@ export function pluginFsPlugin(): Plugin {
 
     configResolved(config) {
       // config.root === apps/mooreseditor ; monorepo root is two levels up.
-      allowedRoot = path.resolve(config.root, "..", "..", "plugins");
+      repoRoot = path.resolve(config.root, "..", "..");
+      allowedRoot = path.resolve(repoRoot, "plugins");
     },
 
     resolveId(id) {
@@ -157,9 +219,11 @@ export function pluginFsPlugin(): Plugin {
         const method = req.method?.toUpperCase();
 
         // GET /api/plugin-fs/read?path=<path>
-        // `path` may be absolute, or relative to the plugins/ root (a
-        // browser client has no business knowing the host's absolute FS
-        // layout, so relative is the realistic plugin-loading form).
+        // `path` may be absolute, or relative to the monorepo root (the
+        // form `mooreseditor.config.yaml` uses, e.g. `./plugins/node-graph`).
+        // A browser client has no business knowing the host's absolute FS
+        // layout, so relative is the realistic plugin-loading form.
+        // Returns JSON `{ content }` (text payload).
         if (url.startsWith("/api/plugin-fs/read") && method === "GET") {
           const filePath = parseQueryParam(url, "path");
           if (typeof filePath !== "string" || filePath.length === 0) {
@@ -167,25 +231,48 @@ export function pluginFsPlugin(): Plugin {
             return;
           }
           try {
-            const resolved = path.isAbsolute(filePath)
-              ? path.resolve(filePath)
-              : path.resolve(allowedRoot, filePath);
-            // Allow-list: must live under the plugins/ directory.
-            if (
-              resolved !== allowedRoot &&
-              !resolved.startsWith(allowedRoot + path.sep)
-            ) {
-              sendJson(res, 403, {
-                error: `Path outside allowed root: ${filePath}`,
+            const result = resolvePluginPath(filePath);
+            if (result.error) {
+              sendJson(res, result.error.status, {
+                error: result.error.message,
               });
               return;
             }
-            if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
-              sendJson(res, 404, { error: `File not found: ${filePath}` });
+            const content = fs.readFileSync(result.resolved, "utf-8");
+            sendJson(res, 200, { content });
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : "Unknown error";
+            sendJson(res, 500, { error: message });
+          }
+          return;
+        }
+
+        // GET /api/plugin-fs/file?path=<path>
+        // Serves a file as a raw asset with a correct Content-Type. Used for
+        // the plugin entry JS (dynamically `import()`-ed by the host, so the
+        // JS MIME type matters) and CSS injected via <link>. Same allow-list
+        // and path-resolution rules as `/read`.
+        if (url.startsWith("/api/plugin-fs/file") && method === "GET") {
+          const filePath = parseQueryParam(url, "path");
+          if (typeof filePath !== "string" || filePath.length === 0) {
+            sendJson(res, 400, { error: "'path' query parameter is required" });
+            return;
+          }
+          try {
+            const result = resolvePluginPath(filePath);
+            if (result.error) {
+              sendJson(res, result.error.status, {
+                error: result.error.message,
+              });
               return;
             }
-            const content = fs.readFileSync(resolved, "utf-8");
-            sendJson(res, 200, { content });
+            const body = fs.readFileSync(result.resolved);
+            res.writeHead(200, {
+              "Content-Type": contentTypeFor(result.resolved),
+              "Content-Length": body.length,
+            });
+            res.end(body);
           } catch (err) {
             const message =
               err instanceof Error ? err.message : "Unknown error";

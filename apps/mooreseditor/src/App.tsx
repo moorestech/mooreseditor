@@ -111,9 +111,7 @@ function App() {
     if (activeViewId === "editor") {
       return {
         canSave: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
-        onSave: () => {
-          void saveAll(jsonData);
-        },
+        onSave: () => saveAll(jsonData),
       };
     }
     return { canSave: false, onSave: () => {} };

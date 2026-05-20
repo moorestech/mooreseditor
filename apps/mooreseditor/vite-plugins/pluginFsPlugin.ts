@@ -96,13 +96,58 @@ const SHARED_DEPS: Record<string, { spec: string; hasDefault: boolean }> = {
 
 const SHARED_PREFIX = "\0plugin-fs-shared:";
 
-/** ESM source that re-exports a host dependency as the shared bridge. */
-function bridgeSource(dep: { spec: string; hasDefault: boolean }): string {
-  const star = `export * from ${JSON.stringify(dep.spec)};\n`;
-  const def = dep.hasDefault
-    ? `export { default } from ${JSON.stringify(dep.spec)};\n`
-    : "";
-  return star + def;
+/** JS 識別子として妥当な名前か（不正な named export はスキップする）。 */
+function isValidIdentifier(name: string): boolean {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name);
+}
+
+/**
+ * ホスト依存を共有ブリッジとして再エクスポートする ESM ソースを生成する。
+ *
+ * 素朴な `export * from "<spec>"` では不十分なケースがある:
+ *  - dev: Vite の依存最適化は `react` のような CJS パッケージを
+ *    「`export default` のみ」のモジュールへ変換する。`export *` は
+ *    default 以外の named export しか転送しないため、変換後 `react` には
+ *    named export が無く、プラグインの `import { useMemo }` が
+ *    `does not provide an export named 'useMemo'` で失敗する。
+ *
+ * 対策として、実モジュールを実行時に import して named export 名を列挙し、
+ * 個別の named 再エクスポート（`export { name } from "<spec>"`）を生成する。
+ * named 再エクスポートは Vite/Rollup の import-analysis が CJS interop へ
+ * 書き換えるため、CJS（react）でも ESM（@xyflow/react）でも正しく解決される。
+ * 特定 API のハードコードを避け、依存のバージョン差にも追従する。
+ */
+async function bridgeSource(dep: {
+  spec: string;
+  hasDefault: boolean;
+}): Promise<string> {
+  const spec = JSON.stringify(dep.spec);
+  let names: string[] = [];
+  try {
+    const mod = (await import(dep.spec)) as Record<string, unknown>;
+    names = Object.keys(mod).filter(
+      (k) => k !== "default" && k !== "__esModule" && isValidIdentifier(k),
+    );
+  } catch {
+    // import 失敗時は素朴な `export *` にフォールバックする。
+    const star = `export * from ${spec};\n`;
+    const def = dep.hasDefault ? `export { default } from ${spec};\n` : "";
+    return star + def;
+  }
+
+  const lines: string[] = [];
+  if (names.length > 0) {
+    // 各 named export を個別に再エクスポートする（`export *` は使わない。
+    // 併用すると同名 export が二重定義になるため）。
+    lines.push(`export { ${names.join(", ")} } from ${spec};`);
+  } else {
+    // named export が 1 つも検出できなかった場合のみ `export *` を使う。
+    lines.push(`export * from ${spec};`);
+  }
+  if (dep.hasDefault) {
+    lines.push(`export { default } from ${spec};`);
+  }
+  return lines.join("\n") + "\n";
 }
 
 function sendJson(
@@ -195,14 +240,14 @@ export function pluginFsPlugin(): Plugin {
       return null;
     },
 
-    load(id) {
+    async load(id) {
       if (id.startsWith(SHARED_PREFIX)) {
         const name = id.slice(SHARED_PREFIX.length);
         const dep = SHARED_DEPS[name];
         if (!dep) return null;
         // Re-export the bare specifier. Vite optimizes `dep` once; both the
         // host and this module share that single optimized instance.
-        return bridgeSource(dep);
+        return await bridgeSource(dep);
       }
       return null;
     },
@@ -353,12 +398,12 @@ export function pluginSharedBuildPlugin(): Plugin {
       return null;
     },
 
-    load(id) {
+    async load(id) {
       if (id.startsWith(ENTRY_PREFIX)) {
         const name = id.slice(ENTRY_PREFIX.length);
         const dep = SHARED_DEPS[name];
         if (!dep) return null;
-        return bridgeSource(dep);
+        return await bridgeSource(dep);
       }
       return null;
     },

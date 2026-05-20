@@ -3,7 +3,18 @@ import * as path from "@tauri-apps/api/path";
 import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
 
 import type { Column } from "../hooks/useJson";
-import type { NodeGraphFile } from "@mooreseditor/plugin-node-graph";
+
+/**
+ * `.mooreseditor/nodeGraph.v1.json` として保存される任意の追加ファイル本体。
+ *
+ * かつてはノードグラフプラグインの `NodeGraphFile` 型を直接 import していたが、
+ * Phase 3 でノードグラフはランタイムプラグイン化され、その保存はプラグイン側
+ * （`PluginView.save()` → `HostAPI.saveProject`）が担うようになった。
+ * アプリ本体はプラグイン成果物への build-time 依存を持たないため、ここでは
+ * JSON シリアライズ可能な不透明値として扱う。現状 Editor の保存経路からは
+ * 渡されないが、後方互換のためパラメータは温存する。
+ */
+type ExtraGraphData = Record<string, unknown>;
 
 async function writeViaDevServer(
   filePath: string,
@@ -21,7 +32,7 @@ async function writeViaDevServer(
 
 interface SaveProjectDataParams {
   columns: Column[];
-  nodeGraphData?: NodeGraphFile | null;
+  nodeGraphData?: ExtraGraphData | null;
   projectDir: string | null;
   masterDir: string | null;
   onSuccess: () => void;

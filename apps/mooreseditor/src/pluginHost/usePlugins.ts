@@ -11,9 +11,12 @@ const CONFIG_RELATIVE_PATH = "apps/mooreseditor/mooreseditor.config.yaml";
 /**
  * `mooreseditor.config.yaml` の本文を読む（dev/prod フォールバック）。
  *
- * prod (Tauri): `resolve_plugin_path` で config を絶対パス化（同時に FS
- *   スコープへ登録）し、`readTextFile` で読む。Tauri webview の作業
- *   ディレクトリは `src-tauri` 付近のため、相対パス直読みは解決できない。
+ * prod (Tauri): `resolve_plugin_path` が `CONFIG_RELATIVE_PATH`（monorepo
+ *   ルート相対）を `CARGO_MANIFEST_DIR` アンカー基準で絶対パス化し（CWD 非
+ *   依存）、FS スコープへ登録する。`tauri dev` の実行時 CWD は
+ *   `apps/mooreseditor/src-tauri`（実測）で monorepo ルートと一致しないため、
+ *   相対パスの直読みや CWD 基準解決はできない。絶対パス化した上で
+ *   `readTextFile` で読む。
  * dev (Vite ブラウザ): Tauri API が無いため `resolveAbsolutePluginPath` は
  *   相対パスをそのまま返し、`readTextFile` の import も失敗する。catch 側で
  *   Vite がルート配信する `/mooreseditor.config.yaml` を fetch する。

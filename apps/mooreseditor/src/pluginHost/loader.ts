@@ -13,15 +13,32 @@ interface PluginJson {
 }
 
 /**
+ * 現在 Tauri webview 内で実行されているかを判定する。
+ *
+ * `@tauri-apps/api/core` は通常の npm パッケージなので、Vite ブラウザでも
+ * 動的 import 自体は成功する（モジュールは存在する）。Tauri ランタイムが
+ * 注入されているかは別問題で、Tauri 2 は webview に `window.__TAURI_INTERNALS__`
+ * を注入する。これが無ければ dev (Vite ブラウザ) と判断できる。
+ */
+function isTauriRuntime(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
+
+/**
  * monorepo ルート相対のプラグインパスを絶対パスへ解決する（dev/prod フォールバック）。
  *
- * prod (Tauri): Rust の `resolve_plugin_path` コマンドが、プロセスの作業
- *   ディレクトリ基準でパスを絶対化し、同時に FS スコープへ登録する。
- *   `@tauri-apps/plugin-fs` の `readTextFile` も `asset:` プロトコルの
- *   `convertFileSrc` も絶対パスを要求するため、ロード前に絶対化が必須。
- * dev (Vite ブラウザ): Tauri API が無いため invoke が失敗する。その場合は
- *   相対パスのまま返す — `/api/plugin-fs/*` エンドポイントが monorepo
- *   ルート基準で相対パスを解決するため、これで正しく動作する。
+ * prod (Tauri): Rust の `resolve_plugin_path` コマンドが、`CARGO_MANIFEST_DIR`
+ *   をアンカーに monorepo ルート基準でパスを絶対化し（CWD 非依存）、許可リスト
+ *   検証を通った場合のみ FS スコープへ登録する。`@tauri-apps/plugin-fs` の
+ *   `readTextFile` も `asset:` プロトコルの `convertFileSrc` も絶対パスを
+ *   要求するため、ロード前に絶対化が必須。
+ * dev (Vite ブラウザ): Tauri ランタイムが無いため、相対パスのまま返す
+ *   — `/api/plugin-fs/*` エンドポイントが monorepo ルート基準で相対パスを
+ *   解決するため、これで正しく動作する。
+ *
+ * Tauri ランタイム不在（= dev の正常なフォールバック）と、Tauri 環境での
+ * `invoke` 拒否（= prod の実エラー）を区別する。前者はサイレントに相対パスへ
+ * フォールバックし、後者はフォールバックしつつ `console.warn` で診断可能にする。
  *
  * `config.yaml` の `dir` 由来のパスは信頼できる入力なので、結果はそのまま
  * 後続の読み込みに使う。
@@ -29,10 +46,21 @@ interface PluginJson {
 export async function resolveAbsolutePluginPath(
   relativePath: string,
 ): Promise<string> {
+  if (!isTauriRuntime()) {
+    // dev (Vite ブラウザ): Tauri ランタイム不在。正常なフォールバック。
+    return relativePath;
+  }
   try {
     const { invoke } = await import("@tauri-apps/api/core");
     return await invoke<string>("resolve_plugin_path", { relativePath });
-  } catch {
+  } catch (error) {
+    // Tauri 環境にも関わらず invoke が失敗した = 実エラー（未登録コマンド・
+    // 許可リスト違反など）。フォールバックはするが、サイレントにせず警告する。
+    console.warn(
+      `resolveAbsolutePluginPath: resolve_plugin_path invoke failed for ` +
+        `"${relativePath}"; falling back to the relative path: ` +
+        (error instanceof Error ? error.message : String(error)),
+    );
     return relativePath;
   }
 }

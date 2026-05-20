@@ -130,3 +130,6 @@ fabric.properties
 
 # plugin build output
 plugins/node-graph/dist/
+
+# E2E screenshots generated at repo root
+/*.png

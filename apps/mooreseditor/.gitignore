@@ -25,6 +25,3 @@ dist-ssr
 
 # E2E / dev scratch output
 tmp/
-
-# Phase 3 PoC scratch (throwaway, kept locally)
-poc-plugin/

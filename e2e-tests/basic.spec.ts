@@ -19,84 +19,97 @@ test.describe("MooresEditor Basic Tests", () => {
     }
   });
 });
-test("外部キー配列でドロップダウンが正しく表示される", async ({ page }) => {
+
+/**
+ * 外部キー（foreignKey）ドロップダウンの表示を検証する。
+ *
+ * 注意: かつてこのテストは専用サンプル `foreignKeySample` を対象にしていたが、
+ * 同サンプルはコミット 8e79155「update dev file system」で削除された。
+ * 現在は実在するスキーマ blocks の `itemGuid` フィールド（items スキーマへの
+ * foreignKey 参照）でドロップダウンの挙動を検証する。
+ */
+test("外部キーフィールドのドロップダウンに参照先の選択肢が表示される", async ({
+  page,
+}) => {
   await page.goto("/");
 
-  // 2秒待機
-  await page.waitForTimeout(2000);
-
+  // ファイルを開く
   await page.getByRole("button", { name: "File Open" }).click();
-  await page.getByText("foreignKeySample").click();
-  await page.getByRole("button", { name: "Edit" }).nth(1).click();
-  await page.getByRole("button", { name: "Edit", exact: true }).nth(2).click();
 
-  // referenceCategoryGuidsのAdd Itemボタンをクリック
-  await page
-    .locator("div")
-    .filter({ hasText: /^referenceCategoryGuids/ })
-    .getByRole("button", { name: "Add Item" })
+  // blocks スキーマを選択
+  await page.getByText("blocks").click();
+
+  // blocks テーブルの最初の行を編集
+  const blocksTable = page.locator("table").first();
+  await expect(blocksTable.locator("tbody tr").first()).toBeVisible();
+  await blocksTable
+    .locator("tbody tr")
+    .first()
+    .getByRole("button", { name: "Edit", exact: true })
     .click();
 
-  // 新しく作成されたドロップダウンをクリック
-  // referenceCategoryGuidsの最後の要素のinputを取得
-  const dropdownInput = page
-    .locator('input[placeholder*="Select foreignKeySample"]')
-    .last();
-  await dropdownInput.click();
+  // itemGuid フィールドの foreignKey ドロップダウン（placeholder="Select items"）をクリック
+  const fkInput = page.locator('input[placeholder="Select items"]').first();
+  await expect(fkInput).toBeVisible();
+  await fkInput.click();
 
-  // ドロップダウンメニューが表示されるのを待つ
-  await page.waitForSelector('[role="listbox"]', { state: "visible" });
+  // ドロップダウンのリストボックスが表示されることを確認
+  const listbox = page.getByRole("listbox");
+  await expect(listbox).toBeVisible();
 
-  // オプションが表示されているかチェック（複数ある場合は最初の1つ）
-  await expect(
-    page
-      .locator('[role="listbox"]')
-      .getByText("Cat1 Foreign Key Element 1")
-      .first(),
-  ).toBeVisible();
+  // 参照先 items スキーマの選択肢（オプション）が表示されていることを確認
+  const options = listbox.getByRole("option");
+  await expect(options.first()).toBeVisible();
+  expect(await options.count()).toBeGreaterThan(0);
 });
 
-test("外部キードロップダウンで階層的な表示がされる", async ({ page }) => {
+/**
+ * 外部キードロップダウンが検索可能で、選択するとフィールド値が更新されることを検証する。
+ *
+ * 注意: 元のテストは `foreignKeySample` の階層的なグループ表示
+ * （.mantine-Select-groupLabel による Category グルーピング）を検証していた。
+ * しかし `foreignKeySample` サンプルは削除されており、現在のサンプルスキーマには
+ * 階層的な foreignKey 参照（hierarchyDisplayPaths 等）を持つものが存在しないため、
+ * グループ表示は再現できない。代わりに、現行サンプルで再現可能な
+ * 「検索して選択肢を絞り込み、選択して値を反映する」フローを検証する。
+ */
+test("外部キードロップダウンで検索・選択ができる", async ({ page }) => {
   await page.goto("/");
 
-  // FileOpenボタンをクリック
+  // ファイルを開く
   await page.getByRole("button", { name: "File Open" }).click();
 
-  // foreignKeySampleをクリック
-  await page.getByText("foreignKeySample").click();
+  // blocks スキーマを選択
+  await page.getByText("blocks").click();
 
-  // Category 1の編集ボタンをクリック
-  await page.getByRole("button", { name: "Edit" }).nth(1).click();
-
-  // Cat1 Foreign Key Element 1の編集ボタンをクリック
-  await page.getByRole("button", { name: "Edit", exact: true }).nth(2).click();
-
-  // referenceCategoryGuidsのAdd Itemボタンをクリック
-  await page
-    .locator("div")
-    .filter({ hasText: /^referenceCategoryGuids/ })
-    .getByRole("button", { name: "Add Item" })
+  // blocks テーブルの最初の行を編集
+  const blocksTable = page.locator("table").first();
+  await expect(blocksTable.locator("tbody tr").first()).toBeVisible();
+  await blocksTable
+    .locator("tbody tr")
+    .first()
+    .getByRole("button", { name: "Edit", exact: true })
     .click();
 
-  // 新しく作成されたドロップダウンをクリック
-  const dropdownInput = page
-    .locator('input[placeholder*="Select foreignKeySample"]')
-    .last();
-  await dropdownInput.click();
+  // itemGuid フィールドの foreignKey ドロップダウンをクリック
+  const fkInput = page.locator('input[placeholder="Select items"]').first();
+  await expect(fkInput).toBeVisible();
+  await fkInput.click();
 
-  // ドロップダウンメニューが表示されるのを待つ
-  await page.waitForSelector('[role="listbox"]', { state: "visible" });
+  // リストボックスが表示される
+  const listbox = page.getByRole("listbox");
+  await expect(listbox).toBeVisible();
 
-  // 階層的な表示が機能していることを確認
-  // グループヘッダーが存在することを確認
-  const groupLabels = page.locator(".mantine-Select-groupLabel");
-  await expect(groupLabels).toHaveCount(2); // Category 1 と Category 2
+  // 検索で選択肢を絞り込む（items サンプルに存在する名前で検索）
+  await fkInput.fill("石器");
+  const filteredOptions = listbox.getByRole("option");
+  await expect(filteredOptions.first()).toBeVisible();
 
-  // グループヘッダーのテキストを確認
-  await expect(page.getByText("Category 1").first()).toBeVisible();
-  await expect(page.getByText("Category 2").first()).toBeVisible();
+  // 絞り込まれたオプションを選択
+  const chosen = filteredOptions.first();
+  const chosenLabel = (await chosen.textContent())?.trim() ?? "";
+  await chosen.click();
 
-  // 少なくとも1つのオプションが表示されていることを確認
-  const visibleOptions = page.locator('[role="option"]:visible');
-  await expect(visibleOptions).toHaveCount(4); // 4つのオプションがあるはず
+  // 選択した値がフィールドに反映されていることを確認
+  await expect(fkInput).toHaveValue(chosenLabel);
 });

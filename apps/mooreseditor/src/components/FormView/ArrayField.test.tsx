@@ -1,6 +1,5 @@
 // AI Generated Test Code
 import "@testing-library/jest-dom";
-import * as generateUuidModule from "@mooreseditor/plugin-sdk";
 import { describe, it, expect, vi, afterEach } from "vitest";
 
 import ArrayField from "./ArrayField";
@@ -9,7 +8,15 @@ import type { Schema, ArraySchema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen, fireEvent } from "@/test/utils/test-utils";
 
-// Mock calculateAutoIncrement (keep other SDK exports real so generateUuid is spy-able)
+// generateUuid mock — must be declared before vi.mock (hoisted by vitest)
+const mockGenerateUuid = vi.fn(() => "default-uuid");
+
+// Mock the SDK-internal generateUuid so useArrayDataManager (now in plugin-sdk) can be controlled
+vi.mock("../../../../../packages/plugin-sdk/src/utils/generateUuid", () => ({
+  generateUuid: () => mockGenerateUuid(),
+}));
+
+// Mock calculateAutoIncrement (keep other SDK exports real)
 vi.mock("@mooreseditor/plugin-sdk", async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -344,9 +351,7 @@ describe("ArrayField", () => {
       { id: 2, uuid: "uuid-2", name: "Second" },
     ];
 
-    vi.spyOn(generateUuidModule, "generateUuid").mockReturnValue(
-      "new-uuid-123",
-    );
+    mockGenerateUuid.mockReturnValue("new-uuid-123");
 
     render(
       <ArrayField
@@ -366,6 +371,6 @@ describe("ArrayField", () => {
     expect(newData[1].uuid).toBe("new-uuid-123"); // UUID is regenerated
     expect(newData[1].id).toBe(3); // ID is auto-incremented
 
-    vi.restoreAllMocks();
+    mockGenerateUuid.mockReset();
   });
 });

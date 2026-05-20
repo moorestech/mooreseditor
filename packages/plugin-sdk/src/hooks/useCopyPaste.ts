@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 
-import { schemaToZod } from "@mooreseditor/plugin-sdk";
+import { useNotification } from "../contexts/NotificationContext";
+import { schemaToZod } from "../utils/schemaToZod";
 
-import { showNotification } from "../utils/notification";
 
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "../schema";
 
 export interface CopyPasteChangeFeedback {
   successMessage?: string;
@@ -21,6 +21,8 @@ export function useCopyPaste(
   onChange: ChangeHandler,
   schema: Schema,
 ) {
+  const showNotification = useNotification();
+
   const handleCopy = useCallback(async () => {
     try {
       const json = JSON.stringify({ value, schema: { type: schema } }, null, 2);
@@ -38,7 +40,7 @@ export function useCopyPaste(
         "error",
       );
     }
-  }, [value, schema]);
+  }, [value, schema, showNotification]);
 
   const handlePaste = useCallback(async () => {
     try {
@@ -99,7 +101,7 @@ export function useCopyPaste(
         "error",
       );
     }
-  }, [onChange, schema]);
+  }, [onChange, schema, showNotification]);
 
   return { handleCopy, handlePaste };
 }

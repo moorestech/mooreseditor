@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 
-import { ForeignKeyResolver } from "@mooreseditor/plugin-sdk";
+import { ForeignKeyResolver } from "../utils/foreignKeyResolver";
 
-import type { Column } from "./useJson";
-import type { ForeignKeyOption } from "@mooreseditor/plugin-sdk";
-import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
+import type { Column } from "../schema";
+import type { ForeignKeyConfig } from "../schema";
+import type { ForeignKeyOption } from "../utils/foreignKeyResolver";
 
 // Overloaded function signatures
 export function useForeignKeyData(

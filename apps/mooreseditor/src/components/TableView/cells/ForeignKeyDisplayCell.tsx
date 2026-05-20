@@ -1,8 +1,7 @@
 import React from "react";
 
 import { Text } from "@mantine/core";
-
-import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
+import { useForeignKeyData } from "@mooreseditor/plugin-sdk";
 
 import type { ColumnDisplayProps } from "../TableView.types";
 import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";

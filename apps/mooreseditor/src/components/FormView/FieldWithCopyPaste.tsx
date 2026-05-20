@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 
 import { Group, Box, Flex, Collapse, ActionIcon } from "@mantine/core";
+import { useCopyPaste } from "@mooreseditor/plugin-sdk";
 import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
 import { CopyPasteButtons } from "./CopyPasteButtons";
@@ -8,7 +9,6 @@ import { CopyPasteButtons } from "./CopyPasteButtons";
 import type { JsonValue } from "@mooreseditor/plugin-sdk";
 import type { Schema } from "@mooreseditor/plugin-sdk";
 
-import { useCopyPaste } from "@/hooks/useCopyPaste";
 
 interface FieldWithCopyPasteProps {
   value: JsonValue;

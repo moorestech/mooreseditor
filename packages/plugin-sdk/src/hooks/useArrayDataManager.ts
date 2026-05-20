@@ -1,15 +1,13 @@
 import { useCallback, useMemo } from "react";
 
 import { arrayMove } from "@dnd-kit/sortable";
-import { calculateAutoIncrement } from "@mooreseditor/plugin-sdk";
-import { createInitialValue, generateUuid } from "@mooreseditor/plugin-sdk";
 
+import { calculateAutoIncrement } from "../utils/autoIncrement";
+import { createInitialValue } from "../utils/createInitialValue";
+import { generateUuid } from "../utils/generateUuid";
+
+import type { Schema, ValueSchema, ArraySchema } from "../schema";
 import type { DragEndEvent } from "@dnd-kit/core";
-import type {
-  Schema,
-  ValueSchema,
-  ArraySchema,
-} from "@mooreseditor/plugin-sdk";
 
 export interface UseArrayDataManagerOptions {
   data: any[] | undefined;

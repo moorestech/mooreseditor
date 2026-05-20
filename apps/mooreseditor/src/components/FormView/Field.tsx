@@ -3,6 +3,7 @@ import React, { memo, useCallback } from "react";
 import { Box, Text, Flex, Button } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { resolvePath } from "@mooreseditor/plugin-sdk";
+import { useSwitchFieldAutoGeneration } from "@mooreseditor/plugin-sdk";
 
 import ArrayField from "./ArrayField";
 import { FieldWithCopyPaste } from "./FieldWithCopyPaste";
@@ -16,7 +17,6 @@ import { renderPrimitiveInput } from "./renderPrimitiveInput";
 import type { Column } from "@/hooks/useJson";
 import type { Schema } from "@mooreseditor/plugin-sdk";
 
-import { useSwitchFieldAutoGeneration } from "@/hooks/useSwitchFieldAutoGeneration";
 
 // Move React.lazy outside to prevent re-creating on every render
 const FormViewLazy = React.lazy(() => import("./index"));

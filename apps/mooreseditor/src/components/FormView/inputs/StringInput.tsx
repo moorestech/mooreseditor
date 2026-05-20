@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { TextInput, Textarea } from "@mantine/core";
-
-import { useDebouncedCallback } from "../../../hooks/useDebounce";
+import { useDebouncedCallback } from "@mooreseditor/plugin-sdk";
 
 import { ForeignKeySelect } from "./ForeignKeySelect";
 

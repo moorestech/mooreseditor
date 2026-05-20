@@ -1,11 +1,10 @@
 import React, { useMemo } from "react";
 
 import { Select, Loader, Text } from "@mantine/core";
-
 import {
   useForeignKeyData,
   buildForeignKeySelectKey,
-} from "../../../hooks/useForeignKeyData";
+} from "@mooreseditor/plugin-sdk";
 
 import type { FormInputProps } from "./types";
 import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";

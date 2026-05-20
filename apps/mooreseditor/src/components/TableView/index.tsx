@@ -14,9 +14,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Table, Button, Stack, Text } from "@mantine/core";
+import { useArrayDataManager } from "@mooreseditor/plugin-sdk";
 import { IconPlus } from "@tabler/icons-react";
 
-import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 
 import { SortableRow } from "./components/SortableRow";
 import { useClipboardAppend } from "./hooks/useClipboardAppend";

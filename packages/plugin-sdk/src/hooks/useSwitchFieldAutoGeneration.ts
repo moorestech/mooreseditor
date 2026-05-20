@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 
-import { DataInitializer, deepMerge } from "@mooreseditor/plugin-sdk";
+import { DataInitializer } from "../utils/dataInitializer";
+import { deepMerge } from "../utils/deepMerge";
 
-import type { SwitchSchema, ValueSchema } from "@mooreseditor/plugin-sdk";
+import type { SwitchSchema, ValueSchema } from "../schema";
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する

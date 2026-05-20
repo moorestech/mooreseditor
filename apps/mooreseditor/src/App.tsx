@@ -7,6 +7,7 @@ import {
   createTheme,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { NotificationProvider } from "@mooreseditor/plugin-sdk";
 
 import EditorView from "./components/EditorView";
 import { SearchOverlay } from "./components/SearchOverlay";
@@ -14,6 +15,7 @@ import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSaveShortcut } from "./hooks/useSaveShortcut";
 import { useSchema } from "./hooks/useSchema";
+import { showNotification } from "./utils/notification";
 import { saveProjectData } from "./utils/saveProjectData";
 
 import type { Column } from "./hooks/useJson";
@@ -131,54 +133,56 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <Notifications
-        position="bottom-left"
-        zIndex={2000}
-        autoClose={4000}
-        limit={5}
-      />
-      <AppShell header={{ height: 48 }} padding={0}>
-        <AppShell.Header>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              height: 48,
-              padding: "0 16px",
-              gap: 16,
-            }}
-          >
-            {views.length > 1 && (
-              <SegmentedControl
-                size="sm"
-                value={activeViewId}
-                onChange={setActiveViewId}
-                data={views.map((view) => ({
-                  label: view.label,
-                  value: view.id,
-                  disabled: view.disabled,
-                }))}
-              />
-            )}
-          </div>
-        </AppShell.Header>
-        <AppShell.Main ref={searchTargetRef}>
-          {views.map((view) => (
+      <NotificationProvider showNotification={showNotification}>
+        <Notifications
+          position="bottom-left"
+          zIndex={2000}
+          autoClose={4000}
+          limit={5}
+        />
+        <AppShell header={{ height: 48 }} padding={0}>
+          <AppShell.Header>
             <div
-              key={view.id}
               style={{
-                display: view.id === activeViewId ? "block" : "none",
+                display: "flex",
+                alignItems: "center",
+                height: 48,
+                padding: "0 16px",
+                gap: 16,
               }}
             >
-              {view.render()}
+              {views.length > 1 && (
+                <SegmentedControl
+                  size="sm"
+                  value={activeViewId}
+                  onChange={setActiveViewId}
+                  data={views.map((view) => ({
+                    label: view.label,
+                    value: view.id,
+                    disabled: view.disabled,
+                  }))}
+                />
+              )}
             </div>
-          ))}
-          <SearchOverlay
-            targetRef={searchTargetRef}
-            onActiveMatchChange={handleActiveSearchMatchChange}
-          />
-        </AppShell.Main>
-      </AppShell>
+          </AppShell.Header>
+          <AppShell.Main ref={searchTargetRef}>
+            {views.map((view) => (
+              <div
+                key={view.id}
+                style={{
+                  display: view.id === activeViewId ? "block" : "none",
+                }}
+              >
+                {view.render()}
+              </div>
+            ))}
+            <SearchOverlay
+              targetRef={searchTargetRef}
+              onActiveMatchChange={handleActiveSearchMatchChange}
+            />
+          </AppShell.Main>
+        </AppShell>
+      </NotificationProvider>
     </MantineProvider>
   );
 }

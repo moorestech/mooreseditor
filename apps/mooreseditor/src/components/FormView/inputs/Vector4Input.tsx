@@ -6,8 +6,7 @@ import {
   vector4ToArray,
   isVectorArray,
 } from "@mooreseditor/plugin-sdk";
-
-import { useDebouncedCallback } from "../../../hooks/useDebounce";
+import { useDebouncedCallback } from "@mooreseditor/plugin-sdk";
 
 import type { FormInputProps } from "./types";
 import type { Vector4Object } from "@mooreseditor/plugin-sdk";

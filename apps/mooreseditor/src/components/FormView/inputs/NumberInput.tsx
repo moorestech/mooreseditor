@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { NumberInput as MantineNumberInput } from "@mantine/core";
-
-import { useDebouncedCallback } from "../../../hooks/useDebounce";
+import { useDebouncedCallback } from "@mooreseditor/plugin-sdk";
 
 import type { FormInputProps } from "./types";
 import type { NumberSchema } from "@mooreseditor/plugin-sdk";

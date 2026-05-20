@@ -1,25 +1,26 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
+import { useForeignKeyData } from "@mooreseditor/plugin-sdk";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
+import { useProject } from "../../../hooks/useProject";
+
+import { ForeignKeySelect } from "./ForeignKeySelect";
+
+import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
 // Mock the hooks
-vi.mock("../../../hooks/useForeignKeyData", () => ({
+vi.mock("@mooreseditor/plugin-sdk", () => ({
   useForeignKeyData: vi.fn(),
   buildForeignKeySelectKey: vi.fn(
-    (_config, _value, _displayValue, prefix) => prefix ?? "foreign-key-select",
+    (_config: any, _value: any, _displayValue: any, prefix: string) =>
+      prefix ?? "foreign-key-select",
   ),
 }));
 
 vi.mock("../../../hooks/useProject", () => ({
   useProject: vi.fn(),
 }));
-
-import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
-import { useProject } from "../../../hooks/useProject";
-
-import { ForeignKeySelect } from "./ForeignKeySelect";
-
-import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
 describe("ForeignKeySelect", () => {
   const defaultProps = {
@@ -122,11 +123,9 @@ describe("ForeignKeySelect", () => {
   it("should display options from foreign key data", () => {
     render(<ForeignKeySelect {...defaultProps} />);
 
-    // Open the dropdown
     const select = screen.getByRole("textbox");
     fireEvent.click(select);
 
-    // Check if options are displayed
     expect(screen.getByText("Alice - alice@example.com")).toBeInTheDocument();
     expect(screen.getByText("Bob - bob@example.com")).toBeInTheDocument();
     expect(
@@ -138,7 +137,6 @@ describe("ForeignKeySelect", () => {
     const onChange = vi.fn();
     render(<ForeignKeySelect {...defaultProps} onChange={onChange} />);
 
-    // Open dropdown and select an option
     const select = screen.getByRole("textbox");
     fireEvent.click(select);
 
@@ -187,8 +185,6 @@ describe("ForeignKeySelect", () => {
       <ForeignKeySelect {...defaultProps} schema={optionalSchema} value="1" />,
     );
 
-    // Mantine Select shows a clear button when clearable and has value
-    // The exact implementation depends on Mantine version
     const select = screen.getByRole("textbox");
     expect(select).toBeInTheDocument();
   });
@@ -213,17 +209,14 @@ describe("ForeignKeySelect", () => {
     const select = screen.getByRole("textbox");
     fireEvent.click(select);
 
-    // Type to search
     fireEvent.change(select, { target: { value: "Ali" } });
 
-    // Should filter options (exact behavior depends on Mantine)
     expect(select).toHaveValue("Ali");
   });
 
   it("should handle value not in options", () => {
     render(<ForeignKeySelect {...defaultProps} value="999" />);
 
-    // Mantine Select might not display invalid values
     const select = screen.getByRole("textbox");
     expect(select).toBeInTheDocument();
   });
@@ -258,7 +251,13 @@ describe("ForeignKeySelect", () => {
       />,
     );
 
-    // Mantine Select's clear behavior is complex to test
-    expect(container).toBeInTheDocument();
+    const clearButton = container.querySelector('[aria-label="Clear"]');
+    if (clearButton) {
+      fireEvent.click(clearButton);
+
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalledWith("");
+      });
+    }
   });
 });

@@ -1,9 +1,9 @@
 import React, { memo, useCallback } from "react";
 
 import { Stack, Group, Box, Button, ActionIcon } from "@mantine/core";
+import { useArrayDataManager } from "@mooreseditor/plugin-sdk";
 import { IconPlus, IconTrash, IconCopy } from "@tabler/icons-react";
 
-import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 
 import Field from "./Field";
 

@@ -7,7 +7,10 @@ import type { Plugin } from "vite";
 /**
  * pluginFsPlugin
  *
- * Phase 3 PoC / Task 6 implementation seed.
+ * The live shared-dependency bridge plus the plugin filesystem API. Since
+ * Task 3 the production import map in `index.html` resolves shared deps
+ * through the `/shared/*.js` bridge served here, so this is the real
+ * mechanism the host and dynamically-imported plugins rely on.
  *
  * Provides three capabilities:
  *
@@ -67,8 +70,13 @@ import type { Plugin } from "vite";
 const SHARED_DEPS: Record<string, { spec: string; hasDefault: boolean }> = {
   react: { spec: "react", hasDefault: true },
   "react-dom": { spec: "react-dom", hasDefault: true },
+  // Key convention for subpath specs: collapse the subpath separator,
+  // slash -> hyphen (`react/jsx-runtime` -> `react-jsx-runtime`), so the
+  // key stays a valid single `/shared/<key>.js` path segment.
   "react-jsx-runtime": { spec: "react/jsx-runtime", hasDefault: false },
   "mantine-core": { spec: "@mantine/core", hasDefault: false },
+  // The host itself does not import `@mantine/hooks` directly, but it must
+  // be retained as a host dependency so this bridge can serve it to plugins.
   "mantine-hooks": { spec: "@mantine/hooks", hasDefault: false },
   "mantine-notifications": {
     spec: "@mantine/notifications",
@@ -201,8 +209,8 @@ const ENTRY_PREFIX = "\0shared-entry:";
  * `transformIndexHtml` hook; the map points at `shared/<dep>.js` literally
  * and this plugin makes Rollup emit the chunk at exactly that path.
  *
- * Design (verified by Phase 3 PoC build-output analysis, not a live Tauri
- * run):
+ * Design (verified by build-output analysis; prod Tauri run pending
+ * Task 8):
  *  - Each shared dep is registered as a Rollup *input entry* with a virtual
  *    id. Its source is `export * from "<dep>"; export { default } from
  *    "<dep>"`. Rollup compiles this into a proper ESM module with clean

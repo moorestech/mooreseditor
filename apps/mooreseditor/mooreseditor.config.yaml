@@ -1,0 +1,3 @@
+# mooreseditor が起動時に読み込むプラグインの宣言。
+plugins:
+  - dir: ./plugins/node-graph

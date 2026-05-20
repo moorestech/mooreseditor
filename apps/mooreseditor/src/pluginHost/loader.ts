@@ -1,0 +1,194 @@
+import type { PluginManifest } from "@mooreseditor/plugin-sdk";
+
+/**
+ * `plugin.json` の形。`config.yaml` の `dir` 配下に置かれる。
+ * `entry` / `styles` の各パスは `dir` からの相対。
+ */
+interface PluginJson {
+  id: string;
+  name: string;
+  version: string;
+  entry: string;
+  styles?: string[];
+}
+
+/**
+ * 現在 Tauri webview 内で実行されているかを判定する。
+ *
+ * `@tauri-apps/api/core` は通常の npm パッケージなので、Vite ブラウザでも
+ * 動的 import 自体は成功する（モジュールは存在する）。Tauri ランタイムが
+ * 注入されているかは別問題で、Tauri 2 は webview に `window.__TAURI_INTERNALS__`
+ * を注入する。これが無ければ dev (Vite ブラウザ) と判断できる。
+ */
+function isTauriRuntime(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
+
+/**
+ * monorepo ルート相対のプラグインパスを絶対パスへ解決する（dev/prod フォールバック）。
+ *
+ * prod (Tauri): Rust の `resolve_plugin_path` コマンドが、`CARGO_MANIFEST_DIR`
+ *   をアンカーに monorepo ルート基準でパスを絶対化し（CWD 非依存）、許可リスト
+ *   検証を通った場合のみ FS スコープへ登録する。`@tauri-apps/plugin-fs` の
+ *   `readTextFile` も `asset:` プロトコルの `convertFileSrc` も絶対パスを
+ *   要求するため、ロード前に絶対化が必須。
+ * dev (Vite ブラウザ): Tauri ランタイムが無いため、相対パスのまま返す
+ *   — `/api/plugin-fs/*` エンドポイントが monorepo ルート基準で相対パスを
+ *   解決するため、これで正しく動作する。
+ *
+ * Tauri ランタイム不在（= dev の正常なフォールバック）と、Tauri 環境での
+ * `invoke` 拒否（= prod の実エラー）を区別する。前者はサイレントに相対パスへ
+ * フォールバックし、後者はフォールバックしつつ `console.warn` で診断可能にする。
+ *
+ * `config.yaml` の `dir` 由来のパスは信頼できる入力なので、結果はそのまま
+ * 後続の読み込みに使う。
+ */
+export async function resolveAbsolutePluginPath(
+  relativePath: string,
+): Promise<string> {
+  if (!isTauriRuntime()) {
+    // dev (Vite ブラウザ): Tauri ランタイム不在。正常なフォールバック。
+    return relativePath;
+  }
+  try {
+    const { invoke } = await import("@tauri-apps/api/core");
+    return await invoke<string>("resolve_plugin_path", { relativePath });
+  } catch (error) {
+    // Tauri 環境にも関わらず invoke が失敗した = 実エラー（未登録コマンド・
+    // 許可リスト違反など）。フォールバックはするが、サイレントにせず警告する。
+    console.warn(
+      `resolveAbsolutePluginPath: resolve_plugin_path invoke failed for ` +
+        `"${relativePath}"; falling back to the relative path: ` +
+        (error instanceof Error ? error.message : String(error)),
+    );
+    return relativePath;
+  }
+}
+
+/**
+ * プラグインディレクトリからファイルテキストを読む（dev/prod フォールバック）。
+ *
+ * prod (Tauri): `@tauri-apps/plugin-fs` の `readTextFile` で直接読む。
+ * dev: `/api/plugin-fs/read` エンドポイント経由。このエンドポイントは
+ *   JSON `{ content }` を返すため、`res.json()` から `content` を取り出す。
+ *
+ * `filePath` は monorepo ルート相対パス（例: `./plugins/node-graph/plugin.json`）。
+ */
+async function readPluginText(filePath: string): Promise<string> {
+  try {
+    const { readTextFile } = await import("@tauri-apps/plugin-fs");
+    return await readTextFile(filePath);
+  } catch {
+    const res = await fetch(
+      `/api/plugin-fs/read?path=${encodeURIComponent(filePath)}`,
+    );
+    if (!res.ok) {
+      throw new Error(`plugin read failed: ${filePath} (${res.status})`);
+    }
+    const body = (await res.json()) as { content?: unknown };
+    if (typeof body.content !== "string") {
+      throw new Error(`plugin read returned no content: ${filePath}`);
+    }
+    return body.content;
+  }
+}
+
+/**
+ * プラグインファイル（エントリ JS・CSS）の URL を解決する（dev/prod フォールバック）。
+ *
+ * prod (Tauri): `convertFileSrc` でカスタムプロトコル URL に変換。
+ * dev: `/api/plugin-fs/file` エンドポイント（正しい MIME で配信）。
+ *
+ * `filePath` は monorepo ルート相対パス。
+ */
+async function resolvePluginFileUrl(filePath: string): Promise<string> {
+  try {
+    const { convertFileSrc } = await import("@tauri-apps/api/core");
+    return convertFileSrc(filePath);
+  } catch {
+    return `/api/plugin-fs/file?path=${encodeURIComponent(filePath)}`;
+  }
+}
+
+/**
+ * plugin.json の styles の CSS を `<link>` として動的注入する。
+ *
+ * 各 href は `resolvePluginFileUrl` で解決するため、prod (Tauri) でも
+ * dev でも正しく配信される（dev 専用エンドポイントを直書きしない）。
+ */
+async function injectPluginStyles(
+  pluginDir: string,
+  styles: string[],
+): Promise<void> {
+  for (const stylePath of styles) {
+    const href = await resolvePluginFileUrl(`${pluginDir}/${stylePath}`);
+    if (!document.querySelector(`link[data-plugin-style="${href}"]`)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      link.dataset.pluginStyle = href;
+      document.head.appendChild(link);
+    }
+  }
+}
+
+/**
+ * 動的 import した default export が `PluginManifest` として妥当かを検証する。
+ * エントリ JS は外部の信頼できないコードなので、型アサーションだけに頼らず
+ * 実行時に最低限の形を確認する。
+ */
+function assertPluginManifest(
+  value: unknown,
+  pluginDir: string,
+): asserts value is PluginManifest {
+  const manifest = value as Partial<PluginManifest> | undefined;
+  if (
+    !manifest ||
+    typeof manifest.id !== "string" ||
+    typeof manifest.name !== "string" ||
+    typeof manifest.createView !== "function"
+  ) {
+    throw new Error(
+      `Plugin ${pluginDir}: default export is not a valid PluginManifest`,
+    );
+  }
+}
+
+/**
+ * 1 プラグインディレクトリをロードして `PluginManifest` を返す。
+ *
+ * 手順:
+ *  1. `<dir>/plugin.json` を読み、`PluginJson` としてパース。
+ *  2. `styles` があれば CSS を `<link>` 注入。
+ *  3. `<dir>/<entry>` の JS を動的 import し、`default` エクスポートを
+ *     検証した上で `PluginManifest` として返す。
+ *
+ * `pluginDir` は monorepo ルート相対パス（例: `./plugins/node-graph`）。
+ * 内部で `resolveAbsolutePluginPath` により prod では絶対パスへ解決する
+ * （dev では相対パスのまま）。以降の読み込みは解決後のパス基準で行う。
+ */
+export async function loadPlugin(pluginDir: string): Promise<PluginManifest> {
+  const resolvedDir = await resolveAbsolutePluginPath(pluginDir);
+  const manifestText = await readPluginText(`${resolvedDir}/plugin.json`);
+  let pluginJson: PluginJson;
+  try {
+    pluginJson = JSON.parse(manifestText) as PluginJson;
+  } catch (e) {
+    throw new Error(`Invalid plugin.json in ${pluginDir}: ${String(e)}`);
+  }
+
+  if (pluginJson.styles?.length) {
+    await injectPluginStyles(resolvedDir, pluginJson.styles);
+  }
+
+  const entryUrl = await resolvePluginFileUrl(
+    `${resolvedDir}/${pluginJson.entry}`,
+  );
+  // `@vite-ignore`: この URL は実行時に解決されるため、Vite に静的解析・
+  // バンドルさせない。
+  const mod = (await import(/* @vite-ignore */ entryUrl)) as {
+    default: unknown;
+  };
+  assertPluginManifest(mod.default, pluginDir);
+  return mod.default;
+}

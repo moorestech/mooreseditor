@@ -13,6 +13,15 @@
       "allow": []
     },
     {
+      "identifier": "fs:scope",
+      "allow": [
+        "**/plugins/**",
+        "**/mooreseditor.config.yaml",
+        "**/.mooreseditor/**",
+        "mooreseditor.config.yaml"
+      ]
+    },
+    {
       "identifier": "dialog:allow-save",
       "all": true
     },

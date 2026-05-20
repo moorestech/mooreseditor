@@ -11,9 +11,13 @@
   "scripts": {
     "lint": "eslint src",
     "type-check": "tsc --noEmit",
+    "build": "vite build",
     "test": "vitest run"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.2.0",
+    "@tauri-apps/plugin-fs": "^2.2.0",
     "@xyflow/react": "^12.10.0",
     "html-to-image": "^1.11.13"
   },
@@ -23,9 +27,6 @@
     "@mantine/notifications": "^7.10.0",
     "@mooreseditor/plugin-sdk": "workspace:*",
     "@tabler/icons-react": "^3.0.0",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-dialog": "^2.2.0",
-    "@tauri-apps/plugin-fs": "^2.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

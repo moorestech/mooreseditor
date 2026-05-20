@@ -13,6 +13,13 @@ export interface ViewDescriptor {
   render: () => ReactNode;
   /** タブを無効化するか（例: データ未ロード時）。 */
   disabled?: boolean;
+  /**
+   * このビューがアクティブな間ホストへ公開する能力を返す（任意）。
+   * Editor も含めた全ビューが同一パスで能力を解決できるよう、
+   * ホストは `views.find(v => v.id === activeViewId)?.getCapabilities?.()`
+   * で能力を取得する。未定義のビューは能力なし扱い。
+   */
+  getCapabilities?: () => ViewCapabilities;
 }
 
 /**

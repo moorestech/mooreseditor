@@ -56,9 +56,12 @@ vi.mock("@tauri-apps/api/path", () => ({
   ),
 }));
 
-// Mock the node-graph plugin so the lazy import resolves synchronously in tests.
-vi.mock("@mooreseditor/plugin-node-graph", () => ({
-  default: vi.fn(() => <div data-testid="node-editor-view" />),
+// ノードグラフはランタイムプラグインとして動的ロードされる（Phase 3）。
+// View host シェルの検証ではプラグインローダをモックし、プラグイン 0 個
+// （= Editor のみ）の状態にする。プラグイン込みのタブ登録は dev サーバ +
+// Playwright（Step 5）で実証する。
+vi.mock("./pluginHost/usePlugins", () => ({
+  usePlugins: vi.fn(() => ({ plugins: [], loading: false })),
 }));
 
 import App from "./App";
@@ -132,12 +135,13 @@ describe("App (view host)", () => {
     expect(screen.getByTestId("search-overlay")).toBeInTheDocument();
   });
 
-  it("shows the tab bar (Editor / Node Graph) when two views are registered", () => {
+  it("hides the tab bar when only the Editor view is registered", () => {
+    // usePlugins はモックで 0 プラグインを返す（= Editor のみ）。
+    // ビューが 1 つしかないとき SegmentedControl は描画されない。
     render(<App />);
 
-    // SegmentedControl renders radio inputs; with two views both tabs exist.
     const radios = screen.queryAllByRole("radio");
-    expect(radios.length).toBe(2);
+    expect(radios.length).toBe(0);
   });
 
   it("preloads data on mount", () => {

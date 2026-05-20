@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 
+import { NODE_GRAPH_DIR, NODE_GRAPH_FILE_NAME } from "../constants";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
@@ -136,8 +137,8 @@ export function useNodeGraph(
 
       try {
         // Production: Tauri FS
-        const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
-        const filePath = await path.join(mooreseditorDir, "nodeGraph.v1.json");
+        const mooreseditorDir = await path.join(projectDir, NODE_GRAPH_DIR);
+        const filePath = await path.join(mooreseditorDir, NODE_GRAPH_FILE_NAME);
         try {
           await invoke("add_project_to_scope", {
             projectPath: mooreseditorDir,

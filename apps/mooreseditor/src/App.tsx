@@ -1,12 +1,4 @@
-import {
-  Suspense,
-  lazy,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   AppShell,
@@ -23,21 +15,25 @@ import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSaveShortcut } from "./hooks/useSaveShortcut";
 import { useSchema } from "./hooks/useSchema";
+import { createHostApi } from "./pluginHost/hostApi";
+import { usePlugins } from "./pluginHost/usePlugins";
 import { showNotification } from "./utils/notification";
 import { saveProjectData } from "./utils/saveProjectData";
 
 import type { Column } from "./hooks/useJson";
 import type { ViewCapabilities, ViewDescriptor } from "./viewHost/types";
-import type {
-  NodeEditorHandle,
-  NodeGraphFile,
-} from "@mooreseditor/plugin-node-graph";
-
-const NodeEditorView = lazy(() => import("@mooreseditor/plugin-node-graph"));
 
 const theme = createTheme({
   primaryColor: "orange",
 });
+
+const EDITOR_VIEW_ID = "editor";
+
+/** 能力を解決できなかった場合のフォールバック（保存不可）。 */
+const NO_CAPABILITIES: ViewCapabilities = {
+  canSave: false,
+  onSave: () => {},
+};
 
 function App() {
   const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
@@ -53,21 +49,29 @@ function App() {
     clearUnsavedChanges,
   } = useJson();
   const { schemas, loadSchema } = useSchema();
+  const { plugins, loading: isPluginsLoading } = usePlugins();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [activeViewId, setActiveViewId] = useState("editor");
+  const [activeViewId, setActiveViewId] = useState(EDITOR_VIEW_ID);
   const searchTargetRef = useRef<HTMLElement>(null);
-  const nodeEditorRef = useRef<NodeEditorHandle>(null);
+
+  // --- 負債③: 揮発性 state を ref で追い、安定参照の getter から最新値を返す ---
+  // hostApi / pluginViews の useMemo deps から jsonData（毎キーストローク変化）と
+  // schemas（loadSchema のたびに新オブジェクト）を排除し、manifest.createView が
+  // 再実行されてプラグインが remount するのを防ぐ。
+  const jsonDataRef = useRef(jsonData);
+  jsonDataRef.current = jsonData;
+  const schemasRef = useRef(schemas);
+  schemasRef.current = schemas;
 
   useEffect(() => {
     preloadAllData(loadSchema);
   }, [menuToFileMap, projectDir, masterDir, schemaDir]);
 
   const saveAll = useCallback(
-    async (columns: Column[], nodeGraphData?: NodeGraphFile | null) => {
+    async (columns: Column[]) => {
       await saveProjectData({
         columns,
-        nodeGraphData,
         projectDir,
         masterDir,
         onSuccess: () => {
@@ -84,51 +88,86 @@ function App() {
     setHasUnsavedChanges(true);
   }, [setHasUnsavedChanges]);
 
-  // ビューレジストリ。Editor と Node Graph の 2 ビュー。
-  const views: ViewDescriptor[] = useMemo(
-    () => [
-      {
-        id: "editor",
-        label: "Editor",
-        render: () => (
-          <EditorView
-            menuToFileMap={menuToFileMap}
-            jsonData={jsonData}
-            setJsonData={setJsonData}
-            schemas={schemas}
-            loadSchema={loadSchema}
-            loadJsonFile={loadJsonFile}
-            openProjectDir={openProjectDir}
-            isPreloading={isPreloading}
-            isEditing={isEditing}
-            hasUnsavedChanges={hasUnsavedChanges}
-            onMarkDirty={markDirty}
-          />
-        ),
-      },
-      {
-        id: "node-graph",
-        label: "Node Graph",
-        disabled: isPreloading,
-        render: () => (
-          <Suspense
-            fallback={<div style={{ padding: 16 }}>Loading Node Editor...</div>}
-          >
-            <NodeEditorView
-              ref={nodeEditorRef}
-              jsonData={jsonData}
-              setJsonData={setJsonData}
-              schemas={schemas}
-              loadSchema={loadSchema}
-              projectDir={projectDir}
-              masterDir={masterDir}
-              onMarkDirty={() => setHasUnsavedChanges(true)}
-              onRequestSave={saveAll}
-            />
-          </Suspense>
-        ),
-      },
+  // --- 負債③: HostAPI に渡す関数群を安定参照にする ---
+  // getColumns / getSchemas は state をクロージャに閉じ込めず ref から読むため、
+  // 毎レンダーで同一参照のまま常に最新値を返せる。
+  const getColumns = useCallback(() => jsonDataRef.current, []);
+  const getSchemas = useCallback(() => schemasRef.current, []);
+  const setColumns = useCallback(
+    (updater: (columns: Column[]) => Column[]) => {
+      setJsonData((prev) => updater(prev));
+    },
+    [setJsonData],
+  );
+
+  // hostApi は projectDir / masterDir が変わったときのみ再生成される。
+  // getColumns / getSchemas / setColumns / loadSchema / markDirty は安定参照
+  // なので、毎キーストロークやスキーマロードのたびには再生成されない。
+  // → manifest.createView が再実行されずプラグインが remount しない。
+  const hostApi = useMemo(
+    () =>
+      createHostApi({
+        getColumns,
+        setColumns,
+        getSchemas,
+        loadSchema,
+        projectDir,
+        masterDir,
+        markDirty,
+      }),
+    [
+      getColumns,
+      setColumns,
+      getSchemas,
+      loadSchema,
+      projectDir,
+      masterDir,
+      markDirty,
     ],
+  );
+
+  // --- 負債①/③: createView は manifest と hostApi が安定な限り 1 回だけ呼ぶ ---
+  // 得た PluginView を保持し、render() を繰り返し呼ぶ。hostApi が安定なため
+  // タブ切替や編集（jsonData 更新）では再生成されず、プラグインは remount しない。
+  const pluginInstances = useMemo(
+    () =>
+      plugins.map((manifest) => ({
+        manifest,
+        view: manifest.createView(hostApi),
+      })),
+    [plugins, hostApi],
+  );
+
+  // Editor の能力解決（従来ロジック）。
+  const editorGetCapabilities = useCallback(
+    (): ViewCapabilities => ({
+      canSave: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
+      onSave: () => saveAll(jsonData),
+    }),
+    [isEditing, hasUnsavedChanges, jsonData, saveAll],
+  );
+
+  const editorView: ViewDescriptor = useMemo(
+    () => ({
+      id: EDITOR_VIEW_ID,
+      label: "Editor",
+      render: () => (
+        <EditorView
+          menuToFileMap={menuToFileMap}
+          jsonData={jsonData}
+          setJsonData={setJsonData}
+          schemas={schemas}
+          loadSchema={loadSchema}
+          loadJsonFile={loadJsonFile}
+          openProjectDir={openProjectDir}
+          isPreloading={isPreloading}
+          isEditing={isEditing}
+          hasUnsavedChanges={hasUnsavedChanges}
+          onMarkDirty={markDirty}
+        />
+      ),
+      getCapabilities: editorGetCapabilities,
+    }),
     [
       menuToFileMap,
       jsonData,
@@ -141,31 +180,51 @@ function App() {
       isEditing,
       hasUnsavedChanges,
       markDirty,
-      projectDir,
-      masterDir,
-      setHasUnsavedChanges,
-      saveAll,
+      editorGetCapabilities,
     ],
   );
 
-  // アクティブビューがホストへ公開する能力を解決する。
+  // --- 負債②: プラグインビューも getCapabilities で同一パスで能力を返す ---
+  const pluginViews: ViewDescriptor[] = useMemo(
+    () =>
+      pluginInstances.map(({ manifest, view }) => {
+        const resolveCapabilities = (): ViewCapabilities => {
+          const isDirty = view.isDirty?.();
+          return {
+            // isDirty を実装するプラグインはそれに従う。
+            // 未実装なら従来どおり常時 true（保存可能）とする。
+            canSave: isDirty ?? true,
+            onSave: () => view.save?.() ?? Promise.resolve(),
+            focusSearchMatch: view.focusSearchMatch
+              ? (element) => view.focusSearchMatch?.(element)
+              : undefined,
+          };
+        };
+        return {
+          id: manifest.id,
+          label: manifest.name,
+          render: () => view.render(),
+          getCapabilities: resolveCapabilities,
+          // ホストデータ preload 中・プラグインロード中はタブを無効化する
+          // （旧 node-graph ビューの `disabled: isPreloading` と同等のガード）。
+          // descriptor の再生成のみで、保持中の `view` 実体には触れないため
+          // プラグインは remount しない。
+          disabled: isPreloading || isPluginsLoading,
+        };
+      }),
+    [pluginInstances, isPreloading, isPluginsLoading],
+  );
+
+  const views = useMemo(
+    () => [editorView, ...pluginViews],
+    [editorView, pluginViews],
+  );
+
+  // --- 負債②: Editor / プラグインを区別せず単一パスで能力を解決する ---
   const capabilities: ViewCapabilities = useMemo(() => {
-    if (activeViewId === "editor") {
-      return {
-        canSave: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
-        onSave: () => saveAll(jsonData),
-      };
-    }
-    if (activeViewId === "node-graph") {
-      return {
-        canSave: true,
-        onSave: () => nodeEditorRef.current?.save() ?? Promise.resolve(),
-        focusSearchMatch: (element) =>
-          nodeEditorRef.current?.focusSearchMatch(element),
-      };
-    }
-    return { canSave: false, onSave: () => {} };
-  }, [activeViewId, isEditing, hasUnsavedChanges, jsonData, saveAll]);
+    const active = views.find((view) => view.id === activeViewId);
+    return active?.getCapabilities?.() ?? NO_CAPABILITIES;
+  }, [views, activeViewId]);
 
   useSaveShortcut({
     canSave: capabilities.canSave,
@@ -178,6 +237,25 @@ function App() {
     },
     [capabilities],
   );
+
+  // --- 負債①: 遅延マウント ---
+  // 全ビュー常時マウント + display:none では、@xyflow/react がコンテナサイズ 0 で
+  // 初期化されレイアウトが崩れる。初回アクティブ化されるまで DOM へ追加せず、
+  // 一度表示された ID は以後マウントを維持（display:none で隠す）して
+  // プラグイン内部状態（編集中のノード等）を保持する。
+  const [mountedViewIds, setMountedViewIds] = useState<Set<string>>(
+    () => new Set([EDITOR_VIEW_ID]),
+  );
+  useEffect(() => {
+    setMountedViewIds((prev) => {
+      if (prev.has(activeViewId)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.add(activeViewId);
+      return next;
+    });
+  }, [activeViewId]);
 
   return (
     <MantineProvider theme={theme}>
@@ -214,16 +292,18 @@ function App() {
             </div>
           </AppShell.Header>
           <AppShell.Main ref={searchTargetRef}>
-            {views.map((view) => (
-              <div
-                key={view.id}
-                style={{
-                  display: view.id === activeViewId ? "block" : "none",
-                }}
-              >
-                {view.render()}
-              </div>
-            ))}
+            {views
+              .filter((view) => mountedViewIds.has(view.id))
+              .map((view) => (
+                <div
+                  key={view.id}
+                  style={{
+                    display: view.id === activeViewId ? "block" : "none",
+                  }}
+                >
+                  {view.render()}
+                </div>
+              ))}
             <SearchOverlay
               targetRef={searchTargetRef}
               onActiveMatchChange={handleActiveSearchMatchChange}

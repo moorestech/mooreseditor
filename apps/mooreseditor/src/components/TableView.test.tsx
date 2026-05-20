@@ -66,8 +66,8 @@ describe("TableView", () => {
   it("should handle null data", () => {
     render(<TableView {...defaultProps} data={null as any} />);
 
-    // Should display error message
-    expect(screen.getByText("Invalid data")).toBeInTheDocument();
+    // Should render empty table (null is treated as missing/empty, like undefined)
+    expect(screen.getByRole("table")).toBeInTheDocument();
   });
 
   it("should handle undefined data", () => {

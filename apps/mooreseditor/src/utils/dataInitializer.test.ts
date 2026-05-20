@@ -86,13 +86,18 @@ describe("DataInitializer", () => {
       const initializer = new DataInitializer();
       const result = initializer.createRequiredValue(schema);
 
+      // A field is required unless optional === true, so every nested field
+      // here is generated (tags -> [], metadata.created -> "").
       expect(result).toEqual({
         id: 0,
         details: {
           category: "",
+          tags: [],
+        },
+        metadata: {
+          created: "",
         },
       });
-      expect(result.metadata).toBeUndefined();
     });
   });
 

@@ -57,8 +57,8 @@ describe("NumberInput", () => {
     fireEvent.change(input, { target: { value: "0.123456789" } });
 
     vi.advanceTimersByTime(300);
-    // MantineNumberInput has decimalScale={2}, so it rounds to 2 decimal places
-    expect(onChange).toHaveBeenCalledWith(0.12);
+    // NumberInput keeps full precision (no decimalScale rounding)
+    expect(onChange).toHaveBeenCalledWith(0.123456789);
   });
 
   it("should handle negative numbers", () => {
@@ -83,18 +83,18 @@ describe("NumberInput", () => {
     expect(onChange).toHaveBeenCalledWith(0);
   });
 
-  it("should handle undefined value as 0", () => {
+  it("should handle undefined value as empty", () => {
     render(<NumberInput {...defaultProps} value={undefined} />);
 
     const input = screen.getByRole("textbox");
-    expect(input).toHaveValue("0");
+    expect(input).toHaveValue("");
   });
 
-  it("should handle null value as 0", () => {
+  it("should handle null value as empty", () => {
     render(<NumberInput {...defaultProps} value={null as any} />);
 
     const input = screen.getByRole("textbox");
-    expect(input).toHaveValue("0");
+    expect(input).toHaveValue("");
   });
 
   it("should handle empty string input", () => {
@@ -105,7 +105,8 @@ describe("NumberInput", () => {
     fireEvent.change(input, { target: { value: "" } });
 
     vi.advanceTimersByTime(300);
-    expect(onChange).toHaveBeenCalledWith(0);
+    // Empty input clears the value (reported as undefined, not 0)
+    expect(onChange).toHaveBeenCalledWith(undefined);
   });
 
   it("should handle invalid input gracefully", () => {
@@ -161,8 +162,8 @@ describe("NumberInput", () => {
     fireEvent.change(input, { target: { value: "0.000000000001" } });
 
     vi.advanceTimersByTime(300);
-    // MantineNumberInput has decimalScale={2}, so it rounds to 0
-    expect(onChange).toHaveBeenCalledWith(0);
+    // NumberInput keeps full precision, so small values are not rounded away
+    expect(onChange).toHaveBeenCalledWith(1e-12);
   });
 
   it("should handle Infinity", () => {

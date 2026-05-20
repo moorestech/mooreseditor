@@ -2,7 +2,7 @@
 import "./mocks/setup-tauri";
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
-import { afterEach, beforeAll, afterAll, vi } from "vitest";
+import { afterEach, beforeAll, afterAll, beforeEach, vi } from "vitest";
 
 // Cleanup after each test
 afterEach(() => {
@@ -10,18 +10,28 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(), // deprecated
-    removeListener: vi.fn(), // deprecated
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
+// Re-applied before every test so that per-file vi.restoreAllMocks()/resetAllMocks()
+// calls cannot strip the mock implementation and break subsequent tests.
+const installMatchMedia = () => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    configurable: true,
+    value: vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(), // deprecated
+      removeListener: vi.fn(), // deprecated
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+};
+
+installMatchMedia();
+beforeEach(() => {
+  installMatchMedia();
 });
 
 // Mock IntersectionObserver

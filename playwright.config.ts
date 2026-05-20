@@ -20,7 +20,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "cd apps/mooreseditor && pnpm run dev",
+    command: "cd apps/mooreseditor && PORT=1420 pnpm run dev",
     port: 1420,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

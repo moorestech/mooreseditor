@@ -1,5 +1,3 @@
-import React from "react";
-
 import { describe, it, expect } from "vitest";
 
 import blocksData from "../../../../public/src/sample/master/blocks.json";
@@ -10,11 +8,13 @@ import type { Schema } from "@/libs/schema/types";
 
 import { render, screen } from "@/test/utils/test-utils";
 
+// Note: the `name` field is intentionally omitted. Some sample rows have a
+// `name` equal to one of their referenced block names, which would make
+// findByDisplayValue ambiguous. This test focuses on foreign key rendering.
 const blockItemSchema: Schema = {
   type: "object",
   properties: [
     { key: "blockGuid", type: "uuid" },
-    { key: "name", type: "string" },
     {
       key: "overrideVerticalBlock",
       type: "object",

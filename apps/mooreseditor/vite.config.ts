@@ -4,12 +4,21 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 import { devFsPlugin } from "./vite-plugins/devFsPlugin";
+import {
+  pluginFsPlugin,
+  pluginSharedBuildPlugin,
+} from "./vite-plugins/pluginFsPlugin";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react(), devFsPlugin()],
+  plugins: [
+    react(),
+    devFsPlugin(),
+    pluginFsPlugin(),
+    pluginSharedBuildPlugin(),
+  ],
 
   resolve: {
     alias: {

@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri + React + Typescript</title>
+    <!-- Phase 3 PoC: shared dependency bridge import map.
+         Plugins loaded via raw dynamic import() resolve the bare specifier
+         "react" through this map to the host's single React instance. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "/shared/react.js"
+        }
+      }
+    </script>
   </head>
 
   <body>

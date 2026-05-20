@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+import type { ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 
 /**
@@ -26,11 +27,19 @@ import type { Plugin } from "vite";
  *     `index.html` import map).
  *
  *  3. `shared/<dep>.js`  (build: real emitted chunk)
- *     During `vite build` the same bridge is emitted as a real asset under
- *     `dist/shared/`, and the `index.html` import map is rewritten to point
- *     at the hashed chunk that Rollup placed React into. This makes the
- *     import map deterministic in prod and keeps the host + plugins on one
- *     React instance (the host bundle imports React from the SAME chunk).
+ *     During `vite build` the same bridge is emitted as a real chunk under
+ *     `dist/shared/`. The `index.html` import map is NOT rewritten — there
+ *     is no `transformIndexHtml` hook here. Instead the *static* map written
+ *     into `index.html` stays correct because `pluginSharedBuildPlugin`
+ *     force-names the bridge entries to stable, unhashed paths
+ *     (`shared/<dep>.js`) via `entryFileNames`. So the literal path the
+ *     import map already references is exactly where Rollup emits the chunk.
+ *     Rollup hoists React's actual implementation into a shared chunk that
+ *     BOTH the host bundle and the bridge entry import, so prod still has a
+ *     single React instance.
+ *
+ *     NOTE: the prod side was verified by build-output analysis (inspecting
+ *     `dist/` chunk paths and import graph), not by a live Tauri run.
  *
  * Per CLAUDE.md, dev/prod differences are handled by Vite's `apply` hook
  * granularity rather than runtime `if (isDev)` branching.
@@ -59,7 +68,7 @@ function bridgeSource(dep: { spec: string; hasDefault: boolean }): string {
 }
 
 function sendJson(
-  res: import("node:http").ServerResponse,
+  res: ServerResponse,
   statusCode: number,
   data: Record<string, unknown>,
 ): void {
@@ -158,10 +167,14 @@ export function pluginFsPlugin(): Plugin {
 const ENTRY_PREFIX = "\0shared-entry:";
 
 /**
- * Build side: emit real `shared/<dep>.js` bridge chunks at deterministic
- * paths and rewrite the `index.html` import map to point at them.
+ * Build side: emit real `shared/<dep>.js` bridge chunks at deterministic,
+ * unhashed paths so the *static* `index.html` import map keeps resolving
+ * correctly. The import map is never rewritten — there is no
+ * `transformIndexHtml` hook; the map points at `shared/<dep>.js` literally
+ * and this plugin makes Rollup emit the chunk at exactly that path.
  *
- * Design (proven by the Phase 3 PoC):
+ * Design (verified by Phase 3 PoC build-output analysis, not a live Tauri
+ * run):
  *  - Each shared dep is registered as a Rollup *input entry* with a virtual
  *    id. Its source is `export * from "<dep>"; export { default } from
  *    "<dep>"`. Rollup compiles this into a proper ESM module with clean

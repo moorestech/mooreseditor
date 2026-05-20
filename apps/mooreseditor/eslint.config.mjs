@@ -19,6 +19,8 @@ export default tseslint.config(
       "eslint.config.mjs",
       "coverage",
       "dist",
+      // Phase 3 PoC scratch (gitignored, not part of any tsconfig project).
+      "poc-plugin",
     ],
   },
   {

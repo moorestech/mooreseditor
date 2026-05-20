@@ -48,20 +48,35 @@ import type { Plugin } from "vite";
 // Shared dependencies exposed through `/shared/<name>.js`.
 // Keep this list explicit: only deps that MUST be a single instance across
 // host + plugins belong here.
-// `hasDefault: false` for deps whose package has no default export
-// (e.g. react/jsx-runtime) — only `export *` is emitted for those.
+// `hasDefault` controls whether `bridgeSource()` additionally emits
+// `export { default } from "<spec>"`. It MUST be `true` only for packages
+// whose ESM entry actually has a top-level default export — emitting that
+// re-export for a package without one breaks the build / bridge evaluation.
+// Verified values (inspecting each package's ESM entry):
+//   - react / react-dom: real default export -> true
+//   - react/jsx-runtime, @mantine/*, @tabler/icons-react, @xyflow/react,
+//     @mooreseditor/plugin-sdk: named exports only -> false
 //
-// SYNC CONTRACT: this registry is the source of truth for shared deps, but
-// the `index.html` import map currently lists ONLY "react" — it is
-// intentionally partial for the PoC and DOES NOT match this registry yet.
-// Task 3 must extend the import map in `apps/mooreseditor/index.html` to
-// cover every entry below, including subpaths like "react-dom/client", so
-// the two stay in sync. Adding a dep here without updating that map will
-// leave the new dep unresolvable for dynamically-imported plugins.
+// SYNC CONTRACT: this registry is the single source of truth for shared
+// deps. Every entry below MUST be mirrored 1:1 by:
+//   - the `index.html` import map (`/shared/<key>.js` URLs), and
+//   - the `EXTERNAL` array in `plugins/node-graph/vite.config.ts`.
+// All three lists currently enumerate the same 9 deps. Adding/removing a dep
+// here without updating the other two will leave it unresolvable for
+// dynamically-imported plugins (import map) or wrongly bundled (EXTERNAL).
 const SHARED_DEPS: Record<string, { spec: string; hasDefault: boolean }> = {
   react: { spec: "react", hasDefault: true },
   "react-dom": { spec: "react-dom", hasDefault: true },
   "react-jsx-runtime": { spec: "react/jsx-runtime", hasDefault: false },
+  "mantine-core": { spec: "@mantine/core", hasDefault: false },
+  "mantine-hooks": { spec: "@mantine/hooks", hasDefault: false },
+  "mantine-notifications": {
+    spec: "@mantine/notifications",
+    hasDefault: false,
+  },
+  "tabler-icons-react": { spec: "@tabler/icons-react", hasDefault: false },
+  "xyflow-react": { spec: "@xyflow/react", hasDefault: false },
+  "plugin-sdk": { spec: "@mooreseditor/plugin-sdk", hasDefault: false },
 };
 
 const SHARED_PREFIX = "\0plugin-fs-shared:";

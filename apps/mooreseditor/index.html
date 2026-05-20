@@ -5,22 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri + React + Typescript</title>
-    <!-- Phase 3 PoC: shared dependency bridge import map.
-         Plugins loaded via raw dynamic import() resolve the bare specifier
-         "react" through this map to the host's single React instance.
+    <!-- Shared dependency bridge import map.
+         Plugins loaded via raw dynamic import() resolve these bare specifiers
+         through this map to the host's single shared instance (served by the
+         `/shared/<name>.js` bridge — `pluginFsPlugin` in dev, emitted chunks
+         in prod). This guarantees host and plugins share one React/Mantine/etc.
 
-         INTENTIONALLY PARTIAL. This map lists only "react" — enough to prove
-         the bridge mechanism. The shared-dependency registry (`SHARED_DEPS`
-         in vite-plugins/pluginFsPlugin.ts) already declares MORE deps
-         (react, react-dom, react/jsx-runtime). Task 3 must extend this map
-         to enumerate EVERY `SHARED_DEPS` entry — including subpaths such as
-         "react-dom/client" — so the import map and `SHARED_DEPS` stay in
-         sync. Until then the disagreement is expected, not a bug.
-         See: vite-plugins/pluginFsPlugin.ts (`SHARED_DEPS`). -->
+         SYNC CONTRACT: the 9 entries below mirror 1:1 the `SHARED_DEPS`
+         registry in vite-plugins/pluginFsPlugin.ts and the `EXTERNAL` array
+         in plugins/node-graph/vite.config.ts. All three lists MUST stay in
+         sync. The map key is the bare specifier the plugin imports; the URL
+         is `/shared/<SHARED_DEPS-key>.js`. -->
     <script type="importmap">
       {
         "imports": {
-          "react": "/shared/react.js"
+          "react": "/shared/react.js",
+          "react-dom": "/shared/react-dom.js",
+          "react/jsx-runtime": "/shared/react-jsx-runtime.js",
+          "@mantine/core": "/shared/mantine-core.js",
+          "@mantine/hooks": "/shared/mantine-hooks.js",
+          "@mantine/notifications": "/shared/mantine-notifications.js",
+          "@tabler/icons-react": "/shared/tabler-icons-react.js",
+          "@xyflow/react": "/shared/xyflow-react.js",
+          "@mooreseditor/plugin-sdk": "/shared/plugin-sdk.js"
         }
       }
     </script>

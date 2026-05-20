@@ -349,6 +349,15 @@ importers:
       '@tabler/icons-react':
         specifier: ^3.0.0
         version: 3.31.0(react@19.1.0)
+      '@tauri-apps/api':
+        specifier: ^2
+        version: 2.8.0
+      '@tauri-apps/plugin-dialog':
+        specifier: ^2.2.0
+        version: 2.2.0
+      '@tauri-apps/plugin-fs':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@xyflow/react':
         specifier: ^12.10.0
         version: 12.10.2(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -371,15 +380,6 @@ importers:
       '@mooreseditor/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
-      '@tauri-apps/api':
-        specifier: ^2
-        version: 2.8.0
-      '@tauri-apps/plugin-dialog':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@tauri-apps/plugin-fs':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.6.3

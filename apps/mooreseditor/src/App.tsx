@@ -49,17 +49,20 @@ function App() {
     clearUnsavedChanges,
   } = useJson();
   const { schemas, loadSchema } = useSchema();
-  const { plugins } = usePlugins();
+  const { plugins, loading: isPluginsLoading } = usePlugins();
 
   const [isEditing, setIsEditing] = useState(false);
   const [activeViewId, setActiveViewId] = useState(EDITOR_VIEW_ID);
   const searchTargetRef = useRef<HTMLElement>(null);
 
   // --- 負債③: 揮発性 state を ref で追い、安定参照の getter から最新値を返す ---
-  // hostApi / pluginViews の useMemo deps から jsonData（毎キーストローク変化）を
-  // 排除し、manifest.createView が再実行されてプラグインが remount するのを防ぐ。
+  // hostApi / pluginViews の useMemo deps から jsonData（毎キーストローク変化）と
+  // schemas（loadSchema のたびに新オブジェクト）を排除し、manifest.createView が
+  // 再実行されてプラグインが remount するのを防ぐ。
   const jsonDataRef = useRef(jsonData);
   jsonDataRef.current = jsonData;
+  const schemasRef = useRef(schemas);
+  schemasRef.current = schemas;
 
   useEffect(() => {
     preloadAllData(loadSchema);
@@ -86,9 +89,10 @@ function App() {
   }, [setHasUnsavedChanges]);
 
   // --- 負債③: HostAPI に渡す関数群を安定参照にする ---
-  // getColumns は jsonData をクロージャに閉じ込めず ref から読むため、
-  // 毎レンダーで同一参照のまま常に最新 columns を返せる。
+  // getColumns / getSchemas は state をクロージャに閉じ込めず ref から読むため、
+  // 毎レンダーで同一参照のまま常に最新値を返せる。
   const getColumns = useCallback(() => jsonDataRef.current, []);
+  const getSchemas = useCallback(() => schemasRef.current, []);
   const setColumns = useCallback(
     (updater: (columns: Column[]) => Column[]) => {
       setJsonData((prev) => updater(prev));
@@ -96,15 +100,16 @@ function App() {
     [setJsonData],
   );
 
-  // hostApi は projectDir / masterDir / schemas / loadSchema が変わったときのみ
-  // 再生成される。getColumns / setColumns / markDirty は安定参照なので
-  // 毎キーストロークでは再生成されない。
+  // hostApi は projectDir / masterDir が変わったときのみ再生成される。
+  // getColumns / getSchemas / setColumns / loadSchema / markDirty は安定参照
+  // なので、毎キーストロークやスキーマロードのたびには再生成されない。
+  // → manifest.createView が再実行されずプラグインが remount しない。
   const hostApi = useMemo(
     () =>
       createHostApi({
         getColumns,
         setColumns,
-        schemas,
+        getSchemas,
         loadSchema,
         projectDir,
         masterDir,
@@ -113,7 +118,7 @@ function App() {
     [
       getColumns,
       setColumns,
-      schemas,
+      getSchemas,
       loadSchema,
       projectDir,
       masterDir,
@@ -200,9 +205,14 @@ function App() {
           label: manifest.name,
           render: () => view.render(),
           getCapabilities: resolveCapabilities,
+          // ホストデータ preload 中・プラグインロード中はタブを無効化する
+          // （旧 node-graph ビューの `disabled: isPreloading` と同等のガード）。
+          // descriptor の再生成のみで、保持中の `view` 実体には触れないため
+          // プラグインは remount しない。
+          disabled: isPreloading || isPluginsLoading,
         };
       }),
-    [pluginInstances],
+    [pluginInstances, isPreloading, isPluginsLoading],
   );
 
   const views = useMemo(

@@ -128,8 +128,16 @@ async function bridgeSource(dep: {
     names = Object.keys(mod).filter(
       (k) => k !== "default" && k !== "__esModule" && isValidIdentifier(k),
     );
-  } catch {
+  } catch (error) {
     // import 失敗時は素朴な `export *` にフォールバックする。
+    // CJS パッケージのフォールバックは named export を転送できず、プラグインが
+    // `does not provide an export named ...` で失敗しうるため、診断できるよう
+    // 警告を出す（共有依存ブリッジの不調はサイレントにしない）。
+    console.warn(
+      `[pluginFsPlugin] shared bridge introspection failed for "${dep.spec}"; ` +
+        `falling back to \`export *\` (named exports may be missing): ` +
+        (error instanceof Error ? error.message : String(error)),
+    );
     const star = `export * from ${spec};\n`;
     const def = dep.hasDefault ? `export { default } from ${spec};\n` : "";
     return star + def;

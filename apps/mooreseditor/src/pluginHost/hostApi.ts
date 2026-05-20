@@ -21,8 +21,16 @@ export interface CreateHostApiDeps {
   getColumns: () => Column[];
   /** master カラムを更新する。 */
   setColumns: (updater: (columns: Column[]) => Column[]) => void;
-  /** ロード済みスキーマ。 */
-  schemas: Record<string, Schema>;
+  /**
+   * 現在のロード済みスキーマを取得する。
+   *
+   * `useSchema` は `loadSchema` のたびに新しい `schemas` オブジェクトを生成する。
+   * 生のオブジェクトを deps へ渡すと `createHostApi` の useMemo が毎ロードで
+   * 再生成され、プラグインの `createView` 再実行＝remount を招く。
+   * getter として渡すことで `createHostApi` の deps を安定させつつ、
+   * `host.schemas` は常に最新値を返す。
+   */
+  getSchemas: () => Record<string, Schema>;
   /** スキーマを名前指定でロードする。 */
   loadSchema: (name: string) => Promise<Schema | null>;
   /** プロジェクトディレクトリ（未オープン時 null）。 */
@@ -313,12 +321,19 @@ async function saveProjectImpl(
  * 一方 `saveExtraFile` / `readExtraFile` / `saveProject` クロージャは呼び出し時に
  * `deps.projectDir` / `deps.masterDir` を読むため、deps が同一インスタンスのまま
  * 更新されても最新値を参照しリアクティブに振る舞う。
+ *
+ * `schemas` は getter プロパティとして実装する。`HostAPI` の型上は
+ * `Record<string, Schema>` のプロパティだが、getter は妥当な実装であり
+ * SDK 契約は変わらない。`deps.getSchemas()` を都度呼ぶため、createHostApi を
+ * 再生成しなくても `host.schemas` は常に最新値を返す。
  */
 export function createHostApi(deps: CreateHostApiDeps): HostAPI {
   return {
     getColumns: () => deps.getColumns(),
     setColumns: (updater) => deps.setColumns(updater),
-    schemas: deps.schemas,
+    get schemas() {
+      return deps.getSchemas();
+    },
     loadSchema: (name) => deps.loadSchema(name),
     projectDir: deps.projectDir,
     masterDir: deps.masterDir,

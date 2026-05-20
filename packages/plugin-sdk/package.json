@@ -10,11 +10,13 @@
   },
   "scripts": {
     "lint": "eslint src",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "json-schema-ref-resolver": "^1.0.1",
     "uuid": "^13.0.0",
+    "yaml": "^2.7.0",
     "zod": "^3.24.2"
   },
   "peerDependencies": {
@@ -27,7 +29,15 @@
   "devDependencies": {
     "@mooreseditor/eslint-config": "workspace:*",
     "@mooreseditor/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.0.3",
     "@types/react": "^19.0.10",
-    "typescript": "~5.6.2"
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.1.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.28.0",
+    "vitest": "^3.2.4"
   }
 }

@@ -121,9 +121,6 @@ function parseQueryParam(url: string, param: string): string | null {
   return searchParams.get(param);
 }
 
-/**
- * Dev-server side: `/api/plugin-fs/read` + virtual `/shared/*.js`.
- */
 /** Map a file extension to the Content-Type used for `/api/plugin-fs/file`. */
 function contentTypeFor(filePath: string): string {
   const ext = path.extname(filePath).toLowerCase();
@@ -217,6 +214,10 @@ export function pluginFsPlugin(): Plugin {
           return next();
         }
         const method = req.method?.toUpperCase();
+        // Match on the exact pathname so `/api/plugin-fs/readdir` etc. do not
+        // accidentally hit the `/read` branch via a `startsWith` prefix.
+        // `req.url` has no host, so a dummy base is supplied for `URL`.
+        const pathname = new URL(url, "http://localhost").pathname;
 
         // GET /api/plugin-fs/read?path=<path>
         // `path` may be absolute, or relative to the monorepo root (the
@@ -224,7 +225,7 @@ export function pluginFsPlugin(): Plugin {
         // A browser client has no business knowing the host's absolute FS
         // layout, so relative is the realistic plugin-loading form.
         // Returns JSON `{ content }` (text payload).
-        if (url.startsWith("/api/plugin-fs/read") && method === "GET") {
+        if (pathname === "/api/plugin-fs/read" && method === "GET") {
           const filePath = parseQueryParam(url, "path");
           if (typeof filePath !== "string" || filePath.length === 0) {
             sendJson(res, 400, { error: "'path' query parameter is required" });
@@ -253,7 +254,7 @@ export function pluginFsPlugin(): Plugin {
         // the plugin entry JS (dynamically `import()`-ed by the host, so the
         // JS MIME type matters) and CSS injected via <link>. Same allow-list
         // and path-resolution rules as `/read`.
-        if (url.startsWith("/api/plugin-fs/file") && method === "GET") {
+        if (pathname === "/api/plugin-fs/file" && method === "GET") {
           const filePath = parseQueryParam(url, "path");
           if (typeof filePath !== "string" || filePath.length === 0) {
             sendJson(res, 400, { error: "'path' query parameter is required" });

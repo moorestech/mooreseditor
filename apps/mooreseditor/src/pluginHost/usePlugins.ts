@@ -18,7 +18,11 @@ async function readConfigText(): Promise<string> {
     return await readTextFile("mooreseditor.config.yaml");
   } catch {
     const res = await fetch("/mooreseditor.config.yaml");
-    return res.ok ? await res.text() : "";
+    if (!res.ok) {
+      console.warn(`usePlugins: failed to fetch config (${res.status})`);
+      return "";
+    }
+    return await res.text();
   }
 }
 

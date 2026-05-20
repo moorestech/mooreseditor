@@ -89,10 +89,15 @@ mooreseditor/ (monorepo)
 - プラグインの読み込みフロー:
   1. `mooreseditor.config.yaml` を読む（`plugins: [{ dir }]`）
   2. 各プラグイン dir の `plugin.json`（マニフェスト）を読む
-  3. マニフェストの entry JS を動的 `import()` する
-  4. プラグインの `export default`（マニフェスト準拠オブジェクト）をホストのビューレジストリへ登録する
+  3. マニフェストの `styles` フィールドに列挙された CSS を `<link rel="stylesheet">` として
+     ホストが `<head>` へ注入する
+  4. マニフェストの entry JS を動的 `import()` する
+  5. プラグインの `export default`（マニフェスト準拠オブジェクト）をホストのビューレジストリへ登録する
 - プラグインはビュー（タブ）を提供し、`save()` / `isDirty()` / `focusSearchMatch()` フックを
   `HostAPI` 経由でホストへ公開する。
+- `plugin.json` マニフェストの `styles` フィールド: Vite library mode は CSS を JS とは別ファイルに
+  出力する。`@xyflow/react` などのスタイルもこれに含まれる。ホストはロード時に各エントリを
+  `<link rel="stylesheet" href="...">` として動的に挿入する。
 
 ### 3.2 dev/prod のローディング差分
 
@@ -151,6 +156,14 @@ CLAUDE.md の try-catch フォールバック規約に従う:
 - `components/TableView`・`components/FormView`
 - `utils/createInitialValue`、`hooks/useJson` の `Column` 型
 - プラグイン契約型（`PluginManifest`・`HostAPI`・`PluginViewProps`）
+
+> **SDK 命名・公開 API 範囲に関する補足（Phase 2 実装前に検討）:** 現計画では
+> FormView/TableView を含む編集エンジン全体を `@mooreseditor/plugin-sdk` に集約する
+> 「フル SDK 方針」を採っている。これは "内部エディタコア" と "プラグイン向け公開 API"
+> を一つのパッケージに混在させることになる。Phase 2 着手時に、
+> `@mooreseditor/editor-core`（内部コア）と `@mooreseditor/plugin-sdk`（プラグイン公開契約）
+> に分割するか、現行一本化のまま公開エントリ（`index.ts` の export 一覧）を明示的にキュレート
+> するかを判断すること。どちらの場合も、SDK の公開 API 表面をドキュメント化する。
 
 ## 5. フェーズ分割
 
@@ -215,6 +228,14 @@ interface HostAPI {
   masterDir: string | null;
   markDirty(): void;
   saveExtraFile(relativePath: string, content: string): Promise<void>;
+  /** master カラム群と任意のプラグイン専用ファイルを原子的に保存する。
+   *  PluginView.save() は「master カラム更新 + プラグイン専用ファイル保存」を
+   *  1 操作として完結させる必要があるため、saveExtraFile だけでは不十分。
+   *  この API を使うことで master JSON とプラグインファイルを同時に永続化できる。 */
+  saveProject(
+    columns: Column[],
+    extraFiles?: { path: string; content: string }[],
+  ): Promise<void>;
 }
 
 // プラグインがホストへ公開するビュー
@@ -239,6 +260,17 @@ React / Mantine / xyflow / SDK の値モジュールであり、これらは imp
   ある（node-graph ブランチに `.mooreseditor` をスコープ追加した前例あり）。
 - **dev/prod ローディング差分**: 環境判定 if は使わず try-catch フォールバックで実装する
   （CLAUDE.md 規約）。
+- **Phase 1 からの繰り越し設計負債（Phase 3 で対応）**:
+  - `display:none` による常時マウント方式は `@xyflow/react` と相性が悪い（React Flow は
+    コンテナサイズ 0 で初期化されノードレイアウトが崩れる）。Phase 3 でプラグインビューを
+    追加する際は、初回アクティブ化まで遅延マウント（lazy mount）するか、表示時に
+    `fitView` / resize 通知を行う対応が必要。
+  - Phase 1 の `capabilities` 解決は `activeViewId === "editor"` のハードコード判定に依存している。
+    Phase 3 では `ViewDescriptor` に `capabilities` フィールド（または `getCapabilities()` メソッド）
+    を持たせ、Editor とプラグインビューが同一パスで能力を公開できるよう統一する。
+  - `views` / `capabilities` の `useMemo` は多くの依存を持ちレンダリングのたびに再計算される。
+    Phase 3 ではビュー記述子の同一性を安定させ（揮発性の値は props/context/HostAPI ref 経由で
+    渡す）、不要な再生成を抑制する。
 
 ## 8. 今回のスコープ
 

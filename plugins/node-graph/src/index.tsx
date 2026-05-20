@@ -23,4 +23,6 @@ const NodeEditorView = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
 NodeEditorView.displayName = "NodeEditorView";
 
 export type { NodeEditorHandle };
+export type { NodeGraphFile } from "./types/nodeGraph";
+export type { NodeEditorViewProps } from "./types/props";
 export default NodeEditorView;

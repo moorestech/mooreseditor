@@ -1,7 +1,9 @@
+import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { exists, mkdir, writeTextFile } from "@tauri-apps/plugin-fs";
 
 import type { Column } from "../hooks/useJson";
+import type { NodeGraphFile } from "@mooreseditor/plugin-node-graph";
 
 async function writeViaDevServer(
   filePath: string,
@@ -19,6 +21,7 @@ async function writeViaDevServer(
 
 interface SaveProjectDataParams {
   columns: Column[];
+  nodeGraphData?: NodeGraphFile | null;
   projectDir: string | null;
   masterDir: string | null;
   onSuccess: () => void;
@@ -26,6 +29,7 @@ interface SaveProjectDataParams {
 
 export async function saveProjectData({
   columns,
+  nodeGraphData,
   projectDir,
   masterDir,
   onSuccess,
@@ -43,6 +47,9 @@ export async function saveProjectData({
         JSON.stringify({ data: column.data }, null, 2),
       );
     });
+    if (nodeGraphData) {
+      console.log("nodeGraph:", JSON.stringify(nodeGraphData, null, 2));
+    }
 
     // Dev mode: also write files via dev server for E2E verification
     try {
@@ -51,6 +58,13 @@ export async function saveProjectData({
           `master/${column.title}.json`,
           JSON.stringify(column.data, null, 2),
         );
+      }
+      if (nodeGraphData) {
+        await writeViaDevServer(
+          ".mooreseditor/nodeGraph.v1.json",
+          JSON.stringify(nodeGraphData, null, 2),
+        );
+        console.log("nodeGraph saved via dev server");
       }
     } catch {
       // Dev server API not available — ignore
@@ -74,6 +88,40 @@ export async function saveProjectData({
       console.log(`データが保存されました: ${jsonFilePath}`);
     } catch (error) {
       errors.push(`${column.title}.json: ${error}`);
+    }
+  }
+
+  if (nodeGraphData) {
+    try {
+      const mooreseditorDir = await path.join(projectDir, ".mooreseditor");
+
+      // Dotfiles (directories starting with '.') are not matched by the parent
+      // directory's glob pattern in Tauri FS scope. Explicitly add .mooreseditor
+      // to the allowed scope before creating/writing.
+      try {
+        await invoke("add_project_to_scope", {
+          projectPath: mooreseditorDir,
+        });
+      } catch {
+        // Scope addition failed — likely in dev/browser environment
+      }
+
+      const isDirExists = await exists(mooreseditorDir);
+      if (!isDirExists) {
+        await mkdir(mooreseditorDir, { recursive: true });
+      }
+
+      const nodeGraphPath = await path.join(
+        mooreseditorDir,
+        "nodeGraph.v1.json",
+      );
+      await writeTextFile(
+        nodeGraphPath,
+        JSON.stringify(nodeGraphData, null, 2),
+      );
+      console.log(`nodeGraphが保存されました: ${nodeGraphPath}`);
+    } catch (error) {
+      errors.push(`nodeGraph: ${error}`);
     }
   }
 

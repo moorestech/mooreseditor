@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   AppShell,
@@ -20,6 +28,12 @@ import { saveProjectData } from "./utils/saveProjectData";
 
 import type { Column } from "./hooks/useJson";
 import type { ViewCapabilities, ViewDescriptor } from "./viewHost/types";
+import type {
+  NodeEditorHandle,
+  NodeGraphFile,
+} from "@mooreseditor/plugin-node-graph";
+
+const NodeEditorView = lazy(() => import("@mooreseditor/plugin-node-graph"));
 
 const theme = createTheme({
   primaryColor: "orange",
@@ -43,15 +57,17 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [activeViewId, setActiveViewId] = useState("editor");
   const searchTargetRef = useRef<HTMLElement>(null);
+  const nodeEditorRef = useRef<NodeEditorHandle>(null);
 
   useEffect(() => {
     preloadAllData(loadSchema);
   }, [menuToFileMap, projectDir, masterDir, schemaDir]);
 
   const saveAll = useCallback(
-    async (columns: Column[]) => {
+    async (columns: Column[], nodeGraphData?: NodeGraphFile | null) => {
       await saveProjectData({
         columns,
+        nodeGraphData,
         projectDir,
         masterDir,
         onSuccess: () => {
@@ -68,8 +84,7 @@ function App() {
     setHasUnsavedChanges(true);
   }, [setHasUnsavedChanges]);
 
-  // ビューレジストリ。Phase 1 は組み込みの Editor のみ。
-  // Phase 3 でプラグインビューがこの配列に追加される。
+  // ビューレジストリ。Editor と Node Graph の 2 ビュー。
   const views: ViewDescriptor[] = useMemo(
     () => [
       {
@@ -91,6 +106,28 @@ function App() {
           />
         ),
       },
+      {
+        id: "node-graph",
+        label: "Node Graph",
+        disabled: isPreloading,
+        render: () => (
+          <Suspense
+            fallback={<div style={{ padding: 16 }}>Loading Node Editor...</div>}
+          >
+            <NodeEditorView
+              ref={nodeEditorRef}
+              jsonData={jsonData}
+              setJsonData={setJsonData}
+              schemas={schemas}
+              loadSchema={loadSchema}
+              projectDir={projectDir}
+              masterDir={masterDir}
+              onMarkDirty={() => setHasUnsavedChanges(true)}
+              onRequestSave={saveAll}
+            />
+          </Suspense>
+        ),
+      },
     ],
     [
       menuToFileMap,
@@ -104,16 +141,27 @@ function App() {
       isEditing,
       hasUnsavedChanges,
       markDirty,
+      projectDir,
+      masterDir,
+      setHasUnsavedChanges,
+      saveAll,
     ],
   );
 
   // アクティブビューがホストへ公開する能力を解決する。
-  // Phase 1 は editor のみ。Phase 3 ではプラグインが登録した能力を引く。
   const capabilities: ViewCapabilities = useMemo(() => {
     if (activeViewId === "editor") {
       return {
         canSave: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
         onSave: () => saveAll(jsonData),
+      };
+    }
+    if (activeViewId === "node-graph") {
+      return {
+        canSave: true,
+        onSave: () => nodeEditorRef.current?.save() ?? Promise.resolve(),
+        focusSearchMatch: (element) =>
+          nodeEditorRef.current?.focusSearchMatch(element),
       };
     }
     return { canSave: false, onSave: () => {} };

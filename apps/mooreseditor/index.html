@@ -7,7 +7,16 @@
     <title>Tauri + React + Typescript</title>
     <!-- Phase 3 PoC: shared dependency bridge import map.
          Plugins loaded via raw dynamic import() resolve the bare specifier
-         "react" through this map to the host's single React instance. -->
+         "react" through this map to the host's single React instance.
+
+         INTENTIONALLY PARTIAL. This map lists only "react" — enough to prove
+         the bridge mechanism. The shared-dependency registry (`SHARED_DEPS`
+         in vite-plugins/pluginFsPlugin.ts) already declares MORE deps
+         (react, react-dom, react/jsx-runtime). Task 3 must extend this map
+         to enumerate EVERY `SHARED_DEPS` entry — including subpaths such as
+         "react-dom/client" — so the import map and `SHARED_DEPS` stay in
+         sync. Until then the disagreement is expected, not a bug.
+         See: vite-plugins/pluginFsPlugin.ts (`SHARED_DEPS`). -->
     <script type="importmap">
       {
         "imports": {

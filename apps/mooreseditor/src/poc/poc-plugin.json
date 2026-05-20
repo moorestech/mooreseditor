@@ -1,8 +1,6 @@
 {
   "name": "poc-plugin",
   "version": "0.0.0",
-  "description": "Phase 3 PoC manifest. Exercises the `styles` field used by Step 3 (CSS dynamic injection). Not a real plugin manifest — the real PluginManifest shape lands in Task 1. The styles entry resolves to a verbatim copy of xyflow style.css served from public/poc/.",
-  "styles": [
-    "/poc/poc-plugin-xyflow.css"
-  ]
+  "description": "Phase 3 PoC manifest. Exercises the `styles` field used by Step 3 (CSS dynamic injection). Not a real plugin manifest — the real PluginManifest shape lands in Task 1. Each `styles` entry is a path relative to the plugins/ root; the host fetches it via the /api/plugin-fs/ endpoint (the realistic plugin-loading path).",
+  "styles": ["poc-fixtures/poc-plugin-xyflow.css"]
 }

@@ -7,11 +7,17 @@
  * working CSS on the page. Steps:
  *
  *  1. Fetch `poc-plugin.json` (the PoC manifest with a `styles` field).
- *  2. Hand its `styles` to `injectPluginStyles`, which appends one
- *     `<link rel="stylesheet">` per entry to `<head>`.
+ *  2. Hand its `styles` to `injectPluginStyles`, together with a resolver
+ *     that fetches each CSS file through the `/api/plugin-fs/read` dev
+ *     endpoint — the realistic plugin-loading path (plugin assets live
+ *     under `plugins/`, not the host's `public/` dir, so they never ship in
+ *     a prod build). Each resolved CSS is injected as a blob-URL
+ *     `<link rel="stylesheet">`.
  *  3. Scan `document.styleSheets` for a CSS rule whose selector mentions
  *     `.react-flow` — proof that xyflow's stylesheet was actually parsed and
- *     applied (the manifest's CSS `@import`s `@xyflow/react/dist/style.css`).
+ *     applied (the manifest points at a verbatim copy of
+ *     `@xyflow/react/dist/style.css` kept at
+ *     `plugins/poc-fixtures/poc-plugin-xyflow.css`).
  *
  * How to run (dev server must be up — `pnpm run dev`):
  *
@@ -29,7 +35,7 @@
 
 import { injectPluginStyles } from "./injectPluginStyles";
 
-import type { StyleManifest } from "./injectPluginStyles";
+import type { CssResolver, StyleManifest } from "./injectPluginStyles";
 
 export interface StyleInjectionResult {
   /** True when at least one `.react-flow` CSS rule is live on the page. */
@@ -40,12 +46,30 @@ export interface StyleInjectionResult {
   reactFlowRuleCount: number;
   /** A sample of matched selectors, for eyeballing the evidence. */
   sampleSelectors: string[];
-  /** Hrefs that were injected from the manifest. */
-  injectedHrefs: string[];
+  /** The `styles` entries that were injected (from the manifest). */
+  injectedSources: string[];
 }
 
 /** URL of the committed PoC manifest, relative to the dev server root. */
 const POC_MANIFEST_URL = "/src/poc/poc-plugin.json";
+
+/**
+ * CSS resolver backed by the `/api/plugin-fs/read` dev endpoint. The endpoint
+ * accepts a path relative to the `plugins/` root and returns `{ content }`.
+ */
+const pluginFsCssResolver: CssResolver = async (styleEntry) => {
+  const res = await fetch(
+    `/api/plugin-fs/read?path=${encodeURIComponent(styleEntry)}`,
+  );
+  if (!res.ok) {
+    throw new Error(`plugin-fs read failed for "${styleEntry}": ${res.status}`);
+  }
+  const body = (await res.json()) as { content?: string };
+  if (typeof body.content !== "string") {
+    throw new Error(`plugin-fs read returned no content for "${styleEntry}"`);
+  }
+  return body.content;
+};
 
 /** Count live CSS rules whose selector mentions `.react-flow`. */
 function collectReactFlowRules(doc: Document): {
@@ -93,7 +117,7 @@ export async function verifyStyleInjection(
   }
   const manifest = (await res.json()) as StyleManifest;
 
-  await injectPluginStyles(manifest, doc);
+  await injectPluginStyles(manifest, pluginFsCssResolver, doc);
 
   const links = Array.from(
     doc.querySelectorAll<HTMLLinkElement>("link[data-plugin-style]"),
@@ -105,6 +129,8 @@ export async function verifyStyleInjection(
     injectedLinks: links.length,
     reactFlowRuleCount: count,
     sampleSelectors: samples,
-    injectedHrefs: links.map((l) => l.href),
+    injectedSources: links.map(
+      (l) => l.getAttribute("data-plugin-style-src") ?? "",
+    ),
   };
 }

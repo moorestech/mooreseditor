@@ -50,6 +50,14 @@ import type { Plugin } from "vite";
 // host + plugins belong here.
 // `hasDefault: false` for deps whose package has no default export
 // (e.g. react/jsx-runtime) — only `export *` is emitted for those.
+//
+// SYNC CONTRACT: this registry is the source of truth for shared deps, but
+// the `index.html` import map currently lists ONLY "react" — it is
+// intentionally partial for the PoC and DOES NOT match this registry yet.
+// Task 3 must extend the import map in `apps/mooreseditor/index.html` to
+// cover every entry below, including subpaths like "react-dom/client", so
+// the two stay in sync. Adding a dep here without updating that map will
+// leave the new dep unresolvable for dynamically-imported plugins.
 const SHARED_DEPS: Record<string, { spec: string; hasDefault: boolean }> = {
   react: { spec: "react", hasDefault: true },
   "react-dom": { spec: "react-dom", hasDefault: true },
@@ -125,7 +133,10 @@ export function pluginFsPlugin(): Plugin {
         }
         const method = req.method?.toUpperCase();
 
-        // GET /api/plugin-fs/read?path=<absPath>
+        // GET /api/plugin-fs/read?path=<path>
+        // `path` may be absolute, or relative to the plugins/ root (a
+        // browser client has no business knowing the host's absolute FS
+        // layout, so relative is the realistic plugin-loading form).
         if (url.startsWith("/api/plugin-fs/read") && method === "GET") {
           const filePath = parseQueryParam(url, "path");
           if (typeof filePath !== "string" || filePath.length === 0) {
@@ -133,7 +144,9 @@ export function pluginFsPlugin(): Plugin {
             return;
           }
           try {
-            const resolved = path.resolve(filePath);
+            const resolved = path.isAbsolute(filePath)
+              ? path.resolve(filePath)
+              : path.resolve(allowedRoot, filePath);
             // Allow-list: must live under the plugins/ directory.
             if (
               resolved !== allowedRoot &&
@@ -195,6 +208,11 @@ export function pluginSharedBuildPlugin(): Plugin {
 
     /** Register one input entry per shared dep. */
     config() {
+      // `{ index: "index.html" }` and the `assets/[name]-[hash].js` fallback
+      // below intentionally re-state Vite's own defaults — we must respecify
+      // them because supplying `input`/`entryFileNames` replaces the
+      // defaults wholesale. If more HTML entries are ever added to the app,
+      // this `input` map must be extended to keep them building.
       const input: Record<string, string> = { index: "index.html" };
       for (const name of Object.keys(SHARED_DEPS)) {
         // entry key e.g. "shared/react" -> emitted file "shared/react.js"

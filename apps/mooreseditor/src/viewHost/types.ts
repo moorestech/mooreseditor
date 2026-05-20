@@ -22,8 +22,12 @@ export interface ViewDescriptor {
 export interface ViewCapabilities {
   /** 現在保存可能か。 */
   canSave: boolean;
-  /** 保存を実行する。 */
-  onSave: () => void;
+  /**
+   * 保存を実行する。
+   * プラグインビューの保存は非同期・失敗ありうるため Promise を返してよい。
+   * ホスト（useSaveShortcut）は保存完了まで次の保存をブロックする。
+   */
+  onSave: () => void | Promise<void>;
   /** 検索でアクティブになった一致要素へフォーカスする（任意）。 */
   focusSearchMatch?: (element: HTMLElement | null) => void;
 }

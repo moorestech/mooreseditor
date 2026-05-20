@@ -1,5 +1,13 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  afterAll,
+} from "vitest";
 import "@testing-library/jest-dom";
 
 // Mock the hooks
@@ -122,6 +130,9 @@ describe("App", () => {
     loadJsonFile: vi.fn(),
     preloadAllData: vi.fn(),
     isPreloading: false,
+    hasUnsavedChanges: false,
+    setHasUnsavedChanges: vi.fn(),
+    clearUnsavedChanges: vi.fn(),
   };
 
   const mockUseSchema = {
@@ -143,6 +154,12 @@ describe("App", () => {
   };
 
   beforeEach(() => {
+    // Re-establish the resolved schema here (not at definition time) because
+    // the afterEach vi.restoreAllMocks() strips mock implementations.
+    mockUseSchema.loadSchema.mockResolvedValue({
+      type: "object" as const,
+      properties: [] as any[],
+    });
     vi.mocked(useJson).mockReturnValue(mockUseJson as any);
     vi.mocked(useSchema).mockReturnValue(mockUseSchema as any);
     vi.mocked(useProject).mockReturnValue(mockUseProject as any);
@@ -151,6 +168,14 @@ describe("App", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.restoreAllMocks();
+  });
+
+  // Mantine's AppShell useResizing hook schedules a ~200ms setTimeout that it
+  // never clears on unmount. After the last test, that timer would otherwise
+  // fire post-teardown ("window is not defined"). Keep the environment alive
+  // long enough for any pending timers to settle.
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
   });
 
   it("should render the main components", () => {
@@ -191,10 +216,7 @@ describe("App", () => {
         1,
         expect.anything(),
       );
-      expect(mockUseSchema.loadSchema).toHaveBeenCalledWith(
-        "recipes",
-        "/test/project/schema",
-      );
+      expect(mockUseSchema.loadSchema).toHaveBeenCalledWith("recipes");
     });
   });
 
@@ -207,8 +229,9 @@ describe("App", () => {
 
     render(<App />);
 
-    // Click on a menu item to load data and show FormView
-    fireEvent.click(screen.getByText("items"));
+    // Click on a not-yet-loaded menu item to trigger data loading.
+    // ("items" is preloaded in jsonData above, so it would use the cache.)
+    fireEvent.click(screen.getByText("recipes"));
 
     await waitFor(() => {
       expect(mockUseJson.loadJsonFile).toHaveBeenCalled();
@@ -511,11 +534,12 @@ describe("App", () => {
 
     const { rerender } = render(<App />);
 
-    // Click menu item to load data
+    // Click menu item to load data ("items" is already cached in jsonData,
+    // so clicking it selects the schema and renders FormView from the cache).
     fireEvent.click(screen.getByText("items"));
 
     await waitFor(() => {
-      expect(mockUseJson.loadJsonFile).toHaveBeenCalled();
+      expect(screen.getByTestId("form-view")).toBeInTheDocument();
     });
 
     // Force re-render to simulate state update

@@ -151,12 +151,19 @@ properties:
       const schemaList = getSampleSchemaList();
 
       expect(schemaList).toEqual([
-        "mapObjects",
         "blocks",
+        "challenges",
+        "characters",
+        "craftRecipes",
+        "fluids",
         "items",
-        "objectSample",
+        "machineRecipes",
+        "mapObjects",
+        "modMeta",
+        "research",
+        "states",
       ]);
-      expect(schemaList).toHaveLength(4);
+      expect(schemaList).toHaveLength(11);
     });
 
     it("should return an array", () => {
@@ -171,13 +178,14 @@ properties:
 
       expect(refSchemaList).toEqual([
         "blockConnectInfo",
-        "inventoryConnects",
-        "gear",
-        "mineSettings",
-        "mapObjectMineSettings",
+        "gameAction",
         "fluidInventoryConnects",
+        "gearConnects",
+        "inventoryConnects",
+        "mapObjectMineSettings",
+        "mineSettings",
       ]);
-      expect(refSchemaList).toHaveLength(6);
+      expect(refSchemaList).toHaveLength(7);
     });
 
     it("should return an array", () => {
@@ -191,31 +199,39 @@ properties:
       const schemaMap = getAllSampleSchemaMap();
 
       expect(schemaMap).toBeInstanceOf(Map);
-      expect(schemaMap.size).toBe(10); // 4 main + 6 ref schemas
+      expect(schemaMap.size).toBe(18); // 11 main + 7 ref schemas
     });
 
     it("should contain all main schemas", () => {
       const schemaMap = getAllSampleSchemaMap();
 
-      expect(schemaMap.get("mapObjects")).toBe("mapObjects");
       expect(schemaMap.get("blocks")).toBe("blocks");
+      expect(schemaMap.get("challenges")).toBe("challenges");
+      expect(schemaMap.get("characters")).toBe("characters");
+      expect(schemaMap.get("craftRecipes")).toBe("craftRecipes");
+      expect(schemaMap.get("fluids")).toBe("fluids");
       expect(schemaMap.get("items")).toBe("items");
-      expect(schemaMap.get("objectSample")).toBe("objectSample");
+      expect(schemaMap.get("machineRecipes")).toBe("machineRecipes");
+      expect(schemaMap.get("mapObjects")).toBe("mapObjects");
+      expect(schemaMap.get("modMeta")).toBe("modMeta");
+      expect(schemaMap.get("research")).toBe("research");
+      expect(schemaMap.get("states")).toBe("states");
     });
 
     it("should contain all ref schemas with correct paths", () => {
       const schemaMap = getAllSampleSchemaMap();
 
       expect(schemaMap.get("ref/blockConnectInfo")).toBe("blockConnectInfo");
-      expect(schemaMap.get("ref/inventoryConnects")).toBe("inventoryConnects");
-      expect(schemaMap.get("ref/gear")).toBe("gear");
-      expect(schemaMap.get("ref/mineSettings")).toBe("mineSettings");
-      expect(schemaMap.get("ref/mapObjectMineSettings")).toBe(
-        "mapObjectMineSettings",
-      );
+      expect(schemaMap.get("ref/gameAction")).toBe("gameAction");
       expect(schemaMap.get("ref/fluidInventoryConnects")).toBe(
         "fluidInventoryConnects",
       );
+      expect(schemaMap.get("ref/gearConnects")).toBe("gearConnects");
+      expect(schemaMap.get("ref/inventoryConnects")).toBe("inventoryConnects");
+      expect(schemaMap.get("ref/mapObjectMineSettings")).toBe(
+        "mapObjectMineSettings",
+      );
+      expect(schemaMap.get("ref/mineSettings")).toBe("mineSettings");
     });
 
     it("should not contain invalid keys", () => {

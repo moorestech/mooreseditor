@@ -63,18 +63,18 @@ describe("IntegerInput", () => {
     expect(onChange).toHaveBeenCalledWith(0);
   });
 
-  it("should handle undefined value as 0", () => {
+  it("should handle undefined value as empty", () => {
     render(<IntegerInput {...defaultProps} value={undefined} />);
 
     const input = screen.getByRole("textbox");
-    expect(input).toHaveValue("0");
+    expect(input).toHaveValue("");
   });
 
-  it("should handle null value as 0", () => {
+  it("should handle null value as empty", () => {
     render(<IntegerInput {...defaultProps} value={null as any} />);
 
     const input = screen.getByRole("textbox");
-    expect(input).toHaveValue("0");
+    expect(input).toHaveValue("");
   });
 
   it("should round decimal input to integer", () => {
@@ -95,8 +95,8 @@ describe("IntegerInput", () => {
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "" } });
 
-    // Empty string should be treated as 0
-    expect(onChange).toHaveBeenCalledWith(0);
+    // Empty input clears the value (reported as undefined, not 0)
+    expect(onChange).toHaveBeenCalledWith(undefined);
   });
 
   // Removed test for invalid input as Mantine NumberInput prevents non-numeric input from being entered

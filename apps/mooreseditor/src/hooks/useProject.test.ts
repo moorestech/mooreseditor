@@ -5,6 +5,8 @@ import * as fsMock from "@tauri-apps/plugin-fs";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+import { ProjectProvider } from "../contexts/ProjectContext";
+
 import { useProject } from "./useProject";
 
 // Mock the imports
@@ -24,7 +26,7 @@ describe("useProject", () => {
   });
 
   it("should initialize with no project", () => {
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     expect(result.current.projectDir).toBeNull();
     expect(result.current.schemaDir).toBeNull();
@@ -48,7 +50,7 @@ describe("useProject", () => {
       { name: "recipes.yml", isDirectory: false, isFile: true },
     ] as any);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -67,7 +69,7 @@ describe("useProject", () => {
   it("should handle no directory selected", async () => {
     vi.mocked(dialogMock.open).mockResolvedValue(null);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -91,7 +93,7 @@ describe("useProject", () => {
     // Enable dev mode for fallback
     vi.stubGlobal("import.meta.env.DEV", true);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -118,7 +120,7 @@ describe("useProject", () => {
     );
     vi.mocked(fsMock.readTextFile).mockResolvedValue(invalidYaml);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -142,7 +144,7 @@ describe("useProject", () => {
       { name: "readme.txt", isDirectory: false, isFile: true },
     ] as any);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -167,7 +169,7 @@ describe("useProject", () => {
       { name: "test.yml", isDirectory: false, isFile: true },
     ] as any);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     expect(result.current.loading).toBe(false);
 
@@ -191,7 +193,7 @@ describe("useProject", () => {
       new Error("Config file error"),
     );
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -220,7 +222,7 @@ describe("useProject", () => {
 
     const { getSampleSchemaList } = await import("../utils/devFileSystem");
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();
@@ -254,7 +256,7 @@ describe("useProject", () => {
       { name: "folder", isDirectory: true, isFile: false }, // Should be ignored
     ] as any);
 
-    const { result } = renderHook(() => useProject());
+    const { result } = renderHook(() => useProject(), { wrapper: ProjectProvider });
 
     await act(async () => {
       await result.current.openProjectDir();

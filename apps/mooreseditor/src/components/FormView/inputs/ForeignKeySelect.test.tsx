@@ -5,6 +5,9 @@ import "@testing-library/jest-dom";
 // Mock the hooks
 vi.mock("../../../hooks/useForeignKeyData", () => ({
   useForeignKeyData: vi.fn(),
+  buildForeignKeySelectKey: vi.fn(
+    (_config, _value, _displayValue, prefix) => prefix ?? "foreign-key-select",
+  ),
 }));
 
 vi.mock("../../../hooks/useProject", () => ({

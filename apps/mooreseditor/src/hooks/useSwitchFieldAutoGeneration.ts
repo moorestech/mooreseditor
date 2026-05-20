@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { DataInitializer } from "../utils/dataInitializer";
-import { deepMerge } from "../utils/deepMerge";
+import { DataInitializer, deepMerge } from "@mooreseditor/plugin-sdk";
 
 import type { SwitchSchema, ValueSchema } from "@mooreseditor/plugin-sdk";
 

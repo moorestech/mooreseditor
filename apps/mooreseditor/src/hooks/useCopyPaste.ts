@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 
+import { schemaToZod } from "@mooreseditor/plugin-sdk";
+
 import { showNotification } from "../utils/notification";
-import { schemaToZod } from "../utils/schemaToZod";
 
 import type { Schema } from "@mooreseditor/plugin-sdk";
 

@@ -1,4 +1,8 @@
-import type { Schema, ValueSchema, SwitchSchema } from "@mooreseditor/plugin-sdk";
+import type {
+  Schema,
+  ValueSchema,
+  SwitchSchema,
+} from "@mooreseditor/plugin-sdk";
 
 /**
  * 型ガード関数：スキーマがSwitchSchemaかどうかを判定

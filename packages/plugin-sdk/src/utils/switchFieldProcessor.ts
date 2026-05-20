@@ -1,7 +1,7 @@
 import { DataInitializer } from "./dataInitializer";
 import { deepMerge } from "./deepMerge";
 
-import type { ObjectSchema, SwitchSchema } from "@mooreseditor/plugin-sdk";
+import type { ObjectSchema, SwitchSchema } from "../schema";
 
 /**
  * オブジェクトスキーマ内のswitchフィールドを処理し、

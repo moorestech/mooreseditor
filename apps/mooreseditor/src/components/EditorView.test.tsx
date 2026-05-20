@@ -1,14 +1,6 @@
 // AI Generated Test Code
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  afterEach,
-  afterAll,
-} from "vitest";
+import { describe, it, expect, vi, afterEach, afterAll } from "vitest";
 import "@testing-library/jest-dom";
-
 
 import EditorView from "./EditorView";
 

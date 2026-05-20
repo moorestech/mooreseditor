@@ -1,23 +1,27 @@
 // AI Generated Test Code
-import { describe, it, expect, vi, afterEach } from "vitest";
 import "@testing-library/jest-dom";
+import * as generateUuidModule from "@mooreseditor/plugin-sdk";
+import { describe, it, expect, vi, afterEach } from "vitest";
 
 import ArrayField from "./ArrayField";
 
 import type { Schema, ArraySchema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen, fireEvent } from "@/test/utils/test-utils";
-import * as generateUuidModule from "@/utils/generateUuid";
 
-// Mock calculateAutoIncrement
-vi.mock("@mooreseditor/plugin-sdk", () => ({
-  calculateAutoIncrement: vi.fn((existingData, key, config) => {
-    // Simple mock that returns max + 1
-    const values = existingData.map((item: any) => item[key] || 0);
-    const max = values.length > 0 ? Math.max(...values) : 0;
-    return max + (config?.step || 1);
-  }),
-}));
+// Mock calculateAutoIncrement (keep other SDK exports real so generateUuid is spy-able)
+vi.mock("@mooreseditor/plugin-sdk", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    calculateAutoIncrement: vi.fn((existingData, key, config) => {
+      // Simple mock that returns max + 1
+      const values = existingData.map((item: any) => item[key] || 0);
+      const max = values.length > 0 ? Math.max(...values) : 0;
+      return max + (config?.step || 1);
+    }),
+  };
+});
 
 // Mock Field component
 vi.mock("./Field", () => ({

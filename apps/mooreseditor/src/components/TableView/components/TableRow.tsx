@@ -2,9 +2,9 @@ import React from "react";
 
 import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
 import { supportsForeignKey } from "@mooreseditor/plugin-sdk";
+import { processSwitchFields } from "@mooreseditor/plugin-sdk";
 import { IconTrash, IconCopy } from "@tabler/icons-react";
 
-import { processSwitchFields } from "../../../utils/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 

@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo } from "react";
 
 import { Group, NumberInput } from "@mantine/core";
-
-import { useDebouncedCallback } from "../../../hooks/useDebounce";
 import {
   arrayToVector3,
   vector3ToArray,
   isVectorArray,
-} from "../../../utils/vectorConverter";
+} from "@mooreseditor/plugin-sdk";
+
+import { useDebouncedCallback } from "../../../hooks/useDebounce";
 
 import type { FormInputProps } from "./types";
-import type { Vector3Object } from "../../../utils/vectorConverter";
+import type { Vector3Object } from "@mooreseditor/plugin-sdk";
 
 export const Vector3Input: React.FC<
   FormInputProps<Vector3Object | [number, number, number]>

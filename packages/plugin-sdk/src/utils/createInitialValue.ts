@@ -1,10 +1,8 @@
-import { calculateAutoIncrement } from "@mooreseditor/plugin-sdk";
-
-
+import { calculateAutoIncrement } from "./autoIncrement";
 import { DataInitializer } from "./dataInitializer";
 import { generateUuid } from "./generateUuid";
 
-import type { Schema, ValueSchema } from "@mooreseditor/plugin-sdk";
+import type { Schema, ValueSchema } from "../schema";
 
 /**
  * プライベート関数：基本的なデフォルト値を生成

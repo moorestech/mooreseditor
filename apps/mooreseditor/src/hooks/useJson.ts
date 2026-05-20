@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { createInitialValue } from "@mooreseditor/plugin-sdk";
 import * as path from "@tauri-apps/api/path";
 import {
   readTextFile,
@@ -8,7 +9,6 @@ import {
   create,
 } from "@tauri-apps/plugin-fs";
 
-import { createInitialValue } from "../utils/createInitialValue";
 import { validateAndFillMissingFields } from "../utils/dataValidator";
 import { getSampleJson } from "../utils/devFileSystem";
 import { notifyFieldsAdded } from "../utils/notifyFieldsAdded";

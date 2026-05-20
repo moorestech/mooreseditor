@@ -5,7 +5,7 @@ import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
 import { CopyPasteButtons } from "./CopyPasteButtons";
 
-import type { JsonValue } from "@/types/json";
+import type { JsonValue } from "@mooreseditor/plugin-sdk";
 import type { Schema } from "@mooreseditor/plugin-sdk";
 
 import { useCopyPaste } from "@/hooks/useCopyPaste";

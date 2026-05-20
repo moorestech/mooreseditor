@@ -1,5 +1,4 @@
-import { calculateAutoIncrement } from "@mooreseditor/plugin-sdk";
-
+import { calculateAutoIncrement } from "./autoIncrement";
 import { generateUuid } from "./generateUuid";
 
 import type {
@@ -8,8 +7,7 @@ import type {
   ObjectSchema,
   ArraySchema,
   SwitchSchema,
-} from "@mooreseditor/plugin-sdk";
-
+} from "../schema";
 
 /**
  * DataInitializerクラス

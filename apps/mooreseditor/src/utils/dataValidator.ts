@@ -1,5 +1,4 @@
-import { DataInitializer } from "./dataInitializer";
-import { deepMerge } from "./deepMerge";
+import { DataInitializer, deepMerge } from "@mooreseditor/plugin-sdk";
 
 import type {
   Schema,

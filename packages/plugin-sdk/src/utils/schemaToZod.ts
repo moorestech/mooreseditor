@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-import type {
-  Schema,
-  ValueSchema,
-  ArraySchema,
-  ObjectSchema,
-} from "@mooreseditor/plugin-sdk";
+import type { Schema, ValueSchema, ArraySchema, ObjectSchema } from "../schema";
 import type { ZodType } from "zod";
 
 const VECTOR_KEYS = ["x", "y", "z", "w"] as const;

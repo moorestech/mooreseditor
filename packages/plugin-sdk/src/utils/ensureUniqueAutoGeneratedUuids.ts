@@ -1,11 +1,6 @@
 import { generateUuid } from "./generateUuid";
 
-import type {
-  ArraySchema,
-  ObjectSchema,
-  Schema,
-  ValueSchema,
-} from "@mooreseditor/plugin-sdk";
+import type { ArraySchema, ObjectSchema, Schema, ValueSchema } from "../schema";
 
 interface UniqueUuidResult {
   value: any;

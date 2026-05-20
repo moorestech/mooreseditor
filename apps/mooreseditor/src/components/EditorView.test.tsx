@@ -13,7 +13,7 @@ import "@testing-library/jest-dom";
 import EditorView from "./EditorView";
 
 import type { Column } from "../hooks/useJson";
-import type { Schema } from "../libs/schema/types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 

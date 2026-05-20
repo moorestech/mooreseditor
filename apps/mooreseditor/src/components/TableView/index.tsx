@@ -23,7 +23,7 @@ import { useClipboardAppend } from "./hooks/useClipboardAppend";
 import { useTableEdit } from "./hooks/useTableEdit";
 
 import type { TableViewProps } from "./TableView.types";
-import type { ObjectSchema } from "../../libs/schema/types";
+import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
 
 export const TableView = ({
   schema,

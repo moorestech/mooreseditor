@@ -3,8 +3,8 @@ import { useMemo } from "react";
 import { ForeignKeyResolver } from "../utils/foreignKeyResolver";
 
 import type { Column } from "./useJson";
-import type { ForeignKeyConfig } from "../libs/schema/types";
 import type { ForeignKeyOption } from "../utils/foreignKeyResolver";
+import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
 
 // Overloaded function signatures
 export function useForeignKeyData(

@@ -1,4 +1,4 @@
-import type { Schema, ValueSchema, SwitchSchema } from "@/libs/schema/types";
+import type { Schema, ValueSchema, SwitchSchema } from "@mooreseditor/plugin-sdk";
 
 /**
  * 型ガード関数：スキーマがSwitchSchemaかどうかを判定

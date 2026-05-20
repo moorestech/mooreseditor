@@ -1,8 +1,7 @@
 import React from "react";
 
 import { TextInput, NumberInput } from "@mantine/core";
-
-import { supportsForeignKey } from "../../../libs/schema/types";
+import { supportsForeignKey } from "@mooreseditor/plugin-sdk";
 
 import { EnumEditCell } from "./EnumEditCell";
 import { ForeignKeyEditCell } from "./ForeignKeyEditCell";

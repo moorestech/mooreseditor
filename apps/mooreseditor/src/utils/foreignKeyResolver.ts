@@ -1,4 +1,4 @@
-import type { ForeignKeyConfig } from "../libs/schema/types";
+import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
 
 export interface ForeignKeyOption {
   id: any;

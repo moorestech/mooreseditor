@@ -5,7 +5,7 @@ import type {
   ObjectSchema,
   Schema,
   ValueSchema,
-} from "../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 interface UniqueUuidResult {
   value: any;

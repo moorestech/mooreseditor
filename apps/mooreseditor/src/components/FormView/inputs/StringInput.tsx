@@ -7,7 +7,7 @@ import { useDebouncedCallback } from "../../../hooks/useDebounce";
 import { ForeignKeySelect } from "./ForeignKeySelect";
 
 import type { FormInputProps } from "./types";
-import type { StringSchema } from "../../../libs/schema/types";
+import type { StringSchema } from "@mooreseditor/plugin-sdk";
 
 const StringTextInput: React.FC<FormInputProps<string>> = React.memo(
   ({ value, onChange, schema }) => {

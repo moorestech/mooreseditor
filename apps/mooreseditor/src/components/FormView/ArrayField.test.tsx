@@ -4,13 +4,13 @@ import "@testing-library/jest-dom";
 
 import ArrayField from "./ArrayField";
 
-import type { Schema, ArraySchema } from "@/libs/schema/types";
+import type { Schema, ArraySchema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen, fireEvent } from "@/test/utils/test-utils";
 import * as generateUuidModule from "@/utils/generateUuid";
 
 // Mock calculateAutoIncrement
-vi.mock("@/utils/autoIncrement", () => ({
+vi.mock("@mooreseditor/plugin-sdk", () => ({
   calculateAutoIncrement: vi.fn((existingData, key, config) => {
     // Simple mock that returns max + 1
     const values = existingData.map((item: any) => item[key] || 0);

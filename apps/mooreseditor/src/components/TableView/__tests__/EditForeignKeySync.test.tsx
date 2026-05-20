@@ -7,7 +7,7 @@ import FormView from "../../FormView";
 import { TableView } from "../index";
 
 import type { Column } from "@/hooks/useJson";
-import type { ArraySchema, Schema } from "@/libs/schema/types";
+import type { ArraySchema, Schema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen, fireEvent } from "@/test/utils/test-utils";
 

@@ -4,7 +4,7 @@ import blocksData from "../../../../public/src/sample/master/blocks.json";
 import FormView from "../index";
 
 import type { Column } from "@/hooks/useJson";
-import type { Schema } from "@/libs/schema/types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen } from "@/test/utils/test-utils";
 

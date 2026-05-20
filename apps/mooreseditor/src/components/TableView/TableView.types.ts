@@ -1,5 +1,5 @@
 import type { Column } from "../../hooks/useJson";
-import type { ArraySchema } from "../../libs/schema/types";
+import type { ArraySchema } from "@mooreseditor/plugin-sdk";
 
 export interface TableViewProps {
   schema: ArraySchema;

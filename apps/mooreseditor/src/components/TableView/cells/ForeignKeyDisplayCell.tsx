@@ -4,8 +4,8 @@ import { Text } from "@mantine/core";
 
 import { useForeignKeyData } from "../../../hooks/useForeignKeyData";
 
-import type { ForeignKeyConfig } from "../../../libs/schema/types";
 import type { ColumnDisplayProps } from "../TableView.types";
+import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
 
 type ForeignKeyCapableColumn = { foreignKey?: ForeignKeyConfig };
 

@@ -7,8 +7,8 @@ import {
   buildForeignKeySelectKey,
 } from "../../../hooks/useForeignKeyData";
 
-import type { ForeignKeyConfig } from "../../../libs/schema/types";
 import type { CellEditProps } from "../TableView.types";
+import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
 
 type ForeignKeyCapableColumn = { foreignKey?: ForeignKeyConfig };
 

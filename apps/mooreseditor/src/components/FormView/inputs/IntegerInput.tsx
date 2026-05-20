@@ -3,7 +3,7 @@ import React from "react";
 import { NumberInput } from "@mantine/core";
 
 import type { FormInputProps } from "./types";
-import type { IntegerSchema } from "../../../libs/schema/types";
+import type { IntegerSchema } from "@mooreseditor/plugin-sdk";
 
 export const IntegerInput: React.FC<FormInputProps<number>> = ({
   value,

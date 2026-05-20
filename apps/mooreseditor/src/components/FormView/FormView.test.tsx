@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 
 import FormView from "./index";
 
-import type { ObjectSchema, ArraySchema } from "../../libs/schema/types";
+import type { ObjectSchema, ArraySchema } from "@mooreseditor/plugin-sdk";
 
 describe("FormView openedByDefault", () => {
   it("should auto-open object arrays with openedByDefault=true", async () => {

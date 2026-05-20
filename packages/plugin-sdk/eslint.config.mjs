@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import libraryConfig from "@mooreseditor/eslint-config/library";
+import tauriConfig from "@mooreseditor/eslint-config/tauri";
 import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,5 +31,5 @@ export default tseslint.config(
       },
     },
   },
-  ...libraryConfig,
+  ...tauriConfig,
 );

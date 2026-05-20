@@ -5,7 +5,7 @@ import { TextInput } from "@mantine/core";
 import { ForeignKeySelect } from "./ForeignKeySelect";
 
 import type { FormInputProps } from "./types";
-import type { UuidSchema } from "../../../libs/schema/types";
+import type { UuidSchema } from "@mooreseditor/plugin-sdk";
 
 export const UuidInput: React.FC<FormInputProps<string>> = ({
   value,

@@ -16,7 +16,7 @@ import {
 } from "./inputs";
 
 import type { Column } from "@/hooks/useJson";
-import type { ValueSchema } from "@/libs/schema/types";
+import type { ValueSchema } from "@mooreseditor/plugin-sdk";
 
 interface RenderPrimitiveInputProps {
   schema: ValueSchema;

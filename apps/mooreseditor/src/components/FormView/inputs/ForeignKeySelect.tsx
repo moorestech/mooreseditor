@@ -8,7 +8,7 @@ import {
 } from "../../../hooks/useForeignKeyData";
 
 import type { FormInputProps } from "./types";
-import type { ForeignKeyConfig } from "../../../libs/schema/types";
+import type { ForeignKeyConfig } from "@mooreseditor/plugin-sdk";
 
 type ForeignKeyCapableSchema = {
   foreignKey?: ForeignKeyConfig;

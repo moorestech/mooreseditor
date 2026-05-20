@@ -8,7 +8,7 @@ import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 import Field from "./Field";
 
 import type { Column } from "../../hooks/useJson";
-import type { ArraySchema, Schema } from "../../libs/schema/types";
+import type { ArraySchema, Schema } from "@mooreseditor/plugin-sdk";
 
 interface ArrayFieldProps {
   schema: ArraySchema;

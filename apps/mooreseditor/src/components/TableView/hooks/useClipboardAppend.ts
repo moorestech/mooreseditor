@@ -7,7 +7,7 @@ import type {
   Schema,
   ObjectSchema,
   ValueSchema,
-} from "../../../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 interface UseClipboardAppendOptions {
   schemaItems?: Schema | ValueSchema;

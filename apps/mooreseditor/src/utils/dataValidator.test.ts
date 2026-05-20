@@ -6,7 +6,7 @@ import type {
   ArraySchema,
   ObjectSchema,
   SwitchSchema,
-} from "../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 describe("validateAndFillMissingFields", () => {
   it("fills missing required fields in objects", () => {

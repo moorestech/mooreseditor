@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 
 import Field from "./Field";
 
-import type { Schema } from "@/libs/schema/types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 import { render, screen } from "@/test/utils/test-utils";
 

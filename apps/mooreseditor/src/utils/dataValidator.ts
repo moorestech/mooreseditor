@@ -7,7 +7,7 @@ import type {
   ObjectSchema,
   SchemaContainer,
   SwitchSchema,
-} from "../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 /**
  * 既存データをスキーマに基づいて検証し、不足している必須フィールドを補完します

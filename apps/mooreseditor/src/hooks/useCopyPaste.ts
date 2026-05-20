@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { showNotification } from "../utils/notification";
 import { schemaToZod } from "../utils/schemaToZod";
 
-import type { Schema } from "../libs/schema/types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 export interface CopyPasteChangeFeedback {
   successMessage?: string;

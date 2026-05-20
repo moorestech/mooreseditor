@@ -8,8 +8,8 @@ import { IconGripVertical } from "@tabler/icons-react";
 import { TableRow } from "./TableRow";
 
 import type { Column } from "../../../hooks/useJson";
-import type { ObjectSchema } from "../../../libs/schema/types";
 import type { EditingCell } from "../TableView.types";
+import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
 
 interface SortableRowProps {
   id: string;

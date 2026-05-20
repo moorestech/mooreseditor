@@ -1,4 +1,4 @@
-import type { AutoIncrementOptions } from "../../utils/autoIncrement";
+import type { AutoIncrementOptions } from "../utils/autoIncrement";
 
 export type RefString = string;
 

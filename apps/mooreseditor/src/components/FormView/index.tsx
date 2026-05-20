@@ -9,7 +9,7 @@ import type {
   Schema,
   ObjectSchema,
   ArraySchema,
-} from "../../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 interface FormViewProps {
   schema: Schema;

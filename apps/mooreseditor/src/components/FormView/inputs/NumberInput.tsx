@@ -5,7 +5,7 @@ import { NumberInput as MantineNumberInput } from "@mantine/core";
 import { useDebouncedCallback } from "../../../hooks/useDebounce";
 
 import type { FormInputProps } from "./types";
-import type { NumberSchema } from "../../../libs/schema/types";
+import type { NumberSchema } from "@mooreseditor/plugin-sdk";
 
 export const NumberInput: React.FC<FormInputProps<number>> = React.memo(
   ({ value, onChange, schema }) => {

@@ -65,6 +65,9 @@ importers:
       '@mantine/tiptap':
         specifier: ^7.17.0
         version: 7.17.3(@mantine/core@7.10.2(@mantine/hooks@7.10.2(react@19.1.0))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@7.10.2(react@19.1.0))(@tiptap/extension-link@2.11.7(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7))(@tiptap/react@2.11.7(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mooreseditor/plugin-sdk':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sdk
       '@tabler/icons-react':
         specifier: ^3.31.0
         version: 3.31.0(react@19.1.0)

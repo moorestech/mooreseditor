@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { DataInitializer } from "./dataInitializer";
 
-import type { ObjectSchema, ArraySchema } from "../libs/schema/types";
+import type { ObjectSchema, ArraySchema } from "@mooreseditor/plugin-sdk";
 
 describe("DataInitializer", () => {
   describe("Simple schemas", () => {

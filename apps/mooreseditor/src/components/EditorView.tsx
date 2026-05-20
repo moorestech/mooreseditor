@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar";
 import { TableView } from "./TableView";
 
 import type { Column } from "../hooks/useJson";
-import type { Schema } from "../libs/schema/types";
+import type { Schema } from "@mooreseditor/plugin-sdk";
 
 type NestedView = {
   type: "form" | "table";

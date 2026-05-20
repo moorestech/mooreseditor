@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
+import { supportsForeignKey } from "@mooreseditor/plugin-sdk";
 import { IconTrash, IconCopy } from "@tabler/icons-react";
 
-import { supportsForeignKey } from "../../../libs/schema/types";
 import { processSwitchFields } from "../../../utils/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
@@ -11,8 +11,8 @@ import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 import { RowCopyPasteButtons } from "./RowCopyPasteButtons";
 
 import type { Column } from "../../../hooks/useJson";
-import type { ObjectSchema } from "../../../libs/schema/types";
 import type { EditingCell } from "../TableView.types";
+import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
 
 interface TableRowProps {
   row: any;

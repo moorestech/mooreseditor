@@ -11,6 +11,7 @@
   "scripts": {
     "lint": "eslint src",
     "type-check": "tsc --noEmit",
+    "build": "vite build",
     "test": "vitest run"
   },
   "dependencies": {

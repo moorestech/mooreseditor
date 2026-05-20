@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 
+import { FormView, TableView } from "@mooreseditor/plugin-sdk";
+
 import { useNestedViewScroll } from "../hooks/useNestedViewScroll";
 
-import FormView from "./FormView";
 import Sidebar from "./Sidebar";
-import { TableView } from "./TableView";
 
 import type { Column } from "../hooks/useJson";
 import type { Schema } from "@mooreseditor/plugin-sdk";

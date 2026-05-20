@@ -34,60 +34,61 @@ vi.mock("./Sidebar", () => ({
   ),
 }));
 
-vi.mock("./FormView", () => ({
-  default: ({
-    data,
-    schema,
-    onDataChange,
-    onObjectArrayClick,
-    path: _path,
-    rootData: _rootData,
-  }: any) => (
-    <div data-testid="form-view">
-      <input
-        data-testid="form-input"
-        defaultValue={JSON.stringify(data)}
-        onChange={(e) => onDataChange(JSON.parse(e.target.value))}
-      />
-      {schema?.properties?.find((p: any) => p.type === "array") && (
+vi.mock("@mooreseditor/plugin-sdk", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    FormView: ({
+      data,
+      schema,
+      onDataChange,
+      onObjectArrayClick,
+      path: _path,
+      rootData: _rootData,
+    }: any) => (
+      <div data-testid="form-view">
+        <input
+          data-testid="form-input"
+          defaultValue={JSON.stringify(data)}
+          onChange={(e) => onDataChange(JSON.parse(e.target.value))}
+        />
+        {schema?.properties?.find((p: any) => p.type === "array") && (
+          <button
+            data-testid="array-click"
+            onClick={() =>
+              onObjectArrayClick(["items"], {
+                type: "array",
+                items: { type: "object" },
+              })
+            }
+          >
+            Click Array
+          </button>
+        )}
+      </div>
+    ),
+    TableView: ({ data, schema: _schema, onDataChange, onRowSelect }: any) => (
+      <div data-testid="table-view">
+        <div data-testid="table-data">{JSON.stringify(data)}</div>
+        {data?.map((_: any, index: number) => (
+          <button
+            key={index}
+            data-testid={`row-${index}`}
+            onClick={() => onRowSelect(index)}
+          >
+            Select Row {index}
+          </button>
+        ))}
         <button
-          data-testid="array-click"
-          onClick={() =>
-            onObjectArrayClick(["items"], {
-              type: "array",
-              items: { type: "object" },
-            })
-          }
+          data-testid="table-change"
+          onClick={() => onDataChange([...data, { new: "item" }])}
         >
-          Click Array
+          Add Item
         </button>
-      )}
-    </div>
-  ),
-}));
-
-vi.mock("./TableView", () => ({
-  TableView: ({ data, schema: _schema, onDataChange, onRowSelect }: any) => (
-    <div data-testid="table-view">
-      <div data-testid="table-data">{JSON.stringify(data)}</div>
-      {data?.map((_: any, index: number) => (
-        <button
-          key={index}
-          data-testid={`row-${index}`}
-          onClick={() => onRowSelect(index)}
-        >
-          Select Row {index}
-        </button>
-      ))}
-      <button
-        data-testid="table-change"
-        onClick={() => onDataChange([...data, { new: "item" }])}
-      >
-        Add Item
-      </button>
-    </div>
-  ),
-}));
+      </div>
+    ),
+  };
+});
 
 vi.mock("../hooks/useNestedViewScroll", () => ({
   useNestedViewScroll: (

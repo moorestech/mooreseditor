@@ -20,3 +20,5 @@ export * from "./hooks/useCopyPaste";
 export * from "./hooks/useDebounce";
 export * from "./hooks/useForeignKeyData";
 export * from "./hooks/useSwitchFieldAutoGeneration";
+export { default as FormView } from "./components/FormView";
+export { TableView } from "./components/TableView";

@@ -13,6 +13,31 @@ interface PluginJson {
 }
 
 /**
+ * monorepo ルート相対のプラグインパスを絶対パスへ解決する（dev/prod フォールバック）。
+ *
+ * prod (Tauri): Rust の `resolve_plugin_path` コマンドが、プロセスの作業
+ *   ディレクトリ基準でパスを絶対化し、同時に FS スコープへ登録する。
+ *   `@tauri-apps/plugin-fs` の `readTextFile` も `asset:` プロトコルの
+ *   `convertFileSrc` も絶対パスを要求するため、ロード前に絶対化が必須。
+ * dev (Vite ブラウザ): Tauri API が無いため invoke が失敗する。その場合は
+ *   相対パスのまま返す — `/api/plugin-fs/*` エンドポイントが monorepo
+ *   ルート基準で相対パスを解決するため、これで正しく動作する。
+ *
+ * `config.yaml` の `dir` 由来のパスは信頼できる入力なので、結果はそのまま
+ * 後続の読み込みに使う。
+ */
+export async function resolveAbsolutePluginPath(
+  relativePath: string,
+): Promise<string> {
+  try {
+    const { invoke } = await import("@tauri-apps/api/core");
+    return await invoke<string>("resolve_plugin_path", { relativePath });
+  } catch {
+    return relativePath;
+  }
+}
+
+/**
  * プラグインディレクトリからファイルテキストを読む（dev/prod フォールバック）。
  *
  * prod (Tauri): `@tauri-apps/plugin-fs` の `readTextFile` で直接読む。
@@ -111,9 +136,12 @@ function assertPluginManifest(
  *     検証した上で `PluginManifest` として返す。
  *
  * `pluginDir` は monorepo ルート相対パス（例: `./plugins/node-graph`）。
+ * 内部で `resolveAbsolutePluginPath` により prod では絶対パスへ解決する
+ * （dev では相対パスのまま）。以降の読み込みは解決後のパス基準で行う。
  */
 export async function loadPlugin(pluginDir: string): Promise<PluginManifest> {
-  const manifestText = await readPluginText(`${pluginDir}/plugin.json`);
+  const resolvedDir = await resolveAbsolutePluginPath(pluginDir);
+  const manifestText = await readPluginText(`${resolvedDir}/plugin.json`);
   let pluginJson: PluginJson;
   try {
     pluginJson = JSON.parse(manifestText) as PluginJson;
@@ -122,11 +150,11 @@ export async function loadPlugin(pluginDir: string): Promise<PluginManifest> {
   }
 
   if (pluginJson.styles?.length) {
-    await injectPluginStyles(pluginDir, pluginJson.styles);
+    await injectPluginStyles(resolvedDir, pluginJson.styles);
   }
 
   const entryUrl = await resolvePluginFileUrl(
-    `${pluginDir}/${pluginJson.entry}`,
+    `${resolvedDir}/${pluginJson.entry}`,
   );
   // `@vite-ignore`: この URL は実行時に解決されるため、Vite に静的解析・
   // バンドルさせない。

@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 
 import { parsePluginConfig } from "./config";
-import { loadPlugin } from "./loader";
+import { loadPlugin, resolveAbsolutePluginPath } from "./loader";
 
 import type { PluginManifest } from "@mooreseditor/plugin-sdk";
+
+/** `config.yaml` の置き場所（monorepo ルート相対 = `apps/mooreseditor/` 直下）。 */
+const CONFIG_RELATIVE_PATH = "apps/mooreseditor/mooreseditor.config.yaml";
 
 /**
  * `mooreseditor.config.yaml` の本文を読む（dev/prod フォールバック）。
  *
- * prod (Tauri): `readTextFile` でアプリ起動時に直接読む。
- * dev: Vite が `apps/mooreseditor/` 直下のファイルをルート配信するため
- *   `/mooreseditor.config.yaml` で取得できる。
+ * prod (Tauri): `resolve_plugin_path` で config を絶対パス化（同時に FS
+ *   スコープへ登録）し、`readTextFile` で読む。Tauri webview の作業
+ *   ディレクトリは `src-tauri` 付近のため、相対パス直読みは解決できない。
+ * dev (Vite ブラウザ): Tauri API が無いため `resolveAbsolutePluginPath` は
+ *   相対パスをそのまま返し、`readTextFile` の import も失敗する。catch 側で
+ *   Vite がルート配信する `/mooreseditor.config.yaml` を fetch する。
  */
 async function readConfigText(): Promise<string> {
   try {
+    const absolutePath = await resolveAbsolutePluginPath(CONFIG_RELATIVE_PATH);
     const { readTextFile } = await import("@tauri-apps/plugin-fs");
-    return await readTextFile("mooreseditor.config.yaml");
+    return await readTextFile(absolutePath);
   } catch {
     const res = await fetch("/mooreseditor.config.yaml");
     if (!res.ok) {

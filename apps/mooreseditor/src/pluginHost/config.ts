@@ -13,9 +13,13 @@ export function parsePluginConfig(yamlText: string): PluginConfigEntry[] {
       return [];
     }
     return plugins
-      .filter((p): p is { dir: string } => typeof p?.dir === "string")
+      .filter(
+        (p): p is { dir: string } =>
+          typeof p?.dir === "string" && p.dir.trim() !== "",
+      )
       .map((p) => ({ dir: p.dir }));
-  } catch {
+  } catch (error) {
+    console.warn("parsePluginConfig: invalid YAML", error);
     return [];
   }
 }

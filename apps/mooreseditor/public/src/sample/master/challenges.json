@@ -8,11 +8,7 @@
       "initialUnlocked": true,
       "challenges": [
         {
-          "blockSize": [
-            1,
-            1,
-            1
-          ],
+          "blockSize": [1, 1, 1],
           "initialUnlocked": true,
           "sortPriority": 100,
           "maxStack": 100,
@@ -20,16 +16,9 @@
           "title": "小石を3個拾う",
           "displayListType": "ForceShow",
           "displayListParam": {
-            "UIPosition": [
-              0,
-              0
-            ],
+            "UIPosition": [0, 0],
             "IconItem": "b0017e14-cc4c-4aef-98ca-64e485a8ab87",
-            "UIScale": [
-              1,
-              1,
-              1
-            ]
+            "UIScale": [1, 1, 1]
           },
           "playSkitType": "None",
           "taskCompletionType": "inInventoryItem",
@@ -50,10 +39,9 @@
             {
               "challengeActionType": "unlockItemRecipeView",
               "challengeActionParam": {
-                "unlockItemGuids": [
-                  "6afafbc9-5a2c-4444-b8c8-9ea047da9ffa"
-                ]
-              }
+                "unlockItemGuids": ["6afafbc9-5a2c-4444-b8c8-9ea047da9ffa"]
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "49ab89d7-bbe2-4735-b253-fbc55889c583",
@@ -67,7 +55,8 @@
                 "skitAddressablePath": "Vanilla/Skit/skits/100_start_game",
                 "playSkitType": "normal",
                 "playSortPriority": 0
-              }
+              },
+              "gameActionType": ""
             },
             {
               "challengeActionType": "playSkit",
@@ -75,7 +64,8 @@
                 "skitAddressablePath": "Vanilla/Skit/skits/200_star_background",
                 "playSkitType": "background",
                 "playSortPriority": 1
-              }
+              },
+              "gameActionType": ""
             }
           ]
         },
@@ -86,16 +76,9 @@
           "taskCompletionType": "createItem",
           "displayListType": "ForceShow",
           "displayListParam": {
-            "UIPosition": [
-              300,
-              0
-            ],
+            "UIPosition": [300, 0],
             "IconItem": "6afafbc9-5a2c-4444-b8c8-9ea047da9ffa",
-            "UIScale": [
-              1,
-              1,
-              1
-            ]
+            "UIScale": [1, 1, 1]
           },
           "prevChallengeGuid": "49ab89d7-bbe2-4735-b253-fbc55889c583",
           "clearedActions": [
@@ -106,7 +89,8 @@
                   "b74c4061-93fa-48e8-a82d-adbcb6c7e0c4",
                   "91458a7e-5eaa-47fd-b79e-8390af20bb84"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "taskParam": {
@@ -137,9 +121,7 @@
           ],
           "challengeGuid": "7ac263d8-406a-44e1-9878-9195378e9efc",
           "playSkitParam": {},
-          "prevChallengeGuids": [
-            "49ab89d7-bbe2-4735-b253-fbc55889c583"
-          ],
+          "prevChallengeGuids": ["49ab89d7-bbe2-4735-b253-fbc55889c583"],
           "initialUnlocked": false,
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
@@ -161,16 +143,9 @@
           },
           "displayListType": "ForceShow",
           "displayListParam": {
-            "UIPosition": [
-              600,
-              0
-            ],
+            "UIPosition": [600, 0],
             "IconItem": "91458a7e-5eaa-47fd-b79e-8390af20bb84",
-            "UIScale": [
-              1,
-              1,
-              1
-            ]
+            "UIScale": [1, 1, 1]
           },
           "tutorials": [
             {
@@ -189,14 +164,13 @@
                   "5def2be9-1bfa-4d6b-b827-8d82712bf70b",
                   "f5f66872-a7a2-4da6-90c0-fc26e904757c"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "c78e8e4b-84e6-4859-8541-daa255c09d48",
           "playSkitParam": {},
-          "prevChallengeGuids": [
-            "7ac263d8-406a-44e1-9878-9195378e9efc"
-          ],
+          "prevChallengeGuids": ["7ac263d8-406a-44e1-9878-9195378e9efc"],
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
         },
@@ -204,21 +178,10 @@
           "initialUnlocked": false,
           "sortPriority": 100,
           "maxStack": 100,
-          "blockSize": [
-            1,
-            1,
-            1
-          ],
+          "blockSize": [1, 1, 1],
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              750,
-              0
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [750, 0],
             "IconItem": "5def2be9-1bfa-4d6b-b827-8d82712bf70b"
           },
           "summary": "麻縄を2個作る",
@@ -241,9 +204,7 @@
             "itemCount": 2,
             "itemGuid": "5def2be9-1bfa-4d6b-b827-8d82712bf70b"
           },
-          "prevChallengeGuids": [
-            "c78e8e4b-84e6-4859-8541-daa255c09d48"
-          ],
+          "prevChallengeGuids": ["c78e8e4b-84e6-4859-8541-daa255c09d48"],
           "challengeGuid": "a05f88c4-b60a-496a-a2c0-5584ea121456",
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
@@ -259,16 +220,9 @@
           "challengeGuid": "8fb53727-935e-4d44-bcfc-064123f15a0a",
           "displayListType": "ForceShow",
           "displayListParam": {
-            "UIPosition": [
-              900,
-              0
-            ],
+            "UIPosition": [900, 0],
             "IconItem": "f5f66872-a7a2-4da6-90c0-fc26e904757c",
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ]
+            "UIScale": [1.5, 1.5, 1.5]
           },
           "playSkitParam": {},
           "playSkitType": "None",
@@ -280,7 +234,8 @@
                   "92e8bb57-30ae-41dc-8a57-5336faeee8fb",
                   "945912f1-d1ca-42ec-aff8-5e6a00e4a544"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "tutorials": [
@@ -292,24 +247,15 @@
               }
             }
           ],
-          "prevChallengeGuids": [
-            "a05f88c4-b60a-496a-a2c0-5584ea121456"
-          ],
+          "prevChallengeGuids": ["a05f88c4-b60a-496a-a2c0-5584ea121456"],
           "initialUnlocked": false,
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1000,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1000, 150],
             "IconItem": "2600a9c6-b365-4754-ad08-0e3d89f9c12d"
           },
           "summary": "木を採掘する",
@@ -334,24 +280,15 @@
           "displayListType": "ForceShow",
           "prevChallengeGuid": "8fb53727-935e-4d44-bcfc-064123f15a0a",
           "challengeGuid": "87ff05b0-4d10-4a0d-952d-e725f2004fe4",
-          "prevChallengeGuids": [
-            "8fb53727-935e-4d44-bcfc-064123f15a0a"
-          ],
+          "prevChallengeGuids": ["8fb53727-935e-4d44-bcfc-064123f15a0a"],
           "initialUnlocked": false,
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1200,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1200, 150],
             "IconItem": "92e8bb57-30ae-41dc-8a57-5336faeee8fb"
           },
           "summary": "木材を作る",
@@ -363,9 +300,7 @@
           "playSkitParam": {},
           "taskCompletionType": "createItem",
           "displayListType": "ForceShow",
-          "prevChallengeGuids": [
-            "87ff05b0-4d10-4a0d-952d-e725f2004fe4"
-          ],
+          "prevChallengeGuids": ["87ff05b0-4d10-4a0d-952d-e725f2004fe4"],
           "taskParam": {
             "itemGuid": "92e8bb57-30ae-41dc-8a57-5336faeee8fb"
           },
@@ -377,15 +312,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1000,
-              -150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1000, -150],
             "IconItem": "b3a8a7af-8612-42bf-9c94-0e95d3bebf70"
           },
           "summary": "石を採掘",
@@ -409,24 +337,15 @@
           },
           "challengeGuid": "4e406d3a-0b04-429d-b4b2-38c7d4586b3c",
           "displayListType": "ForceShow",
-          "prevChallengeGuids": [
-            "8fb53727-935e-4d44-bcfc-064123f15a0a"
-          ],
+          "prevChallengeGuids": ["8fb53727-935e-4d44-bcfc-064123f15a0a"],
           "initialUnlocked": false,
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ],
-            "UIPosition": [
-              1500,
-              0
-            ],
+            "UIScale": [1.5, 1.5, 1.5],
+            "UIPosition": [1500, 0],
             "IconItem": "945912f1-d1ca-42ec-aff8-5e6a00e4a544"
           },
           "summary": "石のツルハシを作る",
@@ -457,7 +376,8 @@
                   "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84",
                   "619638d5-13f0-4c04-b4e6-5113e946be7e"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "tutorials": [],
@@ -470,15 +390,8 @@
           "sortPriority": 100,
           "maxStack": 100,
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1800,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1800, 150],
             "IconItem": "370b1996-237e-475e-a5e3-a3f4f2a88587"
           },
           "displayListType": "ForceShow",
@@ -486,9 +399,7 @@
           "playSkitType": "None",
           "summary": "木の風車を作る",
           "title": "木の風車を作る",
-          "prevChallengeGuids": [
-            "a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"
-          ],
+          "prevChallengeGuids": ["a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"],
           "taskParam": {
             "itemGuid": "370b1996-237e-475e-a5e3-a3f4f2a88587"
           },
@@ -504,22 +415,16 @@
                   "ba3cf978-dc21-47f9-810e-50f1c26015ed",
                   "19fb4202-de45-49f1-a480-3d154309dd99"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              2100,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [2100, 150],
             "IconItem": "370b1996-237e-475e-a5e3-a3f4f2a88587"
           },
           "displayListType": "ForceShow",
@@ -532,9 +437,7 @@
             "itemCount": 1,
             "blockGuid": "f07acb35-f9c2-4905-b1dd-88c6723707b6"
           },
-          "prevChallengeGuids": [
-            "bf759905-fdc6-48b6-b130-890c0d7f5784"
-          ],
+          "prevChallengeGuids": ["bf759905-fdc6-48b6-b130-890c0d7f5784"],
           "challengeGuid": "1f1568c7-f976-4e66-bbb1-2ec1ae6114d0",
           "playSkitParam": {},
           "tutorials": [],
@@ -544,15 +447,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1800,
-              -150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1800, -150],
             "IconItem": "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84"
           },
           "displayListType": "ForceShow",
@@ -561,9 +457,7 @@
           "summary": "ふるいを作る",
           "title": "ふるいを作る",
           "initialUnlocked": false,
-          "prevChallengeGuids": [
-            "a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"
-          ],
+          "prevChallengeGuids": ["a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"],
           "taskParam": {
             "itemGuid": "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84"
           },
@@ -579,22 +473,16 @@
                   "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84",
                   "86670a2a-ab7c-46f4-bedf-1b30d1da111e"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              2100,
-              -150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [2100, -150],
             "IconItem": "8b7a77d9-bda9-4eb5-85f3-8eefc6f90a84"
           },
           "displayListType": "ForceShow",
@@ -607,9 +495,7 @@
             "itemCount": 1,
             "blockGuid": "db586a13-e960-4414-9d63-85fa07fded7f"
           },
-          "prevChallengeGuids": [
-            "74d3d6b2-d8fe-4077-a271-5367972e0569"
-          ],
+          "prevChallengeGuids": ["74d3d6b2-d8fe-4077-a271-5367972e0569"],
           "challengeGuid": "7d127f2a-774d-4b51-9a2f-e10ed9f3f66d",
           "playSkitParam": {},
           "tutorials": [],
@@ -619,15 +505,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              1800,
-              -300
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [1800, -300],
             "IconItem": "619638d5-13f0-4c04-b4e6-5113e946be7e"
           },
           "displayListType": "ForceShow",
@@ -639,9 +518,7 @@
           "taskParam": {
             "itemGuid": "619638d5-13f0-4c04-b4e6-5113e946be7e"
           },
-          "prevChallengeGuids": [
-            "a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"
-          ],
+          "prevChallengeGuids": ["a0c5e75d-66fa-404c-9dcd-41ae6b5a868c"],
           "challengeGuid": "3cc878e1-b049-4262-8893-bada63b6b14f",
           "playSkitParam": {},
           "tutorials": [],
@@ -649,10 +526,9 @@
             {
               "challengeActionType": "unlockItemRecipeView",
               "challengeActionParam": {
-                "unlockItemGuids": [
-                  "38cfc079-3835-4530-b539-449c5200dd59"
-                ]
-              }
+                "unlockItemGuids": ["38cfc079-3835-4530-b539-449c5200dd59"]
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -660,15 +536,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ],
-            "UIPosition": [
-              2400,
-              0
-            ],
+            "UIScale": [1.5, 1.5, 1.5],
+            "UIPosition": [2400, 0],
             "IconItem": "9245960f-5ab9-490d-b940-dac6b9994695"
           },
           "displayListType": "ForceShow",
@@ -690,10 +559,9 @@
             {
               "challengeActionType": "unlockItemRecipeView",
               "challengeActionParam": {
-                "unlockItemGuids": [
-                  "98383d78-6da1-47ca-bc94-f5e12f50c140"
-                ]
-              }
+                "unlockItemGuids": ["98383d78-6da1-47ca-bc94-f5e12f50c140"]
+              },
+              "gameActionType": ""
             }
           ],
           "challengeGuid": "5f19ddab-619c-4749-9160-ea86846c055e",
@@ -704,15 +572,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              2700,
-              0
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [2700, 0],
             "IconItem": "98383d78-6da1-47ca-bc94-f5e12f50c140"
           },
           "displayListType": "ForceShow",
@@ -721,9 +582,7 @@
           "summary": "破石を石のツルハシでさらに砕く",
           "title": "砂利を作る",
           "initialUnlocked": false,
-          "prevChallengeGuids": [
-            "5f19ddab-619c-4749-9160-ea86846c055e"
-          ],
+          "prevChallengeGuids": ["5f19ddab-619c-4749-9160-ea86846c055e"],
           "taskParam": {
             "itemGuid": "98383d78-6da1-47ca-bc94-f5e12f50c140"
           },
@@ -734,10 +593,9 @@
             {
               "challengeActionType": "unlockItemRecipeView",
               "challengeActionParam": {
-                "unlockItemGuids": [
-                  "d9a19e4f-bc3b-4b2e-93b2-d6be5a5c6f44"
-                ]
-              }
+                "unlockItemGuids": ["d9a19e4f-bc3b-4b2e-93b2-d6be5a5c6f44"]
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -745,15 +603,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ],
-            "UIPosition": [
-              3000,
-              0
-            ],
+            "UIScale": [1.5, 1.5, 1.5],
+            "UIPosition": [3000, 0],
             "IconItem": "d9a19e4f-bc3b-4b2e-93b2-d6be5a5c6f44"
           },
           "displayListType": "ForceShow",
@@ -762,9 +613,7 @@
           "summary": "砂をふるいにかけ、石炭を入手する",
           "title": "石炭を入手する",
           "initialUnlocked": false,
-          "prevChallengeGuids": [
-            "0f859a46-4e21-4f16-9e98-e3b4148290c7"
-          ],
+          "prevChallengeGuids": ["0f859a46-4e21-4f16-9e98-e3b4148290c7"],
           "taskParam": {
             "itemCount": 1,
             "itemGuid": "d9a19e4f-bc3b-4b2e-93b2-d6be5a5c6f44"
@@ -782,7 +631,8 @@
                   "dfd0ae76-ae7d-46cd-8abc-0c69407645a2",
                   "3acc3fa4-44c9-44ff-bf45-3f01a8acf4c3"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
@@ -790,15 +640,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              3300,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [3300, 150],
             "IconItem": "b6ac41f7-89e1-45c8-8f2d-128105cb5063"
           },
           "displayListType": "ForceShow",
@@ -811,9 +654,7 @@
             "itemCount": 1,
             "itemGuid": "b6ac41f7-89e1-45c8-8f2d-128105cb5063"
           },
-          "prevChallengeGuids": [
-            "ea4a2fdc-5e3d-4bdb-984b-7615b08159de"
-          ],
+          "prevChallengeGuids": ["ea4a2fdc-5e3d-4bdb-984b-7615b08159de"],
           "challengeGuid": "e3031ec0-7617-4633-a5b5-da484d6c8582",
           "playSkitParam": {},
           "tutorials": [],
@@ -823,15 +664,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              3300,
-              -150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [3300, -150],
             "IconItem": "8b67462b-227a-465b-8d86-de683b5e98a1"
           },
           "displayListType": "ForceShow",
@@ -844,9 +678,7 @@
             "itemGuid": "8b67462b-227a-465b-8d86-de683b5e98a1"
           },
           "challengeGuid": "3e53ca96-1eed-4fef-832d-2190230d24e6",
-          "prevChallengeGuids": [
-            "ea4a2fdc-5e3d-4bdb-984b-7615b08159de"
-          ],
+          "prevChallengeGuids": ["ea4a2fdc-5e3d-4bdb-984b-7615b08159de"],
           "playSkitParam": {},
           "tutorials": [],
           "clearedActions": [],
@@ -854,25 +686,17 @@
             {
               "challengeActionType": "unlockItemRecipeView",
               "challengeActionParam": {
-                "unlockItemGuids": [
-                  "8b67462b-227a-465b-8d86-de683b5e98a1"
-                ]
-              }
+                "unlockItemGuids": ["8b67462b-227a-465b-8d86-de683b5e98a1"]
+              },
+              "gameActionType": ""
             }
           ],
           "unlockAllPreviousChallengeComplete": true
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              3600,
-              0
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [3600, 0],
             "IconItem": "3acc3fa4-44c9-44ff-bf45-3f01a8acf4c3"
           },
           "displayListType": "ForceShow",
@@ -898,15 +722,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ],
-            "UIPosition": [
-              3900,
-              0
-            ],
+            "UIScale": [1.5, 1.5, 1.5],
+            "UIPosition": [3900, 0],
             "IconItem": "38cfc079-3835-4530-b539-449c5200dd59"
           },
           "displayListType": "ForceShow",
@@ -915,9 +732,7 @@
           "summary": "釜で亜鉛を作る",
           "title": "亜鉛を作る",
           "initialUnlocked": false,
-          "prevChallengeGuids": [
-            "53ba736e-3228-4dc3-8fd5-370b51384b6f"
-          ],
+          "prevChallengeGuids": ["53ba736e-3228-4dc3-8fd5-370b51384b6f"],
           "taskParam": {
             "itemCount": 1,
             "itemGuid": "38cfc079-3835-4530-b539-449c5200dd59"
@@ -937,32 +752,22 @@
                   "57f116bb-c374-410b-bc00-23b285575d7b",
                   "44cb69e9-c703-4393-94c4-bad4477da10f"
                 ]
-              }
+              },
+              "gameActionType": ""
             }
           ],
           "startedActions": [],
           "unlockAllPreviousChallengeComplete": true
         },
         {
-          "blockSize": [
-            1,
-            1,
-            1
-          ],
+          "blockSize": [1, 1, 1],
           "recipeViewType": 100,
           "initialUnlocked": false,
           "sortPriority": 100,
           "maxStack": 100,
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              4100,
-              150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [4100, 150],
             "IconItem": "ba3cf978-dc21-47f9-810e-50f1c26015ed"
           },
           "displayListType": "ForceShow",
@@ -973,9 +778,7 @@
           "taskParam": {
             "itemGuid": "ba3cf978-dc21-47f9-810e-50f1c26015ed"
           },
-          "prevChallengeGuids": [
-            "99fc2d4b-a99c-412d-a79c-e91dba34c21f"
-          ],
+          "prevChallengeGuids": ["99fc2d4b-a99c-412d-a79c-e91dba34c21f"],
           "challengeGuid": "08cee1c0-cbf3-48ed-80d1-70bf02723bfa",
           "playSkitParam": {},
           "tutorials": [],
@@ -985,15 +788,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              4100,
-              -150
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [4100, -150],
             "IconItem": "1da13d89-8aa1-42f7-8d7f-96ef0d216c2b"
           },
           "displayListType": "ForceShow",
@@ -1006,9 +802,7 @@
             "itemGuid": "1da13d89-8aa1-42f7-8d7f-96ef0d216c2b"
           },
           "challengeGuid": "c3f25998-ac94-443c-a7a9-e1d2a517f859",
-          "prevChallengeGuids": [
-            "99fc2d4b-a99c-412d-a79c-e91dba34c21f"
-          ],
+          "prevChallengeGuids": ["99fc2d4b-a99c-412d-a79c-e91dba34c21f"],
           "playSkitParam": {},
           "tutorials": [],
           "clearedActions": [],
@@ -1017,15 +811,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1,
-              1,
-              1
-            ],
-            "UIPosition": [
-              4400,
-              0
-            ],
+            "UIScale": [1, 1, 1],
+            "UIPosition": [4400, 0],
             "IconItem": "57f116bb-c374-410b-bc00-23b285575d7b"
           },
           "displayListType": "ForceShow",
@@ -1051,15 +838,8 @@
         },
         {
           "displayListParam": {
-            "UIScale": [
-              1.5,
-              1.5,
-              1.5
-            ],
-            "UIPosition": [
-              4700,
-              0
-            ],
+            "UIScale": [1.5, 1.5, 1.5],
+            "UIPosition": [4700, 0],
             "IconItem": "44cb69e9-c703-4393-94c4-bad4477da10f"
           },
           "displayListType": "ForceShow",
@@ -1072,9 +852,7 @@
             "itemCount": 1,
             "itemGuid": "44cb69e9-c703-4393-94c4-bad4477da10f"
           },
-          "prevChallengeGuids": [
-            "33ca8580-8370-41bb-9f62-48c0c4803cad"
-          ],
+          "prevChallengeGuids": ["33ca8580-8370-41bb-9f62-48c0c4803cad"],
           "challengeGuid": "47b5d93e-d3dd-436a-9ea1-94e317cfa96d",
           "playSkitParam": {},
           "tutorials": [],

@@ -1,11 +1,7 @@
 {
   "data": [
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": true,
       "sortPriority": 100,
       "maxStack": 100,
@@ -235,11 +231,7 @@
       "recipeViewType": "IsUnlocked"
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": false,
       "sortPriority": 380,
       "maxStack": 100,
@@ -344,11 +336,7 @@
       "recipeViewType": "IsUnlocked"
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": false,
       "sortPriority": 470,
       "maxStack": 100,
@@ -389,11 +377,7 @@
       "recipeViewType": "ForceHide"
     },
     {
-      "blockSize": [
-        1,
-        1,
-        1
-      ],
+      "blockSize": [1, 1, 1],
       "initialUnlocked": false,
       "sortPriority": 520,
       "maxStack": 100,

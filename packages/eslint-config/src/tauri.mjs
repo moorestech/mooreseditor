@@ -1,13 +1,12 @@
-import js from '@eslint/js';
-import { fixupPluginRules } from '@eslint/compat';
-import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
-import eslintPluginImport from 'eslint-plugin-import';
-import eslintPluginReact from 'eslint-plugin-react';
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
-import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y';
-
+import js from "@eslint/js";
+import { fixupPluginRules } from "@eslint/compat";
+import tseslint from "typescript-eslint";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginUnusedImports from "eslint-plugin-unused-imports";
+import eslintPluginImport from "eslint-plugin-import";
+import eslintPluginReact from "eslint-plugin-react";
+import eslintPluginReactHooks from "eslint-plugin-react-hooks";
+import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
 
 export default tseslint.config(
   js.configs.recommended,
@@ -15,7 +14,7 @@ export default tseslint.config(
   eslintConfigPrettier,
   {
     plugins: {
-      "react": fixupPluginRules(eslintPluginReact),
+      react: fixupPluginRules(eslintPluginReact),
       "react-hooks": fixupPluginRules(eslintPluginReactHooks),
       "jsx-a11y": fixupPluginRules(eslintPluginJsxA11y),
     },
@@ -23,60 +22,71 @@ export default tseslint.config(
       ...eslintPluginReact.rules.recommended,
       ...eslintPluginReactHooks.rules.recommended,
       ...eslintPluginJsxA11y.rules.recommended,
-    }
+    },
   },
   {
     plugins: {
-      "import": eslintPluginImport,
+      import: eslintPluginImport,
       "unused-imports": eslintPluginUnusedImports,
     },
     rules: {
-      'import/order': [
-        'error',
+      "import/order": [
+        "error",
         {
-          groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
+          groups: [
+            "builtin",
+            "external",
+            "parent",
+            "sibling",
+            "index",
+            "object",
+            "type",
+          ],
           pathGroups: [
             {
-              pattern: '{react,react-dom/**,react-router-dom}',
-              group: 'builtin',
-              position: 'before',
+              pattern: "{react,react-dom/**,react-router-dom}",
+              group: "builtin",
+              position: "before",
             },
             {
-              pattern: '~/**',
-              group: 'parent',
-              position: 'before',
+              pattern: "~/**",
+              group: "parent",
+              position: "before",
             },
           ],
-          pathGroupsExcludedImportTypes: ['builtin'],
+          pathGroupsExcludedImportTypes: ["builtin"],
           alphabetize: {
-            order: 'asc',
+            order: "asc",
           },
-          'newlines-between': 'always',
+          "newlines-between": "always",
         },
       ],
-      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" },
+      ],
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          "args": "all",
-          "varsIgnorePattern": "^_",
-          "argsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_",
-          "destructuredArrayIgnorePattern": "^_",
-          "ignoreRestSiblings": true
-        }
+          args: "all",
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
       ],
       "unused-imports/no-unused-imports": "error",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/naming-convention": [
         "error",
         {
-          "selector": "variable",
-          "types": ["boolean"],
-          "format": ["PascalCase"],
-          "prefix": ["is", "should", "has"]
-        }
-      ]
-    }
-  }
+          selector: "variable",
+          types: ["boolean"],
+          format: ["PascalCase"],
+          prefix: ["is", "should", "has"],
+        },
+      ],
+    },
+  },
 );

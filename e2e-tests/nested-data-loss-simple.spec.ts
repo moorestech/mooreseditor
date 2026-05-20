@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Nested Data Loss Bug - Simplified Test", () => {
-  test("Data loss occurs when switching Edit forms after adding new items", async ({ page }) => {
+  test("Data loss occurs when switching Edit forms after adding new items", async ({
+    page,
+  }) => {
     // コンソールログをキャプチャ
     const consoleLogs: string[] = [];
     page.on("console", (msg) => {
@@ -36,24 +38,31 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     // Step 4: earnItemsの初期状態を記録（JavaScriptで直接データをチェック）
     const initialState = await page.evaluate(() => {
       const mapObjectsData = (window as any).jsonData?.find(
-        (item: any) => item.title === "mapObjects"
+        (item: any) => item.title === "mapObjects",
       );
       const firstItem = mapObjectsData?.data?.data?.[0];
       const earnItemsData = firstItem?.earnItems;
 
       // グローバル変数に保存
-      (window as any).initialEarnItems = JSON.parse(JSON.stringify(earnItemsData || []));
+      (window as any).initialEarnItems = JSON.parse(
+        JSON.stringify(earnItemsData || []),
+      );
 
-      console.log("DATA CHECK: Initial earnItems count:", earnItemsData?.length || 0);
+      console.log(
+        "DATA CHECK: Initial earnItems count:",
+        earnItemsData?.length || 0,
+      );
       console.log("DATA CHECK: Initial earnItems data:", earnItemsData);
 
       return {
         earnItemsCount: earnItemsData?.length || 0,
-        hasData: earnItemsData && earnItemsData.length > 0
+        hasData: earnItemsData && earnItemsData.length > 0,
       };
     });
 
-    console.log(`✓ Step 4: Initial earnItems count: ${initialState.earnItemsCount}`);
+    console.log(
+      `✓ Step 4: Initial earnItems count: ${initialState.earnItemsCount}`,
+    );
     expect(initialState.hasData).toBe(true); // 初期データが存在することを確認
 
     // Step 5: TableViewに戻る（ESCキーまたは戻るボタン）
@@ -66,7 +75,9 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     console.log("✓ Step 5: Returned to TableView");
 
     // Step 6: Add Itemボタンをクリックして新しいmapObjectを追加
-    const addItemButton = page.getByRole("button", { name: "Add Item" }).first();
+    const addItemButton = page
+      .getByRole("button", { name: "Add Item" })
+      .first();
     await addItemButton.click();
     await page.waitForTimeout(1000);
     console.log("✓ Step 6: Added new mapObject");
@@ -78,14 +89,18 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     console.log(`  Found ${rowCount} rows in table`);
 
     // 最後の行のEditボタンをクリック
-    const lastRowEditButton = tableRows.nth(rowCount - 1).getByRole("button", { name: "Edit" });
+    const lastRowEditButton = tableRows
+      .nth(rowCount - 1)
+      .getByRole("button", { name: "Edit" });
     await lastRowEditButton.click();
     await page.waitForTimeout(500);
     console.log("✓ Step 7: Editing newly added mapObject");
 
     // Step 8: 最初のアイテムのEditボタンを再度クリック
     // TableViewの最初の行のEditボタンをクリック
-    const firstRowEditAgain = tableRows.first().getByRole("button", { name: "Edit" });
+    const firstRowEditAgain = tableRows
+      .first()
+      .getByRole("button", { name: "Edit" });
     await firstRowEditAgain.click();
     await page.waitForTimeout(500);
     console.log("✓ Step 8: Back to editing first mapObject");
@@ -93,16 +108,17 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     // Step 9: earnItemsのデータが保持されているか確認
     const finalState = await page.evaluate(() => {
       const mapObjectsData = (window as any).jsonData?.find(
-        (item: any) => item.title === "mapObjects"
+        (item: any) => item.title === "mapObjects",
       );
       const firstItem = mapObjectsData?.data?.data?.[0];
       const currentEarnItems = firstItem?.earnItems;
       const initialEarnItems = (window as any).initialEarnItems;
 
       // データの比較
-      const dataLost = !currentEarnItems ||
-                       currentEarnItems.length === 0 ||
-                       JSON.stringify(currentEarnItems) !== JSON.stringify(initialEarnItems);
+      const dataLost =
+        !currentEarnItems ||
+        currentEarnItems.length === 0 ||
+        JSON.stringify(currentEarnItems) !== JSON.stringify(initialEarnItems);
 
       if (dataLost) {
         console.log("🔴 DATA LOSS DETECTED!");
@@ -117,7 +133,7 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
         currentCount: currentEarnItems?.length || 0,
         dataLost,
         initialData: initialEarnItems,
-        currentData: currentEarnItems
+        currentData: currentEarnItems,
       };
     });
 
@@ -128,7 +144,7 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     // スクリーンショットを保存
     await page.screenshot({
       path: "nested-data-loss-test.png",
-      fullPage: true
+      fullPage: true,
     });
 
     // アサーション：データが失われていないことを確認
@@ -140,8 +156,12 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     console.log("\n=== Test Summary ===");
     if (finalState.dataLost) {
       console.log("❌ BUG CONFIRMED: Nested data (earnItems) was lost!");
-      console.log(`   Data changed from ${finalState.initialCount} items to ${finalState.currentCount} items`);
-      console.log("   This happens when switching between Edit forms after adding new items.");
+      console.log(
+        `   Data changed from ${finalState.initialCount} items to ${finalState.currentCount} items`,
+      );
+      console.log(
+        "   This happens when switching between Edit forms after adding new items.",
+      );
     } else {
       console.log("✅ TEST PASSED: Data integrity maintained");
     }
@@ -161,7 +181,7 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     // データの初期状態を記録
     await page.evaluate(() => {
       const blocksData = (window as any).jsonData?.find(
-        (item: any) => item.title === "blocks"
+        (item: any) => item.title === "blocks",
       );
       const blockCount = blocksData?.data?.data?.length || 0;
       console.log(`Initial blocks count: ${blockCount}`);
@@ -169,7 +189,7 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
       // 最初のブロックのblockParamを保存
       const firstBlock = blocksData?.data?.data?.[0];
       (window as any).initialBlockParam = JSON.parse(
-        JSON.stringify(firstBlock?.blockParam || {})
+        JSON.stringify(firstBlock?.blockParam || {}),
       );
       console.log("Initial blockParam saved:", firstBlock?.blockParam);
     });
@@ -181,13 +201,14 @@ test.describe("Nested Data Loss Bug - Simplified Test", () => {
     // データの最終状態を確認
     const result = await page.evaluate(() => {
       const blocksData = (window as any).jsonData?.find(
-        (item: any) => item.title === "blocks"
+        (item: any) => item.title === "blocks",
       );
       const firstBlock = blocksData?.data?.data?.[0];
       const currentBlockParam = firstBlock?.blockParam;
       const initialBlockParam = (window as any).initialBlockParam;
 
-      const isIntact = JSON.stringify(currentBlockParam) === JSON.stringify(initialBlockParam);
+      const isIntact =
+        JSON.stringify(currentBlockParam) === JSON.stringify(initialBlockParam);
 
       if (!isIntact) {
         console.log("🔴 Block data changed unexpectedly!");

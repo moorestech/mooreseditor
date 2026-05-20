@@ -117,10 +117,7 @@ export class DataInitializer {
    * @param schema オブジェクトスキーマ
    * @param contextData switch fieldの参照値を解決するためのコンテキストデータ
    */
-  private generateObjectValue(
-    schema: ObjectSchema,
-    contextData?: any,
-  ): any {
+  private generateObjectValue(schema: ObjectSchema, contextData?: any): any {
     const obj: any = {};
 
     if (schema.properties && Array.isArray(schema.properties)) {

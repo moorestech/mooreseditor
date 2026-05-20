@@ -4,10 +4,12 @@ import { TextInput, Textarea } from "@mantine/core";
 
 import { useDebouncedCallback } from "../../../hooks/useDebounce";
 
+import { ForeignKeySelect } from "./ForeignKeySelect";
+
 import type { FormInputProps } from "./types";
 import type { StringSchema } from "../../../libs/schema/types";
 
-export const StringInput: React.FC<FormInputProps<string>> = React.memo(
+const StringTextInput: React.FC<FormInputProps<string>> = React.memo(
   ({ value, onChange, schema }) => {
     const stringSchema = schema as StringSchema;
     const [localValue, setLocalValue] = useState(value || "");
@@ -58,5 +60,24 @@ export const StringInput: React.FC<FormInputProps<string>> = React.memo(
         placeholder={stringSchema.default}
       />
     );
+  },
+);
+
+export const StringInput: React.FC<FormInputProps<string>> = React.memo(
+  (props) => {
+    const stringSchema = props.schema as StringSchema;
+
+    if (stringSchema.foreignKey) {
+      return (
+        <ForeignKeySelect
+          value={props.value}
+          onChange={props.onChange}
+          schema={props.schema}
+          jsonData={props.jsonData}
+        />
+      );
+    }
+
+    return <StringTextInput {...props} />;
   },
 );

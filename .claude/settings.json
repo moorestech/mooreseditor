@@ -17,6 +17,7 @@
     ]
   },
   "enabledPlugins": {
-    "playwright-skill@playwright-skill": true
+    "playwright-skill@playwright-skill": true,
+    "reviw-plugin@reviw-plugins": true
   }
 }

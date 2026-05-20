@@ -61,9 +61,7 @@ export function deepMerge(target: any, source: any): any {
       sourceValue.constructor === Object
     ) {
       result[key] = deepMerge(
-        targetValue && typeof targetValue === "object"
-          ? targetValue
-          : {},
+        targetValue && typeof targetValue === "object" ? targetValue : {},
         sourceValue,
       );
       continue;

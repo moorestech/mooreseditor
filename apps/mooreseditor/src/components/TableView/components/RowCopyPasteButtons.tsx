@@ -89,10 +89,7 @@ export const RowCopyPasteButtons: React.FC<RowCopyPasteButtonsProps> = ({
       }
     >
       <Group gap={4} wrap="nowrap">
-        <CopyPasteButtons
-          onCopy={handleCopyClick}
-          onPaste={handlePasteClick}
-        />
+        <CopyPasteButtons onCopy={handleCopyClick} onPaste={handlePasteClick} />
       </Group>
     </div>
   );

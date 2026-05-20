@@ -3,10 +3,7 @@ import * as path from "node:path";
 const project = path.resolve(process.cwd(), "tsconfig.json");
 
 export default {
-  extends: [
-    "eslint:recommended",
-    "prettier",
-  ],
+  extends: ["eslint:recommended", "prettier"],
   globals: {
     React: true,
     JSX: true,
@@ -22,61 +19,72 @@ export default {
     },
   },
   rules: {
-    'import/order': [
-      'error',
+    "import/order": [
+      "error",
       {
-        groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
+        groups: [
+          "builtin",
+          "external",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type",
+        ],
         pathGroups: [
           {
-            pattern: '{react,react-dom/**,react-router-dom}',
-            group: 'builtin',
-            position: 'before',
+            pattern: "{react,react-dom/**,react-router-dom}",
+            group: "builtin",
+            position: "before",
           },
           {
-            pattern: '~/**',
-            group: 'parent',
-            position: 'before',
+            pattern: "~/**",
+            group: "parent",
+            position: "before",
           },
         ],
-        pathGroupsExcludedImportTypes: ['builtin'],
+        pathGroupsExcludedImportTypes: ["builtin"],
         alphabetize: {
-          order: 'asc',
+          order: "asc",
         },
-        'newlines-between': 'always',
+        "newlines-between": "always",
       },
     ],
-    '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      { prefer: "type-imports" },
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "args": "all",
-        "varsIgnorePattern": "^_",
-        "argsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-        "ignoreRestSiblings": true
-      }
+        args: "all",
+        varsIgnorePattern: "^_",
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+      },
     ],
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "error",
       {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-      }
+        vars: "all",
+        varsIgnorePattern: "^_",
+        args: "after-used",
+        argsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+      },
     ],
     "@typescript-eslint/naming-convention": [
       "error",
       {
-        "selector": "variable",
-        "types": ["boolean"],
-        "format": ["PascalCase"],
-        "prefix": ["is", "should", "has"]
-      }
-    ]
+        selector: "variable",
+        types: ["boolean"],
+        format: ["PascalCase"],
+        prefix: ["is", "should", "has"],
+      },
+    ],
   },
   ignorePatterns: [
     // Ignore dotfiles

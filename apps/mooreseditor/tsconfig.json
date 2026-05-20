@@ -1,12 +1,7 @@
 {
   "extends": "@mooreseditor/typescript-config/tauri",
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "files": [],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],

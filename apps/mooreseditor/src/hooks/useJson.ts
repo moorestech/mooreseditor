@@ -95,7 +95,10 @@ export function useJson() {
           parsedData = generateDefaultJsonFromSchema(schema);
 
           // Write the default JSON to file
-          await writeTextFile(jsonFilePath, JSON.stringify(parsedData, null, 2),);
+          await writeTextFile(
+            jsonFilePath,
+            JSON.stringify(parsedData, null, 2),
+          );
           console.log(`Created new JSON file: ${jsonFilePath}`);
         } else {
           // Read existing file

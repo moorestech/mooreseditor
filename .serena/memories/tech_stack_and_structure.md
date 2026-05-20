@@ -1,4 +1,5 @@
 # Tech Stack & Structure
+
 - **Frontend**: React 19, TypeScript, Vite, Mantine UI, DnD Kit, TanStack Table, Zod.
 - **Desktop Shell**: Tauri 2 with plugins (dialog, fs, notification, opener).
 - **Testing**: Vitest (unit), Playwright (E2E via `e2e-tests` workspace).

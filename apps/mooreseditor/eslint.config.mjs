@@ -2,7 +2,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import tauriConfig from "@mooreseditor/eslint-config/tauri";
-import tseslint from 'typescript-eslint';
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +19,7 @@ export default tseslint.config(
       "eslint.config.mjs",
       "coverage",
       "dist",
-    ]
+    ],
   },
   {
     languageOptions: {
@@ -33,5 +33,5 @@ export default tseslint.config(
       },
     },
   },
-  ...tauriConfig
+  ...tauriConfig,
 );

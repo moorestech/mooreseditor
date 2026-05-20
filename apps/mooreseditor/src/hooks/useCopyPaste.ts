@@ -15,7 +15,11 @@ type ChangeHandler = (
   value: any,
 ) => ChangeHandlerResult | Promise<ChangeHandlerResult>;
 
-export function useCopyPaste(value: any, onChange: ChangeHandler, schema: Schema) {
+export function useCopyPaste(
+  value: any,
+  onChange: ChangeHandler,
+  schema: Schema,
+) {
   const handleCopy = useCallback(async () => {
     try {
       const json = JSON.stringify({ value, schema: { type: schema } }, null, 2);

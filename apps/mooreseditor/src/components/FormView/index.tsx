@@ -17,6 +17,7 @@ interface FormViewProps {
   jsonData?: Column[];
   onDataChange: (newData: any) => void;
   onObjectArrayClick?: (path: string[], schema: Schema) => void;
+  autoOpenObjectArrays?: boolean;
   path?: string[];
   parentData?: any;
   rootData?: any;
@@ -29,6 +30,7 @@ const FormView = ({
   jsonData,
   onDataChange,
   onObjectArrayClick,
+  autoOpenObjectArrays = true,
   path = [],
   parentData,
   rootData,
@@ -50,6 +52,7 @@ const FormView = ({
   // Auto-open object arrays with openedByDefault - only on first mount
   useEffect(() => {
     if (
+      autoOpenObjectArrays &&
       !hasAutoOpenedRef.current &&
       "type" in schema &&
       schema.type === "object" &&
@@ -79,7 +82,7 @@ const FormView = ({
         }
       });
     }
-  }, [schema, path, onObjectArrayClick]);
+  }, [schema, path, onObjectArrayClick, autoOpenObjectArrays]);
 
   // Handle the case where schema is an object
   if ("type" in schema && schema.type === "object") {

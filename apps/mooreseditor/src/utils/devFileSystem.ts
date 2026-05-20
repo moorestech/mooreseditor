@@ -37,6 +37,7 @@ export function getSampleSchemaList(): string[] {
     "mapObjects",
     "modMeta",
     "research",
+    "states",
   ];
 }
 
@@ -47,7 +48,7 @@ export function getSampleSchemaList(): string[] {
 export function getSampleRefSchemaList(): string[] {
   return [
     "blockConnectInfo",
-    "challengeAction",
+    "gameAction",
     "fluidInventoryConnects",
     "gearConnects",
     "inventoryConnects",

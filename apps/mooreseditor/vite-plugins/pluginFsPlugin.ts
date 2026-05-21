@@ -395,6 +395,11 @@ export function pluginSharedBuildPlugin(): Plugin {
                 return "assets/[name]-[hash].js";
               },
             },
+            // Shared bridge entries are loaded by project plugins at runtime
+            // through the static import map, so Rollup cannot see their
+            // consumers. Keep their public named exports intact even when the
+            // host app itself only imports a small subset.
+            preserveEntrySignatures: "strict",
           },
         },
       };

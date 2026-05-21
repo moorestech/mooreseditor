@@ -28,7 +28,7 @@ importers:
         version: 4.20.3
       turbo:
         specifier: latest
-        version: 2.9.4
+        version: 2.9.14
 
   apps/mooreseditor:
     dependencies:
@@ -197,7 +197,7 @@ importers:
         version: 9.1.0(eslint@9.23.0)
       eslint-config-turbo:
         specifier: ^2.3.3
-        version: 2.4.4(eslint@9.23.0)(turbo@2.9.4)
+        version: 2.4.4(eslint@9.23.0)(turbo@2.9.14)
       eslint-plugin-import:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0)(typescript@5.6.3))(eslint@9.23.0)
@@ -215,7 +215,7 @@ importers:
         version: 4.6.2(eslint@9.23.0)
       eslint-plugin-turbo:
         specifier: ^2.3.3
-        version: 2.4.4(eslint@9.23.0)(turbo@2.9.4)
+        version: 2.4.4(eslint@9.23.0)(turbo@2.9.14)
       eslint-plugin-unused-imports:
         specifier: ^4.1.4
         version: 4.1.4(@typescript-eslint/eslint-plugin@8.28.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0)(typescript@5.6.3))(eslint@9.23.0)(typescript@5.6.3))(eslint@9.23.0)
@@ -260,16 +260,16 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@19.1.0)
       '@mantine/core':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.10.2(@mantine/hooks@7.10.2(react@19.1.0))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/hooks':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.10.2(react@19.1.0)
       '@mantine/notifications':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.17.8(@mantine/core@7.10.2(@mantine/hooks@7.10.2(react@19.1.0))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@7.10.2(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tabler/icons-react':
-        specifier: ^3.0.0
+        specifier: ^3.31.0
         version: 3.31.0(react@19.1.0)
       json-schema-ref-resolver:
         specifier: ^1.0.1
@@ -323,6 +323,9 @@ importers:
       typescript-eslint:
         specifier: ^8.28.0
         version: 8.28.0(eslint@9.23.0)(typescript@5.6.3)
+      vite:
+        specifier: ^6.0.3
+        version: 6.2.3(@types/node@24.0.3)(tsx@4.20.3)(yaml@2.7.1)
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.3)(@vitest/ui@3.2.4)(happy-dom@18.0.1)(jsdom@26.1.0)(msw@2.10.2(@types/node@24.0.3)(typescript@5.6.3))(tsx@4.20.3)(yaml@2.7.1)
@@ -332,16 +335,16 @@ importers:
   plugins/node-graph:
     dependencies:
       '@mantine/core':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.10.2(@mantine/hooks@7.10.2(react@19.1.0))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mantine/hooks':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.10.2(react@19.1.0)
       '@mantine/notifications':
-        specifier: ^7.10.0
+        specifier: ^7.10.2
         version: 7.17.8(@mantine/core@7.10.2(@mantine/hooks@7.10.2(react@19.1.0))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@7.10.2(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tabler/icons-react':
-        specifier: ^3.0.0
+        specifier: ^3.31.0
         version: 3.31.0(react@19.1.0)
       '@tauri-apps/api':
         specifier: ^2
@@ -1420,33 +1423,33 @@ packages:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@turbo/darwin-64@2.9.4':
-    resolution: {integrity: sha512-ZSlPqJ5Vqg/wgVw8P3AOVCIosnbBilOxLq7TMz3MN/9U46DUYfdG2jtfevNDufyxyrg98pcPs/GBgDRaaids6g==}
+  '@turbo/darwin-64@2.9.14':
+    resolution: {integrity: sha512-t7QiPflaEyBE4oayeZtSmu4mEfjgIrcNlNNl1z1dmIVPqEdtA7+CfTf8d7KXsOGPh6aNgWjKxyvQg9uGfDQF+A==}
     cpu: [x64]
     os: [darwin]
 
-  '@turbo/darwin-arm64@2.9.4':
-    resolution: {integrity: sha512-9cjTWe4OiNlFMSRggPNh+TJlRs7MS5FWrHc96MOzft5vESWjjpvaadYPv5ykDW7b45mVHOF2U/W+48LoX9USWw==}
+  '@turbo/darwin-arm64@2.9.14':
+    resolution: {integrity: sha512-d23147mC9BsCPA9mJ0h/ubcpbRgcJBXbcG3+Vq7YLhjz3IXuvQsJ1UXH8f4MD76ZjJ4m/E4aRdJV+MW88CDfbw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/linux-64@2.9.4':
-    resolution: {integrity: sha512-Cl1GjxqBXQ+r9KKowmXG+lhD1gclLp48/SE7NxL//66iaMytRw0uiphWGOkccD92iPiRjHLRUaA9lOTtgr5OCA==}
+  '@turbo/linux-64@2.9.14':
+    resolution: {integrity: sha512-P3ZKB5tuUDdDQWuAsACGUR1qv9W7BNWxdxqVJ0kZNuNNPRaVYTPPikLcp79+GiEcW3npsR+KyP38lnQiBc5aSA==}
     cpu: [x64]
     os: [linux]
 
-  '@turbo/linux-arm64@2.9.4':
-    resolution: {integrity: sha512-j2hPAKVmGNN2EsKigEWD+43y9m7zaPhNAs6ptsyfq0u7evHHBAXAwOfv86OEMg/gvC+pwGip0i1CIm1bR1vYug==}
+  '@turbo/linux-arm64@2.9.14':
+    resolution: {integrity: sha512-ZRTlzcUMrrPv9ZuDzRF9n60Ym13bKeG9jDB8WjxyLhWNzV+AJQN+zdpIk3NJYf2zQsGUm1mNar2P0elRzLw25g==}
     cpu: [arm64]
     os: [linux]
 
-  '@turbo/windows-64@2.9.4':
-    resolution: {integrity: sha512-1jWPjCe9ZRmsDTXE7uzqfySNQspnUx0g6caqvwps+k/sc+fm9hC/4zRQKlXZLbVmP3Xxp601Ju71boegHdnYGw==}
+  '@turbo/windows-64@2.9.14':
+    resolution: {integrity: sha512-exanwN6sIduZwykYeiTQj8kCmOhazP5WOz3bvXMcYtjhL6Z3iRWLewKrXCBq0bqwSP3iBMb/AerRCnHI4lx46A==}
     cpu: [x64]
     os: [win32]
 
-  '@turbo/windows-arm64@2.9.4':
-    resolution: {integrity: sha512-dlko15TQVu/BFYmIY018Y3covWMRQlUgAkD+OOk+Rokcfj6VY02Vv4mCfT/Zns6B4q8jGbOd6IZhnCFYsE8Viw==}
+  '@turbo/windows-arm64@2.9.14':
+    resolution: {integrity: sha512-fVdCsnmYoKICsycbWuuGp6Jvi51/3G/UluFWuAUCvR8PIW5IJkAk5BM9UF8PSm0Q2IphWHFZjYEgjHsh3B9y/g==}
     cpu: [arm64]
     os: [win32]
 
@@ -3951,8 +3954,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  turbo@2.9.4:
-    resolution: {integrity: sha512-wZ/kMcZCuK5oEp7sXSSo/5fzKjP9I2EhoiarZjyCm2Ixk0WxFrC/h0gF3686eHHINoFQOOSWgB/pGfvkR8rkgQ==}
+  turbo@2.9.14:
+    resolution: {integrity: sha512-BQqXRr4UoWI3UPFrtznCLykYHxwxWh53iCB57x092jPMjIlW1wnm3N895g5irpiXmnxUhREBB0n6+y8BHhs4nw==}
     hasBin: true
 
   type-check@0.4.0:
@@ -5309,22 +5312,22 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
       use-sync-external-store: 1.5.0(react@19.1.0)
 
-  '@turbo/darwin-64@2.9.4':
+  '@turbo/darwin-64@2.9.14':
     optional: true
 
-  '@turbo/darwin-arm64@2.9.4':
+  '@turbo/darwin-arm64@2.9.14':
     optional: true
 
-  '@turbo/linux-64@2.9.4':
+  '@turbo/linux-64@2.9.14':
     optional: true
 
-  '@turbo/linux-arm64@2.9.4':
+  '@turbo/linux-arm64@2.9.14':
     optional: true
 
-  '@turbo/windows-64@2.9.4':
+  '@turbo/windows-64@2.9.14':
     optional: true
 
-  '@turbo/windows-arm64@2.9.4':
+  '@turbo/windows-arm64@2.9.14':
     optional: true
 
   '@types/aria-query@5.0.4': {}
@@ -6415,11 +6418,11 @@ snapshots:
     dependencies:
       eslint: 9.23.0
 
-  eslint-config-turbo@2.4.4(eslint@9.23.0)(turbo@2.9.4):
+  eslint-config-turbo@2.4.4(eslint@9.23.0)(turbo@2.9.14):
     dependencies:
       eslint: 9.23.0
-      eslint-plugin-turbo: 2.4.4(eslint@9.23.0)(turbo@2.9.4)
-      turbo: 2.9.4
+      eslint-plugin-turbo: 2.4.4(eslint@9.23.0)(turbo@2.9.14)
+      turbo: 2.9.14
 
   eslint-import-resolver-alias@1.1.2(eslint-plugin-import@2.31.0):
     dependencies:
@@ -6738,11 +6741,11 @@ snapshots:
       '@microsoft/tsdoc': 0.14.2
       '@microsoft/tsdoc-config': 0.16.2
 
-  eslint-plugin-turbo@2.4.4(eslint@9.23.0)(turbo@2.9.4):
+  eslint-plugin-turbo@2.4.4(eslint@9.23.0)(turbo@2.9.14):
     dependencies:
       dotenv: 16.0.3
       eslint: 9.23.0
-      turbo: 2.9.4
+      turbo: 2.9.14
 
   eslint-plugin-unicorn@48.0.1(eslint@9.23.0):
     dependencies:
@@ -8299,14 +8302,14 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  turbo@2.9.4:
+  turbo@2.9.14:
     optionalDependencies:
-      '@turbo/darwin-64': 2.9.4
-      '@turbo/darwin-arm64': 2.9.4
-      '@turbo/linux-64': 2.9.4
-      '@turbo/linux-arm64': 2.9.4
-      '@turbo/windows-64': 2.9.4
-      '@turbo/windows-arm64': 2.9.4
+      '@turbo/darwin-64': 2.9.14
+      '@turbo/darwin-arm64': 2.9.14
+      '@turbo/linux-64': 2.9.14
+      '@turbo/linux-arm64': 2.9.14
+      '@turbo/windows-64': 2.9.14
+      '@turbo/windows-arm64': 2.9.14
 
   type-check@0.4.0:
     dependencies:

@@ -1,6 +1,7 @@
 {
   "extends": "@mooreseditor/typescript-config/base.json",
   "compilerOptions": {
+    "allowJs": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "ES2022"],
     "module": "ESNext",

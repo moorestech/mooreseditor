@@ -1,6 +1,11 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+import {
+  SHARED_DEPENDENCIES,
+  createSharedDependencyImportMap,
+} from "@mooreseditor/plugin-sdk/vite";
+
 import type { ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 
@@ -55,46 +60,19 @@ import type { Plugin } from "vite";
  * granularity rather than runtime `if (isDev)` branching.
  */
 
-// Shared dependencies exposed through `/shared/<name>.js`.
-// Keep this list explicit: only deps that MUST be a single instance across
-// host + plugins belong here.
-// `hasDefault` controls whether `bridgeSource()` additionally emits
-// `export { default } from "<spec>"`. It MUST be `true` only for packages
-// whose ESM entry actually has a top-level default export — emitting that
-// re-export for a package without one breaks the build / bridge evaluation.
-// Verified values (inspecting each package's ESM entry):
-//   - react / react-dom: real default export -> true
-//   - react/jsx-runtime, @mantine/*, @tabler/icons-react, @xyflow/react,
-//     @mooreseditor/plugin-sdk: named exports only -> false
-//
-// SYNC CONTRACT: this registry is the single source of truth for shared
-// deps. Every entry below MUST be mirrored 1:1 by:
-//   - the `index.html` import map (`/shared/<key>.js` URLs), and
-//   - the `EXTERNAL` array in `plugins/node-graph/vite.config.ts`.
-// All three lists currently enumerate the same 9 deps. Adding/removing a dep
-// here without updating the other two will leave it unresolvable for
-// dynamically-imported plugins (import map) or wrongly bundled (EXTERNAL).
-const SHARED_DEPS: Record<string, { spec: string; hasDefault: boolean }> = {
-  react: { spec: "react", hasDefault: true },
-  "react-dom": { spec: "react-dom", hasDefault: true },
-  // Key convention for subpath specs: collapse the subpath separator,
-  // slash -> hyphen (`react/jsx-runtime` -> `react-jsx-runtime`), so the
-  // key stays a valid single `/shared/<key>.js` path segment.
-  "react-jsx-runtime": { spec: "react/jsx-runtime", hasDefault: false },
-  "mantine-core": { spec: "@mantine/core", hasDefault: false },
-  // The host itself does not import `@mantine/hooks` directly, but it must
-  // be retained as a host dependency so this bridge can serve it to plugins.
-  "mantine-hooks": { spec: "@mantine/hooks", hasDefault: false },
-  "mantine-notifications": {
-    spec: "@mantine/notifications",
-    hasDefault: false,
-  },
-  "tabler-icons-react": { spec: "@tabler/icons-react", hasDefault: false },
-  "xyflow-react": { spec: "@xyflow/react", hasDefault: false },
-  "plugin-sdk": { spec: "@mooreseditor/plugin-sdk", hasDefault: false },
-};
+const SHARED_DEPS = Object.fromEntries(
+  SHARED_DEPENDENCIES.map((dep) => [dep.key, dep]),
+);
 
 const SHARED_PREFIX = "\0plugin-fs-shared:";
+
+function injectSharedDependencyImportMap(html: string): string {
+  const importMap = JSON.stringify(createSharedDependencyImportMap(), null, 2);
+  return html.replace(
+    "</head>",
+    `  <script type="importmap">\n${importMap}\n    </script>\n  </head>`,
+  );
+}
 
 /** JS 識別子として妥当な名前か（不正な named export はスキップする）。 */
 function isValidIdentifier(name: string): boolean {
@@ -120,8 +98,15 @@ function isValidIdentifier(name: string): boolean {
 async function bridgeSource(dep: {
   spec: string;
   hasDefault: boolean;
+  skipIntrospection?: boolean;
 }): Promise<string> {
   const spec = JSON.stringify(dep.spec);
+  if (dep.skipIntrospection) {
+    const star = `export * from ${spec};\n`;
+    const def = dep.hasDefault ? `export { default } from ${spec};\n` : "";
+    return star + def;
+  }
+
   let names: string[] = [];
   try {
     const mod = (await import(dep.spec)) as Record<string, unknown>;
@@ -234,6 +219,8 @@ export function pluginFsPlugin(): Plugin {
   return {
     name: "plugin-fs-plugin",
     apply: "serve",
+
+    transformIndexHtml: injectSharedDependencyImportMap,
 
     configResolved(config) {
       // config.root === apps/mooreseditor ; monorepo root is two levels up.
@@ -368,6 +355,8 @@ export function pluginSharedBuildPlugin(): Plugin {
   return {
     name: "plugin-fs-shared-build",
     apply: "build",
+
+    transformIndexHtml: injectSharedDependencyImportMap,
 
     /** Register one input entry per shared dep. */
     config() {

@@ -68,6 +68,7 @@ import App from "./App";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
+import { usePlugins } from "./pluginHost/usePlugins";
 
 import type { PluginConfigEntry } from "./pluginHost/config";
 
@@ -298,5 +299,31 @@ describe("App (view host)", () => {
     render(<App />);
 
     expect(screen.getByTestId("editor-view")).toBeInTheDocument();
+  });
+
+  it("disposes plugin views when plugin instances are removed", () => {
+    const dispose = vi.fn();
+    const pluginManifest = {
+      id: "node-graph",
+      name: "Node Graph",
+      version: "0.1.0",
+      createView: vi.fn(() => ({
+        render: () => <div data-testid="node-graph-view" />,
+        dispose,
+      })),
+    };
+
+    vi.mocked(usePlugins).mockReturnValue({
+      plugins: [pluginManifest],
+      loading: false,
+    } as any);
+    const { rerender } = render(<App />);
+
+    expect(dispose).not.toHaveBeenCalled();
+
+    vi.mocked(usePlugins).mockReturnValue({ plugins: [], loading: false });
+    rerender(<App />);
+
+    expect(dispose).toHaveBeenCalledOnce();
   });
 });

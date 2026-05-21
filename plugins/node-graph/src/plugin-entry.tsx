@@ -1,4 +1,7 @@
+import { createColumnDispatch } from "@mooreseditor/plugin-sdk";
+
 import { NODE_GRAPH_RELATIVE_PATH } from "./constants";
+import { pluginMetadata } from "./pluginMetadata";
 
 import NodeEditorView from "./index";
 
@@ -12,25 +15,13 @@ import type {
 } from "@mooreseditor/plugin-sdk";
 
 const manifest: PluginManifest = {
-  id: "node-graph",
-  name: "Node Graph",
-  version: "0.1.0",
+  ...pluginMetadata,
   createView(host: HostAPI): PluginView {
     // NodeEditorView は forwardRef。React コンポーネント外なので createRef では
     // なく素のミュータブルコンテナ + コールバック ref で handle を保持する。
     const handleRef: { current: NodeEditorHandle | null } = { current: null };
 
-    // HostAPI.setColumns は updater 関数のみ受け付けるため、
-    // React の SetStateAction（関数 or 値）を updater へ正規化する。
-    const setJsonData: React.Dispatch<React.SetStateAction<Column[]>> = (
-      action,
-    ) => {
-      host.setColumns((columns) =>
-        typeof action === "function"
-          ? (action as (prev: Column[]) => Column[])(columns)
-          : action,
-      );
-    };
+    const setJsonData = createColumnDispatch(host);
 
     // onRequestSave: master カラム + nodeGraph ファイルを 1 操作で永続化する。
     const onRequestSave = async (

@@ -1,10 +1,13 @@
+import { resolvePluginPackagePath } from "./pluginPaths";
+import { injectPluginStyleLink } from "./pluginStyles";
+
 import type { PluginManifest } from "@mooreseditor/plugin-sdk";
 
 /**
  * `plugin.json` の形。`config.yaml` の `dir` 配下に置かれる。
  * `entry` / `styles` の各パスは `dir` からの相対。
  */
-interface PluginJson {
+export interface PluginJson {
   id: string;
   name: string;
   version: string;
@@ -105,18 +108,15 @@ async function resolvePluginFileUrl(filePath: string): Promise<string> {
  * dev でも正しく配信される（dev 専用エンドポイントを直書きしない）。
  */
 async function injectPluginStyles(
+  pluginId: string,
   pluginDir: string,
   styles: string[],
 ): Promise<void> {
   for (const stylePath of styles) {
-    const href = await resolvePluginFileUrl(`${pluginDir}/${stylePath}`);
-    if (!document.querySelector(`link[data-plugin-style="${href}"]`)) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = href;
-      link.dataset.pluginStyle = href;
-      document.head.appendChild(link);
-    }
+    const href = await resolvePluginFileUrl(
+      resolvePluginPackagePath(pluginDir, stylePath),
+    );
+    injectPluginStyleLink(pluginId, href);
   }
 }
 
@@ -134,10 +134,27 @@ function assertPluginManifest(
     !manifest ||
     typeof manifest.id !== "string" ||
     typeof manifest.name !== "string" ||
+    typeof manifest.version !== "string" ||
     typeof manifest.createView !== "function"
   ) {
     throw new Error(
       `Plugin ${pluginDir}: default export is not a valid PluginManifest`,
+    );
+  }
+}
+
+export function assertPluginMetadataMatchesJson(
+  pluginJson: PluginJson,
+  manifest: PluginManifest,
+  pluginDir: string,
+): void {
+  if (
+    pluginJson.id !== manifest.id ||
+    pluginJson.name !== manifest.name ||
+    pluginJson.version !== manifest.version
+  ) {
+    throw new Error(
+      `Plugin ${pluginDir}: plugin.json metadata does not match runtime manifest`,
     );
   }
 }
@@ -168,12 +185,8 @@ export async function loadPlugin(
     throw new Error(`Invalid plugin.json in ${pluginDir}: ${String(e)}`);
   }
 
-  if (pluginJson.styles?.length) {
-    await injectPluginStyles(resolvedDir, pluginJson.styles);
-  }
-
   const entryUrl = await resolvePluginFileUrl(
-    `${resolvedDir}/${pluginJson.entry}`,
+    resolvePluginPackagePath(resolvedDir, pluginJson.entry),
   );
   // `@vite-ignore`: この URL は実行時に解決されるため、Vite に静的解析・
   // バンドルさせない。
@@ -181,5 +194,9 @@ export async function loadPlugin(
     default: unknown;
   };
   assertPluginManifest(mod.default, pluginDir);
+  assertPluginMetadataMatchesJson(pluginJson, mod.default, pluginDir);
+  if (pluginJson.styles?.length) {
+    await injectPluginStyles(mod.default.id, resolvedDir, pluginJson.styles);
+  }
   return mod.default;
 }

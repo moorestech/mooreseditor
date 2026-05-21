@@ -151,10 +151,9 @@ describe("saveProjectData", () => {
     expect(onSuccess).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "保存中にエラー:",
-      expect.arrayContaining([
-        expect.stringContaining("items.json"),
-        expect.stringContaining("blocks.json"),
-      ]),
+      expect.objectContaining({
+        message: expect.stringContaining("masterDir is not set"),
+      }),
     );
   });
 
@@ -173,7 +172,9 @@ describe("saveProjectData", () => {
     expect(onSuccess).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "保存中にエラー:",
-      expect.arrayContaining([expect.stringContaining("items.json")]),
+      expect.objectContaining({
+        message: expect.stringContaining("items.json"),
+      }),
     );
   });
 });

@@ -146,6 +146,18 @@ function App() {
       })),
     [plugins, hostApi],
   );
+  const previousPluginInstancesRef = useRef<typeof pluginInstances>([]);
+  useEffect(() => {
+    const currentIds = new Set(
+      pluginInstances.map(({ manifest }) => manifest.id),
+    );
+    for (const previous of previousPluginInstancesRef.current) {
+      if (!currentIds.has(previous.manifest.id)) {
+        previous.view.dispose?.();
+      }
+    }
+    previousPluginInstancesRef.current = pluginInstances;
+  }, [pluginInstances]);
 
   // Editor の能力解決（従来ロジック）。
   const editorGetCapabilities = useCallback(

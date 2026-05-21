@@ -3,5 +3,7 @@
   "name": "Node Graph",
   "version": "0.1.0",
   "entry": "dist/index.js",
-  "styles": ["dist/index.css"]
+  "styles": [
+    "dist/index.css"
+  ]
 }

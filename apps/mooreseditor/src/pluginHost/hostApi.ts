@@ -1,3 +1,5 @@
+import type { SetStateAction } from "react";
+
 import { invoke } from "@tauri-apps/api/core";
 import * as path from "@tauri-apps/api/path";
 import {
@@ -6,6 +8,8 @@ import {
   readTextFile,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
+
+import { saveProjectFiles } from "../utils/projectPersistence";
 
 import type { Column, HostAPI, Schema } from "@mooreseditor/plugin-sdk";
 
@@ -43,10 +47,6 @@ export interface CreateHostApiDeps {
 
 /** Tauri FS が利用できない（dev/ブラウザ環境）ことを表す内部マーカー。 */
 const TAURI_UNAVAILABLE = Symbol("tauri-unavailable");
-
-function stringifyError(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
 
 /**
  * relativePath（プラグインから渡される POSIX 区切りの相対パス）を検証する。
@@ -239,82 +239,6 @@ async function readExtraFileImpl(
 }
 
 /**
- * masterDir を projectDir からの相対パス（POSIX 区切り）として導出する。
- * 導出できない場合（masterDir が projectDir 配下でない / null 等）は "master" を
- * フォールバックとして返す。dev サーバ書込のみで使用する近似値。
- */
-function deriveMasterRelativeDir(
-  projectDir: string,
-  masterDir: string | null,
-): string {
-  if (!masterDir) {
-    return "master";
-  }
-  const normalizedProject = projectDir.replace(/[/\\]+$/, "");
-  // POSIX / Windows 双方の区切りに対応
-  for (const sep of ["/", "\\"]) {
-    const prefix = `${normalizedProject}${sep}`;
-    if (masterDir.startsWith(prefix)) {
-      return masterDir.slice(prefix.length).split("\\").join("/");
-    }
-  }
-  return "master";
-}
-
-/**
- * master カラム群と任意のプラグイン専用ファイルをまとめて保存する。
- * master カラムは <masterDir>/<column.title>.json へ書き込む。
- */
-async function saveProjectImpl(
-  projectDir: string | null,
-  masterDir: string | null,
-  columns: Column[],
-  extraFiles?: { path: string; content: string }[],
-): Promise<void> {
-  if (!projectDir) {
-    throw new Error("saveProject: projectDir is not set");
-  }
-
-  const errors: string[] = [];
-  const masterRelativeDir = deriveMasterRelativeDir(projectDir, masterDir);
-
-  for (const column of columns) {
-    const json = JSON.stringify(column.data, null, 2);
-    try {
-      if (!masterDir) {
-        throw new Error("Master directory is not set.");
-      }
-      const jsonFilePath = await path.join(masterDir, `${column.title}.json`);
-      await writeTextFile(jsonFilePath, json);
-    } catch (error) {
-      // Tauri FS が使えない場合は dev サーバへフォールバック。
-      // dev サーバへは projectDir 相対パスを渡す（projectDir からの master
-      // ディレクトリ位置を実値から導出。レイアウトはハードコードしない）。
-      try {
-        await writeViaDevServer(
-          `${masterRelativeDir}/${column.title}.json`,
-          json,
-        );
-      } catch {
-        errors.push(`${column.title}.json: ${stringifyError(error)}`);
-      }
-    }
-  }
-
-  for (const file of extraFiles ?? []) {
-    try {
-      await saveExtraFileImpl(projectDir, file.path, file.content);
-    } catch (error) {
-      errors.push(`${file.path}: ${stringifyError(error)}`);
-    }
-  }
-
-  if (errors.length > 0) {
-    throw new Error(`saveProject failed: ${errors.join("; ")}`);
-  }
-}
-
-/**
  * ホスト側の state とハンドラを束ねて、プラグインへ渡す HostAPI を生成する。
  *
  * `projectDir` / `masterDir` のプレーンフィールドは生成時点の値スナップショット。
@@ -330,19 +254,31 @@ async function saveProjectImpl(
 export function createHostApi(deps: CreateHostApiDeps): HostAPI {
   return {
     getColumns: () => deps.getColumns(),
-    setColumns: (updater) => deps.setColumns(updater),
+    setColumns: (action: SetStateAction<Column[]>) =>
+      deps.setColumns((columns) =>
+        typeof action === "function" ? action(columns) : action,
+      ),
     get schemas() {
       return deps.getSchemas();
     },
     loadSchema: (name) => deps.loadSchema(name),
-    projectDir: deps.projectDir,
-    masterDir: deps.masterDir,
+    get projectDir() {
+      return deps.projectDir;
+    },
+    get masterDir() {
+      return deps.masterDir;
+    },
     markDirty: () => deps.markDirty(),
     saveExtraFile: (relativePath, content) =>
       saveExtraFileImpl(deps.projectDir, relativePath, content),
     readExtraFile: (relativePath) =>
       readExtraFileImpl(deps.projectDir, relativePath),
     saveProject: (columns, extraFiles) =>
-      saveProjectImpl(deps.projectDir, deps.masterDir, columns, extraFiles),
+      saveProjectFiles({
+        projectDir: deps.projectDir,
+        masterDir: deps.masterDir,
+        columns,
+        extraFiles,
+      }),
   };
 }

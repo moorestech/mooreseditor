@@ -1,5 +1,4 @@
-import * as path from "@tauri-apps/api/path";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { saveProjectFiles } from "./projectPersistence";
 
 import type { Column } from "../hooks/useJson";
 
@@ -67,27 +66,10 @@ export async function saveProjectData({
     return;
   }
 
-  const errors: string[] = [];
-
-  for (const column of columns) {
-    try {
-      if (!masterDir) {
-        errors.push(`${column.title}.json: Master directory is not set.`);
-        continue;
-      }
-
-      const jsonFilePath = await path.join(masterDir, `${column.title}.json`);
-      await writeTextFile(jsonFilePath, JSON.stringify(column.data, null, 2));
-      console.log(`データが保存されました: ${jsonFilePath}`);
-    } catch (error) {
-      errors.push(`${column.title}.json: ${error}`);
-    }
-  }
-
-  if (errors.length === 0) {
+  try {
+    await saveProjectFiles({ columns, projectDir, masterDir });
     onSuccess();
-    return;
+  } catch (error) {
+    console.error("保存中にエラー:", error);
   }
-
-  console.error("保存中にエラー:", errors);
 }

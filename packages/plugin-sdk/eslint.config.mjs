@@ -17,6 +17,7 @@ export default tseslint.config(
       "coverage",
       "eslint.config.mjs",
       "vitest.config.ts",
+      "src/vite/*.js",
     ],
   },
   {

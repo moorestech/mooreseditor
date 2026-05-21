@@ -67,6 +67,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         console.error(
           "Invalid or missing schemaPath in mooreseditor.config.yml",
         );
+        setPluginConfigs([]);
         setIsLoading(false);
         return;
       }

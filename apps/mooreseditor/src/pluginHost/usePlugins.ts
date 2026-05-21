@@ -1,60 +1,42 @@
 import { useEffect, useState } from "react";
 
-import { parsePluginConfig } from "./config";
-import { loadPlugin, resolveAbsolutePluginPath } from "./loader";
+import { loadPlugin } from "./loader";
 
+import type { PluginConfigEntry } from "./config";
 import type { PluginManifest } from "@mooreseditor/plugin-sdk";
 
-/** `config.yaml` の置き場所（monorepo ルート相対 = `apps/mooreseditor/` 直下）。 */
-const CONFIG_RELATIVE_PATH = "apps/mooreseditor/mooreseditor.config.yaml";
-
 /**
- * `mooreseditor.config.yaml` の本文を読む（dev/prod フォールバック）。
+ * 開いたプロジェクトで宣言されたプラグインをロードするフック。
  *
- * prod (Tauri): `resolve_plugin_path` が `CONFIG_RELATIVE_PATH`（monorepo
- *   ルート相対）を `CARGO_MANIFEST_DIR` アンカー基準で絶対パス化し（CWD 非
- *   依存）、FS スコープへ登録する。`tauri dev` の実行時 CWD は
- *   `apps/mooreseditor/src-tauri`（実測）で monorepo ルートと一致しないため、
- *   相対パスの直読みや CWD 基準解決はできない。絶対パス化した上で
- *   `readTextFile` で読む。
- * dev (Vite ブラウザ): Tauri API が無いため `resolveAbsolutePluginPath` は
- *   相対パスをそのまま返し、`readTextFile` の import も失敗する。catch 側で
- *   Vite がルート配信する `/mooreseditor.config.yaml` を fetch する。
- */
-async function readConfigText(): Promise<string> {
-  try {
-    const absolutePath = await resolveAbsolutePluginPath(CONFIG_RELATIVE_PATH);
-    const { readTextFile } = await import("@tauri-apps/plugin-fs");
-    return await readTextFile(absolutePath);
-  } catch {
-    const res = await fetch("/mooreseditor.config.yaml");
-    if (!res.ok) {
-      console.warn(`usePlugins: failed to fetch config (${res.status})`);
-      return "";
-    }
-    return await res.text();
-  }
-}
-
-/**
- * `mooreseditor.config.yaml` を読み、宣言された全プラグインをロードして
- * `PluginManifest[]` と loading 状態を返すフック。
+ * `ProjectContext` が `<projectDir>/mooreseditor.config.yml` の `plugins:`
+ * セクションを抽出した `pluginConfigs` と、`open()` ダイアログ由来の絶対パス
+ * `projectDir` を受け取り、プロジェクトオープン後に各プラグインをロードする。
+ * `projectDir` が `null`（プロジェクト未オープン）のあいだはプラグイン 0 個。
  *
- * 1 プラグインのロード失敗は致命的とはせず、`console.error` で記録した上で
- * 残りのプラグインのロードを続行する。
+ * 各プラグインの `dir` は `projectDir` からの相対パスとして解決される。
+ * 1 プラグインのロード失敗は致命的とはせず、`console.error` で記録して残りの
+ * プラグインのロードを続行する。
  */
-export function usePlugins(): { plugins: PluginManifest[]; loading: boolean } {
+export function usePlugins(
+  pluginConfigs: PluginConfigEntry[],
+  projectDir: string | null,
+): { plugins: PluginManifest[]; loading: boolean } {
   const [plugins, setPlugins] = useState<PluginManifest[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!projectDir) {
+      setPlugins([]);
+      setIsLoading(false);
+      return;
+    }
     let isCancelled = false;
+    setIsLoading(true);
     void (async () => {
-      const entries = parsePluginConfig(await readConfigText());
       const loaded: PluginManifest[] = [];
-      for (const entry of entries) {
+      for (const entry of pluginConfigs) {
         try {
-          loaded.push(await loadPlugin(entry.dir));
+          loaded.push(await loadPlugin(projectDir, entry.dir));
         } catch (error) {
           console.error(`プラグインのロードに失敗: ${entry.dir}`, error);
         }
@@ -67,7 +49,7 @@ export function usePlugins(): { plugins: PluginManifest[]; loading: boolean } {
     return () => {
       isCancelled = true;
     };
-  }, []);
+  }, [projectDir, pluginConfigs]);
 
   return { plugins, loading: isLoading };
 }

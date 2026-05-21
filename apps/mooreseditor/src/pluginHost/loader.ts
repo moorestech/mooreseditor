@@ -13,55 +13,39 @@ interface PluginJson {
 }
 
 /**
- * 現在 Tauri webview 内で実行されているかを判定する。
+ * プラグインディレクトリの相対パスを、開いたプロジェクトディレクトリ基準で
+ * 絶対パスへ解決する。
  *
- * `@tauri-apps/api/core` は通常の npm パッケージなので、Vite ブラウザでも
- * 動的 import 自体は成功する（モジュールは存在する）。Tauri ランタイムが
- * 注入されているかは別問題で、Tauri 2 は webview に `window.__TAURI_INTERNALS__`
- * を注入する。これが無ければ dev (Vite ブラウザ) と判断できる。
+ * `projectDir` は `open()` ダイアログ由来の絶対パス。`pluginDir` はプロジェクト
+ * 設定 yml の `plugins[].dir`（プロジェクトディレクトリからの相対パス、例:
+ * `./plugins/node-graph`）。`@tauri-apps/plugin-fs` の `readTextFile` も
+ * `asset:` プロトコルの `convertFileSrc` も絶対パスを要求するため、ロード前に
+ * 絶対化する。
+ *
+ * prod / `tauri:dev`（Tauri ランタイム有）: `@tauri-apps/api/path` の `resolve`
+ *   で OS のパス規則どおりに正規化・絶対化する。プロジェクトディレクトリは
+ *   `add_project_to_scope` で再帰的に FS スコープ登録済みなので、配下の
+ *   プラグインファイルは追加登録なしで読める。
+ * 純 Vite ブラウザ（Tauri ランタイム無）: `@tauri-apps/api/path` の import は
+ *   成功するが `resolve` の invoke が失敗する。catch 側で素朴に文字列結合した
+ *   パスを返す（純ブラウザは実プロジェクトを開けないためプラグイン 0 個で、
+ *   このパスが実際に使われることはない）。
+ *
+ * セキュリティ: `pluginDir` はプロジェクト所有者自身の設定ファイル由来だが、
+ * `..` セグメントによるプロジェクト外への脱出を最低限ガードする。
  */
-function isTauriRuntime(): boolean {
-  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-}
-
-/**
- * monorepo ルート相対のプラグインパスを絶対パスへ解決する（dev/prod フォールバック）。
- *
- * prod (Tauri): Rust の `resolve_plugin_path` コマンドが、`CARGO_MANIFEST_DIR`
- *   をアンカーに monorepo ルート基準でパスを絶対化し（CWD 非依存）、許可リスト
- *   検証を通った場合のみ FS スコープへ登録する。`@tauri-apps/plugin-fs` の
- *   `readTextFile` も `asset:` プロトコルの `convertFileSrc` も絶対パスを
- *   要求するため、ロード前に絶対化が必須。
- * dev (Vite ブラウザ): Tauri ランタイムが無いため、相対パスのまま返す
- *   — `/api/plugin-fs/*` エンドポイントが monorepo ルート基準で相対パスを
- *   解決するため、これで正しく動作する。
- *
- * Tauri ランタイム不在（= dev の正常なフォールバック）と、Tauri 環境での
- * `invoke` 拒否（= prod の実エラー）を区別する。前者はサイレントに相対パスへ
- * フォールバックし、後者はフォールバックしつつ `console.warn` で診断可能にする。
- *
- * `config.yaml` の `dir` 由来のパスは信頼できる入力なので、結果はそのまま
- * 後続の読み込みに使う。
- */
-export async function resolveAbsolutePluginPath(
-  relativePath: string,
+async function resolvePluginDir(
+  projectDir: string,
+  pluginDir: string,
 ): Promise<string> {
-  if (!isTauriRuntime()) {
-    // dev (Vite ブラウザ): Tauri ランタイム不在。正常なフォールバック。
-    return relativePath;
+  if (pluginDir.split(/[/\\]/).includes("..")) {
+    throw new Error(`Invalid plugin dir (contains ".."): ${pluginDir}`);
   }
   try {
-    const { invoke } = await import("@tauri-apps/api/core");
-    return await invoke<string>("resolve_plugin_path", { relativePath });
-  } catch (error) {
-    // Tauri 環境にも関わらず invoke が失敗した = 実エラー（未登録コマンド・
-    // 許可リスト違反など）。フォールバックはするが、サイレントにせず警告する。
-    console.warn(
-      `resolveAbsolutePluginPath: resolve_plugin_path invoke failed for ` +
-        `"${relativePath}"; falling back to the relative path: ` +
-        (error instanceof Error ? error.message : String(error)),
-    );
-    return relativePath;
+    const { resolve } = await import("@tauri-apps/api/path");
+    return await resolve(projectDir, pluginDir);
+  } catch {
+    return `${projectDir}/${pluginDir}`;
   }
 }
 
@@ -155,20 +139,23 @@ function assertPluginManifest(
 }
 
 /**
- * 1 プラグインディレクトリをロードして `PluginManifest` を返す。
+ * 1 プラグインをロードして `PluginManifest` を返す。
  *
  * 手順:
- *  1. `<dir>/plugin.json` を読み、`PluginJson` としてパース。
- *  2. `styles` があれば CSS を `<link>` 注入。
- *  3. `<dir>/<entry>` の JS を動的 import し、`default` エクスポートを
+ *  1. `pluginDir` を `projectDir` 基準で絶対パスへ解決。
+ *  2. `<dir>/plugin.json` を読み、`PluginJson` としてパース。
+ *  3. `styles` があれば CSS を `<link>` 注入。
+ *  4. `<dir>/<entry>` の JS を動的 import し、`default` エクスポートを
  *     検証した上で `PluginManifest` として返す。
  *
- * `pluginDir` は monorepo ルート相対パス（例: `./plugins/node-graph`）。
- * 内部で `resolveAbsolutePluginPath` により prod では絶対パスへ解決する
- * （dev では相対パスのまま）。以降の読み込みは解決後のパス基準で行う。
+ * `projectDir` は開いたプロジェクトの絶対パス。`pluginDir` はプロジェクト
+ * 設定 yml の `plugins[].dir`（プロジェクトディレクトリからの相対パス）。
  */
-export async function loadPlugin(pluginDir: string): Promise<PluginManifest> {
-  const resolvedDir = await resolveAbsolutePluginPath(pluginDir);
+export async function loadPlugin(
+  projectDir: string,
+  pluginDir: string,
+): Promise<PluginManifest> {
+  const resolvedDir = await resolvePluginDir(projectDir, pluginDir);
   const manifestText = await readPluginText(`${resolvedDir}/plugin.json`);
   let pluginJson: PluginJson;
   try {

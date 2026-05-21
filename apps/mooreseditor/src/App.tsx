@@ -36,8 +36,14 @@ const NO_CAPABILITIES: ViewCapabilities = {
 };
 
 function App() {
-  const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
-    useProject();
+  const {
+    projectDir,
+    schemaDir,
+    masterDir,
+    menuToFileMap,
+    pluginConfigs,
+    openProjectDir,
+  } = useProject();
   const {
     jsonData,
     setJsonData,
@@ -49,7 +55,10 @@ function App() {
     clearUnsavedChanges,
   } = useJson();
   const { schemas, loadSchema } = useSchema();
-  const { plugins, loading: isPluginsLoading } = usePlugins();
+  const { plugins, loading: isPluginsLoading } = usePlugins(
+    pluginConfigs,
+    projectDir,
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const [activeViewId, setActiveViewId] = useState(EDITOR_VIEW_ID);

@@ -7,8 +7,8 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
-import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
 import { parsePluginConfig } from "../pluginHost/config";
+import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
 
 import type { PluginConfigEntry } from "../pluginHost/config";
 

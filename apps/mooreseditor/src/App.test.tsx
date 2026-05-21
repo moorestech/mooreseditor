@@ -69,6 +69,8 @@ import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
 import { useSchema } from "./hooks/useSchema";
 
+import type { PluginConfigEntry } from "./pluginHost/config";
+
 import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
 describe("App (view host)", () => {
@@ -98,6 +100,7 @@ describe("App (view host)", () => {
       items: "items.json",
       recipes: "recipes.json",
     },
+    pluginConfigs: [] as PluginConfigEntry[],
     openProjectDir: vi.fn(),
   };
 

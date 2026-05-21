@@ -8,6 +8,7 @@ import { NODE_GRAPH_DIR, NODE_GRAPH_FILE_NAME } from "../constants";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
+import { findSchemaIdForNodeType } from "../utils/nodeTypeSchema";
 import { normalizeNoteColor } from "../utils/noteColor";
 import { extractRecipeRefsFromGraphEdge } from "../utils/recipeEdge";
 
@@ -67,13 +68,8 @@ function toReactFlowNodes(
     }
 
     // Look up display name from master data
-    const schemaId =
-      gn.type === "item"
-        ? "items"
-        : gn.type === "block"
-          ? "blocks"
-          : "research";
-    const meta = schemaMetas.get(schemaId);
+    const schemaId = findSchemaIdForNodeType(gn.type, schemaMetas);
+    const meta = schemaId ? schemaMetas.get(schemaId) : null;
     let displayName = gn.masterGuid.substring(0, 8);
     if (meta?.guidField && meta?.nameField) {
       const col = jsonData.find((c) => c.title === schemaId);

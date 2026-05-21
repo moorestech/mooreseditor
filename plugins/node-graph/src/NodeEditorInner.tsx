@@ -11,7 +11,8 @@ import { buildSchemaMetaMap } from "./utils/schemaMeta";
 import type { NodeEditorViewProps } from "./types/props";
 
 export interface NodeEditorHandle {
-  save: () => void;
+  save: () => Promise<void>;
+  isDirty: () => boolean;
   focusSearchMatch: (element: Element | null) => boolean;
 }
 
@@ -25,9 +26,9 @@ const NodeEditorInner = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
     );
     const { exportAndSave, isDirty } = useNodeExport(props, schemaMetas);
 
-    const save = useCallback(() => {
+    const save = useCallback(async () => {
       if (!isDirty && state.nodes.length === 0) return;
-      exportAndSave();
+      await exportAndSave();
     }, [isDirty, state.nodes.length, exportAndSave]);
 
     const focusSearchMatch = useCallback(
@@ -53,9 +54,10 @@ const NodeEditorInner = forwardRef<NodeEditorHandle, NodeEditorViewProps>(
       ref,
       () => ({
         save,
+        isDirty: () => isDirty,
         focusSearchMatch,
       }),
-      [focusSearchMatch, save],
+      [focusSearchMatch, isDirty, save],
     );
 
     return <NodeEditorApp {...props} />;

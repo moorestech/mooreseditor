@@ -159,6 +159,16 @@ export function assertPluginMetadataMatchesJson(
   }
 }
 
+export function assertPluginDirSupportedByAssetScope(pluginDir: string): void {
+  const normalized = pluginDir.replace(/\\/g, "/").replace(/^\.\//, "");
+  const segments = normalized.split("/").filter(Boolean);
+  if (segments.length !== 2 || segments[0] !== "plugins") {
+    throw new Error(
+      `Unsupported plugin dir "${pluginDir}". Production asset scope currently supports only plugins/<name>.`,
+    );
+  }
+}
+
 /**
  * 1 プラグインをロードして `PluginManifest` を返す。
  *
@@ -176,6 +186,7 @@ export async function loadPlugin(
   projectDir: string,
   pluginDir: string,
 ): Promise<PluginManifest> {
+  assertPluginDirSupportedByAssetScope(pluginDir);
   const resolvedDir = await resolvePluginDir(projectDir, pluginDir);
   const manifestText = await readPluginText(`${resolvedDir}/plugin.json`);
   let pluginJson: PluginJson;

@@ -114,6 +114,7 @@ describe("App (view host)", () => {
     vi.mocked(useJson).mockReturnValue(mockUseJson as any);
     vi.mocked(useSchema).mockReturnValue(mockUseSchema as any);
     vi.mocked(useProject).mockReturnValue(mockUseProject as any);
+    vi.mocked(usePlugins).mockReturnValue({ plugins: [], loading: false });
   });
 
   afterEach(() => {
@@ -234,6 +235,83 @@ describe("App (view host)", () => {
         expect.any(String),
       );
     });
+  });
+
+  it("saves dirty plugin data when Ctrl+S is pressed from the Editor view", async () => {
+    const pluginSave = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(usePlugins).mockReturnValue({
+      plugins: [
+        {
+          id: "node-graph",
+          name: "Node Graph",
+          version: "0.1.0",
+          createView: () => ({
+            render: () => <div data-testid="node-graph-view" />,
+            isDirty: () => true,
+            save: pluginSave,
+          }),
+        },
+      ],
+      loading: false,
+    } as any);
+    vi.mocked(useJson).mockReturnValue({
+      ...mockUseJson,
+      hasUnsavedChanges: true,
+    } as any);
+
+    render(<App />);
+
+    const event = new KeyboardEvent("keydown", {
+      key: "s",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    window.dispatchEvent(event);
+
+    await waitFor(() => {
+      expect(pluginSave).toHaveBeenCalledTimes(1);
+    });
+    expect(mockUseJson.clearUnsavedChanges).toHaveBeenCalled();
+  });
+
+  it("saves dirty editor data when Ctrl+S is pressed from a plugin view", async () => {
+    const pluginSave = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(usePlugins).mockReturnValue({
+      plugins: [
+        {
+          id: "node-graph",
+          name: "Node Graph",
+          version: "0.1.0",
+          createView: () => ({
+            render: () => <div data-testid="node-graph-view" />,
+            isDirty: () => false,
+            save: pluginSave,
+          }),
+        },
+      ],
+      loading: false,
+    } as any);
+    vi.mocked(useJson).mockReturnValue({
+      ...mockUseJson,
+      hasUnsavedChanges: true,
+    } as any);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("radio", { name: "Node Graph" }));
+
+    const event = new KeyboardEvent("keydown", {
+      key: "s",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    window.dispatchEvent(event);
+
+    await waitFor(() => {
+      expect(mockUseJson.clearUnsavedChanges).toHaveBeenCalled();
+    });
+    expect(pluginSave).not.toHaveBeenCalled();
   });
 
   it("logs sample-project saves instead of writing files", async () => {

@@ -1,3 +1,5 @@
+import { findSchemaIdForNodeType } from "./nodeTypeSchema";
+
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "@mooreseditor/plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
@@ -12,10 +14,13 @@ export function importResearchFromMaster(
   schemaMetas: Map<string, SchemaMeta>,
 ): ReactFlowNode[] {
   const nodes: ReactFlowNode[] = [];
-  const researchMeta = schemaMetas.get("research");
+  const researchSchemaId = findSchemaIdForNodeType("research", schemaMetas);
+  if (!researchSchemaId) return nodes;
+
+  const researchMeta = schemaMetas.get(researchSchemaId);
   if (!researchMeta?.guidField) return nodes;
 
-  const researchColumn = jsonData.find((c) => c.title === "research");
+  const researchColumn = jsonData.find((c) => c.title === researchSchemaId);
   const dataArray = researchColumn?.data?.[researchMeta.dataArrayPath];
   if (!Array.isArray(dataArray)) return nodes;
 

@@ -236,6 +236,42 @@ function App() {
     [pluginInstances, isPreloading, isPluginsLoading],
   );
 
+  const shouldSaveEditor =
+    (isEditing || hasUnsavedChanges) && jsonData.length > 0;
+
+  const canSavePluginView = useCallback(
+    (view: (typeof pluginInstances)[number]["view"], manifestId: string) => {
+      const isDirty = view.isDirty?.();
+      if (isDirty !== undefined) return isDirty;
+      return activeViewId === manifestId && Boolean(view.save);
+    },
+    [activeViewId],
+  );
+
+  const saveAllDirtyViews = useCallback(async () => {
+    if (shouldSaveEditor) {
+      await saveAll(jsonData);
+    }
+
+    for (const { manifest, view } of pluginInstances) {
+      if (canSavePluginView(view, manifest.id)) {
+        await view.save?.();
+      }
+    }
+  }, [
+    canSavePluginView,
+    jsonData,
+    pluginInstances,
+    saveAll,
+    shouldSaveEditor,
+  ]);
+
+  const hasSaveableView =
+    shouldSaveEditor ||
+    pluginInstances.some(({ manifest, view }) =>
+      canSavePluginView(view, manifest.id),
+    );
+
   const views = useMemo(
     () => [editorView, ...pluginViews],
     [editorView, pluginViews],
@@ -248,8 +284,8 @@ function App() {
   }, [views, activeViewId]);
 
   useSaveShortcut({
-    canSave: capabilities.canSave,
-    onSave: capabilities.onSave,
+    canSave: hasSaveableView,
+    onSave: saveAllDirtyViews,
   });
 
   const handleActiveSearchMatchChange = useCallback(

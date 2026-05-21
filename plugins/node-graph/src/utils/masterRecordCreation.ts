@@ -1,28 +1,16 @@
 import { createInitialValue } from "@mooreseditor/plugin-sdk";
 
+import { findSchemaIdForNodeType } from "./nodeTypeSchema";
+
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "@mooreseditor/plugin-sdk";
 
-type CreatableNodeType = "item" | "research";
+type CreatableNodeType = string;
 
 interface CreateMasterRecordResult {
   updatedColumns: Column[];
   masterGuid: string;
   displayName: string;
-}
-
-const NODE_TYPE_TO_SCHEMA_ID: Record<CreatableNodeType, string> = {
-  item: "items",
-  research: "research",
-};
-
-const NODE_TYPE_TO_DEFAULT_NAME: Record<CreatableNodeType, string> = {
-  item: "New Item",
-  research: "New Research",
-};
-
-function getSchemaIdForNodeType(nodeType: CreatableNodeType): string {
-  return NODE_TYPE_TO_SCHEMA_ID[nodeType];
 }
 
 function normalizeRecord(value: unknown): Record<string, unknown> {
@@ -45,11 +33,16 @@ function getUniqueName(baseName: string, existingNames: string[]): string {
   return `${baseName} ${suffix}`;
 }
 
+function getDefaultName(nodeType: CreatableNodeType): string {
+  return `New ${nodeType.charAt(0).toUpperCase()}${nodeType.slice(1)}`;
+}
+
 function resolveSchemaMeta(
   nodeType: CreatableNodeType,
   schemaMetas: Map<string, SchemaMeta>,
 ): SchemaMeta | null {
-  const schemaId = getSchemaIdForNodeType(nodeType);
+  const schemaId = findSchemaIdForNodeType(nodeType, schemaMetas);
+  if (!schemaId) return null;
   const schemaMeta = schemaMetas.get(schemaId);
   if (!schemaMeta?.elementSchema || !schemaMeta.guidField) {
     return null;
@@ -65,7 +58,8 @@ export function canCreateMasterRecordForNode(
   const schemaMeta = resolveSchemaMeta(nodeType, schemaMetas);
   if (!schemaMeta) return false;
 
-  const schemaId = getSchemaIdForNodeType(nodeType);
+  const schemaId = findSchemaIdForNodeType(nodeType, schemaMetas);
+  if (!schemaId) return false;
   return columns.some((col) => col.title === schemaId);
 }
 
@@ -77,7 +71,8 @@ export function createMasterRecordForNode(
   const schemaMeta = resolveSchemaMeta(nodeType, schemaMetas);
   if (!schemaMeta) return null;
 
-  const schemaId = getSchemaIdForNodeType(nodeType);
+  const schemaId = findSchemaIdForNodeType(nodeType, schemaMetas);
+  if (!schemaId) return null;
   const columnIndex = columns.findIndex((col) => col.title === schemaId);
   if (columnIndex === -1) return null;
 
@@ -127,7 +122,7 @@ export function createMasterRecordForNode(
         .filter((name): name is string => name !== null);
 
       const generatedName = getUniqueName(
-        NODE_TYPE_TO_DEFAULT_NAME[nodeType],
+        getDefaultName(nodeType),
         existingNames,
       );
       newRecord[schemaMeta.nameField] = generatedName;

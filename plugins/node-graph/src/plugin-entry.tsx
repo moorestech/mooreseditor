@@ -58,8 +58,9 @@ const manifest: PluginManifest = {
         />
       ),
       save: async () => {
-        handleRef.current?.save();
+        await handleRef.current?.save();
       },
+      isDirty: () => handleRef.current?.isDirty() ?? false,
       focusSearchMatch: (element: HTMLElement | null) => {
         // NodeEditorHandle.focusSearchMatch は boolean（フォーカス成功可否）を
         // 返すが、PluginView 契約は void。戻り値は意図的に破棄する。

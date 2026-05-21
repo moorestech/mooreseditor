@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { createInitialValue } from "@mooreseditor/plugin-sdk";
 
@@ -42,6 +42,9 @@ export function useEdgeTypeDialogState({
   const [editingRecipeKey, setEditingRecipeKey] = useState<string | null>(null);
   const [objectArrayEditor, setObjectArrayEditor] =
     useState<ObjectArrayEditorState | null>(null);
+  const createdDraftRecipesRef = useRef<
+    { schemaId: string; recipeGuid: string }[]
+  >([]);
 
   // Initialize from existing edge data when editing
   useEffect(() => {
@@ -108,19 +111,60 @@ export function useEdgeTypeDialogState({
     setMachineRecipeGuids([]);
     setEditingRecipeKey(null);
     setObjectArrayEditor(null);
+    createdDraftRecipesRef.current = [];
+  };
+
+  const cleanupCreatedDraftRecipes = () => {
+    const drafts = createdDraftRecipesRef.current;
+    if (drafts.length === 0) return;
+
+    setJsonData((prev) =>
+      drafts.reduce((columns, draft) => {
+        const meta = schemaMetas.get(draft.schemaId);
+        if (!meta?.guidField) return columns;
+
+        const colIndex = columns.findIndex((c) => c.title === draft.schemaId);
+        if (colIndex === -1) return columns;
+
+        const col = columns[colIndex];
+        const rows = col.data?.[meta.dataArrayPath];
+        if (!Array.isArray(rows)) return columns;
+
+        const nextColumns = [...columns];
+        nextColumns[colIndex] = {
+          ...col,
+          data: {
+            ...col.data,
+            [meta.dataArrayPath]: rows.filter(
+              (row: unknown) =>
+                !row ||
+                typeof row !== "object" ||
+                Array.isArray(row) ||
+                (row as Record<string, unknown>)[meta.guidField!] !==
+                  draft.recipeGuid,
+            ),
+          },
+        };
+        return nextColumns;
+      }, prev),
+    );
+    createdDraftRecipesRef.current = [];
   };
 
   const handleConfirm = () => {
     if (mode === "recipe") {
       if (selectedRecipeRefs.length === 0) return;
       onConfirm({ edgeType: "recipe", recipeRefs: selectedRecipeRefs });
+      createdDraftRecipesRef.current = [];
     } else {
+      cleanupCreatedDraftRecipes();
       onConfirm({ edgeType: mode });
     }
     resetState();
   };
 
   const handleCancel = () => {
+    cleanupCreatedDraftRecipes();
     onCancel();
     resetState();
   };
@@ -158,6 +202,17 @@ export function useEdgeTypeDialogState({
     setJsonData((prev) =>
       upsertCreatedRecipe(prev, schemaId, schemaMeta, recipeGuid, nextRecord),
     );
+    if (
+      !createdDraftRecipesRef.current.some(
+        (draft) =>
+          draft.schemaId === schemaId && draft.recipeGuid === recipeGuid,
+      )
+    ) {
+      createdDraftRecipesRef.current = [
+        ...createdDraftRecipesRef.current,
+        { schemaId, recipeGuid },
+      ];
+    }
 
     if (recipeType === "craftRecipe") {
       setCraftRecipeGuids((prev) =>

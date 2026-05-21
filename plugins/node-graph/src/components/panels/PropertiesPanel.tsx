@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 
 import { ScrollArea, Stack, Text } from "@mantine/core";
 
+import { findSchemaIdForNodeType } from "../../utils/nodeTypeSchema";
 import { createRecordUpdater } from "../../utils/schemaAdapter";
 import ObjectArrayDialog from "../dialogs/ObjectArrayDialog";
 
@@ -19,13 +20,6 @@ interface ObjectArrayEditorState {
   schemaId: string;
   masterGuid: string;
 }
-
-// Map node type to schema ID
-const nodeTypeToSchemaId: Record<string, string> = {
-  item: "items",
-  block: "blocks",
-  research: "research",
-};
 
 interface PropertiesPanelProps {
   selectedNode: ReactFlowNode | null;
@@ -160,6 +154,9 @@ export default function PropertiesPanel({
   }
 
   const nodeType = selectedNode.type;
+  const schemaId = nodeType
+    ? findSchemaIdForNodeType(nodeType, schemaMetas)
+    : null;
 
   return (
     <>
@@ -204,9 +201,8 @@ export default function PropertiesPanel({
                     : undefined
                 }
               />
-            ) : nodeType && nodeTypeToSchemaId[nodeType] ? (
+            ) : schemaId ? (
               (() => {
-                const schemaId = nodeTypeToSchemaId[nodeType];
                 const meta = schemaMetas.get(schemaId);
                 const schema = schemas[schemaId];
                 if (!meta || !schema) {

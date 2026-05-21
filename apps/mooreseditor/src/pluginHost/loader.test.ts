@@ -1,6 +1,29 @@
 import { describe, expect, it } from "vitest";
 
-import { assertPluginMetadataMatchesJson } from "./loader";
+import {
+  assertPluginDirSupportedByAssetScope,
+  assertPluginMetadataMatchesJson,
+} from "./loader";
+
+describe("assertPluginDirSupportedByAssetScope", () => {
+  it("accepts a top-level plugins/<name> directory", () => {
+    expect(() =>
+      assertPluginDirSupportedByAssetScope("plugins/node-graph"),
+    ).not.toThrow();
+  });
+
+  it("rejects nested plugin directories that production asset scope cannot serve", () => {
+    expect(() =>
+      assertPluginDirSupportedByAssetScope("extensions/plugins/node-graph"),
+    ).toThrow(/plugins\/<name>/);
+  });
+
+  it("rejects dot-directory plugin paths that production asset scope cannot serve", () => {
+    expect(() =>
+      assertPluginDirSupportedByAssetScope(".mooreseditor/plugins/node-graph"),
+    ).toThrow(/plugins\/<name>/);
+  });
+});
 
 describe("assertPluginMetadataMatchesJson", () => {
   it("accepts matching plugin.json and runtime manifest metadata", () => {

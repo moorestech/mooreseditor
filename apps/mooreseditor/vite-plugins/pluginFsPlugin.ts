@@ -15,17 +15,17 @@ import type { Plugin } from "vite";
  * Provides three capabilities:
  *
  *  1. `/api/plugin-fs/read?path=<path>` + `/api/plugin-fs/file?path=<path>`
- *     (dev only)
- *     Serve files located underneath an allowed root (`plugins/` at the
- *     monorepo root). Unlike `devFsPlugin` (limited to `tmp/e2e-output`),
- *     these endpoints are scoped to the plugin distribution directory so the
- *     host can fetch plugin manifests / bundles during development.
- *     `/read` returns JSON `{ content }` (text); `/file` returns the raw
- *     bytes with a correct `Content-Type` (used for the dynamically
- *     `import()`-ed entry JS and injected CSS). Relative `path` values are
- *     resolved against the *monorepo root* (the form `mooreseditor.config.yaml`
- *     uses, e.g. `./plugins/node-graph`); the result is then allow-list
- *     checked against `plugins/` — traversal outside it returns 403.
+ *     (pure-browser `pnpm run dev` only — NOT used in `tauri:dev` or prod)
+ *     Dev FS bridge that serves files under `plugins/` at the monorepo root.
+ *     In `tauri:dev` and prod, plugins are resolved to absolute paths
+ *     (`<projectDir>/<pluginDir>`) by `resolvePluginDir` in `loader.ts` and
+ *     loaded via the Tauri runtime (`readTextFile` / `convertFileSrc`), so
+ *     this endpoint is bypassed entirely. In the pure-browser case no real
+ *     project can be opened, so plugin loading is a known limitation (0
+ *     plugins). `/read` returns JSON `{ content }` (text); `/file` returns
+ *     raw bytes with a correct `Content-Type`. Relative `path` values are
+ *     resolved against the monorepo root; the result is allow-list checked
+ *     against `plugins/` — traversal outside it returns 403.
  *
  *  2. `/shared/<dep>.js`  (dev: virtual module via Vite's serve pipeline)
  *     A "shared dependency bridge". Returns a tiny ESM module that
@@ -194,10 +194,10 @@ function contentTypeFor(filePath: string): string {
 export function pluginFsPlugin(): Plugin {
   // `allowedRoot` is the security boundary: every served file MUST live under
   // `<monorepo>/plugins`. `repoRoot` is the *resolution base* for relative
-  // paths — `mooreseditor.config.yaml` declares plugin dirs as
-  // monorepo-root-relative (e.g. `./plugins/node-graph`), so a relative
-  // request path must be resolved against the monorepo root, then still be
-  // allow-list-checked against `allowedRoot`.
+  // paths in the pure-browser dev fallback — a relative request path is
+  // resolved against the monorepo root, then allow-list-checked against
+  // `allowedRoot`. In `tauri:dev`/prod this endpoint is not used; plugins
+  // are resolved to absolute project-relative paths by `loader.ts` instead.
   let allowedRoot = "";
   let repoRoot = "";
 
@@ -273,10 +273,9 @@ export function pluginFsPlugin(): Plugin {
         const pathname = new URL(url, "http://localhost").pathname;
 
         // GET /api/plugin-fs/read?path=<path>
-        // `path` may be absolute, or relative to the monorepo root (the
-        // form `mooreseditor.config.yaml` uses, e.g. `./plugins/node-graph`).
-        // A browser client has no business knowing the host's absolute FS
-        // layout, so relative is the realistic plugin-loading form.
+        // `path` may be absolute, or relative to the monorepo root (resolved
+        // by `resolvePluginPath`). This endpoint is only reached in the
+        // pure-browser dev fallback; `tauri:dev`/prod use the Tauri runtime.
         // Returns JSON `{ content }` (text payload).
         if (pathname === "/api/plugin-fs/read" && method === "GET") {
           const filePath = parseQueryParam(url, "path");

@@ -4,7 +4,7 @@ export interface PluginConfigEntry {
   dir: string;
 }
 
-/** mooreseditor.config.yaml の文字列から plugins[].dir を抽出する。 */
+/** 開いたプロジェクトの mooreseditor.config.yml 文字列から plugins[].dir を抽出する。 */
 export function parsePluginConfig(yamlText: string): PluginConfigEntry[] {
   try {
     const doc = parse(yamlText) as { plugins?: { dir?: string }[] } | null;

@@ -14,12 +14,7 @@
     },
     {
       "identifier": "fs:scope",
-      "allow": [
-        "**/plugins/**",
-        "**/mooreseditor.config.yaml",
-        "**/.mooreseditor/**",
-        "mooreseditor.config.yaml"
-      ]
+      "allow": ["**/plugins/**", "**/.mooreseditor/**"]
     },
     {
       "identifier": "dialog:allow-save",

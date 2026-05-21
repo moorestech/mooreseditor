@@ -101,6 +101,7 @@ describe("App (view host)", () => {
       recipes: "recipes.json",
     },
     pluginConfigs: [] as PluginConfigEntry[],
+    loading: false,
     openProjectDir: vi.fn(),
   };
 

@@ -16,6 +16,9 @@ import type { PluginManifest } from "@mooreseditor/plugin-sdk";
  * 各プラグインの `dir` は `projectDir` からの相対パスとして解決される。
  * 1 プラグインのロード失敗は致命的とはせず、`console.error` で記録して残りの
  * プラグインのロードを続行する。
+ *
+ * 注: `pluginConfigs` は安定した参照（`useState` 由来など）であること。
+ * 毎レンダー新しい配列リテラルを渡すと毎回全プラグインが再ロードされる。
  */
 export function usePlugins(
   pluginConfigs: PluginConfigEntry[],

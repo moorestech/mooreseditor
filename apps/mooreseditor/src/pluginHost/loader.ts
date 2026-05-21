@@ -32,14 +32,17 @@ interface PluginJson {
  *   このパスが実際に使われることはない）。
  *
  * セキュリティ: `pluginDir` はプロジェクト所有者自身の設定ファイル由来だが、
- * `..` セグメントによるプロジェクト外への脱出を最低限ガードする。
+ * `..` セグメントと絶対パスによるプロジェクト外への脱出を最低限ガードする。
  */
 async function resolvePluginDir(
   projectDir: string,
   pluginDir: string,
 ): Promise<string> {
-  if (pluginDir.split(/[/\\]/).includes("..")) {
-    throw new Error(`Invalid plugin dir (contains ".."): ${pluginDir}`);
+  if (
+    pluginDir.split(/[/\\]/).includes("..") ||
+    /^([a-zA-Z]:[/\\]|[/\\])/.test(pluginDir)
+  ) {
+    throw new Error(`Invalid plugin dir: ${pluginDir}`);
   }
   try {
     const { resolve } = await import("@tauri-apps/api/path");
@@ -56,7 +59,8 @@ async function resolvePluginDir(
  * dev: `/api/plugin-fs/read` エンドポイント経由。このエンドポイントは
  *   JSON `{ content }` を返すため、`res.json()` から `content` を取り出す。
  *
- * `filePath` は monorepo ルート相対パス（例: `./plugins/node-graph/plugin.json`）。
+ * `filePath` は `resolvePluginDir` が解決済みの絶対パス（例:
+ * `<projectDir>/plugins/node-graph/plugin.json`）。
  */
 async function readPluginText(filePath: string): Promise<string> {
   try {
@@ -83,7 +87,7 @@ async function readPluginText(filePath: string): Promise<string> {
  * prod (Tauri): `convertFileSrc` でカスタムプロトコル URL に変換。
  * dev: `/api/plugin-fs/file` エンドポイント（正しい MIME で配信）。
  *
- * `filePath` は monorepo ルート相対パス。
+ * `filePath` は `resolvePluginDir` が解決済みの絶対パス。
  */
 async function resolvePluginFileUrl(filePath: string): Promise<string> {
   try {

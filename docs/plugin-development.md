@@ -134,7 +134,7 @@ plugins:
   - dir: ./plugins/my-plugin
 ```
 
-現在の production load は `plugins/<name>` 形式のディレクトリをサポートしています。配置先はこの形にしてください。
+現在の production loader は `plugins/<name>` 形式のディレクトリをサポートしています。配置先はこの形にしてください。
 
 ## 依存関係のルール
 

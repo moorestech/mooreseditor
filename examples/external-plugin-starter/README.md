@@ -3,7 +3,7 @@
 A self-contained template for building a mooreseditor plugin in a repository
 **separate from the mooreseditor monorepo**.
 
-Full guide: [../../docs/plugin-development.md](../../docs/plugin-development.md)
+Full guide: https://github.com/moorestech/mooreseditor/blob/master/docs/plugin-development.md
 
 ## Prerequisites
 

@@ -22,7 +22,7 @@
     "@mantine/core": "^7.10.2",
     "@mantine/hooks": "^7.10.2",
     "@mantine/notifications": "^7.10.2",
-    "@mooreseditor/plugin-sdk": "1.0.0",
+    "@moorestech/mooreseditor-plugin-sdk": "1.0.0",
     "@tabler/icons-react": "^3.31.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

@@ -6,11 +6,11 @@ A self-contained template for building a mooreseditor plugin in a repository
 ## Prerequisites
 
 - Node.js 20+ and a package manager (npm or pnpm)
-- `@mooreseditor/plugin-sdk` available from npm (or a local registry)
+- `@moorestech/mooreseditor-plugin-sdk` available from npm (or a local registry)
 
 ## Version contract (IMPORTANT)
 
-`@mooreseditor/plugin-sdk` is **exact-pinned** in `package.json` (no `^`).
+`@moorestech/mooreseditor-plugin-sdk` is **exact-pinned** in `package.json` (no `^`).
 At runtime the SDK, React, and Mantine are supplied by the mooreseditor host,
 not bundled into your plugin. Your plugin therefore MUST be built against the
 SDK version that matches the mooreseditor build you target. Using a newer SDK

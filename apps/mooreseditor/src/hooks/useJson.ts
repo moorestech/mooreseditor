@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { createInitialValue } from "@mooreseditor/plugin-sdk";
+import { createInitialValue } from "@moorestech/mooreseditor-plugin-sdk";
 import * as path from "@tauri-apps/api/path";
 import {
   readTextFile,
@@ -15,9 +15,9 @@ import { notifyFieldsAdded } from "../utils/notifyFieldsAdded";
 
 import { useProject } from "./useProject";
 
-import type { Column, Schema, SchemaContainer } from "@mooreseditor/plugin-sdk";
+import type { Column, Schema, SchemaContainer } from "@moorestech/mooreseditor-plugin-sdk";
 
-export type { Column } from "@mooreseditor/plugin-sdk";
+export type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 const isDev = import.meta.env.DEV;
 

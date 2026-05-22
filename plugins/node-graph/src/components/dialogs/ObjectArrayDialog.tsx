@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
 import { Modal, Stack } from "@mantine/core";
-import { FormView, TableView } from "@mooreseditor/plugin-sdk";
+import { FormView, TableView } from "@moorestech/mooreseditor-plugin-sdk";
 
-import type { Column, ArraySchema, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, ArraySchema, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 interface NestedDialogState {
   label: string;

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { resolveDisplayNames } from "./nodeRenderResolvers";
 import { buildSchemaMetaMap } from "./schemaMeta";
 
-import type { Column, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 describe("resolveDisplayNames", () => {

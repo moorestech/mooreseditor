@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { validateAndFillMissingFields } from "../dataValidator";
 
-import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 describe("dataValidator - optional field preservation", () => {
   it("should preserve optional object fields with existing data", () => {

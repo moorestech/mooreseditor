@@ -44,7 +44,7 @@ export const SHARED_DEPENDENCIES = [
   },
   {
     key: "plugin-sdk",
-    spec: "@mooreseditor/plugin-sdk",
+    spec: "@moorestech/mooreseditor-plugin-sdk",
     hasDefault: false,
     versionRange: "workspace:*",
     skipIntrospection: true,

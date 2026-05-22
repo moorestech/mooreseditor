@@ -1,8 +1,8 @@
 import { Stack, Text } from "@mantine/core";
-import { FormView } from "@mooreseditor/plugin-sdk";
+import { FormView } from "@moorestech/mooreseditor-plugin-sdk";
 
 import type { SchemaMeta } from "../../utils/schemaMeta";
-import type { Column, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 interface RecordPropertiesProps {
   schemaId: string;

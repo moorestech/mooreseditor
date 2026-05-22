@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { mooresPlugin } from "@mooreseditor/plugin-sdk/vite";
+import { mooresPlugin } from "@moorestech/mooreseditor-plugin-sdk/vite";
 import { defineConfig, mergeConfig } from "vite";
 
 import { pluginMetadata } from "./src/pluginMetadata";

@@ -4,7 +4,7 @@ import { scanSchemaDirectory, loadSchemaFile } from "../utils/schemaScanner";
 
 import type { SchemaLoader } from "./SchemaLoader";
 import type { SchemaDefinitions, SchemaLoadOptions } from "../types";
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * 本番環境用のスキーマローダー

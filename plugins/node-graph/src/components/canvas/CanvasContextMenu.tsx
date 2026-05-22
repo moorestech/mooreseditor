@@ -13,7 +13,7 @@ import {
 import { getRecords } from "../../utils/recordLookup";
 
 import type { SchemaMeta } from "../../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 export interface ContextMenuPosition {
   screenX: number;

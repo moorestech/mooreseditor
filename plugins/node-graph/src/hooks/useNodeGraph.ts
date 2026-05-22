@@ -14,7 +14,7 @@ import { extractRecipeRefsFromGraphEdge } from "../utils/recipeEdge";
 
 import type { GraphNode, GraphEdge, NodeGraphFile } from "../types/nodeGraph";
 import type { SchemaMeta } from "../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type {
   Node as ReactFlowNode,
   Edge as ReactFlowEdge,

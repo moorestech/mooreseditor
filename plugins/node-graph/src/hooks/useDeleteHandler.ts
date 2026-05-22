@@ -4,7 +4,7 @@ import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { removeRecipesFromJsonData } from "../utils/recipeCleanup";
 
 import type { SchemaMeta } from "../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 interface UseDeleteHandlerParams {
   schemaMetas: Map<string, SchemaMeta>;

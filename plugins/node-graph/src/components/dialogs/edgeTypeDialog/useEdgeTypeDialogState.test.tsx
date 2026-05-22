@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useEdgeTypeDialogState } from "./useEdgeTypeDialogState";
 
 import type { SchemaMeta } from "../../../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 function createCraftRecipeMeta(): SchemaMeta {
   return {

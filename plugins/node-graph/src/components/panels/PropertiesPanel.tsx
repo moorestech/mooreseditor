@@ -10,7 +10,7 @@ import NoteProperties from "./NoteProperties";
 import RecordProperties from "./RecordProperties";
 
 import type { SchemaMeta } from "../../utils/schemaMeta";
-import type { Column, ArraySchema, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, ArraySchema, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 interface ObjectArrayEditorState {

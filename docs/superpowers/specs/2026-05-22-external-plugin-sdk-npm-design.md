@@ -5,12 +5,12 @@
 ## 背景と目的
 
 現在 mooreseditor のプラグインは、このモノレポ内の `plugins/<name>/` でしか開発できない。
-理由は `@mooreseditor/plugin-sdk` が `private: true` かつ workspace シンボリックリンク経由
+理由は `@moorestech/mooreseditor-plugin-sdk` が `private: true` かつ workspace シンボリックリンク経由
 （`main: ./src/index.ts` で生TSソース出荷）でしか参照できないため。
 
 本タスクのゴール:
 
-1. `@mooreseditor/plugin-sdk` を npm 公開可能なパッケージにする
+1. `@moorestech/mooreseditor-plugin-sdk` を npm 公開可能なパッケージにする
 2. 外部リポジトリでプラグインを開発するためのスターターテンプレートを用意する
 3. モノレポの完全に外にテストリポジトリを作り、別リポジトリ製プラグインが
    実際に動作することを検証する
@@ -19,7 +19,7 @@
 
 ## 重要な前提・制約
 
-- `@mooreseditor/plugin-sdk` は `SHARED_DEPENDENCIES` に含まれており、**ランタイムでは
+- `@moorestech/mooreseditor-plugin-sdk` は `SHARED_DEPENDENCIES` に含まれており、**ランタイムでは
   ホストアプリから共有供給される**。外部プラグインの bundle には SDK は同梱されず、
   npm パッケージは「ビルド時の型・API 提供」用途。
 - したがって外部プラグインがビルド対象とする SDK バージョンは、配布先 mooreseditor
@@ -76,7 +76,7 @@
 
 ```
 external-plugin-starter/
-├── package.json          # workspace:* を排除、@mooreseditor/plugin-sdk は exact pin
+├── package.json          # workspace:* を排除、@moorestech/mooreseditor-plugin-sdk は exact pin
 ├── vite.config.ts        # mooresPlugin(pluginMetadata) を呼ぶだけ
 ├── tsconfig.json         # モノレポの共有 config に依存しない自己完結版
 ├── src/
@@ -94,7 +94,7 @@ external-plugin-starter/
   `SHARED_DEPENDENCIES` と完全一致させる（`react ^19`, `@mantine/* ^7.10.2` 等）。
 - `vite.config.ts` の `mooresPlugin()` が `sharedDependencySpecs()` を使って
   external 化するため、bundle 内容は SDK バージョンに自動追従する。
-- スターターは `@mooreseditor/plugin-sdk` を**範囲指定 (`^`) ではなく exact pin** する。
+- スターターは `@moorestech/mooreseditor-plugin-sdk` を**範囲指定 (`^`) ではなく exact pin** する。
   範囲指定だと、新しい minor の export を使った外部プラグインが古いホストへ配布され
   ランタイムで壊れる事故が起きうるため。
 - README に「SDK のバージョンは配布先 mooreseditor 本体のリリースに対応させること」を明記。
@@ -109,8 +109,8 @@ external-plugin-starter/
 
 2. **SDK を Verdaccio へ publish**
 
-   - `pnpm --filter @mooreseditor/plugin-sdk run build`
-   - `pnpm --filter @mooreseditor/plugin-sdk publish --registry http://localhost:4873 --no-git-checks`
+   - `pnpm --filter @moorestech/mooreseditor-plugin-sdk run build`
+   - `pnpm --filter @moorestech/mooreseditor-plugin-sdk publish --registry http://localhost:4873 --no-git-checks`
      （`npm publish` は不可 — `publishConfig.exports` 差し替えが効かない）
    - publish 前に `pnpm pack` の tarball を展開し、`exports` が `dist/` を
      指していること・`./vite` の `types` が解決することを確認
@@ -126,7 +126,7 @@ external-plugin-starter/
 
 4. **bundle 内容の検証**
 
-   - `dist/index.js` で shared deps（react, @mantine/\*, @mooreseditor/plugin-sdk 等）が
+   - `dist/index.js` で shared deps（react, @mantine/\*, @moorestech/mooreseditor-plugin-sdk 等）が
      `import` 文として external 化され、bundle に同梱されていないこと
    - `@tauri-apps/*` は逆に同梱されていること
    - `plugin.json` の `id/name/version` が `pluginMetadata` と一致すること
@@ -153,6 +153,6 @@ external-plugin-starter/
 
 ## スコープ外（フォローアップ）
 
-- 実 npm レジストリへの `@mooreseditor/plugin-sdk` の publish
+- 実 npm レジストリへの `@moorestech/mooreseditor-plugin-sdk` の publish
   （検証成功後にユーザー承認を得てから実施）
 - 外部開発者向けの公開ドキュメント整備

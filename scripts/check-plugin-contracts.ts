@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import {
   SHARED_DEPENDENCIES,
   sharedDependencySpecs,
-} from "@mooreseditor/plugin-sdk/vite";
+} from "@moorestech/mooreseditor-plugin-sdk/vite";
 
 interface PackageJson {
   name?: string;
@@ -45,8 +45,8 @@ for (const pkg of [sdkPackage, nodeGraphPackage]) {
     if (
       spec === "react/jsx-runtime" ||
       spec === "@xyflow/react" ||
-      (pkg.name === "@mooreseditor/plugin-sdk" &&
-        spec === "@mooreseditor/plugin-sdk")
+      (pkg.name === "@moorestech/mooreseditor-plugin-sdk" &&
+        spec === "@moorestech/mooreseditor-plugin-sdk")
     ) {
       continue;
     }

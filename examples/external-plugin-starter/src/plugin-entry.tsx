@@ -1,13 +1,13 @@
 import { HelloPluginView } from "./HelloPluginView";
 import { pluginMetadata } from "./pluginMetadata";
 
-import { createColumnDispatch } from "@mooreseditor/plugin-sdk";
+import { createColumnDispatch } from "@moorestech/mooreseditor-plugin-sdk";
 
 import type {
   HostAPI,
   PluginManifest,
   PluginView,
-} from "@mooreseditor/plugin-sdk";
+} from "@moorestech/mooreseditor-plugin-sdk";
 
 const manifest: PluginManifest = {
   ...pluginMetadata,

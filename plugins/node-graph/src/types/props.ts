@@ -1,5 +1,5 @@
 import type { NodeGraphFile } from "./nodeGraph";
-import type { Column, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 export interface NodeEditorViewProps {
   jsonData: Column[];

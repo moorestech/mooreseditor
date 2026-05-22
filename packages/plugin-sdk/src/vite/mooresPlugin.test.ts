@@ -20,6 +20,6 @@ describe("mooresPlugin", () => {
   });
 
   it("uses the shared dependency registry for externals", () => {
-    expect(sharedDependencySpecs()).toContain("@mooreseditor/plugin-sdk");
+    expect(sharedDependencySpecs()).toContain("@moorestech/mooreseditor-plugin-sdk");
   });
 });

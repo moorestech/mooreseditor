@@ -9,7 +9,7 @@ import {
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { RecipeReference } from "../types/nodeGraph";
-import type { Column, ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { Column, ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 // --- Test fixtures ---
 

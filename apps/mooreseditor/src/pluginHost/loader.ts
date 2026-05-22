@@ -1,7 +1,7 @@
 import { resolvePluginPackagePath } from "./pluginPaths";
 import { injectPluginStyleLink } from "./pluginStyles";
 
-import type { PluginManifest } from "@mooreseditor/plugin-sdk";
+import type { PluginManifest } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * `plugin.json` の形。`config.yaml` の `dir` 配下に置かれる。

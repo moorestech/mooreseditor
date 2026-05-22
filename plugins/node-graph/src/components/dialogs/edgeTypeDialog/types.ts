@@ -5,7 +5,7 @@ import type {
   Column,
   ArraySchema,
   ObjectPropertySchema,
-} from "@mooreseditor/plugin-sdk";
+} from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 export type EdgeDialogMode = "dependency" | "visual" | "recipe";

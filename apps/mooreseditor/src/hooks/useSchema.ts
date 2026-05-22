@@ -10,7 +10,7 @@ import { useProject } from "./useProject";
 import { RefResolver } from "./useSchema/resolvers/RefResolver";
 import { scanSchemaDirectory } from "./useSchema/utils/schemaScanner";
 
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 export function useSchema() {
   const { schemaDir } = useProject();

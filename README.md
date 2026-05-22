@@ -1,3 +1,15 @@
+# mooreseditor
+
+mooreseditor は、YAML スキーマを動的に読み込み、そのスキーマに基づいて JSON マスタデータを編集する Tauri アプリケーションです。
+
+## プラグイン開発
+
+外部リポジトリでプラグインを作る場合は、公開済み SDK `@moorestech/mooreseditor-plugin-sdk` を使います。
+
+- npm: https://www.npmjs.com/package/@moorestech/mooreseditor-plugin-sdk
+- 開発ガイド: [docs/plugin-development.md](docs/plugin-development.md)
+- starter: [examples/external-plugin-starter](examples/external-plugin-starter)
+
 # Subtreeの設定
 
 ## 初期設定

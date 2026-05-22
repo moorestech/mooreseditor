@@ -1,4 +1,0 @@
-# Copy to .npmrc when installing against a local Verdaccio registry.
-# Only the @moorestech scope is redirected; everything else uses the
-# public npm registry.
-@moorestech:registry=http://localhost:4873

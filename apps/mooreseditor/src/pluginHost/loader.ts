@@ -4,7 +4,7 @@ import { injectPluginStyleLink } from "./pluginStyles";
 import type { PluginManifest } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
- * `plugin.json` の形。`config.yaml` の `dir` 配下に置かれる。
+ * `plugin.json` の形。`mooreseditor.config.yml` の `dir` 配下に置かれる。
  * `entry` / `styles` の各パスは `dir` からの相対。
  */
 export interface PluginJson {

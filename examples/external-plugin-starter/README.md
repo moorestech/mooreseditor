@@ -3,10 +3,12 @@
 A self-contained template for building a mooreseditor plugin in a repository
 **separate from the mooreseditor monorepo**.
 
+Full guide: [../../docs/plugin-development.md](../../docs/plugin-development.md)
+
 ## Prerequisites
 
 - Node.js 20+ and a package manager (npm or pnpm)
-- `@moorestech/mooreseditor-plugin-sdk` available from npm (or a local registry)
+- `@moorestech/mooreseditor-plugin-sdk` available from npm
 
 ## Version contract (IMPORTANT)
 
@@ -21,7 +23,6 @@ the version that matches your target mooreseditor release.
 
 1. Copy this directory into a new repository and `git init`.
 2. Install dependencies: `npm install`
-   (For a local Verdaccio registry, copy `.npmrc.example` to `.npmrc` first.)
 
 ## Build
 
@@ -55,3 +56,9 @@ Open the project in mooreseditor - a "Hello Plugin" tab appears.
 - `src/HelloPluginView.tsx` - your React view
 - Plugin-only deps (e.g. `@tauri-apps/*`) go in `dependencies` - they are
   bundled. Do NOT add host-shared deps there; keep them in `peerDependencies`.
+
+## Legacy notes
+
+Do not copy old migration-plan snippets that manually configure Vite library
+mode or use static plugin loading. New external plugins should use
+`mooresPlugin(pluginMetadata)` from `@moorestech/mooreseditor-plugin-sdk/vite`.

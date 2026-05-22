@@ -40,7 +40,12 @@
 
 ### `./vite`（ビルドツール） — `mooresPlugin()` / `SHARED_DEPENDENCIES` 等
 
-- Node 向け。既にプレーン `.js` で書かれているため、そのまま `dist/vite/` へコピーして同梱
+- Node 向け。既にプレーン `.js` で書かれているため、`.js` 実体は `dist/vite/` へコピーして同梱
+- **`.d.ts` も生成する**。`src/vite/*.ts`（`index.ts`, `mooresPlugin.ts`, `sharedDeps.ts`）
+  から `dist/vite/*.d.ts` を出力する。スターターの `vite.config.ts` が `mooresPlugin()` を
+  import するため、型定義が無いと外部 consumer の型チェックが壊れる。
+- 公開 `exports["./vite"]` は `types` → `dist/vite/index.d.ts`、`default` →
+  `dist/vite/index.js` を指す。
 
 ### `package.json` の変更
 
@@ -48,9 +53,14 @@
 - `version` を `0.0.0` → `1.0.0`
 - `publishConfig.exports` で publish 時のみ `dist/` を指す
   （モノレポ内の `exports` は `src/` のまま据え置き → 開発体験・ホットリロード維持）
+- **publish は `pnpm publish` を使う（`npm publish` 不可）**。`publishConfig` による
+  `exports` 等のフィールド差し替えは pnpm 固有の挙動で、`npm publish` では無視され
+  公開物の `exports` が `src/` を指したまま壊れる。検証・本番とも `pnpm publish` に統一。
 - `publishConfig.access: "public"` を追加（スコープ付きパッケージのため必須）
-- `files`, `repository`, `license` を追加
+- `files`（`dist` のみ）, `repository`, `license` を追加
 - `build` / `prepack` スクリプトを追加（publish 前に必ずビルド）
+- publish 後は `pnpm pack` の tarball を展開し、`package.json` の `exports` が
+  `dist/` を指していることを必ず確認する（hybrid 差し替えの検証）
 - `workspace:*` の内部 devDeps（`@mooreseditor/eslint-config`,
   `@mooreseditor/typescript-config`）は devDependencies のため公開 tarball に含まれず
   影響なし。確認のみ行う。
@@ -66,7 +76,7 @@
 
 ```
 external-plugin-starter/
-├── package.json          # workspace:* を排除、@mooreseditor/plugin-sdk は ^1.0.0
+├── package.json          # workspace:* を排除、@mooreseditor/plugin-sdk は exact pin
 ├── vite.config.ts        # mooresPlugin(pluginMetadata) を呼ぶだけ
 ├── tsconfig.json         # モノレポの共有 config に依存しない自己完結版
 ├── src/
@@ -84,6 +94,9 @@ external-plugin-starter/
   `SHARED_DEPENDENCIES` と完全一致させる（`react ^19`, `@mantine/* ^7.10.2` 等）。
 - `vite.config.ts` の `mooresPlugin()` が `sharedDependencySpecs()` を使って
   external 化するため、bundle 内容は SDK バージョンに自動追従する。
+- スターターは `@mooreseditor/plugin-sdk` を**範囲指定 (`^`) ではなく exact pin** する。
+  範囲指定だと、新しい minor の export を使った外部プラグインが古いホストへ配布され
+  ランタイムで壊れる事故が起きうるため。
 - README に「SDK のバージョンは配布先 mooreseditor 本体のリリースに対応させること」を明記。
 - `@tauri-apps/*` はスターターでも通常 dependency（bundle 同梱、external にしない）。
 
@@ -97,8 +110,10 @@ external-plugin-starter/
 2. **SDK を Verdaccio へ publish**
 
    - `pnpm --filter @mooreseditor/plugin-sdk run build`
-   - `npm publish --registry http://localhost:4873`
-   - `publishConfig.exports` が dist に差し替わることを確認
+   - `pnpm --filter @mooreseditor/plugin-sdk publish --registry http://localhost:4873 --no-git-checks`
+     （`npm publish` は不可 — `publishConfig.exports` 差し替えが効かない）
+   - publish 前に `pnpm pack` の tarball を展開し、`exports` が `dist/` を
+     指していること・`./vite` の `types` が解決することを確認
 
 3. **テストリポジトリ作成（モノレポの完全に外）**
 

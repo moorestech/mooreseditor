@@ -1,0 +1,4 @@
+# Copy to .npmrc when installing against a local Verdaccio registry.
+# Only the @mooreseditor scope is redirected; everything else uses the
+# public npm registry.
+@mooreseditor:registry=http://localhost:4873

@@ -7,12 +7,13 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "tauri:dev": "pnpm --filter @mooreseditor/mooreseditor run tauri-dev",
     "tauri:build": "pnpm --filter @mooreseditor/mooreseditor run tauri:build",
-    "test": "pnpm --filter @mooreseditor/mooreseditor run test",
-    "type-check": "pnpm --filter @mooreseditor/mooreseditor run type-check",
+    "test": "turbo run test",
+    "type-check": "turbo run type-check",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    "test:e2e:html": "playwright test --reporter=html"
+    "test:e2e:html": "playwright test --reporter=html",
+    "check:plugin-contracts": "tsx scripts/check-plugin-contracts.ts"
   },
   "devDependencies": {
     "eslint": "^9.17.0",

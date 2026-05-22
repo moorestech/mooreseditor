@@ -1,5 +1,4 @@
-import { DataInitializer } from "./dataInitializer";
-import { deepMerge } from "./deepMerge";
+import { DataInitializer, deepMerge } from "@mooreseditor/plugin-sdk";
 
 import type {
   Schema,
@@ -7,7 +6,7 @@ import type {
   ObjectSchema,
   SchemaContainer,
   SwitchSchema,
-} from "../libs/schema/types";
+} from "@mooreseditor/plugin-sdk";
 
 /**
  * 既存データをスキーマに基づいて検証し、不足している必須フィールドを補完します
@@ -40,6 +39,36 @@ export function validateAndFillMissingFields(
 
   // 追加されたフィールドを検出
   const addedFields = findAddedFields(existingData, mergedData);
+
+  // トップレベルが配列スキーマの場合、各要素を再帰的に検証
+  // （object型要素のみ。プリミティブ型の配列はそのまま保持）
+  if (
+    Array.isArray(mergedData) &&
+    "type" in schema &&
+    schema.type === "array" &&
+    "items" in schema &&
+    schema.items &&
+    "type" in schema.items &&
+    schema.items.type === "object"
+  ) {
+    const allAddedFields = [...addedFields];
+
+    for (let i = 0; i < mergedData.length; i++) {
+      const { data: validatedItem, addedFields: itemAddedFields } =
+        validateAndFillMissingFields(
+          mergedData[i],
+          schema.items as ValueSchema,
+          mergedData, // 配列全体をexistingArrayとして渡す（autoIncrement用）
+        );
+      mergedData[i] = validatedItem;
+
+      itemAddedFields.forEach((field) => {
+        allAddedFields.push(`[${i}].${field}`);
+      });
+    }
+
+    return { data: mergedData, addedFields: allAddedFields };
+  }
 
   // オブジェクト内のネストした配列・オブジェクトも再帰的に検証
   if (

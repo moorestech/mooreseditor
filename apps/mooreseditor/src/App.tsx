@@ -1,32 +1,49 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { AppShell, MantineProvider, createTheme } from "@mantine/core";
+import {
+  AppShell,
+  MantineProvider,
+  SegmentedControl,
+  createTheme,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import * as path from "@tauri-apps/api/path";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { NotificationProvider } from "@mooreseditor/plugin-sdk";
 
-import FormView from "./components/FormView";
-import Sidebar from "./components/Sidebar";
-import { TableView } from "./components/TableView";
+import EditorView from "./components/EditorView";
+import { SearchOverlay } from "./components/SearchOverlay";
 import { useJson } from "./hooks/useJson";
-import { useNestedViewScroll } from "./hooks/useNestedViewScroll";
 import { useProject } from "./hooks/useProject";
+import { useSaveShortcut } from "./hooks/useSaveShortcut";
 import { useSchema } from "./hooks/useSchema";
+import { createHostApi } from "./pluginHost/hostApi";
+import { usePlugins } from "./pluginHost/usePlugins";
+import { showNotification } from "./utils/notification";
+import { saveProjectData } from "./utils/saveProjectData";
+
+import type { Column } from "./hooks/useJson";
+import type { ViewCapabilities, ViewDescriptor } from "./viewHost/types";
 
 const theme = createTheme({
   primaryColor: "orange",
 });
 
-type NestedView = {
-  type: "form" | "table";
-  schema: any;
-  data: any;
-  path: string[];
+const EDITOR_VIEW_ID = "editor";
+
+/** 能力を解決できなかった場合のフォールバック（保存不可）。 */
+const NO_CAPABILITIES: ViewCapabilities = {
+  canSave: false,
+  onSave: () => {},
 };
 
 function App() {
-  const { projectDir, schemaDir, masterDir, menuToFileMap, openProjectDir } =
-    useProject();
+  const {
+    projectDir,
+    schemaDir,
+    masterDir,
+    menuToFileMap,
+    pluginConfigs,
+    openProjectDir,
+  } = useProject();
   const {
     jsonData,
     setJsonData,
@@ -38,388 +55,319 @@ function App() {
     clearUnsavedChanges,
   } = useJson();
   const { schemas, loadSchema } = useSchema();
-
-  const [nestedViews, setNestedViews] = useState<NestedView[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedSchema, setSelectedSchema] = useState<string | null>(null);
-
-  const { scrollContainerRef, openNestedView } = useNestedViewScroll(
-    nestedViews,
-    setNestedViews,
+  const { plugins, loading: isPluginsLoading } = usePlugins(
+    pluginConfigs,
+    projectDir,
   );
 
-  // Find the currently selected data from jsonData
-  const currentData = jsonData.find((item) => item.title === selectedSchema);
+  const [isEditing, setIsEditing] = useState(false);
+  const [activeViewId, setActiveViewId] = useState(EDITOR_VIEW_ID);
+  const searchTargetRef = useRef<HTMLElement>(null);
 
-  // Preload all data when menuToFileMap changes (after File Open)
+  // --- 負債③: 揮発性 state を ref で追い、安定参照の getter から最新値を返す ---
+  // hostApi / pluginViews の useMemo deps から jsonData（毎キーストローク変化）と
+  // schemas（loadSchema のたびに新オブジェクト）を排除し、manifest.createView が
+  // 再実行されてプラグインが remount するのを防ぐ。
+  const jsonDataRef = useRef(jsonData);
+  jsonDataRef.current = jsonData;
+  const schemasRef = useRef(schemas);
+  schemasRef.current = schemas;
+
   useEffect(() => {
     preloadAllData(loadSchema);
   }, [menuToFileMap, projectDir, masterDir, schemaDir]);
 
-  useEffect(() => {
-    if (
-      selectedSchema &&
-      schemas[selectedSchema] &&
-      currentData &&
-      nestedViews.length === 0
-    ) {
-      const schema = schemas[selectedSchema];
-      const data = currentData.data;
+  const saveAll = useCallback(
+    async (columns: Column[]) => {
+      await saveProjectData({
+        columns,
+        projectDir,
+        masterDir,
+        onSuccess: () => {
+          setIsEditing(false);
+          clearUnsavedChanges();
+        },
+      });
+    },
+    [projectDir, masterDir, clearUnsavedChanges],
+  );
 
-      // Check if the schema is an array type
-      if ("type" in schema && schema.type === "array") {
-        // For array schemas, show TableView directly
-        setNestedViews([
-          {
-            type: "table",
-            schema: schema,
-            data: data,
-            path: [],
-          },
-        ]);
-      } else {
-        // For object schemas, show FormView
-        setNestedViews([
-          {
-            type: "form",
-            schema: schema,
-            data: data,
-            path: [],
-          },
-        ]);
+  const markDirty = useCallback(() => {
+    setIsEditing(true);
+    setHasUnsavedChanges(true);
+  }, [setHasUnsavedChanges]);
+
+  // --- 負債③: HostAPI に渡す関数群を安定参照にする ---
+  // getColumns / getSchemas は state をクロージャに閉じ込めず ref から読むため、
+  // 毎レンダーで同一参照のまま常に最新値を返せる。
+  const getColumns = useCallback(() => jsonDataRef.current, []);
+  const getSchemas = useCallback(() => schemasRef.current, []);
+  const setColumns = useCallback(
+    (updater: (columns: Column[]) => Column[]) => {
+      setJsonData((prev) => updater(prev));
+    },
+    [setJsonData],
+  );
+
+  // hostApi は projectDir / masterDir が変わったときのみ再生成される。
+  // getColumns / getSchemas / setColumns / loadSchema / markDirty は安定参照
+  // なので、毎キーストロークやスキーマロードのたびには再生成されない。
+  // → manifest.createView が再実行されずプラグインが remount しない。
+  const hostApi = useMemo(
+    () =>
+      createHostApi({
+        getColumns,
+        setColumns,
+        getSchemas,
+        loadSchema,
+        projectDir,
+        masterDir,
+        markDirty,
+      }),
+    [
+      getColumns,
+      setColumns,
+      getSchemas,
+      loadSchema,
+      projectDir,
+      masterDir,
+      markDirty,
+    ],
+  );
+
+  // --- 負債①/③: createView は manifest と hostApi が安定な限り 1 回だけ呼ぶ ---
+  // 得た PluginView を保持し、render() を繰り返し呼ぶ。hostApi が安定なため
+  // タブ切替や編集（jsonData 更新）では再生成されず、プラグインは remount しない。
+  const pluginInstances = useMemo(
+    () =>
+      plugins.map((manifest) => ({
+        manifest,
+        view: manifest.createView(hostApi),
+      })),
+    [plugins, hostApi],
+  );
+  const previousPluginInstancesRef = useRef<typeof pluginInstances>([]);
+  useEffect(() => {
+    const currentIds = new Set(
+      pluginInstances.map(({ manifest }) => manifest.id),
+    );
+    for (const previous of previousPluginInstancesRef.current) {
+      if (!currentIds.has(previous.manifest.id)) {
+        previous.view.dispose?.();
       }
     }
-  }, [selectedSchema, schemas, currentData, nestedViews.length]);
+    previousPluginInstancesRef.current = pluginInstances;
+  }, [pluginInstances]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Ctrl+S (Windows/Linux) or Cmd+S (Mac)
-      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-        event.preventDefault(); // Prevent browser's save dialog
+  // Editor の能力解決（従来ロジック）。
+  const editorGetCapabilities = useCallback(
+    (): ViewCapabilities => ({
+      canSave: (isEditing || hasUnsavedChanges) && jsonData.length > 0,
+      onSave: () => saveAll(jsonData),
+    }),
+    [isEditing, hasUnsavedChanges, jsonData, saveAll],
+  );
 
-        if ((isEditing || hasUnsavedChanges) && jsonData.length > 0) {
-          // Save the current jsonData
-          handleSave(jsonData);
-        }
-      }
-    };
+  const editorView: ViewDescriptor = useMemo(
+    () => ({
+      id: EDITOR_VIEW_ID,
+      label: "Editor",
+      render: () => (
+        <EditorView
+          menuToFileMap={menuToFileMap}
+          jsonData={jsonData}
+          setJsonData={setJsonData}
+          schemas={schemas}
+          loadSchema={loadSchema}
+          loadJsonFile={loadJsonFile}
+          openProjectDir={openProjectDir}
+          isPreloading={isPreloading}
+          isEditing={isEditing}
+          hasUnsavedChanges={hasUnsavedChanges}
+          onMarkDirty={markDirty}
+        />
+      ),
+      getCapabilities: editorGetCapabilities,
+    }),
+    [
+      menuToFileMap,
+      jsonData,
+      setJsonData,
+      schemas,
+      loadSchema,
+      loadJsonFile,
+      openProjectDir,
+      isPreloading,
+      isEditing,
+      hasUnsavedChanges,
+      markDirty,
+      editorGetCapabilities,
+    ],
+  );
 
-    window.addEventListener("keydown", handleKeyDown);
+  // --- 負債②: プラグインビューも getCapabilities で同一パスで能力を返す ---
+  const pluginViews: ViewDescriptor[] = useMemo(
+    () =>
+      pluginInstances.map(({ manifest, view }) => {
+        const resolveCapabilities = (): ViewCapabilities => {
+          const isDirty = view.isDirty?.();
+          return {
+            // isDirty を実装するプラグインはそれに従う。
+            // 未実装なら従来どおり常時 true（保存可能）とする。
+            canSave: isDirty ?? true,
+            onSave: () => view.save?.() ?? Promise.resolve(),
+            focusSearchMatch: view.focusSearchMatch
+              ? (element) => view.focusSearchMatch?.(element)
+              : undefined,
+          };
+        };
+        return {
+          id: manifest.id,
+          label: manifest.name,
+          render: () => view.render(),
+          getCapabilities: resolveCapabilities,
+          // ホストデータ preload 中・プラグインロード中はタブを無効化する
+          // （旧 node-graph ビューの `disabled: isPreloading` と同等のガード）。
+          // descriptor の再生成のみで、保持中の `view` 実体には触れないため
+          // プラグインは remount しない。
+          disabled: isPreloading || isPluginsLoading,
+        };
+      }),
+    [pluginInstances, isPreloading, isPluginsLoading],
+  );
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isEditing, hasUnsavedChanges, jsonData]);
+  const shouldSaveEditor =
+    (isEditing || hasUnsavedChanges) && jsonData.length > 0;
 
-  async function handleSave(_data: any) {
-    try {
-      // Check if we have jsonData and project directory
-      if (!jsonData.length || !projectDir) {
-        console.error("保存に必要な情報が不足しています");
-        return;
-      }
+  const canSavePluginView = useCallback(
+    (view: (typeof pluginInstances)[number]["view"], manifestId: string) => {
+      const isDirty = view.isDirty?.();
+      if (isDirty !== undefined) return isDirty;
+      return activeViewId === manifestId && Boolean(view.save);
+    },
+    [activeViewId],
+  );
 
-      // For development environment with sample project
-      if (projectDir === "SampleProject") {
-        console.log("サンプルプロジェクトのため、保存はスキップされました");
-        // Log all data for debugging
-        jsonData.forEach((column) => {
-          console.log(
-            `${column.title}:`,
-            JSON.stringify({ data: column.data }, null, 2),
-          );
-        });
-        setIsEditing(false);
-        clearUnsavedChanges();
-        return;
-      }
-
-      // Save all loaded JSON files
-      for (const column of jsonData) {
-        try {
-          // Build the JSON file path for each data column
-          if (!masterDir) {
-            console.error("Master directory is not set.");
-            continue;
-          }
-          const jsonFilePath = await path.join(
-            masterDir,
-            `${column.title}.json`,
-          );
-
-          // Prepare the data in the original format
-          const dataToSave = column.data;
-
-          // Save to the JSON file
-          await writeTextFile(
-            jsonFilePath,
-            JSON.stringify(dataToSave, null, 2),
-          );
-          console.log(`データが保存されました: ${jsonFilePath}`);
-        } catch (columnError) {
-          console.error(
-            `${column.title}.json の保存中にエラーが発生しました:`,
-            columnError,
-          );
-        }
-      }
-
-      setIsEditing(false);
-      clearUnsavedChanges();
-    } catch (error) {
-      console.error("保存中にエラーが発生しました:", error);
+  const saveAllDirtyViews = useCallback(async () => {
+    if (shouldSaveEditor) {
+      await saveAll(jsonData);
     }
-  }
+
+    for (const { manifest, view } of pluginInstances) {
+      if (canSavePluginView(view, manifest.id)) {
+        await view.save?.();
+      }
+    }
+  }, [
+    canSavePluginView,
+    jsonData,
+    pluginInstances,
+    saveAll,
+    shouldSaveEditor,
+  ]);
+
+  const hasSaveableView =
+    shouldSaveEditor ||
+    pluginInstances.some(({ manifest, view }) =>
+      canSavePluginView(view, manifest.id),
+    );
+
+  const views = useMemo(
+    () => [editorView, ...pluginViews],
+    [editorView, pluginViews],
+  );
+
+  // --- 負債②: Editor / プラグインを区別せず単一パスで能力を解決する ---
+  const capabilities: ViewCapabilities = useMemo(() => {
+    const active = views.find((view) => view.id === activeViewId);
+    return active?.getCapabilities?.() ?? NO_CAPABILITIES;
+  }, [views, activeViewId]);
+
+  useSaveShortcut({
+    canSave: hasSaveableView,
+    onSave: saveAllDirtyViews,
+  });
+
+  const handleActiveSearchMatchChange = useCallback(
+    (element: HTMLElement | null) => {
+      capabilities.focusSearchMatch?.(element);
+    },
+    [capabilities],
+  );
+
+  // --- 負債①: 遅延マウント ---
+  // 全ビュー常時マウント + display:none では、@xyflow/react がコンテナサイズ 0 で
+  // 初期化されレイアウトが崩れる。初回アクティブ化されるまで DOM へ追加せず、
+  // 一度表示された ID は以後マウントを維持（display:none で隠す）して
+  // プラグイン内部状態（編集中のノード等）を保持する。
+  const [mountedViewIds, setMountedViewIds] = useState<Set<string>>(
+    () => new Set([EDITOR_VIEW_ID]),
+  );
+  useEffect(() => {
+    setMountedViewIds((prev) => {
+      if (prev.has(activeViewId)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.add(activeViewId);
+      return next;
+    });
+  }, [activeViewId]);
 
   return (
     <MantineProvider theme={theme}>
-      <Notifications
-        position="bottom-left"
-        zIndex={2000}
-        autoClose={4000}
-        limit={5}
-      />
-      <AppShell header={{ height: 64 }} padding={0}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            height: "100vh",
-            overflow: "hidden",
-            padding: "16px",
-            gap: "16px",
-          }}
-        >
-          <Sidebar
-            menuToFileMap={menuToFileMap}
-            selectedFile={selectedSchema}
-            isPreloading={isPreloading}
-            loadFileData={async (menuItem) => {
-              // Check if already loaded
-              const existingData = jsonData.find(
-                (item) => item.title === menuItem,
-              );
-              if (existingData) {
-                console.log(
-                  `${menuItem} is already loaded. Using cached data.`,
-                );
-                setSelectedSchema(menuItem);
-                setNestedViews([]);
-                return;
-              }
-              // Load schema first
-              const loadedSchema = await loadSchema(menuItem);
-              // Pass the loaded schema to loadJsonFile for auto-generation if needed
-              await loadJsonFile(menuItem, jsonData.length, loadedSchema);
-              setSelectedSchema(menuItem);
-              setNestedViews([]);
-            }}
-            openProjectDir={openProjectDir}
-            isEditing={isEditing}
-            hasUnsavedChanges={hasUnsavedChanges}
-            schemas={schemas}
-          />
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flex: 1,
-              overflowX: "auto",
-              height: "100%",
-            }}
-            ref={scrollContainerRef}
-          >
-            {nestedViews.map((view, index) => (
-              <div
-                key={index}
-                style={{
-                  borderRight:
-                    index < nestedViews.length - 1
-                      ? "1px solid #E2E2E2"
-                      : "none",
-                  padding: "16px",
-                  width: "fit-content",
-                  height: "100%",
-                  overflowY: "auto",
-                  flexShrink: 0,
-                }}
-              >
-                {view.type === "table" ? (
-                  <TableView
-                    schema={view.schema}
-                    jsonData={jsonData}
-                    data={(() => {
-                      if (!currentData) {
-                        return [];
-                      }
-                      // Get data from currentData
-                      if (view.path.length === 0) {
-                        return currentData?.data;
-                      } else {
-                        let dataRef: any = currentData?.data;
-                        for (const key of view.path) {
-                          dataRef = dataRef?.[key];
-                        }
-                        return dataRef;
-                      }
-                    })()}
-                    onDataChange={(newData) => {
-                      console.log("TableView onDataChange:", {
-                        newData,
-                        viewPath: view.path,
-                      });
-                      // Find and update the correct item in jsonData
-                      const updatedJsonData = [...jsonData];
-                      const targetIndex = updatedJsonData.findIndex(
-                        (item) => item.title === selectedSchema,
-                      );
-                      if (targetIndex === -1) return;
-
-                      const updatedItem = { ...updatedJsonData[targetIndex] };
-
-                      if (view.path.length === 0) {
-                        updatedItem.data = newData;
-                      } else {
-                        // Deep copy for nested data
-                        updatedItem.data = { ...updatedItem.data };
-                        let ref: any = updatedItem.data;
-
-                        // Navigate to the parent of the target
-                        for (let i = 0; i < view.path.length - 1; i++) {
-                          const key = view.path[i];
-                          ref[key] = Array.isArray(ref[key])
-                            ? [...ref[key]]
-                            : { ...ref[key] };
-                          ref = ref[key];
-                        }
-
-                        // Update the final value
-                        ref[view.path[view.path.length - 1]] = newData;
-                      }
-
-                      updatedJsonData[targetIndex] = updatedItem;
-                      console.log("Setting new jsonData:", updatedJsonData);
-                      setJsonData(updatedJsonData);
-                      setIsEditing(true);
-                      setHasUnsavedChanges(true);
-                    }}
-                    onRowSelect={(rowIndex) => {
-                      // Get data from currentData
-                      let dataRef: any = currentData?.data;
-                      for (const key of view.path) {
-                        dataRef = dataRef?.[key];
-                      }
-                      const selectedRowData = dataRef?.[rowIndex];
-                      if (
-                        selectedRowData &&
-                        view.schema.items?.type === "object"
-                      ) {
-                        openNestedView(
-                          index,
-                          {
-                            type: "form",
-                            schema: view.schema.items,
-                            data: selectedRowData,
-                            path: [...view.path, rowIndex.toString()],
-                          },
-                          { forceScroll: true },
-                        );
-                      }
-                    }}
-                  />
-                ) : (
-                  <FormView
-                    schema={view.schema}
-                    jsonData={jsonData}
-                    data={(() => {
-                      // Get data from currentData
-                      if (view.path.length === 0) {
-                        return currentData?.data;
-                      } else {
-                        let dataRef: any = currentData?.data;
-                        for (const key of view.path) {
-                          dataRef = dataRef?.[key];
-                        }
-                        return dataRef;
-                      }
-                    })()}
-                    path={view.path}
-                    rootData={currentData?.data}
-                    onDataChange={(newData) => {
-                      // Find and update the correct item in jsonData
-                      const updatedJsonData = [...jsonData];
-                      const targetIndex = updatedJsonData.findIndex(
-                        (item) => item.title === selectedSchema,
-                      );
-                      if (targetIndex === -1) return;
-
-                      const updatedItem = { ...updatedJsonData[targetIndex] };
-
-                      if (view.path.length === 0) {
-                        // ルートレベルの場合、dataを直接置き換え
-                        updatedItem.data = newData;
-                      } else {
-                        // ネストされたデータの更新
-                        // イミュータブルに更新するために各レベルをコピー
-                        updatedItem.data = { ...updatedItem.data };
-                        let ref: any = updatedItem.data;
-
-                        // パスの最後の要素以外を辿る
-                        for (let i = 0; i < view.path.length - 1; i++) {
-                          const key = view.path[i];
-                          ref[key] = Array.isArray(ref[key])
-                            ? [...ref[key]]
-                            : { ...ref[key] };
-                          ref = ref[key];
-                        }
-
-                        // 最後の要素を新しい値で更新
-                        ref[view.path[view.path.length - 1]] = newData;
-                      }
-
-                      updatedJsonData[targetIndex] = updatedItem;
-                      setJsonData(updatedJsonData);
-                      setIsEditing(true);
-                      setHasUnsavedChanges(true);
-                    }}
-                    onObjectArrayClick={(fullPath, schema) => {
-                      console.log("FormView onObjectArrayClick:", {
-                        fullPath,
-                        schema,
-                        viewData: view.data,
-                        viewPath: view.path,
-                        index,
-                      });
-
-                      // Get fresh data from currentData
-                      const rootData = currentData?.data;
-                      let dataAtPath: any = rootData;
-
-                      // Navigate from the root data using the full path
-                      // If the root data has the same structure as the schema expects, navigate accordingly
-                      for (const key of fullPath) {
-                        dataAtPath = dataAtPath?.[key];
-                      }
-
-                      console.log("Data to display:", dataAtPath);
-
-                      const nextView: NestedView = {
-                        type: "table",
-                        schema: schema,
-                        data: dataAtPath || [],
-                        path: fullPath,
-                      };
-
-                      openNestedView(index, nextView);
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </AppShell>
+      <NotificationProvider showNotification={showNotification}>
+        <Notifications
+          position="bottom-left"
+          zIndex={2000}
+          autoClose={4000}
+          limit={5}
+        />
+        <AppShell header={{ height: 48 }} padding={0}>
+          <AppShell.Header>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                height: 48,
+                padding: "0 16px",
+                gap: 16,
+              }}
+            >
+              {views.length > 1 && (
+                <SegmentedControl
+                  size="sm"
+                  value={activeViewId}
+                  onChange={setActiveViewId}
+                  data={views.map((view) => ({
+                    label: view.label,
+                    value: view.id,
+                    disabled: view.disabled,
+                  }))}
+                />
+              )}
+            </div>
+          </AppShell.Header>
+          <AppShell.Main ref={searchTargetRef}>
+            {views
+              .filter((view) => mountedViewIds.has(view.id))
+              .map((view) => (
+                <div
+                  key={view.id}
+                  style={{
+                    display: view.id === activeViewId ? "block" : "none",
+                  }}
+                >
+                  {view.render()}
+                </div>
+              ))}
+            <SearchOverlay
+              targetRef={searchTargetRef}
+              onActiveMatchChange={handleActiveSearchMatchChange}
+            />
+          </AppShell.Main>
+        </AppShell>
+      </NotificationProvider>
     </MantineProvider>
   );
 }

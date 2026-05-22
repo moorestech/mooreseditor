@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { createInitialValue } from "@mooreseditor/plugin-sdk";
 import * as path from "@tauri-apps/api/path";
 import {
   readTextFile,
@@ -8,21 +9,17 @@ import {
   create,
 } from "@tauri-apps/plugin-fs";
 
-import { createInitialValue } from "../utils/createInitialValue";
 import { validateAndFillMissingFields } from "../utils/dataValidator";
 import { getSampleJson } from "../utils/devFileSystem";
 import { notifyFieldsAdded } from "../utils/notifyFieldsAdded";
 
 import { useProject } from "./useProject";
 
-import type { Schema, SchemaContainer } from "../libs/schema/types";
+import type { Column, Schema, SchemaContainer } from "@mooreseditor/plugin-sdk";
+
+export type { Column } from "@mooreseditor/plugin-sdk";
 
 const isDev = import.meta.env.DEV;
-
-export interface Column {
-  title: string;
-  data: any;
-}
 
 function generateDefaultJsonFromSchema(schema: Schema | SchemaContainer): any {
   if ("type" in schema) {

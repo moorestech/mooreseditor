@@ -1,0 +1,412 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
+
+import {
+  SHARED_DEPENDENCIES,
+  createSharedDependencyImportMap,
+} from "@mooreseditor/plugin-sdk/vite";
+
+import type { ServerResponse } from "node:http";
+import type { Plugin } from "vite";
+
+/**
+ * pluginFsPlugin
+ *
+ * The live shared-dependency bridge plus the plugin filesystem API. Since
+ * Task 3 the production import map in `index.html` resolves shared deps
+ * through the `/shared/*.js` bridge served here, so this is the real
+ * mechanism the host and dynamically-imported plugins rely on.
+ *
+ * Provides three capabilities:
+ *
+ *  1. `/api/plugin-fs/read?path=<path>` + `/api/plugin-fs/file?path=<path>`
+ *     (pure-browser `pnpm run dev` only — NOT used in `tauri:dev` or prod)
+ *     Dev FS bridge that serves files under `plugins/` at the monorepo root.
+ *     In `tauri:dev` and prod, plugins are resolved to absolute paths
+ *     (`<projectDir>/<pluginDir>`) by `resolvePluginDir` in `loader.ts` and
+ *     loaded via the Tauri runtime (`readTextFile` / `convertFileSrc`), so
+ *     this endpoint is bypassed entirely. In the pure-browser case no real
+ *     project can be opened, so plugin loading is a known limitation (0
+ *     plugins). `/read` returns JSON `{ content }` (text); `/file` returns
+ *     raw bytes with a correct `Content-Type`. Relative `path` values are
+ *     resolved against the monorepo root; the result is allow-list checked
+ *     against `plugins/` — traversal outside it returns 403.
+ *
+ *  2. `/shared/<dep>.js`  (dev: virtual module via Vite's serve pipeline)
+ *     A "shared dependency bridge". Returns a tiny ESM module that
+ *     re-exports a host dependency (e.g. `react`). Because the re-export is
+ *     processed by Vite's normal module pipeline, the bare specifier
+ *     resolves through the SAME dependency optimizer cache the host uses —
+ *     guaranteeing a single module instance shared between the host and
+ *     dynamically-imported plugins (which reach this URL via the
+ *     `index.html` import map).
+ *
+ *  3. `shared/<dep>.js`  (build: real emitted chunk)
+ *     During `vite build` the same bridge is emitted as a real chunk under
+ *     `dist/shared/`. The `index.html` import map is NOT rewritten — there
+ *     is no `transformIndexHtml` hook here. Instead the *static* map written
+ *     into `index.html` stays correct because `pluginSharedBuildPlugin`
+ *     force-names the bridge entries to stable, unhashed paths
+ *     (`shared/<dep>.js`) via `entryFileNames`. So the literal path the
+ *     import map already references is exactly where Rollup emits the chunk.
+ *     Rollup hoists React's actual implementation into a shared chunk that
+ *     BOTH the host bundle and the bridge entry import, so prod still has a
+ *     single React instance.
+ *
+ *     NOTE: the prod side was verified by build-output analysis (inspecting
+ *     `dist/` chunk paths and import graph), not by a live Tauri run.
+ *
+ * Per CLAUDE.md, dev/prod differences are handled by Vite's `apply` hook
+ * granularity rather than runtime `if (isDev)` branching.
+ */
+
+const SHARED_DEPS = Object.fromEntries(
+  SHARED_DEPENDENCIES.map((dep) => [dep.key, dep]),
+);
+
+const SHARED_PREFIX = "\0plugin-fs-shared:";
+
+function injectSharedDependencyImportMap(html: string): string {
+  const importMap = JSON.stringify(createSharedDependencyImportMap(), null, 2);
+  return html.replace(
+    "</head>",
+    `  <script type="importmap">\n${importMap}\n    </script>\n  </head>`,
+  );
+}
+
+/** JS 識別子として妥当な名前か（不正な named export はスキップする）。 */
+function isValidIdentifier(name: string): boolean {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name);
+}
+
+/**
+ * ホスト依存を共有ブリッジとして再エクスポートする ESM ソースを生成する。
+ *
+ * 素朴な `export * from "<spec>"` では不十分なケースがある:
+ *  - dev: Vite の依存最適化は `react` のような CJS パッケージを
+ *    「`export default` のみ」のモジュールへ変換する。`export *` は
+ *    default 以外の named export しか転送しないため、変換後 `react` には
+ *    named export が無く、プラグインの `import { useMemo }` が
+ *    `does not provide an export named 'useMemo'` で失敗する。
+ *
+ * 対策として、実モジュールを実行時に import して named export 名を列挙し、
+ * 個別の named 再エクスポート（`export { name } from "<spec>"`）を生成する。
+ * named 再エクスポートは Vite/Rollup の import-analysis が CJS interop へ
+ * 書き換えるため、CJS（react）でも ESM（@xyflow/react）でも正しく解決される。
+ * 特定 API のハードコードを避け、依存のバージョン差にも追従する。
+ */
+async function bridgeSource(dep: {
+  spec: string;
+  hasDefault: boolean;
+  skipIntrospection?: boolean;
+}): Promise<string> {
+  const spec = JSON.stringify(dep.spec);
+  if (dep.skipIntrospection) {
+    const star = `export * from ${spec};\n`;
+    const def = dep.hasDefault ? `export { default } from ${spec};\n` : "";
+    return star + def;
+  }
+
+  let names: string[] = [];
+  try {
+    const mod = (await import(dep.spec)) as Record<string, unknown>;
+    names = Object.keys(mod).filter(
+      (k) => k !== "default" && k !== "__esModule" && isValidIdentifier(k),
+    );
+  } catch (error) {
+    // import 失敗時は素朴な `export *` にフォールバックする。
+    // CJS パッケージのフォールバックは named export を転送できず、プラグインが
+    // `does not provide an export named ...` で失敗しうるため、診断できるよう
+    // 警告を出す（共有依存ブリッジの不調はサイレントにしない）。
+    console.warn(
+      `[pluginFsPlugin] shared bridge introspection failed for "${dep.spec}"; ` +
+        `falling back to \`export *\` (named exports may be missing): ` +
+        (error instanceof Error ? error.message : String(error)),
+    );
+    const star = `export * from ${spec};\n`;
+    const def = dep.hasDefault ? `export { default } from ${spec};\n` : "";
+    return star + def;
+  }
+
+  const lines: string[] = [];
+  if (names.length > 0) {
+    // 各 named export を個別に再エクスポートする（`export *` は使わない。
+    // 併用すると同名 export が二重定義になるため）。
+    lines.push(`export { ${names.join(", ")} } from ${spec};`);
+  } else {
+    // named export が 1 つも検出できなかった場合のみ `export *` を使う。
+    lines.push(`export * from ${spec};`);
+  }
+  if (dep.hasDefault) {
+    lines.push(`export { default } from ${spec};`);
+  }
+  return lines.join("\n") + "\n";
+}
+
+function sendJson(
+  res: ServerResponse,
+  statusCode: number,
+  data: Record<string, unknown>,
+): void {
+  res.writeHead(statusCode, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(data));
+}
+
+function parseQueryParam(url: string, param: string): string | null {
+  const queryIndex = url.indexOf("?");
+  if (queryIndex === -1) return null;
+  const searchParams = new URLSearchParams(url.slice(queryIndex));
+  return searchParams.get(param);
+}
+
+/** Map a file extension to the Content-Type used for `/api/plugin-fs/file`. */
+function contentTypeFor(filePath: string): string {
+  const ext = path.extname(filePath).toLowerCase();
+  switch (ext) {
+    case ".js":
+    case ".mjs":
+      // Dynamically imported by the host -> must be a JS MIME type.
+      return "text/javascript; charset=utf-8";
+    case ".css":
+      return "text/css; charset=utf-8";
+    case ".json":
+      return "application/json; charset=utf-8";
+    default:
+      return "application/octet-stream";
+  }
+}
+
+export function pluginFsPlugin(): Plugin {
+  // `allowedRoot` is the security boundary: every served file MUST live under
+  // `<monorepo>/plugins`. `repoRoot` is the *resolution base* for relative
+  // paths in the pure-browser dev fallback — a relative request path is
+  // resolved against the monorepo root, then allow-list-checked against
+  // `allowedRoot`. In `tauri:dev`/prod this endpoint is not used; plugins
+  // are resolved to absolute project-relative paths by `loader.ts` instead.
+  let allowedRoot = "";
+  let repoRoot = "";
+
+  /**
+   * Resolve a request `path` query value to an absolute, allow-listed file
+   * path. Returns `{ resolved }` on success or `{ error: { status, message } }`.
+   */
+  function resolvePluginPath(
+    filePath: string,
+  ):
+    | { resolved: string; error?: undefined }
+    | { resolved?: undefined; error: { status: number; message: string } } {
+    const resolved = path.isAbsolute(filePath)
+      ? path.resolve(filePath)
+      : path.resolve(repoRoot, filePath);
+    // Allow-list: must live under the plugins/ directory.
+    if (
+      resolved !== allowedRoot &&
+      !resolved.startsWith(allowedRoot + path.sep)
+    ) {
+      return {
+        error: {
+          status: 403,
+          message: `Path outside allowed root: ${filePath}`,
+        },
+      };
+    }
+    if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+      return { error: { status: 404, message: `File not found: ${filePath}` } };
+    }
+    return { resolved };
+  }
+
+  return {
+    name: "plugin-fs-plugin",
+    apply: "serve",
+
+    transformIndexHtml: injectSharedDependencyImportMap,
+
+    configResolved(config) {
+      // config.root === apps/mooreseditor ; monorepo root is two levels up.
+      repoRoot = path.resolve(config.root, "..", "..");
+      allowedRoot = path.resolve(repoRoot, "plugins");
+    },
+
+    resolveId(id) {
+      if (id.startsWith("/shared/") && id.endsWith(".js")) {
+        return SHARED_PREFIX + id.slice("/shared/".length, -3);
+      }
+      return null;
+    },
+
+    async load(id) {
+      if (id.startsWith(SHARED_PREFIX)) {
+        const name = id.slice(SHARED_PREFIX.length);
+        const dep = SHARED_DEPS[name];
+        if (!dep) return null;
+        // Re-export the bare specifier. Vite optimizes `dep` once; both the
+        // host and this module share that single optimized instance.
+        return await bridgeSource(dep);
+      }
+      return null;
+    },
+
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const url = req.url ?? "";
+        if (!url.startsWith("/api/plugin-fs/")) {
+          return next();
+        }
+        const method = req.method?.toUpperCase();
+        // Match on the exact pathname so `/api/plugin-fs/readdir` etc. do not
+        // accidentally hit the `/read` branch via a `startsWith` prefix.
+        // `req.url` has no host, so a dummy base is supplied for `URL`.
+        const pathname = new URL(url, "http://localhost").pathname;
+
+        // GET /api/plugin-fs/read?path=<path>
+        // `path` may be absolute, or relative to the monorepo root (resolved
+        // by `resolvePluginPath`). This endpoint is only reached in the
+        // pure-browser dev fallback; `tauri:dev`/prod use the Tauri runtime.
+        // Returns JSON `{ content }` (text payload).
+        if (pathname === "/api/plugin-fs/read" && method === "GET") {
+          const filePath = parseQueryParam(url, "path");
+          if (typeof filePath !== "string" || filePath.length === 0) {
+            sendJson(res, 400, { error: "'path' query parameter is required" });
+            return;
+          }
+          try {
+            const result = resolvePluginPath(filePath);
+            if (result.error) {
+              sendJson(res, result.error.status, {
+                error: result.error.message,
+              });
+              return;
+            }
+            const content = fs.readFileSync(result.resolved, "utf-8");
+            sendJson(res, 200, { content });
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : "Unknown error";
+            sendJson(res, 500, { error: message });
+          }
+          return;
+        }
+
+        // GET /api/plugin-fs/file?path=<path>
+        // Serves a file as a raw asset with a correct Content-Type. Used for
+        // the plugin entry JS (dynamically `import()`-ed by the host, so the
+        // JS MIME type matters) and CSS injected via <link>. Same allow-list
+        // and path-resolution rules as `/read`.
+        if (pathname === "/api/plugin-fs/file" && method === "GET") {
+          const filePath = parseQueryParam(url, "path");
+          if (typeof filePath !== "string" || filePath.length === 0) {
+            sendJson(res, 400, { error: "'path' query parameter is required" });
+            return;
+          }
+          try {
+            const result = resolvePluginPath(filePath);
+            if (result.error) {
+              sendJson(res, result.error.status, {
+                error: result.error.message,
+              });
+              return;
+            }
+            const body = fs.readFileSync(result.resolved);
+            res.writeHead(200, {
+              "Content-Type": contentTypeFor(result.resolved),
+              "Content-Length": body.length,
+            });
+            res.end(body);
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : "Unknown error";
+            sendJson(res, 500, { error: message });
+          }
+          return;
+        }
+
+        sendJson(res, 404, { error: `Unknown endpoint: ${url}` });
+      });
+    },
+  };
+}
+
+const ENTRY_PREFIX = "\0shared-entry:";
+
+/**
+ * Build side: emit real `shared/<dep>.js` bridge chunks at deterministic,
+ * unhashed paths so the *static* `index.html` import map keeps resolving
+ * correctly. The import map is never rewritten — there is no
+ * `transformIndexHtml` hook; the map points at `shared/<dep>.js` literally
+ * and this plugin makes Rollup emit the chunk at exactly that path.
+ *
+ * Design (verified by build-output analysis; prod Tauri run pending
+ * Task 8):
+ *  - Each shared dep is registered as a Rollup *input entry* with a virtual
+ *    id. Its source is `export * from "<dep>"; export { default } from
+ *    "<dep>"`. Rollup compiles this into a proper ESM module with clean
+ *    named + default exports (NOT an opaque internal chunk).
+ *  - React's actual implementation is hoisted by Rollup into a shared chunk
+ *    that BOTH the host bundle and this entry import — so there is exactly
+ *    one React instance in prod.
+ *  - The entry chunk is force-named so it lands at the stable path
+ *    `shared/<dep>.js`, which the import map references verbatim.
+ *
+ * Used in `vite.config.ts` alongside `pluginFsPlugin()`. Splitting build vs
+ * serve into two `Plugin` objects keeps each one's `apply` field honest.
+ */
+export function pluginSharedBuildPlugin(): Plugin {
+  return {
+    name: "plugin-fs-shared-build",
+    apply: "build",
+
+    transformIndexHtml: injectSharedDependencyImportMap,
+
+    /** Register one input entry per shared dep. */
+    config() {
+      // `{ index: "index.html" }` and the `assets/[name]-[hash].js` fallback
+      // below intentionally re-state Vite's own defaults — we must respecify
+      // them because supplying `input`/`entryFileNames` replaces the
+      // defaults wholesale. If more HTML entries are ever added to the app,
+      // this `input` map must be extended to keep them building.
+      const input: Record<string, string> = { index: "index.html" };
+      for (const name of Object.keys(SHARED_DEPS)) {
+        // entry key e.g. "shared/react" -> emitted file "shared/react.js"
+        input[`shared/${name}`] = `${ENTRY_PREFIX}${name}`;
+      }
+      return {
+        build: {
+          rollupOptions: {
+            input,
+            output: {
+              // Keep the shared bridge entries at predictable, unhashed
+              // paths so the import map can reference them statically.
+              entryFileNames(chunk) {
+                if (chunk.name.startsWith("shared/")) {
+                  return "[name].js";
+                }
+                return "assets/[name]-[hash].js";
+              },
+            },
+            // Shared bridge entries are loaded by project plugins at runtime
+            // through the static import map, so Rollup cannot see their
+            // consumers. Keep their public named exports intact even when the
+            // host app itself only imports a small subset.
+            preserveEntrySignatures: "strict",
+          },
+        },
+      };
+    },
+
+    resolveId(id) {
+      if (id.startsWith(ENTRY_PREFIX)) return id;
+      return null;
+    },
+
+    async load(id) {
+      if (id.startsWith(ENTRY_PREFIX)) {
+        const name = id.slice(ENTRY_PREFIX.length);
+        const dep = SHARED_DEPS[name];
+        if (!dep) return null;
+        return await bridgeSource(dep);
+      }
+      return null;
+    },
+  };
+}

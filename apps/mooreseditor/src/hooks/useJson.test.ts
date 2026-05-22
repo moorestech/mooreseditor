@@ -25,6 +25,7 @@ vi.mock("./useProject", () => ({
     masterDir: "/test/project/master",
     schemaDir: "/test/project/schema",
     menuToFileMap: {},
+    pluginConfigs: [],
     loading: false,
     openProjectDir: vi.fn(),
   })),
@@ -81,6 +82,7 @@ describe("useJson", () => {
       masterDir: null,
       schemaDir: null,
       menuToFileMap: {},
+      pluginConfigs: [],
       loading: false,
       openProjectDir: vi.fn(),
     });
@@ -204,6 +206,7 @@ describe("useJson", () => {
       masterDir: "SampleProject/master",
       schemaDir: "SampleProject/schema",
       menuToFileMap: {},
+      pluginConfigs: [],
       loading: false,
       openProjectDir: vi.fn(),
     });
@@ -239,6 +242,7 @@ describe("useJson", () => {
       masterDir: "SampleProject/master",
       schemaDir: "SampleProject/schema",
       menuToFileMap: {},
+      pluginConfigs: [],
       loading: false,
       openProjectDir: vi.fn(),
     });

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { validateAndFillMissingFields } from "../dataValidator";
 
-import type { ObjectSchema } from "../../libs/schema/types";
+import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
 
 describe("dataValidator", () => {
   describe("switch field validation", () => {

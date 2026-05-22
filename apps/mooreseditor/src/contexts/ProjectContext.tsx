@@ -7,7 +7,10 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { readTextFile, readDir } from "@tauri-apps/plugin-fs";
 import YAML from "yaml";
 
+import { parsePluginConfig } from "../pluginHost/config";
 import { getSampleSchemaList, getSampleSchema } from "../utils/devFileSystem";
+
+import type { PluginConfigEntry } from "../pluginHost/config";
 
 const isDev = import.meta.env.DEV;
 
@@ -16,6 +19,8 @@ interface ProjectContextType {
   schemaDir: string | null;
   masterDir: string | null;
   menuToFileMap: Record<string, string>;
+  /** 開いたプロジェクトの mooreseditor.config.yml で宣言されたプラグイン一覧。 */
+  pluginConfigs: PluginConfigEntry[];
   loading: boolean;
   openProjectDir: () => Promise<void>;
 }
@@ -29,6 +34,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [menuToFileMap, setMenuToFileMap] = useState<Record<string, string>>(
     {},
   );
+  const [pluginConfigs, setPluginConfigs] = useState<PluginConfigEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   async function openProjectDir() {
@@ -61,9 +67,14 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         console.error(
           "Invalid or missing schemaPath in mooreseditor.config.yml",
         );
+        setPluginConfigs([]);
         setIsLoading(false);
         return;
       }
+
+      // プロジェクト設定 yml の plugins: セクションを抽出する。
+      // plugins: が無ければ parsePluginConfig は [] を返す。
+      setPluginConfigs(parsePluginConfig(configContents));
 
       const resolvedSchemaPath = await path.resolve(
         openedDir as string,
@@ -131,6 +142,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       setProjectDir("SampleProject");
+      setPluginConfigs([]);
       setSchemaDir("SampleProject/schema");
       setMasterDir("SampleProject/master");
 
@@ -173,6 +185,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         schemaDir,
         masterDir,
         menuToFileMap,
+        pluginConfigs,
         loading: isLoading,
         openProjectDir,
       }}

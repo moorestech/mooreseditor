@@ -1,4 +1,3 @@
-use tauri::Manager;
 use tauri_plugin_fs::FsExt;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -9,11 +8,13 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn add_project_to_scope(app: tauri::AppHandle, project_path: String) -> Result<(), String> {
-    // Add the project directory and all its subdirectories to the scope
+    // Add the project directory and all its subdirectories to the scope.
+    // プロジェクトディレクトリを再帰登録するため、配下に置かれたプラグイン
+    // （`<projectDir>/plugins/.../dist/*` 等）も追加登録なしで読み書きできる。
     let fs = app.fs_scope();
     fs.allow_directory(&project_path, true)
         .map_err(|e| format!("Failed to add directory to scope: {}", e))?;
-    
+
     Ok(())
 }
 

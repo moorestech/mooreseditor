@@ -1,5 +1,5 @@
 import type { SchemaDefinitions, SchemaLoadOptions } from "../types";
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * スキーマローダーの抽象インターフェース

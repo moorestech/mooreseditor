@@ -1,4 +1,4 @@
-import type { Schema, ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { Schema, ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 export interface SchemaMeta {
   schemaId: string;

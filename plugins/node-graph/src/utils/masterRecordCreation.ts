@@ -1,9 +1,9 @@
-import { createInitialValue } from "@mooreseditor/plugin-sdk";
+import { createInitialValue } from "@moorestech/mooreseditor-plugin-sdk";
 
 import { findSchemaIdForNodeType } from "./nodeTypeSchema";
 
 import type { SchemaMeta } from "./schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 type CreatableNodeType = string;
 

@@ -10,7 +10,7 @@ import {
 
 import type { ContextMenuPosition } from "../components/canvas/CanvasContextMenu";
 import type { SchemaMeta } from "../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 interface UseContextMenuParams {
   jsonData: Column[];

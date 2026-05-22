@@ -1,7 +1,7 @@
 import type { EditableRecipe } from "./types";
 import type { RecipeReference } from "../../../types/nodeGraph";
 import type { SchemaMeta } from "../../../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 export function buildSelectedRecipeRefs(
   craftRecipeGuids: string[],

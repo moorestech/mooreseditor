@@ -1,5 +1,5 @@
 import type { SchemaMeta } from "./schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 /**

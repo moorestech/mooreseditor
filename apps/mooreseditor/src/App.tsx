@@ -7,7 +7,7 @@ import {
   createTheme,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { NotificationProvider } from "@mooreseditor/plugin-sdk";
+import { NotificationProvider } from "@moorestech/mooreseditor-plugin-sdk";
 
 import EditorView from "./components/EditorView";
 import { SearchOverlay } from "./components/SearchOverlay";

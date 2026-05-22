@@ -6,7 +6,7 @@ import {
 } from "./masterRecordCreation";
 
 import type { SchemaMeta } from "./schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 const questMeta: SchemaMeta = {
   schemaId: "quests",

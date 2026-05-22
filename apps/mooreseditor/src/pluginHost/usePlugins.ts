@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { loadPlugin } from "./loader";
 
 import type { PluginConfigEntry } from "./config";
-import type { PluginManifest } from "@mooreseditor/plugin-sdk";
+import type { PluginManifest } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * 開いたプロジェクトで宣言されたプラグインをロードするフック。

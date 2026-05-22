@@ -4,7 +4,7 @@ import * as path from "node:path";
 import {
   SHARED_DEPENDENCIES,
   createSharedDependencyImportMap,
-} from "@mooreseditor/plugin-sdk/vite";
+} from "@moorestech/mooreseditor-plugin-sdk/vite";
 
 import type { ServerResponse } from "node:http";
 import type { Plugin } from "vite";

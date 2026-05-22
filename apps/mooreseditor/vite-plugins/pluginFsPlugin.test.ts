@@ -1,7 +1,7 @@
 import {
   createSharedDependencyImportMap,
   sharedDependencySpecs,
-} from "@mooreseditor/plugin-sdk/vite";
+} from "@moorestech/mooreseditor-plugin-sdk/vite";
 import { describe, expect, it } from "vitest";
 
 describe("shared dependency contract", () => {
@@ -16,7 +16,7 @@ describe("shared dependency contract", () => {
         "@mantine/notifications": "/shared/mantine-notifications.js",
         "@tabler/icons-react": "/shared/tabler-icons-react.js",
         "@xyflow/react": "/shared/xyflow-react.js",
-        "@mooreseditor/plugin-sdk": "/shared/plugin-sdk.js",
+        "@moorestech/mooreseditor-plugin-sdk": "/shared/plugin-sdk.js",
       },
     });
   });
@@ -31,7 +31,7 @@ describe("shared dependency contract", () => {
       "@mantine/notifications",
       "@tabler/icons-react",
       "@xyflow/react",
-      "@mooreseditor/plugin-sdk",
+      "@moorestech/mooreseditor-plugin-sdk",
     ]);
   });
 });

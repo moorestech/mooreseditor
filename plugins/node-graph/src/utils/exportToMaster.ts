@@ -8,7 +8,7 @@ import { calculateUnlockedItems } from "./spatialUnlock";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { NodeGraphFile } from "../types/nodeGraph";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type {
   Node as ReactFlowNode,
   Edge as ReactFlowEdge,

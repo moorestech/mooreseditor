@@ -1,5 +1,5 @@
 import type { SchemaMeta } from "./schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * Create a record updater function for a specific record in jsonData.

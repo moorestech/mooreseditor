@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { createInitialValue } from "@mooreseditor/plugin-sdk";
+import { createInitialValue } from "@moorestech/mooreseditor-plugin-sdk";
 
 import { RECIPE_SCHEMA_MAP } from "../../../utils/recipeEdge";
 
@@ -22,7 +22,7 @@ import type {
   ObjectArrayEditorState,
 } from "./types";
 import type { RecipeEdgeType } from "../../../types/nodeGraph";
-import type { ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 export function useEdgeTypeDialogState({
   opened,

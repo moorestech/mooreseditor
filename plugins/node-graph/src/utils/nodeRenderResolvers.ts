@@ -10,7 +10,7 @@ import type {
   Column,
   ObjectPropertySchema,
   ObjectSchema,
-} from "@mooreseditor/plugin-sdk";
+} from "@moorestech/mooreseditor-plugin-sdk";
 import type {
   Edge as ReactFlowEdge,
   Node as ReactFlowNode,

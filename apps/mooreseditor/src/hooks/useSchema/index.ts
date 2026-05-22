@@ -6,7 +6,7 @@ import { RefResolver } from "./resolvers/RefResolver";
 
 import type { SchemaLoader } from "./loaders/SchemaLoader";
 import type { UseSchemaReturn, SchemaDefinitions } from "./types";
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * refをサポートしたスキーマ読み込みフック

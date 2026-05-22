@@ -9,7 +9,7 @@ import {
 import AddNodeMenu from "./AddNodeMenu";
 
 import type { SchemaMeta } from "../../utils/schemaMeta";
-import type { Column } from "@mooreseditor/plugin-sdk";
+import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
 const ITEM_NODE_TYPES = [
   { label: "Item", type: "item" as const, schemaId: "items" },

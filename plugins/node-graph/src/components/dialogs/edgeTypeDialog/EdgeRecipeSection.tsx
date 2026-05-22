@@ -8,7 +8,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { FormView, TableView } from "@mooreseditor/plugin-sdk";
+import { FormView, TableView } from "@moorestech/mooreseditor-plugin-sdk";
 import { IconArrowLeft } from "@tabler/icons-react";
 
 
@@ -20,7 +20,7 @@ import type {
   RecipeOptionsByType,
 } from "./types";
 import type { RecipeEdgeType } from "../../../types/nodeGraph";
-import type { Column, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 interface EdgeRecipeSectionProps {
   jsonData: Column[];

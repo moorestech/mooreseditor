@@ -1,4 +1,4 @@
-import { createColumnDispatch } from "@mooreseditor/plugin-sdk";
+import { createColumnDispatch } from "@moorestech/mooreseditor-plugin-sdk";
 
 import { NODE_GRAPH_RELATIVE_PATH } from "./constants";
 import { pluginMetadata } from "./pluginMetadata";
@@ -12,7 +12,7 @@ import type {
   HostAPI,
   PluginManifest,
   PluginView,
-} from "@mooreseditor/plugin-sdk";
+} from "@moorestech/mooreseditor-plugin-sdk";
 
 const manifest: PluginManifest = {
   ...pluginMetadata,

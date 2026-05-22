@@ -1,84 +1,106 @@
 ---
 name: mooreseditor-plugin-dev
-description: mooreseditor（Tauri アプリ）のプラグインを作成・ビルド・デプロイ・デバッグする。Use When — 「プラグインを作りたい」「プラグインのビルド方法」「node-graph のような新しいタブを追加」「plugin.json」「PluginManifest」「プラグインがロードされない」「does not provide an export named エラー」と言われた場合。plugins/ 配下の新規プラグイン作成、共有依存(External)同期、HostAPI 契約の実装、Tauri FS スコープのトラブルシュートを扱う。
+description: mooreseditor（Tauri アプリ）の外部プラグインを作成・ビルド・デプロイ・デバッグする。Use When — 「プラグインを作りたい」「プラグインのビルド方法」「node-graph のような新しいタブを追加」「plugin.json」「PluginManifest」「HostAPI」「プラグインがロードされない」「does not provide an export named エラー」と言われた場合。npm SDK、external starter、共有依存、HostAPI 契約、Tauri FS スコープのトラブルシュートを扱う。
 ---
 
 # mooreseditor プラグイン開発
 
 ## 概要
 
-mooreseditor のプラグインは「ホストアプリにタブとして追加される独立した React ビュー」。`packages/plugin-sdk` の契約（`PluginManifest` / `HostAPI` / `PluginView`）に従って実装し、SDK の Vite preset `mooresPlugin()` で単体 ESM バンドルと `plugin.json` を生成する。ホストはプロジェクトを開いたとき `mooreseditor.config.yml` の `plugins:` 宣言を読み、動的 `import()` でロードする。実装の生きた手本は `plugins/node-graph/`。
+mooreseditor のプラグインは、ユーザーが開いたプロジェクトから実行時にロードされ、ホストアプリにタブとして追加される独立した React ビュー。新規プラグインは npm 公開済み SDK `@moorestech/mooreseditor-plugin-sdk` と `examples/external-plugin-starter/` を使って、mooreseditor モノレポの外で作る。
+
+ホストはプロジェクトを開いたとき `mooreseditor.config.yml` の `plugins:` 宣言を読み、各プラグインの `plugin.json` と `dist/index.js` を動的 `import()` でロードする。SDK の Vite helper `mooresPlugin(pluginMetadata)` が単体 ESM bundle と `plugin.json` を生成する。
+
+詳細ドキュメント: `docs/plugin-development.md`
 
 ## 前提条件
 
-- 作業対象は mooreseditor モノレポ（pnpm + turbo workspace）。
-- 新規プラグインは `plugins/<name>/` に置く。pnpm workspace に `plugins/*` が含まれていることを前提とする。
-- 動作確認は `pnpm run tauri:dev` かビルド済み `.app` で行う。**純ブラウザ `pnpm run dev` ではプロジェクトを開けず、プラグインは常に0個になる**（デバッグ不能）。
-- プラグインの最終的な配置先は「ユーザーが開く対象プロジェクト」のディレクトリ配下であって、モノレポ内ではない。
+- 新規外部プラグインは `examples/external-plugin-starter/` から作る。
+- SDK は npm の `@moorestech/mooreseditor-plugin-sdk` を使い、対象 mooreseditor が同梱する SDK と同じ version を exact pin する。
+- 固定リリース向けプラグインでは `^1.0.0` のような範囲指定を避ける。
+- 動作確認は `pnpm run tauri:dev` かビルド済み `.app` で行う。純ブラウザ `pnpm run dev` では実プロジェクトを開けず、プラグインデバッグには使えない。
+- プラグインの配置先は、最終的に「ユーザーが開く対象プロジェクト」の `plugins/<name>/` 配下。
 
 ## 作成手順
 
-### Step 1 — node-graph を雛形にコピー
+### Step 1 — starter を外部リポジトリへコピー
 
 ```bash
-cp -r plugins/node-graph plugins/<name>
-rm -rf plugins/<name>/{dist,node_modules,.turbo}
+cp -R examples/external-plugin-starter ../my-mooreseditor-plugin
+cd ../my-mooreseditor-plugin
+git init
+npm install
 ```
 
-`node-graph` は forwardRef・HostAPI 保存・React Flow 初期化など実装パターンが詰まっているので、ゼロから書くより必ずコピーから始める。
+モノレポ内の `plugins/node-graph/` は実装参考には使えるが、新規プラグインの雛形として丸ごとコピーしない。`node-graph` にはモノレポ workspace 前提や専用実装が含まれる。
 
-### Step 2 — メタファイルを書き換える
+### Step 2 — SDK version を exact pin
 
-`plugins/<name>/package.json` の `"name"` を `@mooreseditor/plugin-<name>` に変更。
+`package.json` の SDK dependency を対象 host に合わせる。
 
-`src/pluginMetadata.ts` にメタデータを置く:
+```json
+{
+  "dependencies": {
+    "@moorestech/mooreseditor-plugin-sdk": "1.0.0"
+  }
+}
+```
+
+React/Mantine などのホスト共有依存は `peerDependencies` と `devDependencies` に置き、plugin bundle へ含めない。
+
+### Step 3 — メタデータを設定
+
+`src/pluginMetadata.ts` に id/name/version を置く。これが `plugin.json` と runtime manifest の単一の真実源になる。
 
 ```ts
 export const pluginMetadata = {
-  id: "<name>",
-  name: "表示名",
+  id: "my-plugin",
+  name: "My Plugin",
   version: "0.1.0",
 } as const;
 ```
 
 `plugin.json` は `mooresPlugin(pluginMetadata)` がビルド時に生成する。手書きの `plugin.json` と runtime manifest を二重管理しない。
 
-### Step 3 — エントリ実装（`src/plugin-entry.tsx`）
+### Step 4 — エントリ実装
 
-`PluginManifest` を **default export** する。これがビルドのエントリ（vite.config.ts の `build.lib.entry`）。
+`src/plugin-entry.tsx` は `PluginManifest` を default export する。
 
 ```tsx
+import { MyPluginView } from "./MyPluginView";
+import { pluginMetadata } from "./pluginMetadata";
+
 import type {
   HostAPI,
   PluginManifest,
   PluginView,
-} from "@mooreseditor/plugin-sdk";
-import { pluginMetadata } from "./pluginMetadata";
+} from "@moorestech/mooreseditor-plugin-sdk";
 
 const manifest: PluginManifest = {
   ...pluginMetadata,
   createView(host: HostAPI): PluginView {
     return {
-      render: () => <MyView /* host を props で渡す */ />,
+      render: () => <MyPluginView projectDir={host.projectDir} />,
       save: async () => {
-        /* host.saveProject(...) */
+        await host.saveProject(host.getColumns());
       },
       isDirty: () => false,
     };
   },
 };
+
 export default manifest;
 ```
 
 実行時に検証される必須フィールドは `id` / `name` / `version` / `createView`。さらに `plugin.json` と runtime manifest の `id/name/version` が一致しないとロード失敗。
 
-### Step 4 — ビルド
+### Step 5 — Vite helper でビルド
 
-`vite.config.ts` は SDK preset を使う:
+`vite.config.ts` は SDK の Vite helper を使う。
 
 ```ts
 import react from "@vitejs/plugin-react";
-import { mooresPlugin } from "@mooreseditor/plugin-sdk/vite";
+import { mooresPlugin } from "@moorestech/mooreseditor-plugin-sdk/vite";
 import { defineConfig, mergeConfig } from "vite";
 
 import { pluginMetadata } from "./src/pluginMetadata";
@@ -89,125 +111,137 @@ export default defineConfig(
 ```
 
 ```bash
-pnpm --filter @mooreseditor/plugin-<name> run build       # dist/index.js, index.css を生成
-pnpm --filter @mooreseditor/plugin-<name> run type-check
-pnpm --filter @mooreseditor/plugin-<name> run lint
+npm run build
 ```
 
-`mooresPlugin()` は共有依存の `external`、出力名、`plugin.json` 生成をまとめて設定する。
+成果物:
 
-### Step 5 — 対象プロジェクトへデプロイ
+- `dist/index.js`
+- `dist/index.css`（CSS がある場合）
+- `plugin.json`
 
-ビルドした `plugin.json` と `dist/` を、ユーザーが開く対象プロジェクトの配下にコピーする:
+`mooresPlugin()` は共有依存の external、出力名、`plugin.json` 生成をまとめて設定する。プラグイン側で手動 `EXTERNAL` 配列を書かない。
 
-```
-<project>/plugins/<name>/
+### Step 6 — 対象プロジェクトへデプロイ
+
+ビルドした `plugin.json` と `dist/` を、ユーザーが開く対象プロジェクト配下へコピーする。
+
+```text
+<project>/plugins/my-plugin/
 ├── plugin.json
-└── dist/index.js, index.css
+└── dist/
+    ├── index.js
+    └── index.css
 ```
 
-対象プロジェクトの `mooreseditor.config.yml` に宣言を追加:
+対象プロジェクトの `mooreseditor.config.yml` に宣言を追加する。
 
 ```yaml
 plugins:
-  - dir: ./plugins/<name> # config.yml からの相対パス
+  - dir: ./plugins/my-plugin
 ```
 
-### Step 6 — 動作確認
+現在の production loader は `plugins/<name>` 形式をサポートする。`plugins/foo/bar`、絶対パス、`..` は避ける。
 
-`pnpm run tauri:dev` でホストを起動 → 対象プロジェクトを開く → タブが増えていることを確認。ロードに失敗すると console に `プラグインのロードに失敗` が出る（プラグイン1個の失敗は致命的でなく、他は続行される）。
+### Step 7 — 動作確認
+
+mooreseditor 側で `pnpm run tauri:dev` を起動し、対象プロジェクトを開く。タブが増えていることを確認する。ロードに失敗すると console に `プラグインのロードに失敗` が出る。
 
 ## Gotchas
 
-### 🔴 共有依存は SDK Vite preset に寄せる
+### 共有依存は SDK Vite helper に寄せる
 
-React・Mantine 等は「ホストとプラグインで同一インスタンス」でないと React Context が共有できず UI が壊れる。以下3ファイルの依存リストを**完全一致**させる:
+React・Mantine などはホストとプラグインで同一インスタンスでないと React Context が共有できず UI が壊れる。共有依存の単一の真実源は `packages/plugin-sdk/src/vite/sharedDeps.js`。
 
-| ファイル                                                            | 役割                                |
-| ------------------------------------------------------------------- | ----------------------------------- |
-| `packages/plugin-sdk/src/vite/sharedDeps.js`                        | shared deps の単一の真実源          |
-| `apps/mooreseditor/vite-plugins/pluginFsPlugin.ts`                  | import map と `/shared/*` を生成    |
-| `plugins/<name>/vite.config.ts`                                     | `mooresPlugin()` を呼ぶだけ         |
+現在の主な共有対象:
 
-現在の共有対象: `react`, `react-dom`, `react/jsx-runtime`, `@mantine/core`, `@mantine/hooks`, `@mantine/notifications`, `@tabler/icons-react`, `@xyflow/react`, `@mooreseditor/plugin-sdk`。
+- `react`
+- `react-dom`
+- `react/jsx-runtime`
+- `@mantine/core`
+- `@mantine/hooks`
+- `@mantine/notifications`
+- `@tabler/icons-react`
+- `@xyflow/react`
+- `@moorestech/mooreseditor-plugin-sdk`
 
-- プラグイン側は手動 `EXTERNAL` 配列を書かず、必ず `mooresPlugin(pluginMetadata)` を使う。
-- 新しい共有パッケージ（例 `@mantine/dates`）を使うなら `sharedDeps.js` に追加し、`pnpm check:plugin-contracts` で host/plugin/sdk の version contract を確認する。
-- `does not provide an export named '...'` が出たら、まず shared deps registry と plugin build preset の適用漏れを疑う。
-- **逆に `@tauri-apps/*` は EXTERNAL に入れない**。これはプラグイン専用依存として `dist/index.js` に同梱する（`window.__TAURI__` 経由で動くので二重インスタンス問題がない）。
+ルール:
 
-### 🟠 HostAPI の状態管理の癖（`pluginHost/hostApi.ts`）
+- プラグイン側は必ず `mooresPlugin(pluginMetadata)` を使う。
+- 新しい共有パッケージを追加する場合は `packages/plugin-sdk/src/vite/sharedDeps.js` を更新し、mooreseditor モノレポで `pnpm check:plugin-contracts` を通す。
+- `does not provide an export named '...'` が出たら、まず SDK helper の適用漏れ、shared deps registry、host の import map を確認する。
+- `@tauri-apps/*` は shared deps に入れない。プラグイン専用依存として `dist/index.js` に同梱する。
 
-- **`setColumns(action)` は React の `SetStateAction<Column[]>`**。値直接渡しと updater 関数の両方を受ける。React component 側へ渡すなら SDK の `createColumnDispatch(host)` を使う。
-- **`host.schemas` は getter**。読むたび最新値が返るが参照が毎回変わりうる → `useMemo`/`useEffect` の deps に入れない。
-- **`host.projectDir` / `host.masterDir` は getter**。読むたび最新値が返る。
-- **`saveProject(columns, extraFiles)` は書き込み前に全パスを検証するが、filesystem atomic ではない**。途中失敗で partial write になりうる。reject されたらユーザーに再試行させる。
-- `saveExtraFile`/`readExtraFile` の `relativePath` は **POSIX 区切り `/` のみ**。Windows の `\`、絶対パス、`..` は検証で拒否される。
+### HostAPI の状態管理
 
-### 🟠 PluginView のオプショナルメソッド
+- `setColumns(action)` は React の `SetStateAction<Column[]>`。値直接渡しと updater 関数の両方を受ける。React component 側へ渡すなら SDK の `createColumnDispatch(host)` を使う。
+- `host.schemas` は getter。読むたび最新値が返るが参照が毎回変わりうるため、`useMemo`/`useEffect` の deps に入れない。
+- `host.projectDir` / `host.masterDir` は getter。読むたび最新値が返る。
+- `saveProject(columns, extraFiles)` は書き込み前に全パスを検証するが、filesystem atomic ではない。途中失敗で partial write になりうる。
+- `saveExtraFile` / `readExtraFile` の path は POSIX 区切り `/` の相対パスにする。Windows の `\`、絶対パス、`..` は拒否される。
 
-`save?` / `isDirty?` / `focusSearchMatch?` は任意だが、未実装だと意図しない挙動になる:
+### PluginView のオプショナルメソッド
 
-- **`isDirty()` 未実装 → タブが常に「保存可能」扱い**（ホスト側 `canSave: isDirty ?? true`）。未保存変更がないのに保存ボタンが活性化する。保存不要なビューは必ず `isDirty: () => false` を返す。
-- **`save()` 未実装 → 保存ボタンが無反応**（`Promise.resolve()` で即完了）。
-- **`dispose()` は任意**。購読解除、タイマー停止、外部リソース解放が必要なビューは実装する。ホストはプラグインが外れたときに呼ぶ。
+`save?` / `isDirty?` / `focusSearchMatch?` / `dispose?` は任意だが、未実装だと意図しない挙動になる。
 
-### 🟠 `createView` は React の外で呼ばれる
+- `isDirty()` 未実装: タブが常に保存可能扱い。保存不要なビューは `isDirty: () => false` を返す。
+- `save()` 未実装: 保存ボタンが実質何もしない。
+- `dispose()` は購読解除、タイマー停止、外部リソース解放が必要なビューで実装する。
 
-`createView` 内で `useState`/`useRef` 等の hook を呼んではいけない。ref が必要なら node-graph のように素のミュータブルコンテナ `const handleRef = { current: null }` + コールバック ref を使う。
+### `createView` は React の外で呼ばれる
 
-### 🟡 plugin.json のパス解決とセキュリティ
+`createView` 内で `useState` / `useRef` などの React hook を呼ばない。ref が必要なら素のミュータブルコンテナ `const handleRef = { current: null }` と callback ref を使う。
 
-- `mooreseditor.config.yml` の `plugins[].dir` は**開いたプロジェクトディレクトリ基準の相対パス**として解決される。
-- `dir` に `..` セグメントや絶対パスを書くと `loader.ts` の `resolvePluginDir` で拒否される → プラグインはプロジェクト配下にしか置けない。
-- `plugin.json` の `entry` / `styles` も plugin package 境界内の相対パスとして検証される。空パス、絶対パス、`..` traversal は拒否される。
-- `mooreseditor.config.yml` が不正な YAML だと `parsePluginConfig` が `[]` を返し、プラグインなしで起動する（エラーで落ちはしない）。
+### plugin.json のパス解決とセキュリティ
 
-### 🟡 CSS 注入
+- `mooreseditor.config.yml` の `plugins[].dir` は開いたプロジェクトディレクトリ基準の相対パスとして解決される。
+- `dir` に `..` セグメントや絶対パスを書くと `loader.ts` の `resolvePluginDir` で拒否される。
+- `plugin.json` の `entry` / `styles` も plugin package 境界内の相対パスとして検証される。
+- `mooreseditor.config.yml` が不正な YAML だと `parsePluginConfig` が `[]` を返し、プラグインなしで起動する。
 
-- `styles` の CSS は `loader.ts` の `injectPluginStyles` が plugin id 単位の `<link>` として動的注入する。同じ plugin id + href の重複注入は避ける。
-- 対策: クラス名にプラグイン id を接頭辞（`plugin-<name>__...`）、または Mantine のスタイルシステムを使う。
-- ホストの Mantine theme（`primaryColor: "orange"`）が支配的。プラグインで nested `MantineProvider` は避け、`useMantineTheme()` で実行時にテーマを読む。
+### CSS 注入
 
-### 🟡 dev と prod の挙動差
+- `styles` の CSS は `loader.ts` の `injectPluginStyles` が plugin id 単位の `<link>` として動的注入する。
+- クラス名には plugin id を接頭辞として付けるか、Mantine のスタイルシステムを使う。
+- ホストの Mantine theme が支配的。プラグインで nested `MantineProvider` は避け、`useMantineTheme()` で実行時にテーマを読む。
+
+### dev と prod の挙動差
 
 | 環境                         | プラグインロード                               | extraFile 保存先         |
 | ---------------------------- | ---------------------------------------------- | ------------------------ |
-| `pnpm run dev`（純ブラウザ） | 実プロジェクトを開けない。サンプルプロジェクトにはプラグイン宣言なし | —                        |
-| `pnpm run tauri:dev`         | Tauri ランタイムあり → prod と同経路           | 実プロジェクトに書き込み |
-| ビルド済み `.app`            | `convertFileSrc`（asset プロトコル）+ Tauri FS | 実プロジェクトに書き込み |
+| `pnpm run dev`（純ブラウザ） | 実プロジェクトを開けない                       | なし                     |
+| `pnpm run tauri:dev`         | Tauri ランタイムあり、prod と同経路            | 実プロジェクトに書き込み |
+| ビルド済み `.app`            | `convertFileSrc` + Tauri FS                    | 実プロジェクトに書き込み |
 
-- dev の `/api/dev-fs/*` は `tmp/e2e-output/` 配下に書く（E2E 隔離用）ため、`saveExtraFile` の本番挙動は純ブラウザ dev では確認できない。
+dev の `/api/dev-fs/*` は E2E 隔離用。`saveExtraFile` の本番挙動は純ブラウザ dev では確認できない。
 
-### 🟡 Tauri FS スコープ（prod のみ効く）
+### Tauri FS スコープ
 
-prod でプラグインファイルが読めない時はここ:
+prod でプラグインファイルが読めない時はここを確認する。
 
-- `apps/mooreseditor/src-tauri/tauri.conf.json` の `assetProtocol.scope`（読み取り用、`$HOME/**/plugins/*/dist/**` 等）。
-- `apps/mooreseditor/src-tauri/capabilities/default.json` の `fs:scope`（読み書き用、`**/plugins/**` / `**/.mooreseditor/**`）。
-- プロジェクトを開くと `add_project_to_scope`（`src-tauri/src/lib.rs`）がプロジェクト全体を再帰的にスコープ追加する。
-- **これらの設定を変えたら Tauri を再ビルドしないと反映されない**（`tauri:dev` は毎回 Rust ビルドされるので影響なし）。
+- `apps/mooreseditor/src-tauri/tauri.conf.json` の `assetProtocol.scope`
+- `apps/mooreseditor/src-tauri/capabilities/default.json` の `fs:scope`
+- `src-tauri/src/lib.rs` の `add_project_to_scope`
 
-### 🟢 ビューの遅延マウント
-
-`App.tsx` はプラグインビューを「初めてアクティブ化されるまで DOM に追加しない」（`@xyflow/react` がサイズ0で初期化されレイアウト崩壊するのを防ぐため）。プラグインは「初回アクティブ化まで `render()` が呼ばれない」前提で設計する。一度表示されたら以後は `display:none` で隠すだけ（内部状態は保持）。
+設定変更後は Tauri を再ビルドする。
 
 ## トラブルシュート早見表
 
 | 症状                                     | 原因と対処                                                                                        |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `does not provide an export named '...'` | `mooresPlugin()` の適用漏れ、または shared deps registry の不足を確認                              |
+| `does not provide an export named '...'` | `mooresPlugin()` の適用漏れ、または shared deps registry / host import map の不足を確認           |
 | プラグインが0個（タブが増えない）        | 純ブラウザ dev で実行している / `mooreseditor.config.yml` の `plugins:` 漏れ / 不正 YAML          |
-| `プラグインのロードに失敗` (console)     | `plugin.json` の `entry`/`styles` パスミス、または対象プロジェクトに `plugin.json`/`dist/` 未配置 |
+| `プラグインのロードに失敗`               | `plugin.json` の `entry`/`styles` パスミス、または対象プロジェクトに `plugin.json`/`dist/` 未配置 |
 | prod でファイルが読めない                | Tauri FS スコープ設定 + Tauri 再ビルド                                                            |
-| Context not found（notification 等）     | ホスト側 `NotificationProvider` の外でフックを呼んでいる                                          |
+| Context not found                        | host-shared 依存が bundle に混入していないか確認                                                  |
 
 ## 完成チェックリスト
 
-```
+```text
+[ ] npm SDK `@moorestech/mooreseditor-plugin-sdk` を exact pin
 [ ] vite.config.ts で `mooresPlugin(pluginMetadata)` を使う
-[ ] `pnpm check:plugin-contracts` が通る
-[ ] @tauri-apps/* は EXTERNAL に含めない（プラグインに同梱）
+[ ] 手動 EXTERNAL 配列を書いていない
+[ ] @tauri-apps/* は shared deps に含めない
 [ ] PluginManifest を default export、id/name/version/createView がある
 [ ] plugin.json と runtime manifest の id/name/version が一致
 [ ] isDirty() / save() を実装（または isDirty: () => false で明示）

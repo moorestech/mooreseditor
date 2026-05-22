@@ -1,8 +1,13 @@
 {
-  "name": "@mooreseditor/plugin-sdk",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@moorestech/mooreseditor-plugin-sdk",
+  "version": "1.0.0",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sakastudio/mooreseditor.git",
+    "directory": "packages/plugin-sdk"
+  },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -12,8 +17,28 @@
       "default": "./src/vite/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./vite": {
+        "types": "./dist/vite/index.d.ts",
+        "default": "./dist/vite/index.js"
+      }
+    }
+  },
   "scripts": {
+    "build": "tsup && node scripts/build-vite-subpath.mjs",
     "lint": "eslint src",
+    "prepack": "pnpm run build",
     "type-check": "tsc --noEmit",
     "test": "vitest run"
   },
@@ -44,6 +69,7 @@
     "@types/react": "^19.0.10",
     "@vitejs/plugin-react": "^4.3.4",
     "jsdom": "^26.1.0",
+    "tsup": "^8.5.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.28.0",
     "vite": "^6.0.3",

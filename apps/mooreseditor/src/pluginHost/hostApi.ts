@@ -11,7 +11,7 @@ import {
 
 import { saveProjectFiles } from "../utils/projectPersistence";
 
-import type { Column, HostAPI, Schema } from "@mooreseditor/plugin-sdk";
+import type { Column, HostAPI, Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * createHostApi に注入するホスト側の生 state とハンドラ。

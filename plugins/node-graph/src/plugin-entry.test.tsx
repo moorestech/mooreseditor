@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import manifest from "./plugin-entry";
 
-import type { Column, HostAPI } from "@mooreseditor/plugin-sdk";
+import type { Column, HostAPI } from "@moorestech/mooreseditor-plugin-sdk";
 
 vi.mock("./index", () => ({
   default: ({ ref, onRequestSave }: any): null => {

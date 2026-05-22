@@ -1,4 +1,4 @@
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 /**
  * スキーマ定義のマップ

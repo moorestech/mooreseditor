@@ -13,7 +13,7 @@ import type {
   Column,
   ObjectPropertySchema,
   ObjectSchema,
-} from "@mooreseditor/plugin-sdk";
+} from "@moorestech/mooreseditor-plugin-sdk";
 
 export function buildSchemaRecordIndex(
   schemaId: string,

@@ -1,4 +1,4 @@
-import { createInitialValue } from "@mooreseditor/plugin-sdk";
+import { createInitialValue } from "@moorestech/mooreseditor-plugin-sdk";
 
 import {
   RECIPE_SCHEMA_MAP,
@@ -19,7 +19,7 @@ import type {
 import type { NodeSchemaRef } from "./types";
 import type { RecipeEdgeType, RecipeReference } from "../../../types/nodeGraph";
 import type { SchemaMeta } from "../../../utils/schemaMeta";
-import type { Column, ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { Column, ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 function pickGuidForForeignKey(
   propertyKey: string,

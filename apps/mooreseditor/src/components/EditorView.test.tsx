@@ -5,7 +5,7 @@ import "@testing-library/jest-dom";
 import EditorView from "./EditorView";
 
 import type { Column } from "../hooks/useJson";
-import type { Schema } from "@mooreseditor/plugin-sdk";
+import type { Schema } from "@moorestech/mooreseditor-plugin-sdk";
 
 import { render, screen, fireEvent, waitFor } from "@/test/utils/test-utils";
 
@@ -34,7 +34,7 @@ vi.mock("./Sidebar", () => ({
   ),
 }));
 
-vi.mock("@mooreseditor/plugin-sdk", async (importOriginal) => {
+vi.mock("@moorestech/mooreseditor-plugin-sdk", async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as object),

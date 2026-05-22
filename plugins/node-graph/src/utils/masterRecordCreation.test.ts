@@ -6,7 +6,7 @@ import {
 } from "./masterRecordCreation";
 
 import type { SchemaMeta } from "./schemaMeta";
-import type { Column, ObjectSchema } from "@mooreseditor/plugin-sdk";
+import type { Column, ObjectSchema } from "@moorestech/mooreseditor-plugin-sdk";
 
 const itemElementSchema: ObjectSchema = {
   type: "object",

@@ -1,0 +1,20 @@
+{
+  "extends": "@mooreseditor/typescript-config/base.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "dist/vite",
+    "rootDir": "src/vite",
+    "baseUrl": "."
+  },
+  "include": [
+    "src/vite/index.ts",
+    "src/vite/mooresPlugin.ts",
+    "src/vite/sharedDeps.ts"
+  ]
+}

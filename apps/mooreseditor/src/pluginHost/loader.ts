@@ -21,7 +21,7 @@ export interface PluginJson {
  *
  * `projectDir` は `open()` ダイアログ由来の絶対パス。`pluginDir` はプロジェクト
  * 設定 yml の `plugins[].dir`（プロジェクトディレクトリからの相対パス、例:
- * `./plugins/node-graph`）。`@tauri-apps/plugin-fs` の `readTextFile` も
+ * `./plugins/node-graph` や `../mooreseditor/plugins/node-graph`）。`@tauri-apps/plugin-fs` の `readTextFile` も
  * `asset:` プロトコルの `convertFileSrc` も絶対パスを要求するため、ロード前に
  * 絶対化する。
  *
@@ -35,18 +35,13 @@ export interface PluginJson {
  *   このパスが実際に使われることはない）。
  *
  * セキュリティ: `pluginDir` はプロジェクト所有者自身の設定ファイル由来だが、
- * `..` セグメントと絶対パスによるプロジェクト外への脱出を最低限ガードする。
+ * 絶対パスと `plugins/<name>` 直下以外の指定を最低限ガードする。
  */
-async function resolvePluginDir(
+export async function resolvePluginDir(
   projectDir: string,
   pluginDir: string,
 ): Promise<string> {
-  if (
-    pluginDir.split(/[/\\]/).includes("..") ||
-    /^([a-zA-Z]:[/\\]|[/\\])/.test(pluginDir)
-  ) {
-    throw new Error(`Invalid plugin dir: ${pluginDir}`);
-  }
+  assertPluginDirSupportedByAssetScope(pluginDir);
   try {
     const { resolve } = await import("@tauri-apps/api/path");
     return await resolve(projectDir, pluginDir);
@@ -161,10 +156,20 @@ export function assertPluginMetadataMatchesJson(
 
 export function assertPluginDirSupportedByAssetScope(pluginDir: string): void {
   const normalized = pluginDir.replace(/\\/g, "/").replace(/^\.\//, "");
+  if (/^([a-zA-Z]:\/|\/)/.test(normalized)) {
+    throw new Error(`Invalid plugin dir: ${pluginDir}`);
+  }
+
   const segments = normalized.split("/").filter(Boolean);
-  if (segments.length !== 2 || segments[0] !== "plugins") {
+  const pluginSegmentIndex = segments.length - 2;
+  if (
+    pluginSegmentIndex < 0 ||
+    segments[pluginSegmentIndex] !== "plugins" ||
+    segments[segments.length - 1] === ".." ||
+    segments[segments.length - 1] === "."
+  ) {
     throw new Error(
-      `Unsupported plugin dir "${pluginDir}". Production asset scope currently supports only plugins/<name>.`,
+      `Unsupported plugin dir "${pluginDir}". Production asset scope currently supports only directories whose final parent is plugins/<name>.`,
     );
   }
 }

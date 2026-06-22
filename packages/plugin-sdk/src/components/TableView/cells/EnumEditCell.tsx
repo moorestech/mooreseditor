@@ -34,7 +34,8 @@ export const EnumEditCell: React.FC<EnumEditCellProps> = ({
         if (e.key === "Enter") e.preventDefault();
       }}
       autoFocus
-      searchable={false}
+      searchable
+      nothingFoundMessage="No options found"
       allowDeselect={false}
       withCheckIcon={false}
       defaultDropdownOpened={true}

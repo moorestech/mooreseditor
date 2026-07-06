@@ -192,7 +192,9 @@ export default function EditorView({
                     updatedItem.data = newData;
                   } else {
                     // Deep copy for nested data
-                    updatedItem.data = { ...updatedItem.data };
+                    updatedItem.data = Array.isArray(updatedItem.data)
+                      ? [...updatedItem.data]
+                      : { ...updatedItem.data };
                     let ref: any = updatedItem.data;
 
                     // Navigate to the parent of the target
@@ -270,7 +272,9 @@ export default function EditorView({
                   } else {
                     // ネストされたデータの更新
                     // イミュータブルに更新するために各レベルをコピー
-                    updatedItem.data = { ...updatedItem.data };
+                    updatedItem.data = Array.isArray(updatedItem.data)
+                      ? [...updatedItem.data]
+                      : { ...updatedItem.data };
                     let ref: any = updatedItem.data;
 
                     // パスの最後の要素以外を辿る

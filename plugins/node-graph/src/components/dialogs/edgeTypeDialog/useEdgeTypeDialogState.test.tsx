@@ -62,4 +62,105 @@ describe("useEdgeTypeDialogState", () => {
 
     expect(columns[0].data.data).toHaveLength(0);
   });
+
+  it("does not reset the selected recipes when rerendered while open", () => {
+    const columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
+    const setJsonData = vi.fn();
+    const onConfirm = vi.fn();
+
+    const createProps = () => ({
+      opened: true,
+      onConfirm,
+      onCancel: vi.fn(),
+      jsonData: columns,
+      setJsonData,
+      schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+      sourceNode: {
+        id: "source",
+        type: "item",
+        data: { masterGuid: "item-a" },
+      } as any,
+      targetNode: {
+        id: "target",
+        type: "item",
+        data: { masterGuid: "item-b" },
+      } as any,
+      onMarkDirty: vi.fn(),
+      initialRecipeRefs: [
+        { edgeType: "craftRecipe" as const, masterGuid: "initial-guid" },
+      ],
+    });
+
+    const { result, rerender } = renderHook(
+      (props: ReturnType<typeof createProps>) =>
+        useEdgeTypeDialogState(props),
+      { initialProps: createProps() },
+    );
+
+    expect(result.current.craftRecipeGuids).toEqual(["initial-guid"]);
+
+    act(() => {
+      result.current.setCraftRecipeGuids(["user-selected-guid"]);
+    });
+
+    rerender(createProps());
+
+    expect(result.current.craftRecipeGuids).toEqual(["user-selected-guid"]);
+  });
+
+  it("removes only unselected draft recipes when the dialog is confirmed", () => {
+    let columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
+    const setJsonData = vi.fn((updater) => {
+      columns = typeof updater === "function" ? updater(columns) : updater;
+    });
+    const onConfirm = vi.fn();
+
+    const { result } = renderHook(() =>
+      useEdgeTypeDialogState({
+        opened: true,
+        onConfirm,
+        onCancel: vi.fn(),
+        jsonData: columns,
+        setJsonData,
+        schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+        sourceNode: {
+          id: "source",
+          type: "item",
+          data: { masterGuid: "item-a" },
+        } as any,
+        targetNode: {
+          id: "target",
+          type: "item",
+          data: { masterGuid: "item-b" },
+        } as any,
+        onMarkDirty: vi.fn(),
+      }),
+    );
+
+    act(() => {
+      result.current.handleCreateRecipe("craftRecipe");
+      result.current.handleCreateRecipe("craftRecipe");
+    });
+
+    const [selectedGuid, unselectedGuid] = result.current.craftRecipeGuids;
+    expect(columns[0].data.data).toHaveLength(2);
+
+    act(() => {
+      result.current.setCraftRecipeGuids([selectedGuid]);
+    });
+
+    act(() => {
+      result.current.handleConfirm();
+    });
+
+    const remainingGuids = columns[0].data.data.map(
+      (row: Record<string, unknown>) => row.craftRecipeGuid,
+    );
+    expect(remainingGuids).toEqual([selectedGuid]);
+    expect(remainingGuids).not.toContain(unselectedGuid);
+    expect(onConfirm).toHaveBeenCalledWith({
+      edgeType: "recipe",
+      recipeRefs: [{ edgeType: "craftRecipe", masterGuid: selectedGuid }],
+    });
+  });
 });

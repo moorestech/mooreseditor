@@ -60,6 +60,7 @@ interface NodeCanvasProps {
   onEdgeClick?: (event: React.MouseEvent, edge: ReactFlowEdge) => void;
   viewport: Viewport;
   onViewportChange: (viewport: Viewport) => void;
+  deletionDisabled?: boolean;
 }
 
 export default function NodeCanvas({
@@ -77,6 +78,7 @@ export default function NodeCanvas({
   onEdgeClick,
   viewport,
   onViewportChange,
+  deletionDisabled = false,
 }: NodeCanvasProps) {
   const handleSelectionChange = useCallback(
     ({ nodes: selectedNodes }: { nodes: ReactFlowNode[] }) => {
@@ -126,7 +128,7 @@ export default function NodeCanvas({
       snapToGrid
       snapGrid={[20, 20]}
       elevateEdgesOnSelect
-      deleteKeyCode="Delete"
+      deleteKeyCode={deletionDisabled ? null : ["Delete", "Backspace"]}
       style={{ width: "100%", height: "100%" }}
     >
       <Background variant={BackgroundVariant.Dots} gap={20} size={1} />

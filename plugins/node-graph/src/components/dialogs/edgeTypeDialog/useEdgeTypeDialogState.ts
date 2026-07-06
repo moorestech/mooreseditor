@@ -45,10 +45,17 @@ export function useEdgeTypeDialogState({
   const createdDraftRecipesRef = useRef<
     { schemaId: string; recipeGuid: string }[]
   >([]);
+  const initializedForOpenRef = useRef(false);
 
   // Initialize from existing edge data when editing
   useEffect(() => {
-    if (!opened) return;
+    if (!opened) {
+      initializedForOpenRef.current = false;
+      return;
+    }
+    if (initializedForOpenRef.current) return;
+    initializedForOpenRef.current = true;
+
     if (initialRecipeRefs && initialRecipeRefs.length > 0) {
       setMode("recipe");
       setCraftRecipeGuids(
@@ -114,8 +121,11 @@ export function useEdgeTypeDialogState({
     createdDraftRecipesRef.current = [];
   };
 
-  const cleanupCreatedDraftRecipes = () => {
-    const drafts = createdDraftRecipesRef.current;
+  const cleanupCreatedDraftRecipes = (
+    shouldRemove: (draft: { schemaId: string; recipeGuid: string }) => boolean =
+      () => true,
+  ) => {
+    const drafts = createdDraftRecipesRef.current.filter(shouldRemove);
     if (drafts.length === 0) return;
 
     setJsonData((prev) =>
@@ -148,12 +158,19 @@ export function useEdgeTypeDialogState({
         return nextColumns;
       }, prev),
     );
-    createdDraftRecipesRef.current = [];
+    createdDraftRecipesRef.current =
+      createdDraftRecipesRef.current.filter((draft) => !shouldRemove(draft));
   };
 
   const handleConfirm = () => {
     if (mode === "recipe") {
       if (selectedRecipeRefs.length === 0) return;
+      const selectedKeys = new Set(
+        selectedRecipeRefs.map((ref) => `${RECIPE_SCHEMA_MAP[ref.edgeType]}:${ref.masterGuid}`),
+      );
+      cleanupCreatedDraftRecipes(
+        (draft) => !selectedKeys.has(`${draft.schemaId}:${draft.recipeGuid}`),
+      );
       onConfirm({ edgeType: "recipe", recipeRefs: selectedRecipeRefs });
       createdDraftRecipesRef.current = [];
     } else {

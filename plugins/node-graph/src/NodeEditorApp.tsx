@@ -90,6 +90,8 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     confirmConnection,
     cancelConnection,
     onMarkDirty: handleMarkDirty,
+    setJsonData: props.setJsonData,
+    schemaMetas,
   });
 
   // Delete handler + keyboard shortcut
@@ -97,8 +99,6 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     schemaMetas,
     setJsonData: props.setJsonData,
     deleteSelected,
-    hasSelection,
-    isDialogOpen: isEdgeDialogOpen,
   });
 
   // Context menu + node creation
@@ -165,6 +165,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             onEdgeClick={closeContextMenu}
             viewport={state.viewport}
             onViewportChange={handleViewportChange}
+            deletionDisabled={isEdgeDialogOpen}
           />
           <CanvasContextMenu
             position={contextMenuPos}

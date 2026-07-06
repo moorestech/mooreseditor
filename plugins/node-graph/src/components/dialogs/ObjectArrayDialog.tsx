@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Modal, Stack } from "@mantine/core";
 import { FormView, TableView } from "@moorestech/mooreseditor-plugin-sdk";
@@ -30,29 +30,46 @@ export default function ObjectArrayDialog({
   jsonData,
   onDataChange,
 }: ObjectArrayDialogProps) {
-  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
   const [nestedDialog, setNestedDialog] = useState<NestedDialogState | null>(
     null,
   );
 
+  const selectedRowIndex = selectedRow === null ? -1 : data.indexOf(selectedRow);
+
+  useEffect(() => {
+    if (selectedRow !== null && !data.includes(selectedRow)) {
+      setSelectedRow(null);
+      setNestedDialog(null);
+    }
+  }, [data, selectedRow]);
+
   const handleClose = useCallback(() => {
-    setSelectedRowIndex(null);
+    setSelectedRow(null);
     setNestedDialog(null);
     onClose();
   }, [onClose]);
 
-  const handleRowSelect = useCallback((rowIndex: number) => {
-    setSelectedRowIndex(rowIndex);
-  }, []);
+  const handleRowSelect = useCallback(
+    (rowIndex: number) => {
+      setSelectedRow(data[rowIndex] ?? null);
+    },
+    [data],
+  );
 
   const handleRowDataChange = useCallback(
     (newRowData: any) => {
-      if (selectedRowIndex === null) return;
+      const currentIndex = selectedRow === null ? -1 : data.indexOf(selectedRow);
+      if (currentIndex === -1) {
+        setSelectedRow(null);
+        return;
+      }
       const newData = [...data];
-      newData[selectedRowIndex] = newRowData;
+      newData[currentIndex] = newRowData;
+      setSelectedRow(newRowData);
       onDataChange(newData);
     },
-    [data, selectedRowIndex, onDataChange],
+    [data, selectedRow, onDataChange],
   );
 
   // Handler for nested object array clicks within the FormView
@@ -76,20 +93,25 @@ export default function ObjectArrayDialog({
 
   // Get nested data from the selected row using the nested dialog path
   const getNestedData = useCallback((): any[] => {
-    if (selectedRowIndex === null || !nestedDialog) return [];
-    let current: any = data[selectedRowIndex];
+    const currentIndex = selectedRow === null ? -1 : data.indexOf(selectedRow);
+    if (currentIndex === -1 || !nestedDialog) return [];
+    let current: any = data[currentIndex];
     for (const key of nestedDialog.path) {
       if (current == null) return [];
       current = current[key];
     }
     return Array.isArray(current) ? current : [];
-  }, [data, selectedRowIndex, nestedDialog]);
+  }, [data, selectedRow, nestedDialog]);
 
   // Handle data changes in the nested dialog
   const handleNestedDataChange = useCallback(
     (newNestedData: any[]) => {
-      if (selectedRowIndex === null || !nestedDialog) return;
-      const rowData = { ...data[selectedRowIndex] };
+      const currentIndex = selectedRow === null ? -1 : data.indexOf(selectedRow);
+      if (currentIndex === -1 || !nestedDialog) {
+        setSelectedRow(null);
+        return;
+      }
+      const rowData = { ...data[currentIndex] };
       // Navigate to the parent and set the data at the last key
       let current: any = rowData;
       const pathKeys = nestedDialog.path;
@@ -104,10 +126,11 @@ export default function ObjectArrayDialog({
       current[pathKeys[pathKeys.length - 1]] = newNestedData;
 
       const newData = [...data];
-      newData[selectedRowIndex] = rowData;
+      newData[currentIndex] = rowData;
+      setSelectedRow(rowData);
       onDataChange(newData);
     },
-    [data, selectedRowIndex, nestedDialog, onDataChange],
+    [data, selectedRow, nestedDialog, onDataChange],
   );
 
   const hasItemSchema =
@@ -130,7 +153,7 @@ export default function ObjectArrayDialog({
             onDataChange={onDataChange}
             onRowSelect={hasItemSchema ? handleRowSelect : undefined}
           />
-          {selectedRowIndex !== null &&
+          {selectedRowIndex !== -1 &&
             hasItemSchema &&
             data?.[selectedRowIndex] && (
               <div

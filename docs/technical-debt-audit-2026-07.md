@@ -49,8 +49,8 @@
 
 - **debounce 入力の未確定編集が消える** — plugin-sdk の NumberInput/StringInput/Vector系。debounce(300ms) 中にアンマウントや Ctrl+S が起きると最後の編集を捨てる（`useDebounce.ts:24-30` がタイマーをクリア）。flush-on-unmount が必要。
 - **Vector 入力で別軸の編集が上書き消失** — `Vector2Input.tsx:21-51`（Vector3/4 も同型）。X→Y を素早く編集すると単一 debounce タイマーの clear により X が古い値へ巻き戻る。
-- **node-graph: 依存エッジを全削除しても master の `prevResearchNodeGuids` が残留** — `exportToMasterResearchPatch.ts:64-67`。「依存を消せない」実害。research ノード自体を削除しても孤児データが残る。
-- **node-graph: レシピエッジ編集中に選択がリセット** — `useEdgeTypeDialogState.ts:50-65`。effect 依存に毎レンダー新配列が入り、既存エッジへのレシピ追加が実質機能しない。
+- **node-graph: 依存エッジを全削除しても master の `prevResearchNodeGuids` が残留** — **修正済み**（`fix/node-graph-audit-fixes`）。常時上書き＋重複/自己ループ除去に変更。ただし「research ノード自体を削除した場合の孤児データ凍結」は設計判断が必要なため未対応（[node-graph 申し送り](./node-graph-audit-handover-2026-07.md) 参照）。
+- **node-graph: レシピエッジ編集中に選択がリセット** — **修正済み**（`fix/node-graph-audit-fixes`）。useMemo 化＋初期化ガードで解消。あわせて編集確定の非対称性（型変更不可・旧レシピ孤立・ドラフト孤立）も修正。
 
 ### クラッシュ系（Rules of Hooks 違反）
 
@@ -61,7 +61,7 @@
 ### 基盤・方針系
 
 - **`strictNullChecks: false`** — `packages/typescript-config/base.json`。`"strict": true` と同居して全ワークスペースの null 安全を無効化。C1/C2 のような穴を型で防げない根本原因。段階的に有効化を推奨。
-- **node-graph のスキーマ名・フィールド名ハードコード** — `exportToMasterResearchPatch.ts` / `spatialUnlock.ts` / `recipeEdgeConstants.ts` が `"research"` `prevResearchNodeGuids` `craftRecipes` を直書き、入出力判定は `/(output|to|...)/i` の正規表現ヒューリスティック。CLAUDE.md「スキーマ構造をハードコードしない」に違反。
+- **node-graph のスキーマ名・フィールド名ハードコード** — `exportToMasterResearchPatch.ts` / `spatialUnlock.ts` / `recipeEdgeConstants.ts` が `"research"` `prevResearchNodeGuids` `craftRecipes` を直書き、入出力判定は `/(output|to|...)/i` の正規表現ヒューリスティック。CLAUDE.md「スキーマ構造をハードコードしない」に違反。→ `"research"` の schemaId 解決のみ `fix/node-graph-audit-fixes` で動的化済み。フィールド名群は SchemaMeta の構造的限界のため設計判断待ち（[node-graph 申し送り](./node-graph-audit-handover-2026-07.md) 参照）。
 - **Windows パストラバーサル** — `hostApi.ts:55-70` と `projectPersistence.ts:23-38` の `validateRelativePath` が `\` を正規化せず `"..\\..\\x"` が検証を通過。読み込み系（`pluginPaths.ts`）は正規化済みで書き込み系だけ抜けている不整合。（C3 の一部として許容範囲だが、修正コストは低い）
 - **偽依存 `dnd-kit: ^0.0.2`** — `apps/mooreseditor/package.json`。正規の `@dnd-kit/*` とは別物の無関係パッケージで未使用。タイポスクワットリスクのため削除推奨。
 - **FS capability の `**/plugins/**` グロブが広すぎ** — `capabilities/default.json`。パスのどこかに `plugins` を含む全ファイルが静的に許可される。（C3 の一部）
@@ -73,7 +73,7 @@
 - **数値型の外部キーが破綻** — Mantine Select が文字列前提のため数値 id の FK は表示名が出ず、保存で文字列に型ドリフト（`ForeignKeySelect.tsx:40` 他）。
 - **schemaToZod の検証が型ごとに非一貫** — integer/number/boolean/array は必須でも無条件 `.optional()`（`schemaToZod.ts:83-148`）。ペースト検証をすり抜ける。
 - **switch 初回選択で必須フィールドが自動生成されない** — `useSwitchFieldAutoGeneration.ts:30-33` の undefined センチネル誤用。また `./` 相対パスしか対応せず `../` は黙って無視（`switchFieldProcessor.ts` / `dataInitializer.ts`）。
-- **node-graph: ノード座標だけから unlock 対象を毎保存時に再計算** — `spatialUnlock.ts`。ノードを動かして保存しただけでゲームロジックデータが静かに書き換わる設計。孤児ドラフトレシピ、レシピ全削除・種別変更不可も同ダイアログ周りに集中。
+- **node-graph: ノード座標だけから unlock 対象を毎保存時に再計算** — `spatialUnlock.ts`。ノードを動かして保存しただけでゲームロジックデータが静かに書き換わる設計。※孤児ドラフトレシピ・レシピ全削除・種別変更不可は `fix/node-graph-audit-fixes` で修正済み。空間アンロック設計自体は未対応。
 - **useSchema が二重実装** — `hooks/useSchema.ts`（実使用）と `hooks/useSchema/index.ts`＋loaders 群（完全デッドコード・引数非互換）。誤って切り替えるとスキーマロード全滅。整理推奨。
 - **SearchOverlay の mark.js が React 管理 DOM を直接改変** — 検索中に編集すると切り離された DOM 参照・reconcile 不整合（`SearchOverlay.tsx:126-180`）。
 - **パフォーマンス** — node-graph でノードドラッグ毎に全ノード×全マスタ走査（`NodeEditorApp.tsx:39-46`）、エッジ選択だけで全ラベル再構築。
@@ -89,8 +89,8 @@
 
 - 本番コードに `console.log` 19件（保存前のマスタデータ丸ごと出力を含む）。
 - React key に配列 index を使用（Sidebar/EditorView/DataSidebar）。
-- エッジ ID が `Date.now()` のみで同一 ms 衝突（ノード側はカウンタ併用で非一貫、`useNodeOperations.ts:113,141`）。
-- Delete キーの二重ハンドリング（`useDeleteHandler.ts` と React Flow の `deleteKeyCode`）。
+- エッジ ID が `Date.now()` のみで同一 ms 衝突 — **修正済み**（`fix/node-graph-audit-fixes`、カウンタ併用の `generateEdgeId()` に統一）。
+- Delete キーの二重ハンドリング — **修正済み**（`fix/node-graph-audit-fixes`、React Flow の `deleteKeyCode` に一本化。Backspace 対応・ダイアログ表示中は無効化）。
 - デバッグ用 `greet` IPC コマンド残置（`lib.rs:4-7`）。（C3 の一部）
 - `RefResolver.debugBlocksSchema` が `"blocks"` スキーマ構造をハードコード（CLAUDE.md 違反のデバッグ残骸）。
 - `EnumInput` が default を表示するのにデータへ書き戻さない乖離（`EnumInput.tsx:18`）。

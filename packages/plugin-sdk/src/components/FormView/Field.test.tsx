@@ -5,9 +5,24 @@ import "@testing-library/jest-dom";
 import { render, screen } from "../../test/utils/test-utils";
 
 import Field from "./Field";
+import * as primitiveRendering from "./renderPrimitiveInput";
 
-import type { Schema } from "../../schema";
+import type { PrimitiveSchema, Schema } from "../../schema";
 
+const primitiveInputFamilies = {
+  string: "string-input",
+  enum: "enum-input",
+  uuid: "uuid-input",
+  integer: "integer-input",
+  number: "number-input",
+  boolean: "boolean-input",
+  vector2: "vector2-input",
+  vector3: "vector3-input",
+  vector4: "vector4-input",
+  vector2Int: "vector2-input",
+  vector3Int: "vector3-input",
+  vector4Int: "vector4-input",
+} as const satisfies Record<PrimitiveSchema["type"], string>;
 
 // Mock the input components
 vi.mock("./inputs", () => ({
@@ -99,6 +114,39 @@ describe("Field", () => {
     render(<Field {...defaultProps} />);
 
     expect(screen.getByTestId("string-input")).toBeInTheDocument();
+  });
+
+  it.each(Object.entries(primitiveInputFamilies))(
+    "dispatches %s schemas to the %s family",
+    (type, testId) => {
+      const schema =
+        type === "enum"
+          ? { type, options: ["first", "second"] }
+          : { type };
+
+      render(
+        <Field
+          {...defaultProps}
+          schema={schema as PrimitiveSchema}
+          data={type.startsWith("vector") ? [] : undefined}
+        />,
+      );
+
+      expect(screen.getByTestId(testId)).toBeInTheDocument();
+    },
+  );
+
+  it("registers a renderer for every primitive schema kind", () => {
+    const rendererRegistry = (
+      primitiveRendering as typeof primitiveRendering & {
+        primitiveInputRenderers?: Record<string, unknown>;
+      }
+    ).primitiveInputRenderers;
+
+    expect(rendererRegistry).toBeDefined();
+    expect(Object.keys(rendererRegistry ?? {}).sort()).toEqual(
+      Object.keys(primitiveInputFamilies).sort(),
+    );
   });
 
   it("should render an integer input for integer schema", () => {
@@ -284,6 +332,27 @@ describe("Field", () => {
         />,
       );
     }).not.toThrow();
+
+    expect(
+      screen.queryByRole("button", { name: "Edit Test Field" }),
+    ).not.toBeInTheDocument();
+
+    expect(() => {
+      rerender(
+        <Field
+          {...defaultProps}
+          schema={schema}
+          data={[]}
+          path={["buttons"]}
+          parentData={{ kind: "loop" }}
+          rootData={{ kind: "loop" }}
+          onObjectArrayClick={vi.fn()}
+        />,
+      );
+    }).not.toThrow();
+
+    expect(screen.getByRole("button", { name: "Edit Test Field" }))
+      .toBeInTheDocument();
   });
 
   it("should call onChange with updated value", () => {
@@ -362,11 +431,37 @@ describe("Field", () => {
     expect(screen.getByText("Invalid schema")).toBeInTheDocument();
   });
 
+  it("treats an incomplete switch schema as invalid", () => {
+    const schema: any = { switch: "./kind" };
+    render(<Field {...defaultProps} schema={schema} />);
+
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats a non-string switch path as invalid", () => {
+    const schema: any = { switch: null, cases: [] };
+
+    expect(() => render(<Field {...defaultProps} schema={schema} />))
+      .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
   it("should handle unknown schema type", () => {
     const schema: any = { type: "unknown" };
     render(<Field {...defaultProps} schema={schema} />);
 
     // Should render "Unsupported type" message
+    expect(screen.getByText("Unsupported type: unknown")).toBeInTheDocument();
+  });
+
+  it("does not let switch-like properties hide an unknown type", () => {
+    const schema: any = {
+      type: "unknown",
+      switch: "./kind",
+      cases: [],
+    };
+    render(<Field {...defaultProps} schema={schema} />);
+
     expect(screen.getByText("Unsupported type: unknown")).toBeInTheDocument();
   });
 });

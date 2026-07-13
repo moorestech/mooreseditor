@@ -1,30 +1,131 @@
-import React from "react";
-
-import { Text } from "@mantine/core";
+import type { ReactElement } from "react";
 
 import { FieldWithCopyPaste } from "./FieldWithCopyPaste";
 import {
-  StringInput,
-  UuidInput,
+  BooleanInput,
   EnumInput,
   IntegerInput,
   NumberInput,
-  BooleanInput,
+  StringInput,
+  UuidInput,
   Vector2Input,
   Vector3Input,
   Vector4Input,
 } from "./inputs";
 
-import type { Column } from "../../schema";
-import type { ValueSchema } from "../../schema";
+import type { Column, PrimitiveSchema } from "../../schema";
 
 interface RenderPrimitiveInputProps {
-  schema: ValueSchema;
+  schema: PrimitiveSchema;
   data: any;
   jsonData?: Column[];
   onDataChange: (value: any) => void;
   isParentHovered?: boolean;
 }
+
+type PrimitiveInputRenderer = (
+  props: RenderPrimitiveInputProps,
+) => ReactElement;
+
+type PrimitiveInputRendererRegistry = {
+  [Type in PrimitiveSchema["type"]]: PrimitiveInputRenderer;
+};
+
+const renderStringInput: PrimitiveInputRenderer = (props) => (
+  <StringInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderUuidInput: PrimitiveInputRenderer = (props) => (
+  <UuidInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderEnumInput: PrimitiveInputRenderer = (props) => (
+  <EnumInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderIntegerInput: PrimitiveInputRenderer = (props) => (
+  <IntegerInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderNumberInput: PrimitiveInputRenderer = (props) => (
+  <NumberInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderBooleanInput: PrimitiveInputRenderer = (props) => (
+  <BooleanInput
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderVector2Input: PrimitiveInputRenderer = (props) => (
+  <Vector2Input
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderVector3Input: PrimitiveInputRenderer = (props) => (
+  <Vector3Input
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+const renderVector4Input: PrimitiveInputRenderer = (props) => (
+  <Vector4Input
+    value={props.data}
+    onChange={props.onDataChange}
+    schema={props.schema}
+    jsonData={props.jsonData}
+  />
+);
+
+export const primitiveInputRenderers = {
+  string: renderStringInput,
+  enum: renderEnumInput,
+  uuid: renderUuidInput,
+  integer: renderIntegerInput,
+  number: renderNumberInput,
+  boolean: renderBooleanInput,
+  vector2: renderVector2Input,
+  vector3: renderVector3Input,
+  vector4: renderVector4Input,
+  vector2Int: renderVector2Input,
+  vector3Int: renderVector3Input,
+  vector4Int: renderVector4Input,
+} satisfies PrimitiveInputRendererRegistry;
 
 export const renderPrimitiveInput = ({
   schema,
@@ -32,117 +133,23 @@ export const renderPrimitiveInput = ({
   jsonData,
   onDataChange,
   isParentHovered = false,
-}: RenderPrimitiveInputProps): React.ReactElement => {
-  const renderInput = () => {
-    switch (schema.type) {
-      case "string":
-        return (
-          <StringInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "uuid":
-        return (
-          <UuidInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "enum":
-        return (
-          <EnumInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "integer":
-        return (
-          <IntegerInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "number":
-        return (
-          <NumberInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "boolean":
-        return (
-          <BooleanInput
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "vector2":
-      case "vector2Int":
-        return (
-          <Vector2Input
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "vector3":
-      case "vector3Int":
-        return (
-          <Vector3Input
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      case "vector4":
-      case "vector4Int":
-        return (
-          <Vector4Input
-            value={data}
-            onChange={onDataChange}
-            schema={schema}
-            jsonData={jsonData}
-          />
-        );
-      default:
-        return (
-          <Text c="dimmed" size="sm">
-            Unsupported type: {schema.type}
-          </Text>
-        );
-    }
-  };
+}: RenderPrimitiveInputProps): ReactElement => {
+  const input = primitiveInputRenderers[schema.type]({
+    schema,
+    data,
+    jsonData,
+    onDataChange,
+    isParentHovered,
+  });
 
-  const input = renderInput();
-
-  // Wrap with copy/paste buttons for all valid types
-  if (schema.type) {
-    return (
-      <FieldWithCopyPaste
-        value={data}
-        onChange={onDataChange}
-        schema={schema}
-        isParentHovered={isParentHovered}
-      >
-        {input}
-      </FieldWithCopyPaste>
-    );
-  }
-
-  return input;
+  return (
+    <FieldWithCopyPaste
+      value={data}
+      onChange={onDataChange}
+      schema={schema}
+      isParentHovered={isParentHovered}
+    >
+      {input}
+    </FieldWithCopyPaste>
+  );
 };

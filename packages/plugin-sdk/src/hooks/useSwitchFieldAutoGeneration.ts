@@ -1,9 +1,19 @@
 import { useEffect, useRef } from "react";
 
+import { isValueSchemaType } from "../schema";
 import { DataInitializer } from "../utils/dataInitializer";
 import { deepMerge } from "../utils/deepMerge";
 
-import type { SwitchSchema, ValueSchema } from "../schema";
+import type { ValueSchema } from "../schema";
+
+interface SwitchCaseForAutoGeneration {
+  when: string | number | boolean;
+  type: string;
+}
+
+interface SwitchSchemaForAutoGeneration {
+  cases: SwitchCaseForAutoGeneration[];
+}
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する
@@ -14,7 +24,7 @@ import type { SwitchSchema, ValueSchema } from "../schema";
  */
 export function useSwitchFieldAutoGeneration(
   switchValue: any,
-  switchSchema: SwitchSchema | null,
+  switchSchema: SwitchSchemaForAutoGeneration | null,
   data: any,
   onDataChange: (newData: any) => void,
 ) {
@@ -37,7 +47,7 @@ export function useSwitchFieldAutoGeneration(
       // 新しいcaseを探す
       const newCase = switchSchema.cases?.find((c) => c.when === switchValue);
 
-      if (newCase && "type" in newCase) {
+      if (newCase && isValueSchemaType(newCase.type)) {
         // 新しいcaseの必須フィールドを生成
         const initializer = new DataInitializer([]);
         const requiredFields = initializer.createRequiredValue(

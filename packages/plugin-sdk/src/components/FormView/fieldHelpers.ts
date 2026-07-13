@@ -3,11 +3,11 @@ import {
   isValueSchemaType,
 } from "../../schema";
 
+import type { RuntimeSwitchSchema } from "./fieldTypes";
 import type {
   ArraySchema,
   ObjectSchema,
   PrimitiveSchema,
-  SwitchSchema,
   ValueSchema,
 } from "../../schema";
 
@@ -25,7 +25,9 @@ export const isValueSchema = (schema: unknown): schema is ValueSchema => {
 /**
  * 型ガード関数：スキーマがSwitchSchemaかどうかを判定
  */
-export const isSwitchSchema = (schema: unknown): schema is SwitchSchema => {
+export const isSwitchSchema = (
+  schema: unknown,
+): schema is RuntimeSwitchSchema => {
   return (
     isRecord(schema) &&
     !("type" in schema) &&
@@ -35,7 +37,10 @@ export const isSwitchSchema = (schema: unknown): schema is SwitchSchema => {
       (candidate) =>
         isRecord(candidate) &&
         "when" in candidate &&
-        isValueSchema(candidate),
+        (typeof candidate.when === "string" ||
+          typeof candidate.when === "number" ||
+          typeof candidate.when === "boolean") &&
+        typeof candidate.type === "string",
     )
   );
 };

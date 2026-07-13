@@ -355,6 +355,44 @@ describe("Field", () => {
       .toBeInTheDocument();
   });
 
+  it("dispatches an unknown selected switch case without auto-generation", () => {
+    const schema: any = {
+      switch: "./kind",
+      cases: [
+        { when: "known", type: "string" },
+        { when: "future", type: "futureKind" },
+      ],
+    };
+    const onDataChange = vi.fn();
+    const { rerender } = render(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data=""
+        path={["value"]}
+        rootData={{ kind: "known" }}
+        onDataChange={onDataChange}
+      />,
+    );
+
+    expect(screen.getByTestId("string-input")).toBeInTheDocument();
+
+    rerender(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data=""
+        path={["value"]}
+        rootData={{ kind: "future" }}
+        onDataChange={onDataChange}
+      />,
+    );
+
+    expect(screen.getByText("Unsupported type: futureKind"))
+      .toBeInTheDocument();
+    expect(onDataChange).not.toHaveBeenCalled();
+  });
+
   it("should call onChange with updated value", () => {
     const onDataChange = vi.fn();
     const { rerender } = render(
@@ -443,6 +481,26 @@ describe("Field", () => {
 
     expect(() => render(<Field {...defaultProps} schema={schema} />))
       .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats a switch with a non-string case type as invalid", () => {
+    const schema: any = {
+      switch: "./kind",
+      cases: [
+        { when: "known", type: "string" },
+        { when: "malformed", type: null },
+      ],
+    };
+    render(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        path={["value"]}
+        rootData={{ kind: "known" }}
+      />,
+    );
+
     expect(screen.getByText("Invalid schema")).toBeInTheDocument();
   });
 

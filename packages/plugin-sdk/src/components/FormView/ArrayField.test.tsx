@@ -11,6 +11,7 @@ import {
 
 import type { ArraySchema, Schema } from "../../schema";
 
+// Vitest hoists vi.mock, so import the shared spy inside the factory.
 vi.mock("../../utils/generateUuid", async () => {
   const { mockGenerateUuid } = await import(
     "./__tests__/ArrayField.testSupport"
@@ -18,6 +19,7 @@ vi.mock("../../utils/generateUuid", async () => {
   return { generateUuid: () => mockGenerateUuid() };
 });
 
+// Mock the exact autoIncrement module imported by useArrayDataManager.
 vi.mock("../../utils/autoIncrement", async (importOriginal) => {
   const actual = await importOriginal();
   const { calculateAutoIncrementMock } = await import(

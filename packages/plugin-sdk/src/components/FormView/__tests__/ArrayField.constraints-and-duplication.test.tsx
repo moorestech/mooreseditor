@@ -104,7 +104,7 @@ describe("ArrayField constraints and duplication", () => {
     fireEvent.click(screen.getByText(/add/i));
     expect(onDataChange).toHaveBeenCalledWith([{ name: "New Item", value: 0 }]);
   });
-
+  // ArrayField does not implement drag handles yet.
   it.skip("should handle drag handles for sortable items", () => {
     render(<ArrayField {...defaultArrayFieldProps} />);
     expect(screen.getAllByText("::")).toHaveLength(2);

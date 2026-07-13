@@ -1,7 +1,7 @@
 import { validate as validateUuid } from "uuid";
 import { describe, expect, it } from "vitest";
 
-import { createInitialValue } from "../createInitialValue";
+import { createInitialValue } from "../../createInitialValue";
 import { DataInitializer } from "../dataInitializer";
 
 import type { ObjectSchema } from "../../../schema";

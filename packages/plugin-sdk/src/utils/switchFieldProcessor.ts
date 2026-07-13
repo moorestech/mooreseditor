@@ -1,5 +1,5 @@
-import { DataInitializer } from "./dataInitializer";
-import { deepMerge } from "./deepMerge";
+import { DataInitializer } from "./initialization/dataInitializer";
+import { deepMerge } from "./object/deepMerge";
 
 import type { ObjectSchema, SwitchSchema } from "../schema";
 

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 
 import { isValueSchemaType } from "../schema";
-import { DataInitializer } from "../utils/dataInitializer";
-import { deepMerge } from "../utils/deepMerge";
+import { DataInitializer } from "../utils/initialization/dataInitializer";
+import { deepMerge } from "../utils/object/deepMerge";
 
 import type { RuntimeSwitchSchema, ValueSchema } from "../schema";
 

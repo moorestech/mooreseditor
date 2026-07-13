@@ -1,8 +1,8 @@
 import { isRuntimeValueSchema } from "../schema";
 
 import { calculateAutoIncrement } from "./autoIncrement";
-import { DataInitializer } from "./dataInitializer";
-import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
+import { DataInitializer } from "./initialization/dataInitializer";
+import { createPrimitiveDefaultValue } from "./initialization/primitiveDefaultValue";
 
 import type { Schema, ValueSchema } from "../schema";
 

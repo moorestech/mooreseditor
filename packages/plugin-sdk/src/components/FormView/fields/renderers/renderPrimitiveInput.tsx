@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-import { FieldWithCopyPaste } from "./FieldWithCopyPaste";
+import { FieldWithCopyPaste } from "../../FieldWithCopyPaste";
 import {
   BooleanInput,
   EnumInput,
@@ -11,9 +11,9 @@ import {
   Vector2Input,
   Vector3Input,
   Vector4Input,
-} from "./inputs";
+} from "../../inputs";
 
-import type { Column, PrimitiveSchema } from "../../schema";
+import type { Column, PrimitiveSchema } from "../../../../schema";
 
 interface RenderPrimitiveInputProps {
   schema: PrimitiveSchema;

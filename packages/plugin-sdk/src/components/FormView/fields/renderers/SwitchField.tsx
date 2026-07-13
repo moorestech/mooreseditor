@@ -1,11 +1,10 @@
 import { memo } from "react";
 
-import { useSwitchFieldAutoGeneration } from "../../hooks/useSwitchFieldAutoGeneration";
-import { resolvePath } from "../../utils/pathResolver";
+import { useSwitchFieldAutoGeneration } from "../../../../hooks/useSwitchFieldAutoGeneration";
+import { resolvePath } from "../../../../utils/pathResolver";
+import Field from "../Field";
 
-import Field from "./Field";
-
-import type { SwitchFieldProps } from "./fieldTypes";
+import type { SwitchFieldProps } from "../fieldTypes";
 
 const SwitchField = memo(function SwitchField({
   label,

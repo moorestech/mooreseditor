@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import {
   ForeignKeyResolver,
   validateForeignKeyPath,
-} from "./foreignKeyResolver";
+} from "../foreignKeyResolver";
 
 // Test data
 const testData = {

@@ -6,7 +6,7 @@ import type {
   RuntimeFieldSchema,
   RuntimeSwitchSchema,
   Schema,
-} from "../../schema";
+} from "../../../schema";
 
 export interface FieldProps {
   label: string;

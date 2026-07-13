@@ -2,17 +2,17 @@ import { memo } from "react";
 
 import { Flex, Text } from "@mantine/core";
 
-import { isValueSchemaType } from "../../schema";
+import { isValueSchemaType } from "../../../schema";
 
-import ObjectField from "./ObjectField";
-import PrimitiveField from "./PrimitiveField";
-import SchemaArrayField from "./SchemaArrayField";
-import SwitchField from "./SwitchField";
 import {
   isPrimitiveSchema,
   isSwitchSchema,
   isValueSchema,
 } from "./fieldHelpers";
+import ObjectField from "./renderers/ObjectField";
+import PrimitiveField from "./renderers/PrimitiveField";
+import SchemaArrayField from "./renderers/SchemaArrayField";
+import SwitchField from "./renderers/SwitchField";
 
 import type { FieldProps } from "./fieldTypes";
 

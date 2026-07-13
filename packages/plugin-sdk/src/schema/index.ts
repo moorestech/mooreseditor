@@ -1,3 +1,3 @@
 export * from "./types";
-export * from "./schemaTypes";
+export * from "./runtime/schemaTypes";
 export * from "./column";

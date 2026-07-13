@@ -1,11 +1,11 @@
-import { supportsForeignKey } from "./types";
+import { supportsForeignKey } from "../types";
 
 import type {
   PrimitiveSchema,
   Schema,
   StructedSchema,
   ValueSchema,
-} from "./types";
+} from "../types";
 
 export interface RuntimeSwitchCaseSchema {
   when: string | number | boolean;

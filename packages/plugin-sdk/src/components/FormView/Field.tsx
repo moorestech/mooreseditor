@@ -2,6 +2,8 @@ import { memo } from "react";
 
 import { Flex, Text } from "@mantine/core";
 
+import { isValueSchemaType } from "../../schema";
+
 import ObjectField from "./ObjectField";
 import PrimitiveField from "./PrimitiveField";
 import SchemaArrayField from "./SchemaArrayField";
@@ -21,6 +23,10 @@ const renderSchemaError = (label: string, message: string) => (
   </Flex>
 );
 
+const assertNever = (schema: never): never => {
+  throw new Error(`Unhandled schema type: ${JSON.stringify(schema)}`);
+};
+
 const Field = memo(function Field(props: FieldProps) {
   const { label, schema } = props;
 
@@ -38,7 +44,12 @@ const Field = memo(function Field(props: FieldProps) {
   }
 
   if (!isValueSchema(schema)) {
-    return renderSchemaError(label, `Unsupported type: ${String(schemaType)}`);
+    return renderSchemaError(
+      label,
+      isValueSchemaType(schemaType)
+        ? "Invalid schema"
+        : `Unsupported type: ${String(schemaType)}`,
+    );
   }
 
   if (schema.type === "object") {
@@ -53,7 +64,7 @@ const Field = memo(function Field(props: FieldProps) {
     return <PrimitiveField {...props} schema={schema} />;
   }
 
-  return renderSchemaError(label, `Unsupported type: ${String(schemaType)}`);
+  return assertNever(schema);
 });
 
 export default Field;

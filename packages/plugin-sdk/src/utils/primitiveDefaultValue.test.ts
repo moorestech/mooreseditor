@@ -6,6 +6,15 @@ import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
 import type { PrimitiveSchema } from "../schema";
 
 describe("createPrimitiveDefaultValue", () => {
+  it.each([
+    { type: "futureKind" },
+    { type: null },
+  ])("returns null for an unsupported runtime discriminator: $type", (schema) => {
+    expect(
+      createPrimitiveDefaultValue(schema as unknown as PrimitiveSchema),
+    ).toBeNull();
+  });
+
   it.each<[PrimitiveSchema, unknown]>([
     [{ type: "string" }, ""],
     [{ type: "enum", options: ["first", "second"] }, ""],

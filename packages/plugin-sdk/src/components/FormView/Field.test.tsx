@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import "@testing-library/jest-dom";
 
-import { render, screen } from "../../test/utils/test-utils";
+import { fireEvent, render, screen } from "../../test/utils/test-utils";
 
 import Field from "./Field";
 import * as primitiveRendering from "./renderPrimitiveInput";
@@ -393,6 +393,26 @@ describe("Field", () => {
     expect(onDataChange).not.toHaveBeenCalled();
   });
 
+  it("adds a null fallback for an array item with an unknown runtime kind", () => {
+    const onDataChange = vi.fn();
+    const schema: any = {
+      type: "array",
+      items: { type: "futureKind" },
+    };
+
+    render(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data={[]}
+        onDataChange={onDataChange}
+      />,
+    );
+
+    expect(() => fireEvent.click(screen.getByText("Add Item"))).not.toThrow();
+    expect(onDataChange).toHaveBeenCalledWith([null]);
+  });
+
   it("should call onChange with updated value", () => {
     const onDataChange = vi.fn();
     const { rerender } = render(
@@ -469,6 +489,30 @@ describe("Field", () => {
     expect(screen.getByText("Invalid schema")).toBeInTheDocument();
   });
 
+  it("treats object properties with a non-array shape as invalid", () => {
+    const schema: any = { type: "object", properties: {} };
+
+    expect(() => render(<Field {...defaultProps} schema={schema} />))
+      .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats an array without an item schema as invalid", () => {
+    const schema: any = { type: "array" };
+
+    expect(() => render(<Field {...defaultProps} schema={schema} data={[]} />))
+      .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats enum options with a non-array shape as invalid", () => {
+    const schema: any = { type: "enum", options: {} };
+
+    expect(() => render(<Field {...defaultProps} schema={schema} />))
+      .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
   it("treats an incomplete switch schema as invalid", () => {
     const schema: any = { switch: "./kind" };
     render(<Field {...defaultProps} schema={schema} />);
@@ -501,6 +545,28 @@ describe("Field", () => {
       />,
     );
 
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats a switch with a malformed known case payload as invalid", () => {
+    const schema: any = {
+      switch: "./kind",
+      cases: [
+        { when: "known", type: "string" },
+        { when: "malformed", type: "enum", options: null },
+      ],
+    };
+
+    expect(() =>
+      render(
+        <Field
+          {...defaultProps}
+          schema={schema}
+          path={["value"]}
+          rootData={{ kind: "known" }}
+        />,
+      ),
+    ).not.toThrow();
     expect(screen.getByText("Invalid schema")).toBeInTheDocument();
   });
 

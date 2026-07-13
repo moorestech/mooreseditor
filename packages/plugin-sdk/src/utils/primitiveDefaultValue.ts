@@ -1,3 +1,5 @@
+import { isPrimitiveSchemaType } from "../schema";
+
 import { generateUuid } from "./generateUuid";
 
 import type { PrimitiveSchema } from "../schema";
@@ -24,6 +26,10 @@ const primitiveDefaultValueHandlers = {
 } satisfies PrimitiveDefaultValueHandlers;
 
 export function createPrimitiveDefaultValue(schema: PrimitiveSchema): unknown {
+  if (!isPrimitiveSchemaType(schema.type)) {
+    return null;
+  }
+
   // The discriminant selects the handler for this exact schema variant. TypeScript
   // cannot preserve that key/argument correlation through an indexed union call.
   return primitiveDefaultValueHandlers[schema.type](schema as never);

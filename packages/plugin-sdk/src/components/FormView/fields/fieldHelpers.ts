@@ -2,7 +2,7 @@ import {
   isPrimitiveSchemaType,
   isRuntimeSwitchSchema,
   isRuntimeValueSchema,
-} from "../../schema";
+} from "../../../schema";
 
 import type {
   ArraySchema,
@@ -10,7 +10,7 @@ import type {
   PrimitiveSchema,
   RuntimeSwitchSchema,
   ValueSchema,
-} from "../../schema";
+} from "../../../schema";
 
 export const isValueSchema = (schema: unknown): schema is ValueSchema => {
   return isRuntimeValueSchema(schema);

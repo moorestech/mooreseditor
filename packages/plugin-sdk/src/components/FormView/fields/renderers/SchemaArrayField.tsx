@@ -3,11 +3,11 @@ import { memo, useCallback } from "react";
 import { Box, Button, Flex, Text } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 
-import ArrayField from "./ArrayField";
-import { FieldWithCopyPaste } from "./FieldWithCopyPaste";
-import { isObjectArraySchema } from "./fieldHelpers";
+import ArrayField from "../../ArrayField";
+import { FieldWithCopyPaste } from "../../FieldWithCopyPaste";
+import { isObjectArraySchema } from "../fieldHelpers";
 
-import type { SchemaArrayFieldProps } from "./fieldTypes";
+import type { SchemaArrayFieldProps } from "../fieldTypes";
 
 const SchemaArrayField = memo(function SchemaArrayField({
   label,

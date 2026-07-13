@@ -5,7 +5,7 @@ import { useHover } from "@mantine/hooks";
 
 import { renderPrimitiveInput } from "./renderPrimitiveInput";
 
-import type { PrimitiveFieldProps } from "./fieldTypes";
+import type { PrimitiveFieldProps } from "../fieldTypes";
 
 const PrimitiveField = memo(function PrimitiveField({
   label,

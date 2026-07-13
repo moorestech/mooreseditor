@@ -1,3 +1,5 @@
+import { isRuntimeValueSchema } from "../schema";
+
 import { calculateAutoIncrement } from "./autoIncrement";
 import { DataInitializer } from "./dataInitializer";
 import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
@@ -51,12 +53,12 @@ export function createInitialValue(
 
   // 後方互換性のため、旧実装も残す（全フィールドを生成）
   // スキーマがない場合はnullを返す
-  if (!schema || !("type" in schema)) {
+  if (!isRuntimeValueSchema(schema)) {
     return null;
   }
 
   // 基本的なデフォルト値を取得
-  let defaultValue = getDefaultValue(schema as ValueSchema);
+  let defaultValue = getDefaultValue(schema);
 
   // オブジェクト型の場合、autoIncrementプロパティをチェック
   if (

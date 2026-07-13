@@ -1,3 +1,5 @@
+import { isRuntimeValueSchema } from "../schema";
+
 import { calculateAutoIncrement } from "./autoIncrement";
 import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
 
@@ -41,11 +43,11 @@ export class DataInitializer {
     contextData?: any,
   ): any {
     // スキーマがない場合はnullを返す
-    if (!schema || !("type" in schema)) {
+    if (!isRuntimeValueSchema(schema)) {
       return null;
     }
 
-    const valueSchema = schema as ValueSchema;
+    const valueSchema = schema;
 
     // 循環参照チェック（refが設定されている場合）
     if ("ref" in valueSchema && valueSchema.ref) {

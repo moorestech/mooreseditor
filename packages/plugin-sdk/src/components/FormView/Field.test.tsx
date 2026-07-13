@@ -2,7 +2,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import "@testing-library/jest-dom";
 
-import { fireEvent, render, screen } from "../../test/utils/test-utils";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "../../test/utils/test-utils";
 
 import Field from "./Field";
 import * as primitiveRendering from "./renderPrimitiveInput";
@@ -393,6 +398,60 @@ describe("Field", () => {
     expect(onDataChange).not.toHaveBeenCalled();
   });
 
+  it("replaces data when a switch changes between object and array families", async () => {
+    const schema: any = {
+      switch: "./kind",
+      cases: [
+        {
+          when: "loop",
+          type: "array",
+          items: { type: "string" },
+        },
+        {
+          when: "oneshot",
+          type: "object",
+          properties: [],
+        },
+      ],
+    };
+    const onDataChange = vi.fn();
+    const { rerender } = render(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data={[]}
+        path={["value"]}
+        rootData={{ kind: "loop" }}
+        onDataChange={onDataChange}
+      />,
+    );
+
+    rerender(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data={[]}
+        path={["value"]}
+        rootData={{ kind: "oneshot" }}
+        onDataChange={onDataChange}
+      />,
+    );
+    await waitFor(() => expect(onDataChange).toHaveBeenCalledWith({}));
+
+    onDataChange.mockClear();
+    rerender(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data={{}}
+        path={["value"]}
+        rootData={{ kind: "loop" }}
+        onDataChange={onDataChange}
+      />,
+    );
+    await waitFor(() => expect(onDataChange).toHaveBeenCalledWith([]));
+  });
+
   it("adds a null fallback for an array item with an unknown runtime kind", () => {
     const onDataChange = vi.fn();
     const schema: any = {
@@ -507,6 +566,22 @@ describe("Field", () => {
 
   it("treats enum options with a non-array shape as invalid", () => {
     const schema: any = { type: "enum", options: {} };
+
+    expect(() => render(<Field {...defaultProps} schema={schema} />))
+      .not.toThrow();
+    expect(screen.getByText("Invalid schema")).toBeInTheDocument();
+  });
+
+  it("treats a malformed foreign key configuration as invalid", () => {
+    const schema: any = {
+      type: "string",
+      foreignKey: {
+        schemaId: "items",
+        foreignKeyIdPath: null,
+        displayElementPath: "/data/[*]/name",
+        hierarchyDisplayPaths: ["/data/[*]/group", null],
+      },
+    };
 
     expect(() => render(<Field {...defaultProps} schema={schema} />))
       .not.toThrow();

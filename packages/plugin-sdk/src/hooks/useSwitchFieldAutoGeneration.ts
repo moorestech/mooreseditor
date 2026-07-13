@@ -4,16 +4,20 @@ import { isValueSchemaType } from "../schema";
 import { DataInitializer } from "../utils/dataInitializer";
 import { deepMerge } from "../utils/deepMerge";
 
-import type { ValueSchema } from "../schema";
+import type { RuntimeSwitchSchema, ValueSchema } from "../schema";
 
-interface SwitchCaseForAutoGeneration {
-  when: string | number | boolean;
-  type: string;
-}
+const canMergeSwitchValues = (current: unknown, generated: unknown): boolean => {
+  if (Array.isArray(current) || Array.isArray(generated)) {
+    return Array.isArray(current) && Array.isArray(generated);
+  }
 
-interface SwitchSchemaForAutoGeneration {
-  cases: SwitchCaseForAutoGeneration[];
-}
+  return (
+    current !== null &&
+    typeof current === "object" &&
+    generated !== null &&
+    typeof generated === "object"
+  );
+};
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する
@@ -24,7 +28,7 @@ interface SwitchSchemaForAutoGeneration {
  */
 export function useSwitchFieldAutoGeneration(
   switchValue: any,
-  switchSchema: SwitchSchemaForAutoGeneration | null,
+  switchSchema: Pick<RuntimeSwitchSchema, "cases"> | null,
   data: any,
   onDataChange: (newData: any) => void,
 ) {
@@ -56,7 +60,9 @@ export function useSwitchFieldAutoGeneration(
 
         // 既存データとマージ
         if (requiredFields !== null && requiredFields !== undefined) {
-          const mergedData = deepMerge(data || {}, requiredFields);
+          const mergedData = canMergeSwitchValues(data, requiredFields)
+            ? deepMerge(data, requiredFields)
+            : requiredFields;
 
           // 実際に変更がある場合のみ更新
           if (JSON.stringify(mergedData) !== JSON.stringify(data)) {

@@ -6,6 +6,7 @@ import { FieldWithCopyPaste } from "./FieldWithCopyPaste";
 
 import type { ObjectFieldProps } from "./fieldTypes";
 
+// Keep React.lazy at module scope to preserve component identity across renders.
 const FormViewLazy = React.lazy(() => import("./index"));
 
 const ObjectField = memo(function ObjectField({

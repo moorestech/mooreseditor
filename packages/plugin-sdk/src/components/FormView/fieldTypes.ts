@@ -3,24 +3,10 @@ import type {
   Column,
   ObjectSchema,
   PrimitiveSchema,
+  RuntimeFieldSchema,
+  RuntimeSwitchSchema,
   Schema,
 } from "../../schema";
-
-export interface RuntimeSwitchCaseSchema {
-  when: string | number | boolean;
-  type: string;
-}
-
-export interface RuntimeSwitchSchema {
-  switch: string;
-  cases: RuntimeSwitchCaseSchema[];
-  optional?: boolean;
-}
-
-export type RuntimeFieldSchema =
-  | Schema
-  | RuntimeSwitchSchema
-  | RuntimeSwitchCaseSchema;
 
 export interface FieldProps {
   label: string;

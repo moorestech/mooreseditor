@@ -127,6 +127,7 @@ fabric.properties
 .playwright-mcp
 .artifacts
 .envrc
+.worktrees/
 
 # plugin build output
 plugins/node-graph/dist/

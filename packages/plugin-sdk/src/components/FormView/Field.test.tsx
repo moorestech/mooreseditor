@@ -203,6 +203,89 @@ describe("Field", () => {
     expect(screen.getByText("Test Field")).toBeInTheDocument();
   });
 
+  it("keeps hook order stable when an object array schema changes to an object", () => {
+    const objectArraySchema: Schema = {
+      type: "array",
+      items: {
+        type: "object",
+        properties: [{ key: "name", type: "string" }],
+      },
+    };
+    const objectSchema: Schema = {
+      type: "object",
+      optional: true,
+      properties: [],
+    };
+
+    const { rerender } = render(
+      <Field
+        {...defaultProps}
+        schema={objectArraySchema}
+        data={[]}
+        onObjectArrayClick={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Edit Test Field" }))
+      .toBeInTheDocument();
+
+    expect(() => {
+      rerender(
+        <Field {...defaultProps} schema={objectSchema} data={{}} />,
+      );
+    }).not.toThrow();
+  });
+
+  it("switches an object-array case to an object case without reusing branch hooks", () => {
+    const schema: Schema = {
+      switch: "./kind",
+      cases: [
+        {
+          when: "loop",
+          type: "array",
+          items: {
+            type: "object",
+            properties: [{ key: "label", type: "string" }],
+          },
+        },
+        {
+          when: "oneshot",
+          type: "object",
+          optional: true,
+          properties: [],
+        },
+      ],
+    };
+
+    const { rerender } = render(
+      <Field
+        {...defaultProps}
+        schema={schema}
+        data={[]}
+        path={["buttons"]}
+        parentData={{ kind: "loop" }}
+        rootData={{ kind: "loop" }}
+        onObjectArrayClick={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Edit Test Field" }))
+      .toBeInTheDocument();
+
+    expect(() => {
+      rerender(
+        <Field
+          {...defaultProps}
+          schema={schema}
+          data={{}}
+          path={["buttons"]}
+          parentData={{ kind: "oneshot" }}
+          rootData={{ kind: "oneshot" }}
+        />,
+      );
+    }).not.toThrow();
+  });
+
   it("should call onChange with updated value", () => {
     const onDataChange = vi.fn();
     const { rerender } = render(

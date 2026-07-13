@@ -49,26 +49,34 @@ const Field = memo(function Field({
   const { hovered: isLabelHovered, ref: labelHoverRef } =
     useHover<HTMLDivElement>();
 
+  const switchSchema = isSwitchSchema(schema) ? schema : null;
+  const switchValue = switchSchema
+    ? resolvePath(switchSchema.switch, path, rootData || data, arrayIndices)
+    : undefined;
+
+  // スキーマ種別が動的に変わっても、フックの呼び出し順序を一定に保つ。
+  useSwitchFieldAutoGeneration(
+    switchValue,
+    switchSchema,
+    data,
+    onDataChange,
+  );
+
+  const handleObjectArrayClick = useCallback(() => {
+    onObjectArrayClick?.(path, schema);
+  }, [onObjectArrayClick, path, schema]);
+
   const labelElement = label ? (
     <Text ref={labelHoverRef} style={{ minWidth: 120 }}>
       {label}
     </Text>
   ) : null;
 
-  if (isSwitchSchema(schema)) {
-    // Use resolvePath for all path types
-    const switchValue = resolvePath(
-      schema.switch,
-      path,
-      rootData || data,
-      arrayIndices,
-    );
-
-    // カスタムフックを使用してswitch値変更を検出し、必須フィールドを自動生成
-    useSwitchFieldAutoGeneration(switchValue, schema, data, onDataChange);
-
+  if (switchSchema) {
     // Find the matching case
-    const matchingCase = schema.cases?.find((c) => c.when === switchValue);
+    const matchingCase = switchSchema.cases?.find(
+      (c) => c.when === switchValue,
+    );
 
     if (!matchingCase) {
       // If no matching case, return empty
@@ -78,6 +86,7 @@ const Field = memo(function Field({
     // Render the schema for the matching case
     return (
       <Field
+        key={`${typeof switchValue}:${String(switchValue)}`}
         label={label}
         schema={matchingCase}
         data={data}
@@ -153,10 +162,6 @@ const Field = memo(function Field({
   if (schema.type === "array") {
     // Object arrays get a button to open in table view with copy/paste
     if (isObjectArraySchema(schema)) {
-      const handleObjectArrayClick = useCallback(() => {
-        onObjectArrayClick?.(path, schema);
-      }, [onObjectArrayClick, path, schema]);
-
       return (
         <Flex align="center" gap="md">
           {labelElement}

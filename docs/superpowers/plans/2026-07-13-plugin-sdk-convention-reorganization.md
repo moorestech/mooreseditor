@@ -350,6 +350,9 @@ git commit -m "fix(plugin-sdk): keep long consumers unchanged"
 - Create: `packages/plugin-sdk/src/components/FormView/fields/Field.structured.test.tsx`
 - Create: `packages/plugin-sdk/src/components/FormView/fields/Field.switch.test.tsx`
 - Create: `packages/plugin-sdk/src/components/FormView/fields/Field.invalid-schema.test.tsx`
+- Modify and split: `packages/plugin-sdk/src/components/FormView/ArrayField.test.tsx`
+- Create: `packages/plugin-sdk/src/components/FormView/__tests__/ArrayField.constraints-and-duplication.test.tsx`
+- Create: `packages/plugin-sdk/src/components/FormView/__tests__/ArrayField.testSupport.tsx`
 - Modify: `packages/plugin-sdk/src/components/FormView/index.tsx`
 - Modify: `packages/plugin-sdk/src/components/FormView/ArrayField.tsx`
 
@@ -542,6 +545,8 @@ import * as primitiveRendering from "./renderers/renderPrimitiveInput";
 
 Delete the original `Field.test.tsx` after all 35 test definitions are present. Every new `.test.tsx` and `Field.testSupport.tsx` must remain at or below 200 lines.
 
+Because repairing the moved `Field` mock path also changes the pre-existing 200-line-plus `ArrayField.test.tsx`, split that test in the same task. Keep basic array operations in the root test, move constraint and duplication cases to `FormView/__tests__/ArrayField.constraints-and-duplication.test.tsx`, and share mocks through `ArrayField.testSupport.tsx`. Preserve all 22 test titles and all 34 `expect` calls from the original file.
+
 - [ ] **Step 4: Move production files with `apply_patch` and verify RED**
 
 Move the listed dispatch and renderer files without changing their bodies. Run before repairing imports:
@@ -603,7 +608,7 @@ Do not introduce a `fields/index.ts` or `renderers/index.ts` barrel.
 Run:
 
 ```bash
-pnpm --filter @moorestech/mooreseditor-plugin-sdk exec vitest run src/components/FormView/fields/Field.*.test.tsx src/components/FormView/ArrayField.test.tsx src/components/FormView/index.test.tsx src/components/FormView/FormView.test.tsx
+pnpm --filter @moorestech/mooreseditor-plugin-sdk exec vitest run src/components/FormView/fields/Field.primitives.test.tsx src/components/FormView/fields/Field.structured.test.tsx src/components/FormView/fields/Field.switch.test.tsx src/components/FormView/fields/Field.invalid-schema.test.tsx src/components/FormView/ArrayField.test.tsx src/components/FormView/__tests__/ArrayField.constraints-and-duplication.test.tsx src/components/FormView/index.test.tsx src/components/FormView/FormView.test.tsx
 rg -n 'from "\./(Field|ObjectField|PrimitiveField|SchemaArrayField|SwitchField|fieldHelpers|fieldTypes|renderPrimitiveInput)"' packages/plugin-sdk/src/components/FormView --glob '*.ts' --glob '*.tsx'
 ```
 
@@ -619,9 +624,10 @@ find packages/plugin-sdk/src/components/FormView -maxdepth 1 -type f | wc -l
 find packages/plugin-sdk/src/components/FormView/fields -maxdepth 1 -type f | wc -l
 find packages/plugin-sdk/src/components/FormView/fields/renderers -maxdepth 1 -type f | wc -l
 wc -l packages/plugin-sdk/src/components/FormView/fields/Field*.tsx
+wc -l packages/plugin-sdk/src/components/FormView/ArrayField.test.tsx packages/plugin-sdk/src/components/FormView/__tests__/ArrayField*.tsx
 ```
 
-Expected: the package suite passes; direct file counts are `FormView: 9`, `fields: 8`, `renderers: 5`; every listed Field file is at most 200 lines.
+Expected: the package suite passes; direct file counts are `FormView: 9`, `fields: 8`, `renderers: 5`; every listed Field and ArrayField test/support file is at most 200 lines. The split ArrayField tests retain all 22 original test titles and 34 `expect` calls.
 
 Commit:
 

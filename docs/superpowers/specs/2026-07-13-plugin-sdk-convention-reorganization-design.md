@@ -35,6 +35,10 @@ components/FormView/
 ├── FormView.test.tsx
 ├── index.tsx
 ├── index.test.tsx
+├── __tests__/
+│   ├── ArrayField.constraints-and-duplication.test.tsx
+│   ├── ArrayField.testSupport.tsx
+│   └── BlocksForeignKey.test.tsx
 └── fields/
     ├── Field.tsx
     ├── fieldHelpers.ts
@@ -53,6 +57,8 @@ components/FormView/
 ```
 
 `Field.test.tsx` は振る舞い別に 4 本へ分割する。共通 mock とレンダリング補助は `Field.testSupport.tsx` に集約し、各テストファイルで mock 実装を重複させない。分割後も既存の全ケースを保持する。
+
+`Field` の移動に合わせた mock path の変更により、既存の 200 行超 `ArrayField.test.tsx` も変更対象になったため、基本操作をルートの `ArrayField.test.tsx`、制約・複製を `__tests__/ArrayField.constraints-and-duplication.test.tsx`、共通 mock を `__tests__/ArrayField.testSupport.tsx` に分割する。分割前の 22 テストタイトルと 34 個の `expect` 呼び出しをすべて保持する。
 
 ### schema
 

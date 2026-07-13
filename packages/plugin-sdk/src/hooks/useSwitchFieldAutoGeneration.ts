@@ -1,9 +1,23 @@
 import { useEffect, useRef } from "react";
 
-import { DataInitializer } from "../utils/dataInitializer";
-import { deepMerge } from "../utils/deepMerge";
+import { isValueSchemaType } from "../schema";
+import { DataInitializer } from "../utils/initialization/dataInitializer";
+import { deepMerge } from "../utils/object/deepMerge";
 
-import type { SwitchSchema, ValueSchema } from "../schema";
+import type { RuntimeSwitchSchema, ValueSchema } from "../schema";
+
+const canMergeSwitchValues = (current: unknown, generated: unknown): boolean => {
+  if (Array.isArray(current) || Array.isArray(generated)) {
+    return Array.isArray(current) && Array.isArray(generated);
+  }
+
+  return (
+    current !== null &&
+    typeof current === "object" &&
+    generated !== null &&
+    typeof generated === "object"
+  );
+};
 
 /**
  * カスタムフック: switchフィールドの値変更を検出し、必須フィールドを自動生成する
@@ -14,7 +28,7 @@ import type { SwitchSchema, ValueSchema } from "../schema";
  */
 export function useSwitchFieldAutoGeneration(
   switchValue: any,
-  switchSchema: SwitchSchema | null,
+  switchSchema: Pick<RuntimeSwitchSchema, "cases"> | null,
   data: any,
   onDataChange: (newData: any) => void,
 ) {
@@ -37,7 +51,7 @@ export function useSwitchFieldAutoGeneration(
       // 新しいcaseを探す
       const newCase = switchSchema.cases?.find((c) => c.when === switchValue);
 
-      if (newCase && "type" in newCase) {
+      if (newCase && isValueSchemaType(newCase.type)) {
         // 新しいcaseの必須フィールドを生成
         const initializer = new DataInitializer([]);
         const requiredFields = initializer.createRequiredValue(
@@ -46,7 +60,9 @@ export function useSwitchFieldAutoGeneration(
 
         // 既存データとマージ
         if (requiredFields !== null && requiredFields !== undefined) {
-          const mergedData = deepMerge(data || {}, requiredFields);
+          const mergedData = canMergeSwitchValues(data, requiredFields)
+            ? deepMerge(data, requiredFields)
+            : requiredFields;
 
           // 実際に変更がある場合のみ更新
           if (JSON.stringify(mergedData) !== JSON.stringify(data)) {

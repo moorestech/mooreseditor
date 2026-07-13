@@ -1,15 +1,11 @@
-// AI Generated Test Code
 import { describe, it, expect, vi, afterEach } from "vitest";
 
 import { render, screen, fireEvent } from "../../test/utils/test-utils";
 
 import FormView from "./index";
 
-
 import "@testing-library/jest-dom";
-
-// Mock child components
-vi.mock("./Field", () => ({
+vi.mock("./fields/Field", () => ({
   default: ({ path, data, onDataChange }: any) => (
     <div data-testid={`field-${path.join("-")}`}>
       <input
@@ -62,21 +58,18 @@ describe("FormView", () => {
 
     render(<FormView {...defaultProps} schema={schemaWithTitle} />);
 
-    // FormView doesn't display title, just verify it renders
     expect(screen.getByTestId("field-name")).toBeInTheDocument();
   });
 
   it("should handle null data", () => {
     render(<FormView {...defaultProps} data={null} />);
 
-    // Should render without errors
     expect(screen.getByTestId("field-name")).toBeInTheDocument();
   });
 
   it("should handle undefined data", () => {
     render(<FormView {...defaultProps} data={undefined} />);
 
-    // Should render without errors
     expect(screen.getByTestId("field-name")).toBeInTheDocument();
   });
 
@@ -96,7 +89,6 @@ describe("FormView", () => {
       <FormView {...defaultProps} schema={schemaWithoutProps} />,
     );
 
-    // Should render without errors (empty Stack)
     expect(container).toBeInTheDocument();
   });
 
@@ -114,7 +106,6 @@ describe("FormView", () => {
       />,
     );
 
-    // Should render Field component for array
     expect(screen.getByTestId("field-")).toBeInTheDocument();
   });
 
@@ -163,7 +154,6 @@ describe("FormView", () => {
       <FormView {...defaultProps} schema={stringSchema} data="test string" />,
     );
 
-    // Should render Field for simple type
     expect(screen.getByTestId("field-")).toBeInTheDocument();
   });
 
@@ -172,7 +162,6 @@ describe("FormView", () => {
 
     const stackElement = container.querySelector(".mantine-Stack-root");
     expect(stackElement).toBeInTheDocument();
-    // Mantine Stack uses CSS variables for gap
     expect(stackElement).toHaveStyle("--stack-gap: var(--mantine-spacing-sm)");
   });
 
@@ -190,7 +179,6 @@ describe("FormView", () => {
 
     render(<FormView {...defaultProps} schema={schemaWithUi} />);
 
-    // UI options would be handled by Field component
     expect(screen.getByTestId("field-name")).toBeInTheDocument();
   });
 
@@ -200,13 +188,11 @@ describe("FormView", () => {
       <FormView {...defaultProps} onDataChange={onDataChange} />,
     );
 
-    // Update props
     const newData = { name: "updated", value: 100 };
     rerender(
       <FormView {...defaultProps} data={newData} onDataChange={onDataChange} />,
     );
 
-    // Check that new data is reflected
     const nameInput = screen.getByTestId("input-name");
     expect(nameInput).toHaveValue(JSON.stringify(newData.name));
   });

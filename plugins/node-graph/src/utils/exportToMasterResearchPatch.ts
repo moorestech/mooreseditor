@@ -1,4 +1,5 @@
 import { updateClearedActions } from "./exportToMasterHelpers";
+import { findSchemaIdForNodeType } from "./nodeTypeSchema";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
@@ -11,7 +12,7 @@ export function buildResearchDependencyMap(
   nodes: ReactFlowNode[],
   edges: ReactFlowEdge[],
 ): Map<string, string[]> {
-  const dependencyMap = new Map<string, string[]>();
+  const dependencySets = new Map<string, Set<string>>();
 
   for (const edge of edges) {
     if (edge.data?.edgeType !== "dependency") continue;
@@ -24,10 +25,17 @@ export function buildResearchDependencyMap(
 
     const sourceGuid = sourceNode.data.masterGuid as string;
     const targetGuid = targetNode.data.masterGuid as string;
-    const existing = dependencyMap.get(targetGuid) ?? [];
-    dependencyMap.set(targetGuid, [...existing, sourceGuid]);
+    if (sourceGuid === targetGuid) continue;
+
+    const existing = dependencySets.get(targetGuid) ?? new Set<string>();
+    existing.add(sourceGuid);
+    dependencySets.set(targetGuid, existing);
   }
 
+  const dependencyMap = new Map<string, string[]>();
+  for (const [targetGuid, sourceGuids] of dependencySets) {
+    dependencyMap.set(targetGuid, [...sourceGuids]);
+  }
   return dependencyMap;
 }
 
@@ -38,11 +46,14 @@ export function patchResearchColumn(
   unlockMap: Map<string, string[]>,
   schemaMetas: Map<string, SchemaMeta>,
 ): Column[] {
-  const researchMeta = schemaMetas.get("research");
+  const researchSchemaId = findSchemaIdForNodeType("research", schemaMetas);
+  if (!researchSchemaId) return columns;
+
+  const researchMeta = schemaMetas.get(researchSchemaId);
   if (!researchMeta) return columns;
 
   const researchColumnIndex = columns.findIndex(
-    (col) => col.title === "research",
+    (col) => col.title === researchSchemaId,
   );
   if (researchColumnIndex === -1) return columns;
 
@@ -61,10 +72,7 @@ export function patchResearchColumn(
     if (recordIndex === -1) continue;
 
     const record = { ...dataArray[recordIndex] };
-    const dependencies = dependencyMap.get(masterGuid);
-    if (dependencies) {
-      record.prevResearchNodeGuids = dependencies;
-    }
+    record.prevResearchNodeGuids = dependencyMap.get(masterGuid) ?? [];
 
     const unlockGuids = unlockMap.get(masterGuid) ?? [];
     record.clearedActions = updateClearedActions(

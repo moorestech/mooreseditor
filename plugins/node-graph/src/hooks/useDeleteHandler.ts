@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { removeRecipesFromJsonData } from "../utils/recipeCleanup";
@@ -10,16 +10,12 @@ interface UseDeleteHandlerParams {
   schemaMetas: Map<string, SchemaMeta>;
   setJsonData: React.Dispatch<React.SetStateAction<Column[]>>;
   deleteSelected: () => void;
-  hasSelection: boolean;
-  isDialogOpen: boolean;
 }
 
 export function useDeleteHandler({
   schemaMetas,
   setJsonData,
   deleteSelected,
-  hasSelection,
-  isDialogOpen,
 }: UseDeleteHandlerParams) {
   const { state } = useNodeEditorContext();
 
@@ -51,28 +47,6 @@ export function useDeleteHandler({
 
     deleteSelected();
   }, [state.nodes, state.edges, deleteSelected, setJsonData, schemaMetas]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isDialogOpen) return;
-      if (
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      if (event.key === "Delete" || event.key === "Backspace") {
-        if (hasSelection) {
-          event.preventDefault();
-          handleDeleteSelected();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isDialogOpen, hasSelection, handleDeleteSelected]);
 
   return { handleDeleteSelected };
 }

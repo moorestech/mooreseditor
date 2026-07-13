@@ -5,7 +5,7 @@ import { IconPlus, IconTrash, IconCopy } from "@tabler/icons-react";
 
 import { useArrayDataManager } from "../../hooks/useArrayDataManager";
 
-import Field from "./Field";
+import Field from "./fields/Field";
 
 import type { Column } from "../../schema";
 import type { ArraySchema, Schema } from "../../schema";

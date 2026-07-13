@@ -21,8 +21,8 @@ interface NodeEditorState {
 }
 
 type Action =
-  | { type: "SET_NODES"; nodes: ReactFlowNode[] }
-  | { type: "SET_EDGES"; edges: ReactFlowEdge[] }
+  | { type: "SET_NODES"; nodes: ReactFlowNode[]; markDirty?: boolean }
+  | { type: "SET_EDGES"; edges: ReactFlowEdge[]; markDirty?: boolean }
   | { type: "SET_VIEWPORT"; viewport: Viewport }
   | { type: "SET_DIRTY"; dirty: boolean }
   | { type: "SET_SELECTED_NODE"; nodeId: string | null }
@@ -37,9 +37,17 @@ type Action =
 function reducer(state: NodeEditorState, action: Action): NodeEditorState {
   switch (action.type) {
     case "SET_NODES":
-      return { ...state, nodes: action.nodes, isDirty: true };
+      return {
+        ...state,
+        nodes: action.nodes,
+        isDirty: action.markDirty === false ? state.isDirty : true,
+      };
     case "SET_EDGES":
-      return { ...state, edges: action.edges, isDirty: true };
+      return {
+        ...state,
+        edges: action.edges,
+        isDirty: action.markDirty === false ? state.isDirty : true,
+      };
     case "SET_VIEWPORT":
       return { ...state, viewport: action.viewport };
     case "SET_DIRTY":

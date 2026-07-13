@@ -67,3 +67,59 @@ export function removeRecipesFromJsonData(
 
   return result;
 }
+
+/**
+ * Remove recipe records that were referenced by an edge before editing but are
+ * no longer referenced by any edge after the edit, including the edited edge.
+ */
+export function cleanupOrphanedRecipesAfterEdgeUpdate(
+  previousEdge: ReactFlowEdge,
+  updatedEdges: ReactFlowEdge[],
+  jsonData: Column[],
+  schemaMetas: Map<string, SchemaMeta>,
+): Column[] {
+  const previousRefs = normalizeRecipeRefsFromEdgeData(previousEdge.data);
+  if (previousRefs.length === 0) return jsonData;
+
+  const refsStillInUse = new Set<string>();
+  for (const edge of updatedEdges) {
+    for (const ref of normalizeRecipeRefsFromEdgeData(edge.data)) {
+      refsStillInUse.add(`${ref.edgeType}:${ref.masterGuid}`);
+    }
+  }
+
+  const refsToActuallyRemove = previousRefs.filter(
+    (ref) => !refsStillInUse.has(`${ref.edgeType}:${ref.masterGuid}`),
+  );
+  if (refsToActuallyRemove.length === 0) return jsonData;
+
+  let result = [...jsonData];
+  for (const ref of refsToActuallyRemove) {
+    const schemaId = RECIPE_SCHEMA_MAP[ref.edgeType];
+    const schemaMeta = schemaMetas.get(schemaId);
+    if (!schemaMeta?.guidField) continue;
+
+    const colIndex = result.findIndex((col) => col.title === schemaId);
+    if (colIndex === -1) continue;
+
+    const col = result[colIndex];
+    const rows = Array.isArray(col.data?.[schemaMeta.dataArrayPath])
+      ? (col.data[schemaMeta.dataArrayPath] as Record<string, unknown>[])
+      : [];
+    const filteredRows = rows.filter(
+      (row) =>
+        row &&
+        typeof row === "object" &&
+        (row as Record<string, unknown>)[schemaMeta.guidField!] !==
+          ref.masterGuid,
+    );
+
+    result = [...result];
+    result[colIndex] = {
+      ...col,
+      data: { ...col.data, [schemaMeta.dataArrayPath]: filteredRows },
+    };
+  }
+
+  return result;
+}

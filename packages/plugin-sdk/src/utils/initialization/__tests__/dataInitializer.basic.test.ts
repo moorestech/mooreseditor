@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { DataInitializer } from "./dataInitializer";
+import { DataInitializer } from "../dataInitializer";
 
-import type { ObjectSchema, ArraySchema } from "../schema";
+import type { ArraySchema, ObjectSchema } from "../../../schema";
 
 describe("DataInitializer", () => {
   describe("Simple schemas", () => {
@@ -133,65 +133,6 @@ describe("DataInitializer", () => {
       expect(result).toHaveLength(2);
       expect(result[0]).toEqual({ name: "" });
       expect(result[1]).toEqual({ name: "" });
-    });
-  });
-
-  describe("AutoIncrement", () => {
-    it("should handle autoIncrement for integer fields", () => {
-      const schema: ObjectSchema = {
-        type: "object",
-        properties: [
-          {
-            key: "id",
-            type: "integer",
-            optional: false,
-            autoIncrement: { direction: "asc", startWith: 1, step: 1 },
-          },
-          { key: "name", type: "string", optional: false },
-        ],
-      };
-
-      const existingData = [
-        { id: 1, name: "Item 1" },
-        { id: 2, name: "Item 2" },
-      ];
-
-      const initializer = new DataInitializer(existingData);
-      const result = initializer.createRequiredValue(schema);
-
-      expect(result).toEqual({
-        id: 3,
-        name: "",
-      });
-    });
-  });
-
-  describe("Circular references", () => {
-    it("should handle circular references gracefully", () => {
-      const schema: ObjectSchema = {
-        type: "object",
-        ref: "node",
-        properties: [
-          { key: "name", type: "string", optional: false },
-          {
-            key: "children",
-            type: "array",
-            items: {
-              type: "object",
-              ref: "node", // 循環参照
-              properties: [],
-            },
-          },
-        ],
-      };
-
-      const initializer = new DataInitializer();
-      const result = initializer.createRequiredValue(schema);
-
-      expect(result).toEqual({
-        name: "",
-        children: [],
-      });
     });
   });
 });

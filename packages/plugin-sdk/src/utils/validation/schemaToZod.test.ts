@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { schemaToZod } from "./schemaToZod";
 
-import type { Schema } from "../schema";
+import type { Schema } from "../../schema";
 
 describe("schemaToZod - uuid schema", () => {
   it("allows empty string values for optional UUID fields", () => {

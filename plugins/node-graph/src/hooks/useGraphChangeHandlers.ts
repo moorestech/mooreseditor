@@ -10,6 +10,8 @@ import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type {
   OnNodesChange,
   OnEdgesChange,
+  NodeChange,
+  EdgeChange,
   Node as ReactFlowNode,
   Edge as ReactFlowEdge,
 } from "@xyflow/react";
@@ -18,6 +20,22 @@ interface UseGraphChangeHandlersParams {
   schemaMetas: Map<string, SchemaMeta>;
   setJsonData: React.Dispatch<React.SetStateAction<Column[]>>;
   onMarkDirty: () => void;
+}
+
+// Selection changes and React Flow's mount-time dimension measurements do not
+// affect persisted data; only user-driven resizes (resizing/setAttributes) and
+// structural or position changes should mark the graph dirty.
+function isSelectionOnlyChange(changes: (NodeChange | EdgeChange)[]): boolean {
+  return (
+    changes.length > 0 &&
+    changes.every(
+      (change) =>
+        change.type === "select" ||
+        (change.type === "dimensions" &&
+          !change.resizing &&
+          !change.setAttributes),
+    )
+  );
 }
 
 export function useGraphChangeHandlers({
@@ -30,8 +48,15 @@ export function useGraphChangeHandlers({
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => {
       const newNodes = applyNodeChanges(changes, state.nodes);
-      dispatch({ type: "SET_NODES", nodes: newNodes });
-      onMarkDirty();
+      const shouldMarkDirty = !isSelectionOnlyChange(changes);
+      dispatch({
+        type: "SET_NODES",
+        nodes: newNodes,
+        markDirty: shouldMarkDirty,
+      });
+      if (shouldMarkDirty) {
+        onMarkDirty();
+      }
     },
     [state.nodes, dispatch, onMarkDirty],
   );
@@ -56,8 +81,15 @@ export function useGraphChangeHandlers({
       }
 
       const newEdges = applyEdgeChanges(changes, state.edges);
-      dispatch({ type: "SET_EDGES", edges: newEdges });
-      onMarkDirty();
+      const shouldMarkDirty = !isSelectionOnlyChange(changes);
+      dispatch({
+        type: "SET_EDGES",
+        edges: newEdges,
+        markDirty: shouldMarkDirty,
+      });
+      if (shouldMarkDirty) {
+        onMarkDirty();
+      }
     },
     [state.edges, dispatch, setJsonData, onMarkDirty, schemaMetas],
   );

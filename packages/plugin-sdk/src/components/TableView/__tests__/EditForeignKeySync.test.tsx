@@ -10,6 +10,38 @@ import { TableView } from "../index";
 import type { Column } from "../../../schema";
 import type { ArraySchema, Schema } from "../../../schema";
 
+type BlockFixture = {
+  blockGuid: string;
+  name: string;
+  overrideVerticalBlock?: {
+    horizontalBlockGuid?: string;
+    upBlockGuid?: string;
+  };
+};
+
+const EDITED_BLOCK_NAME = "直線歯車ベルトコンベア";
+const sourceBlocks = blocksData.data as BlockFixture[];
+const editedBlock = sourceBlocks.find(
+  (block) => block.name === EDITED_BLOCK_NAME,
+);
+if (!editedBlock?.overrideVerticalBlock?.upBlockGuid) {
+  throw new Error("Expected edited block fixture with an upBlockGuid");
+}
+
+const referencedBlock = sourceBlocks.find(
+  (block) => block.blockGuid === editedBlock.overrideVerticalBlock?.upBlockGuid,
+);
+if (!referencedBlock) {
+  throw new Error("Expected referenced block fixture");
+}
+
+const testBlocksData = {
+  ...blocksData,
+  data: [referencedBlock, editedBlock],
+};
+const editedRowIndex = testBlocksData.data.findIndex(
+  (block) => block.blockGuid === editedBlock.blockGuid,
+);
 
 const getNestedValue = (root: unknown, path: string[]) =>
   path.reduce<unknown>((acc, key) => {
@@ -68,7 +100,7 @@ const Harness: React.FC = () => {
   const [jsonData, setJsonData] = useState<Column[]>([
     {
       title: "blocks",
-      data: blocksData,
+      data: testBlocksData,
     },
   ]);
 
@@ -137,13 +169,13 @@ describe("Table edit foreign key sync", () => {
     render(<Harness />);
 
     const rowButtons = await screen.findAllByRole("button", { name: "Edit" });
-    fireEvent.click(rowButtons[10]);
+    fireEvent.click(rowButtons[editedRowIndex]);
 
     await expect(
-      screen.findByDisplayValue("上り歯車ベルトコンベア"),
+      screen.findByDisplayValue(referencedBlock.name),
     ).resolves.toBeInTheDocument();
     await expect(
-      screen.findAllByDisplayValue("直線歯車ベルトコンベア"),
+      screen.findAllByDisplayValue(EDITED_BLOCK_NAME),
     ).resolves.toHaveLength(2);
   });
 });

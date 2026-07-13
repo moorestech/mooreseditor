@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 import { useNodeEditorContext } from "../context/NodeEditorContext";
 import { exportToMaster } from "../utils/exportToMaster";
@@ -11,27 +11,37 @@ export function useNodeExport(
   schemaMetas: Map<string, SchemaMeta>,
 ) {
   const { state, dispatch } = useNodeEditorContext();
+  const isSavingRef = useRef(false);
 
   const exportAndSave = useCallback(async () => {
+    if (isSavingRef.current) {
+      return;
+    }
+
+    isSavingRef.current = true;
     const { nodes, edges, viewport } = state;
 
-    // 1. Export to master (partial patch for research)
-    const { updatedColumns, nodeGraphFile } = exportToMaster(
-      nodes,
-      edges,
-      viewport,
-      props.jsonData,
-      schemaMetas,
-    );
+    try {
+      // 1. Export to master (partial patch for research)
+      const { updatedColumns, nodeGraphFile } = exportToMaster(
+        nodes,
+        edges,
+        viewport,
+        props.jsonData,
+        schemaMetas,
+      );
 
-    // 2. Update App's jsonData state
-    props.setJsonData(updatedColumns);
+      // 2. Request save (columns + nodeGraph)
+      await props.onRequestSave(updatedColumns, nodeGraphFile);
 
-    // 3. Request save (columns + nodeGraph)
-    await props.onRequestSave(updatedColumns, nodeGraphFile);
+      // 3. Update App's jsonData state after save succeeds
+      props.setJsonData(updatedColumns);
 
-    // 4. Clear dirty flag on success
-    dispatch({ type: "SET_DIRTY", dirty: false });
+      // 4. Clear dirty flag on success
+      dispatch({ type: "SET_DIRTY", dirty: false });
+    } finally {
+      isSavingRef.current = false;
+    }
   }, [state, props, schemaMetas, dispatch]);
 
   return { exportAndSave, isDirty: state.isDirty };

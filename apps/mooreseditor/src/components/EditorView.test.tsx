@@ -427,6 +427,50 @@ describe("EditorView", () => {
     });
   });
 
+  it("keeps top-level array data as an array when editing via a nested FormView", async () => {
+    const props = buildProps({
+      jsonData: [
+        {
+          title: "items",
+          data: [
+            { id: 1, name: "Item 1" },
+            { id: 2, name: "Item 2" },
+          ],
+        },
+      ],
+      schemas: { items: arraySchema },
+    });
+    render(<EditorView {...props} />);
+
+    fireEvent.click(screen.getByText("items"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("table-view")).toBeInTheDocument();
+    });
+
+    // Open the nested FormView for row 0 (path becomes ["0"])
+    fireEvent.click(screen.getByTestId("row-0"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("form-view")).toBeInTheDocument();
+    });
+
+    // Edit the row via the nested FormView
+    fireEvent.change(screen.getByTestId("form-input"), {
+      target: { value: '{"id":1,"name":"Updated"}' },
+    });
+
+    await waitFor(() => {
+      expect(props.setJsonData).toHaveBeenCalled();
+    });
+
+    const updatedJsonData = (props.setJsonData as ReturnType<typeof vi.fn>).mock
+      .calls[0][0] as Column[];
+    expect(Array.isArray(updatedJsonData[0].data)).toBe(true);
+    expect(updatedJsonData[0].data[0]).toEqual({ id: 1, name: "Updated" });
+    expect(updatedJsonData[0].data[1]).toEqual({ id: 2, name: "Item 2" });
+  });
+
   // -----------------------------------------------------------------------
   // 6. Switching between menu items resets nested views
   // -----------------------------------------------------------------------

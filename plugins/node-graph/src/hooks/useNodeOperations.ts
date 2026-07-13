@@ -14,6 +14,13 @@ import {
 import type { ConnectionDecision } from "../types/connection";
 import type { Connection, Edge as ReactFlowEdge } from "@xyflow/react";
 
+let edgeIdCounter = 0;
+
+export function generateEdgeId(): string {
+  edgeIdCounter++;
+  return `edge-${Date.now()}-${edgeIdCounter}`;
+}
+
 export function useNodeOperations() {
   const { state, dispatch } = useNodeEditorContext();
   const [pendingConnection, setPendingConnection] = useState<Connection | null>(
@@ -110,7 +117,7 @@ export function useNodeOperations() {
 
       if (isResearchToResearch) {
         const newEdge = {
-          id: `edge-${Date.now()}`,
+          id: generateEdgeId(),
           source: connection.source,
           target: connection.target,
           type: "arrow",
@@ -139,7 +146,7 @@ export function useNodeOperations() {
       const isRecipe =
         decision.edgeType === "recipe" && decision.recipeRefs.length > 0;
       const newEdge = {
-        id: `edge-${Date.now()}`,
+        id: generateEdgeId(),
         source: pendingConnection.source,
         target: pendingConnection.target,
         type: isRecipe ? "recipe" : "arrow",

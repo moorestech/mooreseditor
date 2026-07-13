@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 
 import { Stack } from "@mantine/core";
 
-import Field from "./Field";
+import Field from "./fields/Field";
 
 import type { Column } from "../../schema";
 import type { Schema, ObjectSchema, ArraySchema } from "../../schema";

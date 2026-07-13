@@ -10,6 +10,10 @@ import { Notifications } from "@mantine/notifications";
 import { NotificationProvider } from "@moorestech/mooreseditor-plugin-sdk";
 
 import EditorView from "./components/EditorView";
+import {
+  PluginViewContent,
+  PluginViewErrorBoundary,
+} from "./components/PluginViewErrorBoundary";
 import { SearchOverlay } from "./components/SearchOverlay";
 import { useJson } from "./hooks/useJson";
 import { useProject } from "./hooks/useProject";
@@ -351,16 +355,30 @@ function App() {
           <AppShell.Main ref={searchTargetRef}>
             {views
               .filter((view) => mountedViewIds.has(view.id))
-              .map((view) => (
-                <div
-                  key={view.id}
-                  style={{
-                    display: view.id === activeViewId ? "block" : "none",
-                  }}
-                >
-                  {view.render()}
-                </div>
-              ))}
+              .map((view) => {
+                const viewContent =
+                  view.id === EDITOR_VIEW_ID ? (
+                    view.render()
+                  ) : (
+                    <PluginViewErrorBoundary
+                      pluginId={view.id}
+                      pluginName={view.label}
+                    >
+                      <PluginViewContent renderView={view.render} />
+                    </PluginViewErrorBoundary>
+                  );
+
+                return (
+                  <div
+                    key={view.id}
+                    style={{
+                      display: view.id === activeViewId ? "block" : "none",
+                    }}
+                  >
+                    {viewContent}
+                  </div>
+                );
+              })}
             <SearchOverlay
               targetRef={searchTargetRef}
               onActiveMatchChange={handleActiveSearchMatchChange}

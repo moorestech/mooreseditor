@@ -1,8 +1,7 @@
-import { isPrimitiveSchemaType } from "../schema";
+import { isPrimitiveSchemaType } from "../../schema";
+import { generateUuid } from "../generateUuid";
 
-import { generateUuid } from "./generateUuid";
-
-import type { PrimitiveSchema } from "../schema";
+import type { PrimitiveSchema } from "../../schema";
 
 type PrimitiveDefaultValueHandlers = {
   [Type in PrimitiveSchema["type"]]: (

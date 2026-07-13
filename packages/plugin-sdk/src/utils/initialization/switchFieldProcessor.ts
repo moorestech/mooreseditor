@@ -1,7 +1,8 @@
-import { DataInitializer } from "./dataInitializer";
-import { deepMerge } from "./deepMerge";
+import { deepMerge } from "../object/deepMerge";
 
-import type { ObjectSchema, SwitchSchema } from "../schema";
+import { DataInitializer } from "./dataInitializer";
+
+import type { ObjectSchema, SwitchSchema } from "../../schema";
 
 /**
  * オブジェクトスキーマ内のswitchフィールドを処理し、

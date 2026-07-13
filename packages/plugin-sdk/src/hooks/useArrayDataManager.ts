@@ -3,8 +3,8 @@ import { useCallback, useMemo } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import { calculateAutoIncrement } from "../utils/autoIncrement";
-import { createInitialValue } from "../utils/createInitialValue";
 import { generateUuid } from "../utils/generateUuid";
+import { createInitialValue } from "../utils/initialization/createInitialValue";
 
 import type { Schema, ValueSchema, ArraySchema } from "../schema";
 import type { DragEndEvent } from "@dnd-kit/core";

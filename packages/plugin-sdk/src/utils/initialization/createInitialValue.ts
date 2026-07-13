@@ -1,10 +1,10 @@
-import { isRuntimeValueSchema } from "../schema";
+import { isRuntimeValueSchema } from "../../schema";
+import { calculateAutoIncrement } from "../autoIncrement";
 
-import { calculateAutoIncrement } from "./autoIncrement";
 import { DataInitializer } from "./dataInitializer";
 import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
 
-import type { Schema, ValueSchema } from "../schema";
+import type { Schema, ValueSchema } from "../../schema";
 
 /**
  * プライベート関数：基本的なデフォルト値を生成

@@ -4,7 +4,7 @@ import { Table, Button, Group, ActionIcon, Checkbox } from "@mantine/core";
 import { IconTrash, IconCopy } from "@tabler/icons-react";
 
 import { supportsForeignKey } from "../../../schema";
-import { processSwitchFields } from "../../../utils/switchFieldProcessor";
+import { processSwitchFields } from "../../../utils/initialization/switchFieldProcessor";
 import { EditableCell } from "../cells/EditableCell";
 import { ForeignKeyDisplayCell } from "../cells/ForeignKeyDisplayCell";
 

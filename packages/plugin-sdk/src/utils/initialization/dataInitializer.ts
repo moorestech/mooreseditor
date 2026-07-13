@@ -1,15 +1,15 @@
-import { isRuntimeValueSchema } from "../schema";
+import { isRuntimeValueSchema } from "../../schema";
+import { calculateAutoIncrement } from "../autoIncrement";
 
-import { calculateAutoIncrement } from "./autoIncrement";
 import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
 
 import type {
-  Schema,
-  ValueSchema,
-  ObjectSchema,
   ArraySchema,
+  ObjectSchema,
+  Schema,
   SwitchSchema,
-} from "../schema";
+  ValueSchema,
+} from "../../schema";
 
 /**
  * DataInitializerクラス

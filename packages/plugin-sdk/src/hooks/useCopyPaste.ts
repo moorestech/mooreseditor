@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { useNotification } from "../contexts/NotificationContext";
-import { schemaToZod } from "../utils/schemaToZod";
+import { schemaToZod } from "../utils/validation/schemaToZod";
 
 
 import type { Schema } from "../schema";

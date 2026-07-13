@@ -1,9 +1,9 @@
 import { validate as validateUuid } from "uuid";
 import { describe, expect, it } from "vitest";
 
-import { createPrimitiveDefaultValue } from "./primitiveDefaultValue";
+import { createPrimitiveDefaultValue } from "../primitiveDefaultValue";
 
-import type { PrimitiveSchema } from "../schema";
+import type { PrimitiveSchema } from "../../../schema";
 
 describe("createPrimitiveDefaultValue", () => {
   it.each([

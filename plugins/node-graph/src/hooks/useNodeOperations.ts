@@ -3,15 +3,18 @@ import { useCallback, useState } from "react";
 import { MarkerType, reconnectEdge } from "@xyflow/react";
 
 import { useNodeEditorContext } from "../context/NodeEditorContext";
+import { edgeRenderType } from "../utils/edgeRenderType";
 import {
   createItemNode,
   createBlockNode,
+  createTrainNode,
   createResearchNode,
   createNoteNode,
   createPlaceholderNode,
 } from "../utils/nodeFactory";
 
 import type { ConnectionDecision } from "../types/connection";
+import type { GraphNodeType } from "../types/nodeGraph";
 import type { Connection, Edge as ReactFlowEdge } from "@xyflow/react";
 
 let edgeIdCounter = 0;
@@ -29,7 +32,7 @@ export function useNodeOperations() {
 
   const addNode = useCallback(
     (
-      type: "item" | "block" | "research" | "note" | "placeholder",
+      type: GraphNodeType,
       masterGuid?: string,
       displayName?: string,
       targetPosition?: { x: number; y: number },
@@ -59,6 +62,9 @@ export function useNodeOperations() {
           break;
         case "block":
           newNode = createBlockNode(masterGuid!, position, displayName);
+          break;
+        case "train":
+          newNode = createTrainNode(masterGuid!, position, displayName);
           break;
         case "research":
           newNode = createResearchNode(masterGuid!, position, displayName);
@@ -145,16 +151,21 @@ export function useNodeOperations() {
 
       const isRecipe =
         decision.edgeType === "recipe" && decision.recipeRefs.length > 0;
+      const renderType = edgeRenderType(decision.edgeType);
       const newEdge = {
         id: generateEdgeId(),
         source: pendingConnection.source,
         target: pendingConnection.target,
-        type: isRecipe ? "recipe" : "arrow",
+        type: renderType,
         data: {
-          edgeType: isRecipe ? "recipe" : decision.edgeType,
+          edgeType: decision.edgeType,
           ...(isRecipe ? { recipeRefs: decision.recipeRefs } : {}),
         },
-        ...(isRecipe ? {} : { markerEnd: { type: MarkerType.ArrowClosed } }),
+        // 矢印マーカーはdependency/visualのみ（recipe/buildCostはラベル中心）
+        // Arrow markers only for dependency/visual; recipe/buildCost are label-centric
+        ...(renderType === "arrow"
+          ? { markerEnd: { type: MarkerType.ArrowClosed } }
+          : {}),
       };
       dispatch({ type: "SET_EDGES", edges: [...state.edges, newEdge] });
       setPendingConnection(null);

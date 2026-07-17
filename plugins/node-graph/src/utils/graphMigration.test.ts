@@ -46,6 +46,56 @@ describe("validateAndMigrate", () => {
     expect(result?.edges).toEqual([]);
   });
 
+  it("accepts train nodes with masterGuid and drops those without", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const result = validateAndMigrate({
+      version: 1,
+      nodes: [
+        {
+          id: "train-1",
+          type: "train",
+          masterGuid: "train-guid",
+          position: { x: 0, y: 0 },
+        },
+        { id: "train-2", type: "train", position: { x: 10, y: 10 } },
+      ],
+      edges: [],
+    });
+
+    expect(result?.nodes.map((node) => node.id)).toEqual(["train-1"]);
+  });
+
+  it("accepts buildCost edges", () => {
+    const graph = {
+      version: 1,
+      viewport: { x: 0, y: 0, zoom: 1 },
+      nodes: [
+        {
+          id: "item-1",
+          type: "item",
+          masterGuid: "item-guid",
+          position: { x: 0, y: 0 },
+        },
+        {
+          id: "block-1",
+          type: "block",
+          masterGuid: "block-guid",
+          position: { x: 10, y: 10 },
+        },
+      ],
+      edges: [
+        {
+          id: "edge-1",
+          source: "item-1",
+          target: "block-1",
+          edgeType: "buildCost",
+        },
+      ],
+    };
+
+    expect(validateAndMigrate(graph)).toEqual(graph);
+  });
+
   it("leaves a valid graph unchanged", () => {
     const graph = {
       version: 1,

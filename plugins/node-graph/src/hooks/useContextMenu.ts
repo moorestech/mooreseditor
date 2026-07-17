@@ -7,8 +7,11 @@ import {
   canCreateMasterRecordForNode,
   createMasterRecordForNode,
 } from "../utils/masterRecordCreation";
+import { MASTER_NODE_TYPE_SECTIONS } from "../utils/nodeTypeCatalog";
 
 import type { ContextMenuPosition } from "../components/canvas/CanvasContextMenu";
+import type { GraphNodeType } from "../types/nodeGraph";
+import type { MasterNodeType } from "../utils/nodeTypeCatalog";
 import type { SchemaMeta } from "../utils/schemaMeta";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
@@ -18,7 +21,7 @@ interface UseContextMenuParams {
   setJsonData: React.Dispatch<React.SetStateAction<Column[]>>;
   onMarkDirty: () => void;
   addNode: (
-    type: "item" | "block" | "research" | "note" | "placeholder",
+    type: GraphNodeType,
     masterGuid?: string,
     displayName?: string,
     position?: { x: number; y: number },
@@ -59,28 +62,32 @@ export function useContextMenu({
     setContextMenuPos(null);
   }, []);
 
+  // 配置済みマスタ参照ノードのGUID集合（全型対象、重複配置の抑止に使う）
+  // GUIDs of placed master-backed nodes (all types), used for dedup
   const existingNodeGuids = useMemo(() => {
     const guids = new Set<string>();
     for (const node of state.nodes) {
-      if (
-        (node.type === "item" || node.type === "research") &&
-        node.data?.masterGuid
-      ) {
-        guids.add(node.data.masterGuid as string);
+      if (typeof node.data?.masterGuid === "string") {
+        guids.add(node.data.masterGuid);
       }
     }
     return guids;
   }, [state.nodes]);
 
-  const hasCreatableNodesInContextMenu = useMemo(
-    () =>
-      canCreateMasterRecordForNode("item", jsonData, schemaMetas) ||
-      canCreateMasterRecordForNode("research", jsonData, schemaMetas),
-    [jsonData, schemaMetas],
-  );
+  // 新規masterレコードを作成できるノード型の集合
+  // Node types for which a new master record can be created
+  const creatableNodeTypes = useMemo(() => {
+    const types = new Set<MasterNodeType>();
+    for (const entry of MASTER_NODE_TYPE_SECTIONS) {
+      if (canCreateMasterRecordForNode(entry.type, jsonData, schemaMetas)) {
+        types.add(entry.type);
+      }
+    }
+    return types;
+  }, [jsonData, schemaMetas]);
 
   const handleCreateAndAddNode = useCallback(
-    (type: "item" | "research", position: { x: number; y: number }) => {
+    (type: MasterNodeType, position: { x: number; y: number }) => {
       const created = createMasterRecordForNode(type, jsonData, schemaMetas);
       if (!created) {
         return false;
@@ -99,7 +106,7 @@ export function useContextMenu({
     handlePaneContextMenu,
     closeContextMenu,
     existingNodeGuids,
-    hasCreatableNodesInContextMenu,
+    creatableNodeTypes,
     handleCreateAndAddNode,
   };
 }

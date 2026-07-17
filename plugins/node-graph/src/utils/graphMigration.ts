@@ -1,7 +1,12 @@
 import type { NodeGraphFile } from "../types/nodeGraph";
 
 function requiresMasterGuid(type: unknown): boolean {
-  return type === "item" || type === "block" || type === "research";
+  return (
+    type === "item" ||
+    type === "block" ||
+    type === "train" ||
+    type === "research"
+  );
 }
 
 export function validateAndMigrate(data: unknown): NodeGraphFile | null {

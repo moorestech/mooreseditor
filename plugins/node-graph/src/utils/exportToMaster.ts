@@ -4,7 +4,8 @@ import {
   patchResearchColumn,
 } from "./exportToMasterResearchPatch";
 import { validateGraph } from "./graphValidator";
-import { calculateUnlockedItems } from "./spatialUnlock";
+import { calculateResearchUnlocks } from "./spatialUnlock";
+import { buildUnlockGuidIndex, UNLOCKABLE_NODE_TYPES } from "./unlockTargets";
 
 import type { SchemaMeta } from "./schemaMeta";
 import type { NodeGraphFile } from "../types/nodeGraph";
@@ -31,15 +32,17 @@ export function exportToMaster(
   }
 
   const researchNodes = nodes.filter((node) => node.type === "research");
-  const itemBlockNodes = nodes.filter(
-    (node) => node.type === "item" || node.type === "block",
+  const unlockableNodes = nodes.filter(
+    (node) => node.type && UNLOCKABLE_NODE_TYPES.has(node.type),
   );
 
-  const unlockMap = calculateUnlockedItems(
+  // 有効GUID索引を先に構築し、dangling参照と未ロード種別を分離する
+  // Build the valid-guid index first to separate dangling refs from unloaded kinds
+  const guidIndex = buildUnlockGuidIndex(jsonData, schemaMetas);
+  const unlockMap = calculateResearchUnlocks(
     researchNodes,
-    itemBlockNodes,
-    jsonData,
-    schemaMetas,
+    unlockableNodes,
+    guidIndex,
   );
   const dependencyMap = buildResearchDependencyMap(nodes, cleanedEdges);
   const updatedColumns = patchResearchColumn(
@@ -48,6 +51,7 @@ export function exportToMaster(
     dependencyMap,
     unlockMap,
     schemaMetas,
+    new Set(guidIndex.keys()),
   );
 
   const nodeGraphFile = buildNodeGraphFile(nodes, cleanedEdges, viewport);

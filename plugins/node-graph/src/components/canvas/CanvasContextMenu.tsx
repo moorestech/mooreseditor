@@ -10,8 +10,14 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 
+import {
+  FILTERABLE_TYPES,
+  MASTER_NODE_TYPE_SECTIONS,
+} from "../../utils/nodeTypeCatalog";
 import { getRecords } from "../../utils/recordLookup";
 
+import type { GraphNodeType } from "../../types/nodeGraph";
+import type { MasterNodeType } from "../../utils/nodeTypeCatalog";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 
@@ -28,28 +34,21 @@ interface CanvasContextMenuProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: "item" | "block" | "research" | "note" | "placeholder",
+    type: GraphNodeType,
     masterGuid?: string,
     displayName?: string,
     position?: { x: number; y: number },
   ) => void;
   onCreateAndAddNode?: (
-    type: "item" | "research",
+    type: MasterNodeType,
     position: { x: number; y: number },
   ) => boolean;
+  creatableNodeTypes: ReadonlySet<MasterNodeType>;
   existingNodeGuids: Set<string>;
 }
 
-const NODE_TYPE_SECTIONS = [
-  { label: "Item", type: "item" as const, schemaId: "items" },
-  { label: "Block", type: "block" as const, schemaId: "blocks" },
-  { label: "Research", type: "research" as const, schemaId: "research" },
-];
-
 const MENU_WIDTH = 260;
 const MENU_MAX_HEIGHT = 420;
-
-const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
 
 export default function CanvasContextMenu({
   position,
@@ -58,6 +57,7 @@ export default function CanvasContextMenu({
   schemaMetas,
   onAddNode,
   onCreateAndAddNode,
+  creatableNodeTypes,
   existingNodeGuids,
 }: CanvasContextMenuProps) {
   const [search, setSearch] = useState("");
@@ -95,11 +95,7 @@ export default function CanvasContextMenu({
   }, [position, onClose]);
 
   const handleAddNode = useCallback(
-    (
-      type: "item" | "block" | "research" | "note" | "placeholder",
-      masterGuid?: string,
-      displayName?: string,
-    ) => {
+    (type: GraphNodeType, masterGuid?: string, displayName?: string) => {
       if (!position) return;
       onAddNode(type, masterGuid, displayName, {
         x: position.flowX,
@@ -111,7 +107,7 @@ export default function CanvasContextMenu({
   );
 
   const handleCreateAndAddNode = useCallback(
-    (type: "item" | "research") => {
+    (type: MasterNodeType) => {
       if (!position || !onCreateAndAddNode) return;
       const isCreated = onCreateAndAddNode(type, {
         x: position.flowX,
@@ -122,6 +118,10 @@ export default function CanvasContextMenu({
       }
     },
     [position, onClose, onCreateAndAddNode],
+  );
+
+  const creatableSections = MASTER_NODE_TYPE_SECTIONS.filter((entry) =>
+    creatableNodeTypes.has(entry.type),
   );
 
   if (!position) return null;
@@ -164,36 +164,25 @@ export default function CanvasContextMenu({
       />
       <ScrollArea.Autosize mah={350}>
         <Stack gap={0}>
-          {onCreateAndAddNode && (
+          {onCreateAndAddNode && creatableSections.length > 0 && (
             <>
-              <UnstyledButton
-                role="menuitem"
-                onClick={() => handleCreateAndAddNode("item")}
-                px="sm"
-                py={4}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  borderRadius: 4,
-                }}
-                className="context-menu-item"
-              >
-                <Text size="xs">Add New Item</Text>
-              </UnstyledButton>
-              <UnstyledButton
-                role="menuitem"
-                onClick={() => handleCreateAndAddNode("research")}
-                px="sm"
-                py={4}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  borderRadius: 4,
-                }}
-                className="context-menu-item"
-              >
-                <Text size="xs">Add New Research</Text>
-              </UnstyledButton>
+              {creatableSections.map(({ label, type }) => (
+                <UnstyledButton
+                  key={type}
+                  role="menuitem"
+                  onClick={() => handleCreateAndAddNode(type)}
+                  px="sm"
+                  py={4}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    borderRadius: 4,
+                  }}
+                  className="context-menu-item"
+                >
+                  <Text size="xs">Add New {label}</Text>
+                </UnstyledButton>
+              ))}
               <Divider my={4} />
             </>
           )}
@@ -226,7 +215,7 @@ export default function CanvasContextMenu({
             <Text size="xs">Add Placeholder</Text>
           </UnstyledButton>
           <Divider my={4} />
-          {NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
+          {MASTER_NODE_TYPE_SECTIONS.map(({ label, type, schemaId }) => {
             const records = getRecords(schemaId, jsonData, schemaMetas).filter(
               (r) => {
                 if (FILTERABLE_TYPES.has(type) && existingNodeGuids.has(r.guid))

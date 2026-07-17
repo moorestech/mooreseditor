@@ -35,6 +35,19 @@ export function createBlockNode(
   };
 }
 
+export function createTrainNode(
+  masterGuid: string,
+  position: { x: number; y: number },
+  displayName?: string,
+): ReactFlowNode {
+  return {
+    id: generateNodeId(),
+    type: "train",
+    position,
+    data: { masterGuid, displayName: displayName || masterGuid },
+  };
+}
+
 export function createResearchNode(
   masterGuid: string,
   position: { x: number; y: number },

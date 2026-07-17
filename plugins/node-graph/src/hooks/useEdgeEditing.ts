@@ -41,6 +41,15 @@ export function buildEditedEdge(
     };
   }
 
+  if (decision.edgeType === "buildCost") {
+    const { markerEnd: _markerEnd, ...edgeWithoutMarker } = edge;
+    return {
+      ...edgeWithoutMarker,
+      type: "buildCost",
+      data: { edgeType: "buildCost" },
+    };
+  }
+
   return {
     ...edge,
     type: "arrow",

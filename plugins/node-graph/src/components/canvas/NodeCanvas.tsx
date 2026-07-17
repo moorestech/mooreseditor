@@ -7,6 +7,7 @@ import {
   MarkerType,
 } from "@xyflow/react";
 
+import BuildCostEdge from "../edges/BuildCostEdge";
 import DependencyEdge from "../edges/DependencyEdge";
 import RecipeEdge from "../edges/RecipeEdge";
 import BlockNode from "../nodes/BlockNode";
@@ -14,6 +15,7 @@ import ItemNode from "../nodes/ItemNode";
 import MemoNode from "../nodes/MemoNode";
 import PlaceholderNode from "../nodes/PlaceholderNode";
 import ResearchNode from "../nodes/ResearchNode";
+import TrainNode from "../nodes/TrainNode";
 
 import CanvasControls from "./CanvasControls";
 
@@ -30,6 +32,7 @@ import type {
 const nodeTypes = {
   item: ItemNode,
   block: BlockNode,
+  train: TrainNode,
   research: ResearchNode,
   note: MemoNode,
   placeholder: PlaceholderNode,
@@ -37,6 +40,7 @@ const nodeTypes = {
 
 const edgeTypes = {
   recipe: RecipeEdge,
+  buildCost: BuildCostEdge,
   arrow: DependencyEdge,
 };
 

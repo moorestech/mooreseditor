@@ -1,5 +1,7 @@
 import { normalizeNoteColor } from "./noteColor";
+import { UNLOCK_ACTION_SPECS } from "./unlockTargets";
 
+import type { ResearchUnlocks, UnlockKind } from "./unlockTargets";
 import type { RecipeReference, NodeGraphFile } from "../types/nodeGraph";
 import type {
   Edge as ReactFlowEdge,
@@ -7,22 +9,36 @@ import type {
 } from "@xyflow/react";
 
 /**
- * Update clearedActions: upsert unlockItemRecipeView only, preserve all other action types.
+ * Update clearedActions: regenerate unlock actions (item/block/train) from the
+ * spatial layout, preserve all other action types (giveItem, playSkit, ...).
+ * Kinds absent from activeKinds (master column not loaded) keep their existing
+ * actions untouched so a partial load can never wipe hand-authored unlocks.
  */
 export function updateClearedActions(
   existingActions: any[],
-  unlockItemGuids: string[],
+  unlocks: ResearchUnlocks,
+  activeKinds: ReadonlySet<UnlockKind>,
 ): any[] {
-  const preserved = existingActions.filter(
-    (a: any) => a.gameActionType !== "unlockItemRecipeView",
+  // 管理対象のaction型を一旦除去し、非空のみ再生成する
+  // Strip managed action types, then re-emit only non-empty ones
+  const managedTypes = new Set(
+    UNLOCK_ACTION_SPECS.filter((spec) => activeKinds.has(spec.kind)).map(
+      (spec) => spec.gameActionType,
+    ),
   );
-  preserved.push({
-    gameActionType: "unlockItemRecipeView",
-    gameActionParam: {
-      unlockItemGuids,
-    },
-  });
-  return preserved;
+  const next = existingActions.filter(
+    (a: any) => !managedTypes.has(a.gameActionType),
+  );
+  for (const spec of UNLOCK_ACTION_SPECS) {
+    if (!activeKinds.has(spec.kind)) continue;
+    const guids = unlocks[spec.paramKey];
+    if (guids.length === 0) continue;
+    next.push({
+      gameActionType: spec.gameActionType,
+      gameActionParam: { [spec.paramKey]: guids },
+    });
+  }
+  return next;
 }
 
 function normalizeRecipeRefs(edge: ReactFlowEdge): RecipeReference[] {
@@ -77,7 +93,7 @@ function toSerializableNode(node: ReactFlowNode) {
   }
   return {
     ...base,
-    type: node.type as "item" | "block" | "research",
+    type: node.type as "item" | "block" | "train" | "research",
     masterGuid: node.data.masterGuid as string,
   };
 }
@@ -97,7 +113,9 @@ function toSerializableEdge(edge: ReactFlowEdge) {
     id: edge.id,
     source: edge.source,
     target: edge.target,
-    edgeType: (edge.data?.edgeType as "dependency" | "visual") || "visual",
+    edgeType:
+      (edge.data?.edgeType as "dependency" | "visual" | "buildCost") ||
+      "visual",
   };
 }
 

@@ -6,6 +6,7 @@ import { readTextFile } from "@tauri-apps/plugin-fs";
 
 import { NODE_GRAPH_DIR, NODE_GRAPH_FILE_NAME } from "../constants";
 import { useNodeEditorContext } from "../context/NodeEditorContext";
+import { edgeRenderType } from "../utils/edgeRenderType";
 import { validateAndMigrate } from "../utils/graphMigration";
 import { importResearchFromMaster } from "../utils/importFromMaster";
 import { findSchemaIdForNodeType } from "../utils/nodeTypeSchema";
@@ -21,20 +22,6 @@ import type {
 } from "@xyflow/react";
 
 const isDev = import.meta.env.DEV;
-
-/**
- * Map edgeType to React Flow component type key
- */
-function mapEdgeType(edgeType: string): string {
-  if (
-    edgeType === "recipe" ||
-    edgeType === "craftRecipe" ||
-    edgeType === "machineRecipe"
-  ) {
-    return "recipe";
-  }
-  return "arrow";
-}
 
 /**
  * Convert persistent GraphNode[] to React Flow nodes
@@ -104,7 +91,7 @@ function toReactFlowEdges(graphEdges: GraphEdge[]): ReactFlowEdge[] {
       id: ge.id,
       source: ge.source,
       target: ge.target,
-      type: mapEdgeType(ge.edgeType),
+      type: edgeRenderType(ge.edgeType),
       data: {
         edgeType: isRecipe ? "recipe" : ge.edgeType,
         ...(isRecipe ? { recipeRefs } : {}),

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { calculateUnlockedItems } from "./spatialUnlock";
+import { calculateResearchUnlocks } from "./spatialUnlock";
 
-import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
+import type { UnlockKind } from "./unlockTargets";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
 /**
@@ -22,12 +22,8 @@ function makeResearch(
   };
 }
 
-/**
- * Helper to create a minimal item node for testing.
- * For item nodes, getItemGuidForNode returns data.masterGuid directly,
- * so no jsonData/schemaMeta lookup is needed.
- */
-function makeItem(
+function makeNode(
+  type: "item" | "block" | "train",
   id: string,
   x: number,
   y: number,
@@ -35,31 +31,63 @@ function makeItem(
 ): ReactFlowNode {
   return {
     id,
-    type: "item",
+    type,
     position: { x, y },
     data: { masterGuid: masterGuid ?? id },
   };
 }
 
-// For item-type nodes, jsonData and schemaMetas are not used.
-const emptyColumns: Column[] = [];
-const emptyMetas = new Map();
+function makeItem(
+  id: string,
+  x: number,
+  y: number,
+  masterGuid?: string,
+): ReactFlowNode {
+  return makeNode("item", id, x, y, masterGuid);
+}
+
+// 渡した全ノードのGUIDを有効として登録する索引を作る
+// Build a guid index registering every given node's guid as valid
+function guidIndexFromNodes(
+  nodes: ReactFlowNode[],
+): Map<UnlockKind, Set<string>> {
+  const index = new Map<UnlockKind, Set<string>>([
+    ["item", new Set<string>()],
+    ["block", new Set<string>()],
+    ["train", new Set<string>()],
+  ]);
+  for (const node of nodes) {
+    index.get(node.type as UnlockKind)?.add(node.data.masterGuid as string);
+  }
+  return index;
+}
+
+// 旧API相当のアダプタ: 全GUIDを有効扱いにしてitemリストだけを返す
+// Legacy-shaped adapter: treats all guids as valid, returns item lists only
+function calculateUnlockedItems(
+  researchNodes: ReactFlowNode[],
+  nodes: ReactFlowNode[],
+): Map<string, string[]> {
+  const result = calculateResearchUnlocks(
+    researchNodes,
+    nodes,
+    guidIndexFromNodes(nodes),
+  );
+  return new Map(
+    [...result].map(([guid, unlocks]) => [guid, unlocks.unlockItemGuids]),
+  );
+}
 
 describe("calculateUnlockedItems", () => {
   it("returns empty map when no research nodes exist", () => {
     const items = [makeItem("i1", 100, 100)];
-    const result = calculateUnlockedItems([], items, emptyColumns, emptyMetas);
+    const result = calculateUnlockedItems([], items);
     expect(result.size).toBe(0);
   });
 
   it("returns empty arrays when no items exist", () => {
     const research = [makeResearch("r1", 0, 0)];
-    const result = calculateUnlockedItems(
-      research,
-      [],
-      emptyColumns,
-      emptyMetas,
-    );
+    const result = calculateUnlockedItems(research, []);
     expect(result.get("r1")).toEqual([]);
   });
 
@@ -67,36 +95,21 @@ describe("calculateUnlockedItems", () => {
     it("includes items to the right of research node", () => {
       const research = [makeResearch("r1", 0, 0)];
       const items = [makeItem("i1", 200, 0), makeItem("i2", 200, 100)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1", "i2"]);
     });
 
     it("excludes items to the left of research node", () => {
       const research = [makeResearch("r1", 300, 0)];
       const items = [makeItem("i1", 100, 0)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
 
     it("excludes items at the same x as research node", () => {
       const research = [makeResearch("r1", 100, 0)];
       const items = [makeItem("i1", 100, 0)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
 
@@ -106,12 +119,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1", 200, 0), // between r1 and r2
         makeItem("i2", 500, 0), // past r2
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
       expect(result.get("r2")).toEqual(["i2"]);
     });
@@ -123,12 +131,7 @@ describe("calculateUnlockedItems", () => {
       const items = [
         makeItem("i1", 200, 300), // same x, below
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
     });
 
@@ -137,24 +140,14 @@ describe("calculateUnlockedItems", () => {
       const items = [
         makeItem("i1", 100, 300), // left of all research
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
 
     it("excludes items above research node", () => {
       const research = [makeResearch("r1", 200, 400)];
       const items = [makeItem("i1", 200, 100)]; // above
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
 
@@ -163,12 +156,7 @@ describe("calculateUnlockedItems", () => {
       // same y and x <= research.x → not in below zone (requires y > r.y)
       // also not in right zone (x is not > r.x)
       const items = [makeItem("i1", 200, 100)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
 
@@ -181,12 +169,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1", 200, 200), // between r1 and r2 (below zone of r1)
         makeItem("i2", 200, 500), // past r2 (below zone of r2)
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
       expect(result.get("r2")).toEqual(["i2"]);
     });
@@ -196,12 +179,7 @@ describe("calculateUnlockedItems", () => {
       // x > r.x and y > r.y → this falls in right zone, not below zone
       // but still gets included via right zone
       const items = [makeItem("i1", 300, 300)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       // Should be in right zone (x > 200, y >= 0)
       expect(result.get("r1")).toEqual(["i1"]);
     });
@@ -215,12 +193,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("below1", 200, 400), // below zone (y > 200, x == 200)
         makeItem("below2", 200, 300), // below zone (y > 200, x == 200)
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       const unlocked = result.get("r1")!;
       expect(unlocked).toContain("right1");
       expect(unlocked).toContain("below1");
@@ -234,12 +207,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1", 100, 100), // above and left → neither zone
         makeItem("i2", 100, 200), // same y and left → neither zone
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual([]);
     });
   });
@@ -251,12 +219,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1a", 400, 200, "shared-guid"), // right zone
         makeItem("i1b", 100, 400, "shared-guid"), // below zone, same guid
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["shared-guid"]);
     });
   });
@@ -268,12 +231,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1", 200, 0), // right of r1, left of r2
         makeItem("i2", 1000, 0), // right of r2
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
       expect(result.get("r2")).toEqual(["i2"]);
     });
@@ -288,12 +246,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i1", 0, 200), // below r1, bounded by r2
         makeItem("i2", 0, 500), // below r2
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
       expect(result.get("r2")).toEqual(["i2"]);
     });
@@ -311,12 +264,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("stone-axe", 40, 160, "石の斧"),
         makeItem("wind-miner", 460, 160, "風力掘削機"),
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("原始研究2")).toContain("石の斧");
       expect(result.get("原始研究3")).not.toContain("石の斧");
       expect(result.get("原始研究3")).toEqual(["風力掘削機"]);
@@ -328,12 +276,7 @@ describe("calculateUnlockedItems", () => {
         makeResearch("r2", -200, 20, "原始研究2"),
       ];
       const items = [makeItem("far-left-item", -2180, 100, "遠い左アイテム")];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       // Items to the left of all research should remain unassigned
       expect(result.get("原始研究1")).toEqual([]);
       expect(result.get("原始研究2")).toEqual([]);
@@ -355,12 +298,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i-wind-miner", 460, 160, "wind-miner"),
         makeItem("i-r4-right", 860, 140, "item-r4-right"),
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       // Items to the right of R1 are assigned to R1
       expect(result.get("原始研究1")).toContain("item-r1-right");
       expect(result.get("原始研究1")).toContain("item-between");
@@ -397,12 +335,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i3", 1060, 420, "iron-plate-item"),
         makeItem("i4", 680, 280, "sand-iron-item"),
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
 
       // R1 should unlock the item to its right: 低品質鉄塊
       expect(result.get("low-quality-iron-research")).toEqual([
@@ -426,12 +359,7 @@ describe("calculateUnlockedItems", () => {
         makeResearch("r2", 860, 0),
       ];
       const items = [makeItem("i1", 340, 160)];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r1")).toEqual(["i1"]);
       expect(result.get("r2")).toEqual([]);
     });
@@ -448,12 +376,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i2", 1060, 120), // right of both, but closest to R2
         makeItem("i3", 1060, 420), // right of both, but closest to R3
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       expect(result.get("r2")).toEqual(["i2"]);
       expect(result.get("r3")).toEqual(["i3"]);
     });
@@ -473,12 +396,7 @@ describe("calculateUnlockedItems", () => {
         makeItem("i-assembler", 6900, 560, "木材組立機"),
         makeItem("i-frame", 6900, 700, "木のフレーム"),
       ];
-      const result = calculateUnlockedItems(
-        research,
-        items,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(research, items);
       // All three should be assigned to 木材の組み立て, NOT 燃料式風車の作成
       const woodUnlocks = result.get("木材の組み立て")!;
       expect(woodUnlocks).toContain("補強棒材");
@@ -541,12 +459,7 @@ describe("calculateUnlockedItems", () => {
     ];
 
     it("assigns every item to the correct research matching research.json", () => {
-      const result = calculateUnlockedItems(
-        allResearch,
-        allItems,
-        emptyColumns,
-        emptyMetas,
-      );
+      const result = calculateUnlockedItems(allResearch, allItems);
 
       // 原始研究1: only 2 items to its RIGHT (Pass 1)
       // Leftmost 5 items (x < -840) are NOT assigned (they belong to ダミー研究)
@@ -607,5 +520,79 @@ describe("calculateUnlockedItems", () => {
       expect(rFuel).toContain("05c58e99");
       expect(rFuel).toHaveLength(2);
     });
+  });
+});
+
+describe("calculateResearchUnlocks (per-kind routing)", () => {
+  it("routes item/block/train nodes into separate unlock lists", () => {
+    const research = [makeResearch("r1", 0, 0)];
+    const nodes = [
+      makeItem("i1", 200, 0, "item-guid"),
+      makeNode("block", "b1", 200, 100, "block-guid"),
+      makeNode("train", "t1", 200, 200, "train-guid"),
+    ];
+    const result = calculateResearchUnlocks(
+      research,
+      nodes,
+      guidIndexFromNodes(nodes),
+    );
+    expect(result.get("r1")).toEqual({
+      unlockItemGuids: ["item-guid"],
+      unlockBlockGuids: ["block-guid"],
+      unlockTrainCarGuids: ["train-guid"],
+    });
+  });
+
+  it("excludes nodes whose masterGuid is dangling (not in guid index)", () => {
+    const research = [makeResearch("r1", 0, 0)];
+    const nodes = [
+      makeItem("i1", 200, 0, "valid-item"),
+      makeItem("i2", 200, 100, "dangling-item"),
+      makeNode("block", "b1", 200, 200, "dangling-block"),
+    ];
+    const guidIndex = new Map<UnlockKind, Set<string>>([
+      ["item", new Set(["valid-item"])],
+      ["block", new Set<string>()],
+      ["train", new Set<string>()],
+    ]);
+    const result = calculateResearchUnlocks(research, nodes, guidIndex);
+    expect(result.get("r1")).toEqual({
+      unlockItemGuids: ["valid-item"],
+      unlockBlockGuids: [],
+      unlockTrainCarGuids: [],
+    });
+  });
+
+  it("excludes kinds whose master column is not loaded (no index entry)", () => {
+    const research = [makeResearch("r1", 0, 0)];
+    const nodes = [
+      makeItem("i1", 200, 0, "item-guid"),
+      makeNode("block", "b1", 200, 100, "block-guid"),
+    ];
+    // blocksカラム未ロード想定: block種のエントリ自体が無い
+    // Simulates unloaded blocks column: no entry for the block kind
+    const guidIndex = new Map<UnlockKind, Set<string>>([
+      ["item", new Set(["item-guid"])],
+    ]);
+    const result = calculateResearchUnlocks(research, nodes, guidIndex);
+    expect(result.get("r1")).toEqual({
+      unlockItemGuids: ["item-guid"],
+      unlockBlockGuids: [],
+      unlockTrainCarGuids: [],
+    });
+  });
+
+  it("deduplicates guids within each kind independently", () => {
+    const research = [makeResearch("r1", 0, 0)];
+    const nodes = [
+      makeNode("block", "b1", 200, 0, "shared-guid"),
+      makeNode("block", "b2", 200, 100, "shared-guid"),
+    ];
+    const result = calculateResearchUnlocks(
+      research,
+      nodes,
+      guidIndexFromNodes(nodes),
+    );
+    expect(result.get("r1")?.unlockBlockGuids).toEqual(["shared-guid"]);
   });
 });

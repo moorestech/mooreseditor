@@ -6,25 +6,22 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import {
+  ENTITY_NODE_TYPES,
+  RESEARCH_NODE_TYPES,
+} from "../../utils/nodeTypeCatalog";
+
 import AddNodeMenu from "./AddNodeMenu";
 
+import type { GraphNodeType } from "../../types/nodeGraph";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
-
-const ITEM_NODE_TYPES = [
-  { label: "Item", type: "item" as const, schemaId: "items" },
-  { label: "Block", type: "block" as const, schemaId: "blocks" },
-];
-
-const RESEARCH_NODE_TYPES = [
-  { label: "Research", type: "research" as const, schemaId: "research" },
-];
 
 interface NodeToolbarProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: "item" | "block" | "research" | "note" | "placeholder",
+    type: GraphNodeType,
     masterGuid?: string,
     displayName?: string,
   ) => void;
@@ -61,9 +58,9 @@ export default function NodeToolbar({
         jsonData={jsonData}
         schemaMetas={schemaMetas}
         onAddNode={onAddNode}
-        nodeTypes={ITEM_NODE_TYPES}
+        nodeTypes={ENTITY_NODE_TYPES}
         color="blue"
-        tooltip="Add Item / Block"
+        tooltip="Add Item / Block / Train"
         existingNodeGuids={existingNodeGuids}
       />
       <AddNodeMenu

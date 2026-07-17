@@ -16,6 +16,7 @@ import { useGraphChangeHandlers } from "./hooks/useGraphChangeHandlers";
 import { useGraphImageExport } from "./hooks/useGraphImageExport";
 import { useNodeGraph } from "./hooks/useNodeGraph";
 import { useNodeOperations } from "./hooks/useNodeOperations";
+import { resolveBuildCostEdgeLabels } from "./utils/buildCostEdgeLabels";
 import {
   resolveDisplayNames,
   resolveEdgeRecipeLabels,
@@ -41,8 +42,14 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     [state.nodes, props.jsonData, schemaMetas],
   );
   const resolvedEdges = useMemo(
-    () => resolveEdgeRecipeLabels(state.edges, props.jsonData, schemaMetas),
-    [state.edges, props.jsonData, schemaMetas],
+    () =>
+      resolveBuildCostEdgeLabels(
+        resolveEdgeRecipeLabels(state.edges, props.jsonData, schemaMetas),
+        state.nodes,
+        props.jsonData,
+        schemaMetas,
+      ),
+    [state.edges, state.nodes, props.jsonData, schemaMetas],
   );
 
   // Image export
@@ -107,7 +114,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     handlePaneContextMenu,
     closeContextMenu,
     existingNodeGuids,
-    hasCreatableNodesInContextMenu,
+    creatableNodeTypes,
     handleCreateAndAddNode,
   } = useContextMenu({
     jsonData: props.jsonData,
@@ -174,10 +181,9 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             schemaMetas={schemaMetas}
             onAddNode={addNode}
             onCreateAndAddNode={
-              hasCreatableNodesInContextMenu
-                ? handleCreateAndAddNode
-                : undefined
+              creatableNodeTypes.size > 0 ? handleCreateAndAddNode : undefined
             }
+            creatableNodeTypes={creatableNodeTypes}
             existingNodeGuids={existingNodeGuids}
           />
         </div>

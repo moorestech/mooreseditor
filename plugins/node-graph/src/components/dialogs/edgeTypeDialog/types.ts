@@ -8,7 +8,7 @@ import type {
 } from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
 
-export type EdgeDialogMode = "dependency" | "visual" | "recipe";
+export type EdgeDialogMode = "dependency" | "visual" | "recipe" | "buildCost";
 
 export interface EdgeTypeDialogProps {
   opened: boolean;

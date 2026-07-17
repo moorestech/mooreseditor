@@ -11,30 +11,23 @@ import {
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
+import { FILTERABLE_TYPES } from "../../utils/nodeTypeCatalog";
 import { getRecords } from "../../utils/recordLookup";
 
+import type { GraphNodeType } from "../../types/nodeGraph";
+import type { NodeTypeCatalogEntry } from "../../utils/nodeTypeCatalog";
 import type { SchemaMeta } from "../../utils/schemaMeta";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
-
-type NodeType = "item" | "block" | "research" | "note";
-
-interface NodeTypeEntry {
-  label: string;
-  type: NodeType;
-  schemaId: string;
-}
-
-const FILTERABLE_TYPES: ReadonlySet<string> = new Set(["item", "research"]);
 
 interface AddNodeMenuProps {
   jsonData: Column[];
   schemaMetas: Map<string, SchemaMeta>;
   onAddNode: (
-    type: NodeType,
+    type: GraphNodeType,
     masterGuid?: string,
     displayName?: string,
   ) => void;
-  nodeTypes: NodeTypeEntry[];
+  nodeTypes: ReadonlyArray<NodeTypeCatalogEntry>;
   color: string;
   tooltip: string;
   showNoteOption?: boolean;

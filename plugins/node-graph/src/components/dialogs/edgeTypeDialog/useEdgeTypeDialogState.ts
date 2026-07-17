@@ -71,6 +71,11 @@ export function useEdgeTypeDialogState({
     }
   }, [opened, initialRecipeRefs]);
 
+  // 建設コストはターゲットがblock/trainのときだけ選択可能
+  // Build Cost is selectable only when the target is a block/train node
+  const isBuildCostAvailable =
+    targetNode?.type === "block" || targetNode?.type === "train";
+
   const recipeOptions = useMemo(
     () => buildRecipeOptions(jsonData, schemaMetas),
     [jsonData, schemaMetas],
@@ -265,6 +270,7 @@ export function useEdgeTypeDialogState({
   return {
     mode,
     setMode,
+    isBuildCostAvailable,
     craftRecipeGuids,
     setCraftRecipeGuids,
     machineRecipeGuids,

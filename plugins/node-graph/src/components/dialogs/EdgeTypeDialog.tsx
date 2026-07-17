@@ -19,6 +19,7 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
   const {
     mode,
     setMode,
+    isBuildCostAvailable,
     craftRecipeGuids,
     setCraftRecipeGuids,
     machineRecipeGuids,
@@ -56,10 +57,20 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
             { label: "Dependency", value: "dependency" },
             { label: "Visual", value: "visual" },
             { label: "Recipe", value: "recipe" },
+            ...(isBuildCostAvailable
+              ? [{ label: "Build Cost", value: "buildCost" }]
+              : []),
           ]}
           value={mode}
           onChange={(value) => setMode(value as EdgeDialogMode)}
         />
+
+        {mode === "buildCost" && (
+          <Text size="xs" c="dimmed">
+            Cost is derived from the target&apos;s requiredItems. Edit them in
+            the Properties panel.
+          </Text>
+        )}
 
         {mode === "recipe" && (
           <EdgeRecipeSection

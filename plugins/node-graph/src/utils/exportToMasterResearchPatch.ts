@@ -1,7 +1,9 @@
 import { updateClearedActions } from "./exportToMasterHelpers";
 import { findSchemaIdForNodeType } from "./nodeTypeSchema";
+import { createEmptyResearchUnlocks } from "./unlockTargets";
 
 import type { SchemaMeta } from "./schemaMeta";
+import type { ResearchUnlocks, UnlockKind } from "./unlockTargets";
 import type { Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type {
   Edge as ReactFlowEdge,
@@ -43,8 +45,9 @@ export function patchResearchColumn(
   columns: Column[],
   researchNodes: ReactFlowNode[],
   dependencyMap: Map<string, string[]>,
-  unlockMap: Map<string, string[]>,
+  unlockMap: Map<string, ResearchUnlocks>,
   schemaMetas: Map<string, SchemaMeta>,
+  activeKinds: ReadonlySet<UnlockKind>,
 ): Column[] {
   const researchSchemaId = findSchemaIdForNodeType("research", schemaMetas);
   if (!researchSchemaId) return columns;
@@ -74,10 +77,11 @@ export function patchResearchColumn(
     const record = { ...dataArray[recordIndex] };
     record.prevResearchNodeGuids = dependencyMap.get(masterGuid) ?? [];
 
-    const unlockGuids = unlockMap.get(masterGuid) ?? [];
+    const unlocks = unlockMap.get(masterGuid) ?? createEmptyResearchUnlocks();
     record.clearedActions = updateClearedActions(
       record.clearedActions || [],
-      unlockGuids,
+      unlocks,
+      activeKinds,
     );
 
     dataArray[recordIndex] = record;

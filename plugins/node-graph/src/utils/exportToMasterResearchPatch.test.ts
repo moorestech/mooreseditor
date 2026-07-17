@@ -94,6 +94,7 @@ describe("patchResearchColumn", () => {
       new Map(),
       new Map(),
       schemaMetas,
+      new Set(),
     );
 
     expect(
@@ -125,10 +126,119 @@ describe("patchResearchColumn", () => {
       dependencyMap,
       new Map(),
       schemaMetas,
+      new Set(),
     );
 
     expect(result[0].data.entries[0].prevResearchNodeGuids).toEqual([
       "source-guid",
+    ]);
+  });
+
+  it("regenerates unlock actions per kind and preserves other actions", () => {
+    const columns: Column[] = [
+      {
+        title: "researchs",
+        data: {
+          entries: [
+            {
+              guid: "research-guid",
+              name: "Research",
+              prevResearchNodeGuids: [],
+              clearedActions: [
+                {
+                  gameActionType: "unlockItemRecipeView",
+                  gameActionParam: { unlockItemGuids: ["stale-item"] },
+                },
+                {
+                  gameActionType: "unlockBlock",
+                  gameActionParam: { unlockBlockGuids: ["stale-block"] },
+                },
+                {
+                  gameActionType: "giveItem",
+                  gameActionParam: { itemGuid: "gift" },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ];
+    const schemaMetas = new Map([["researchs", makeSchemaMeta("researchs")]]);
+    const unlockMap = new Map([
+      [
+        "research-guid",
+        {
+          unlockItemGuids: ["new-item"],
+          unlockBlockGuids: ["new-block"],
+          unlockTrainCarGuids: [],
+        },
+      ],
+    ]);
+
+    const result = patchResearchColumn(
+      columns,
+      [makeResearchNode("research", "research-guid")],
+      new Map(),
+      unlockMap,
+      schemaMetas,
+      new Set(["item", "block", "train"] as const),
+    );
+
+    expect(result[0].data.entries[0].clearedActions).toEqual([
+      {
+        gameActionType: "giveItem",
+        gameActionParam: { itemGuid: "gift" },
+      },
+      {
+        gameActionType: "unlockItemRecipeView",
+        gameActionParam: { unlockItemGuids: ["new-item"] },
+      },
+      {
+        gameActionType: "unlockBlock",
+        gameActionParam: { unlockBlockGuids: ["new-block"] },
+      },
+    ]);
+  });
+
+  it("keeps existing unlock actions for kinds outside activeKinds", () => {
+    const columns: Column[] = [
+      {
+        title: "researchs",
+        data: {
+          entries: [
+            {
+              guid: "research-guid",
+              name: "Research",
+              prevResearchNodeGuids: [],
+              clearedActions: [
+                {
+                  gameActionType: "unlockTrainCar",
+                  gameActionParam: { unlockTrainCarGuids: ["hand-authored"] },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ];
+    const schemaMetas = new Map([["researchs", makeSchemaMeta("researchs")]]);
+
+    const result = patchResearchColumn(
+      columns,
+      [makeResearchNode("research", "research-guid")],
+      new Map(),
+      new Map(),
+      schemaMetas,
+      new Set(["item", "block"] as const),
+    );
+
+    // trainカラム未ロード時は手動投入のunlockTrainCarを消さない
+    // Hand-authored unlockTrainCar survives when train column isn't loaded
+    expect(result[0].data.entries[0].clearedActions).toEqual([
+      {
+        gameActionType: "unlockTrainCar",
+        gameActionParam: { unlockTrainCarGuids: ["hand-authored"] },
+      },
     ]);
   });
 });

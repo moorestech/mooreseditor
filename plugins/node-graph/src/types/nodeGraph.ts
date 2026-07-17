@@ -8,9 +8,12 @@ export interface NodeGraphFile {
 export type GraphNode =
   | ItemGraphNode
   | BlockGraphNode
+  | TrainGraphNode
   | ResearchGraphNode
   | NoteGraphNode
   | PlaceholderGraphNode;
+
+export type GraphNodeType = GraphNode["type"];
 
 interface BaseGraphNode {
   id: string;
@@ -22,6 +25,10 @@ export interface ItemGraphNode extends BaseGraphNode {
 }
 export interface BlockGraphNode extends BaseGraphNode {
   type: "block";
+  masterGuid: string;
+}
+export interface TrainGraphNode extends BaseGraphNode {
+  type: "train";
   masterGuid: string;
 }
 export interface ResearchGraphNode extends BaseGraphNode {
@@ -47,6 +54,7 @@ export type GraphEdge =
   | RecipeCollectionGraphEdge
   | CraftRecipeGraphEdge
   | MachineRecipeGraphEdge
+  | BuildCostGraphEdge
   | DependencyGraphEdge
   | VisualGraphEdge;
 
@@ -74,6 +82,11 @@ export interface RecipeCollectionGraphEdge extends BaseGraphEdge {
   edgeType: "recipe";
   recipes: RecipeReference[];
 }
+// 建設コスト辺。参照は持たずターゲットのrequiredItemsから導出
+// Build-cost edge. Holds no refs; derived from target's requiredItems
+export interface BuildCostGraphEdge extends BaseGraphEdge {
+  edgeType: "buildCost";
+}
 export interface DependencyGraphEdge extends BaseGraphEdge {
   edgeType: "dependency";
 }
@@ -85,4 +98,5 @@ export interface VisualGraphEdge extends BaseGraphEdge {
 // edgeType → type mapping
 // "recipe"                            → type: "recipe"  (RecipeEdge)
 // "craftRecipe" | "machineRecipe" → type: "recipe"  (RecipeEdge)
+// "buildCost"                     → type: "buildCost" (BuildCostEdge)
 // "dependency" | "visual"         → type: "arrow"    (DependencyEdge)

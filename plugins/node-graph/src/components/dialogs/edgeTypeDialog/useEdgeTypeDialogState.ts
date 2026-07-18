@@ -35,6 +35,7 @@ export function useEdgeTypeDialogState({
   targetNode,
   onMarkDirty,
   initialRecipeRefs,
+  initialMode,
 }: EdgeTypeDialogProps) {
   const [mode, setMode] = useState<EdgeDialogMode>("dependency");
   const [craftRecipeGuids, setCraftRecipeGuids] = useState<string[]>([]);
@@ -56,20 +57,19 @@ export function useEdgeTypeDialogState({
     if (initializedForOpenRef.current) return;
     initializedForOpenRef.current = true;
 
-    if (initialRecipeRefs && initialRecipeRefs.length > 0) {
-      setMode("recipe");
-      setCraftRecipeGuids(
-        initialRecipeRefs
-          .filter((r) => r.edgeType === "craftRecipe")
-          .map((r) => r.masterGuid),
-      );
-      setMachineRecipeGuids(
-        initialRecipeRefs
-          .filter((r) => r.edgeType === "machineRecipe")
-          .map((r) => r.masterGuid),
-      );
-    }
-  }, [opened, initialRecipeRefs]);
+    // 既存エッジ編集は現在型を初期選択し、選択済みレシピも毎回リセットする
+    // Editing preselects the current type; recipe selections reset on every open
+    const refs = initialRecipeRefs ?? [];
+    setMode(initialMode ?? (refs.length > 0 ? "recipe" : "dependency"));
+    setCraftRecipeGuids(
+      refs.filter((r) => r.edgeType === "craftRecipe").map((r) => r.masterGuid),
+    );
+    setMachineRecipeGuids(
+      refs
+        .filter((r) => r.edgeType === "machineRecipe")
+        .map((r) => r.masterGuid),
+    );
+  }, [opened, initialRecipeRefs, initialMode]);
 
   // 建設コストはターゲットがblock/trainのときだけ選択可能
   // Build Cost is selectable only when the target is a block/train node

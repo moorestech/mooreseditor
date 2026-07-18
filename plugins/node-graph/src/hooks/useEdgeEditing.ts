@@ -72,9 +72,7 @@ export function useEdgeEditing({
 
   const handleEdgeDoubleClick = useCallback(
     (_event: React.MouseEvent, edge: ReactFlowEdge) => {
-      if (edge.type === "recipe") {
-        setEditingEdge(edge);
-      }
+      setEditingEdge(edge);
     },
     [],
   );
@@ -82,7 +80,7 @@ export function useEdgeEditing({
   const handleRequestEditEdge = useCallback(
     (edgeId: string) => {
       const edge = state.edges.find((e) => e.id === edgeId);
-      if (edge?.type === "recipe") {
+      if (edge) {
         setEditingEdge(edge);
       }
     },
@@ -135,6 +133,15 @@ export function useEdgeEditing({
     [editingEdge],
   );
 
+  // 編集対象エッジの現在型をダイアログの初期選択にする
+  // Preselect the edited edge's current type in the dialog
+  const dialogInitialMode = useMemo<ConnectionDecision["edgeType"] | undefined>(() => {
+    if (!editingEdge) return undefined;
+    if (editingEdge.type === "recipe") return "recipe";
+    if (editingEdge.type === "buildCost") return "buildCost";
+    return editingEdge.data?.edgeType === "visual" ? "visual" : "dependency";
+  }, [editingEdge]);
+
   const handleDialogConfirm = useCallback(
     (decision: ConnectionDecision) => {
       if (editingEdge) {
@@ -162,6 +169,7 @@ export function useEdgeEditing({
     dialogSourceNode,
     dialogTargetNode,
     dialogInitialRecipeRefs,
+    dialogInitialMode,
     handleDialogConfirm,
     handleDialogCancel,
   };

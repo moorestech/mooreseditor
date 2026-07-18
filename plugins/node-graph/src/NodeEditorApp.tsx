@@ -89,6 +89,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     dialogSourceNode,
     dialogTargetNode,
     dialogInitialRecipeRefs,
+    dialogInitialMode,
     handleDialogConfirm,
     handleDialogCancel,
   } = useEdgeEditing({
@@ -207,6 +208,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
           targetNode={dialogTargetNode}
           onMarkDirty={handleMarkDirty}
           initialRecipeRefs={dialogInitialRecipeRefs}
+          initialMode={dialogInitialMode}
         />
       </div>
     </EdgeEditContext.Provider>

@@ -1,4 +1,8 @@
+import { useContext } from "react";
+
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from "@xyflow/react";
+
+import { EdgeEditContext } from "../../context/EdgeEditContext";
 
 import type { EdgeProps } from "@xyflow/react";
 
@@ -15,6 +19,8 @@ export default function BuildCostEdge({
   data,
   selected,
 }: EdgeProps) {
+  const requestEditEdge = useContext(EdgeEditContext);
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -56,9 +62,11 @@ export default function BuildCostEdge({
             whiteSpace: "pre-line",
             lineHeight: 1.3,
             textAlign: "center",
+            cursor: "pointer",
           }}
           className="nodrag nopan"
           title={label}
+          onDoubleClick={() => requestEditEdge?.(id)}
         >
           {label}
         </div>

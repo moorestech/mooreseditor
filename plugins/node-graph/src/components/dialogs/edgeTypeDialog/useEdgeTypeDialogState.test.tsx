@@ -108,6 +108,76 @@ describe("useEdgeTypeDialogState", () => {
     expect(result.current.craftRecipeGuids).toEqual(["user-selected-guid"]);
   });
 
+  it("preselects the edited edge's current type from initialMode", () => {
+    const columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
+    const createProps = (opened: boolean) => ({
+      opened,
+      onConfirm: vi.fn(),
+      onCancel: vi.fn(),
+      jsonData: columns,
+      setJsonData: vi.fn(),
+      schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+      sourceNode: {
+        id: "source",
+        type: "item",
+        data: { masterGuid: "item-a" },
+      } as any,
+      targetNode: {
+        id: "target",
+        type: "block",
+        data: { masterGuid: "block-b" },
+      } as any,
+      onMarkDirty: vi.fn(),
+      initialMode: "buildCost" as const,
+    });
+
+    const { result } = renderHook(
+      (props: ReturnType<typeof createProps>) => useEdgeTypeDialogState(props),
+      { initialProps: createProps(true) },
+    );
+
+    expect(result.current.mode).toBe("buildCost");
+  });
+
+  it("resets stale mode and recipe selections when reopened without initial state", () => {
+    const columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
+    const createProps = (opened: boolean) => ({
+      opened,
+      onConfirm: vi.fn(),
+      onCancel: vi.fn(),
+      jsonData: columns,
+      setJsonData: vi.fn(),
+      schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+      sourceNode: {
+        id: "source",
+        type: "item",
+        data: { masterGuid: "item-a" },
+      } as any,
+      targetNode: {
+        id: "target",
+        type: "item",
+        data: { masterGuid: "item-b" },
+      } as any,
+      onMarkDirty: vi.fn(),
+    });
+
+    const { result, rerender } = renderHook(
+      (props: ReturnType<typeof createProps>) => useEdgeTypeDialogState(props),
+      { initialProps: createProps(true) },
+    );
+
+    act(() => {
+      result.current.setMode("recipe");
+      result.current.setCraftRecipeGuids(["stale-guid"]);
+    });
+
+    rerender(createProps(false));
+    rerender(createProps(true));
+
+    expect(result.current.mode).toBe("dependency");
+    expect(result.current.craftRecipeGuids).toEqual([]);
+  });
+
   it("removes only unselected draft recipes when the dialog is confirmed", () => {
     let columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
     const setJsonData = vi.fn((updater) => {

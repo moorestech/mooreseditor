@@ -21,6 +21,7 @@ export interface EdgeTypeDialogProps {
   targetNode: ReactFlowNode | null;
   onMarkDirty: () => void;
   initialRecipeRefs?: RecipeReference[];
+  initialMode?: EdgeDialogMode;
 }
 
 export interface NodeSchemaRef {

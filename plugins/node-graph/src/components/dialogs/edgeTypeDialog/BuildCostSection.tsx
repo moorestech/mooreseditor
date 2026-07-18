@@ -1,9 +1,10 @@
 import { Stack, Text } from "@mantine/core";
 import { TableView } from "@moorestech/mooreseditor-plugin-sdk";
 
+import { isBuildCostArrayProperty } from "../../../utils/buildCostEdgeLabels";
 import { findSchemaIdForNodeType } from "../../../utils/nodeTypeSchema";
-import { INPUT_KEY_RE } from "../../../utils/recipeEdgeConstants";
 
+import type { CostSnapshot } from "./types";
 import type { SchemaMeta } from "../../../utils/schemaMeta";
 import type { ArraySchema, Column } from "@moorestech/mooreseditor-plugin-sdk";
 import type { Node as ReactFlowNode } from "@xyflow/react";
@@ -14,6 +15,7 @@ interface BuildCostSectionProps {
   setJsonData: React.Dispatch<React.SetStateAction<Column[]>>;
   schemaMetas: Map<string, SchemaMeta>;
   onMarkDirty: () => void;
+  onRegisterCostSnapshot: (snapshot: CostSnapshot) => void;
 }
 
 // ターゲットのマスタレコードとrequiredItems系配列プロパティを特定して直接編集する
@@ -24,6 +26,7 @@ export default function BuildCostSection({
   setJsonData,
   schemaMetas,
   onMarkDirty,
+  onRegisterCostSnapshot,
 }: BuildCostSectionProps) {
   const schemaId = targetNode?.type
     ? findSchemaIdForNodeType(targetNode.type, schemaMetas)
@@ -46,17 +49,20 @@ export default function BuildCostSection({
       ? rows.find((r) => r && typeof r === "object" && r[guidField] === masterGuid)
       : undefined;
 
+  // ラベル導出と同じ述語で対象プロパティを決め、表示と編集の乖離を防ぐ
+  // Share the label-derivation predicate so display and editing never diverge
   const costProperties = (meta?.elementSchema?.properties ?? []).filter(
-    (p) =>
-      "type" in p &&
-      p.type === "array" &&
-      INPUT_KEY_RE.test(p.key) &&
-      "items" in p &&
-      !!p.items &&
-      p.items.type === "object",
+    isBuildCostArrayProperty,
   );
 
-  if (!record || !schemaId || !guidField || !dataArrayPath || costProperties.length === 0) {
+  if (
+    !record ||
+    !schemaId ||
+    !guidField ||
+    !dataArrayPath ||
+    !masterGuid ||
+    costProperties.length === 0
+  ) {
     return (
       <Text size="xs" c="dimmed">
         Cost is derived from the target&apos;s requiredItems. Edit them in the
@@ -66,6 +72,16 @@ export default function BuildCostSection({
   }
 
   const handleCostChange = (propertyKey: string, nextArray: unknown[]) => {
+    // Cancel復元用に編集前の値を登録（同一プロパティは初回のみ保持される）
+    // Register the pre-edit value for cancel restore (first edit wins per property)
+    onRegisterCostSnapshot({
+      schemaId,
+      dataArrayPath,
+      guidField,
+      guid: masterGuid,
+      propertyKey,
+      original: record[propertyKey] ?? [],
+    });
     setJsonData((prev) =>
       prev.map((c) =>
         c.title !== schemaId
@@ -91,8 +107,8 @@ export default function BuildCostSection({
   return (
     <Stack gap="xs">
       <Text size="xs" c="dimmed">
-        Edits the target&apos;s cost directly (shared by every build-cost edge
-        of this target).
+        Edits the target&apos;s cost (shared by every build-cost edge of this
+        target). Cancel reverts edits made here.
       </Text>
       {costProperties.map((property) => (
         <Stack key={property.key} gap={4}>

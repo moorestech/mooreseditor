@@ -28,6 +28,30 @@ function findCountField(row: Record<string, unknown>): unknown {
   return undefined;
 }
 
+// 建設コストとして扱うFK配列プロパティの判定。ラベル導出と編集UIで共有する
+// Predicate for build-cost FK array properties, shared by labels and the editor UI
+export function isBuildCostArrayProperty(
+  property: ObjectPropertySchema,
+): boolean {
+  if (!("type" in property) || property.type !== "array") return false;
+  if (!INPUT_KEY_RE.test(property.key)) return false;
+  if (
+    !("items" in property) ||
+    !property.items ||
+    property.items.type !== "object"
+  ) {
+    return false;
+  }
+  const itemSchema = property.items as ObjectSchema;
+  return !!itemSchema.properties?.some(
+    (entry) =>
+      "type" in entry &&
+      entry.type === "uuid" &&
+      "foreignKey" in entry &&
+      !!entry.foreignKey,
+  );
+}
+
 // requiredItems相当のFK配列プロパティから「素材名 xN」行を組み立てる
 // Build "material xN" lines from a requiredItems-like FK array property
 function buildCostLines(
@@ -35,15 +59,8 @@ function buildCostLines(
   record: Record<string, unknown>,
   resolveForeignName: ForeignNameResolver,
 ): string[] {
-  if (!("type" in property) || property.type !== "array") return [];
-  if (!INPUT_KEY_RE.test(property.key)) return [];
-  if (
-    !("items" in property) ||
-    !property.items ||
-    property.items.type !== "object"
-  ) {
-    return [];
-  }
+  if (!isBuildCostArrayProperty(property)) return [];
+  if (!("items" in property) || !property.items) return [];
 
   const rows = record[property.key];
   if (!Array.isArray(rows)) return [];

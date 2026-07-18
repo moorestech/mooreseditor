@@ -219,6 +219,72 @@ describe("useEdgeTypeDialogState", () => {
     expect(result.current.craftRecipeGuids).toEqual([]);
   });
 
+  it("restores snapshotted build-cost edits on cancel but keeps them on confirm", () => {
+    const originalItems = [{ itemGuid: "item-x", count: 5 }];
+    let columns: Column[] = [
+      {
+        title: "blocks",
+        data: { data: [{ blockGuid: "block-b", requiredItems: originalItems }] },
+      },
+    ];
+    const setJsonData = vi.fn((updater) => {
+      columns = typeof updater === "function" ? updater(columns) : updater;
+    });
+    const createProps = () => ({
+      opened: true,
+      onConfirm: vi.fn(),
+      onCancel: vi.fn(),
+      jsonData: columns,
+      setJsonData,
+      schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+      sourceNode: {
+        id: "source",
+        type: "item",
+        data: { masterGuid: "item-a" },
+      } as any,
+      targetNode: {
+        id: "target",
+        type: "block",
+        data: { masterGuid: "block-b" },
+      } as any,
+      onMarkDirty: vi.fn(),
+    });
+
+    const { result } = renderHook(
+      (props: ReturnType<typeof createProps>) => useEdgeTypeDialogState(props),
+      { initialProps: createProps() },
+    );
+
+    // 編集をシミュレート: スナップショット登録の後にデータを書き換える
+    // Simulate an edit: register the snapshot, then mutate the data
+    act(() => {
+      result.current.registerCostSnapshot({
+        schemaId: "blocks",
+        dataArrayPath: "data",
+        guidField: "blockGuid",
+        guid: "block-b",
+        propertyKey: "requiredItems",
+        original: originalItems,
+      });
+    });
+    columns = [
+      {
+        title: "blocks",
+        data: {
+          data: [
+            { blockGuid: "block-b", requiredItems: [{ itemGuid: "item-x", count: 9 }] },
+          ],
+        },
+      },
+    ];
+
+    act(() => {
+      result.current.handleCancel();
+    });
+
+    expect(columns[0].data.data[0].requiredItems).toEqual(originalItems);
+  });
+
   it("removes only unselected draft recipes when the dialog is confirmed", () => {
     let columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
     const setJsonData = vi.fn((updater) => {

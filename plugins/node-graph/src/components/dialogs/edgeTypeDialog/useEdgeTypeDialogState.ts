@@ -17,6 +17,7 @@ import {
 } from "./recipeStateMutations";
 
 import type {
+  CostSnapshot,
   EdgeDialogMode,
   EdgeTypeDialogProps,
   ObjectArrayEditorState,
@@ -46,6 +47,7 @@ export function useEdgeTypeDialogState({
   const createdDraftRecipesRef = useRef<
     { schemaId: string; recipeGuid: string }[]
   >([]);
+  const costSnapshotsRef = useRef<CostSnapshot[]>([]);
   const initializedForOpenRef = useRef(false);
 
   // 建設コストはターゲットがblock/trainのときだけ選択可能
@@ -132,6 +134,56 @@ export function useEdgeTypeDialogState({
     setEditingRecipeKey(null);
     setObjectArrayEditor(null);
     createdDraftRecipesRef.current = [];
+    costSnapshotsRef.current = [];
+  };
+
+  // buildCost編集の初回値を保持（同一プロパティは最初のスナップショット優先）
+  // Keep the pre-edit value of build-cost arrays; first snapshot wins per property
+  const registerCostSnapshot = (snapshot: CostSnapshot) => {
+    const hasSnapshot = costSnapshotsRef.current.some(
+      (s) =>
+        s.schemaId === snapshot.schemaId &&
+        s.guid === snapshot.guid &&
+        s.propertyKey === snapshot.propertyKey,
+    );
+    if (!hasSnapshot) costSnapshotsRef.current.push(snapshot);
+  };
+
+  // Cancel時にbuildCost編集をマスタレコードへ巻き戻す
+  // Roll back build-cost edits to the master records on cancel
+  const restoreCostSnapshots = () => {
+    const snapshots = costSnapshotsRef.current;
+    if (snapshots.length === 0) return;
+    costSnapshotsRef.current = [];
+
+    setJsonData((prev) =>
+      snapshots.reduce(
+        (columns, snapshot) =>
+          columns.map((c) =>
+            c.title !== snapshot.schemaId
+              ? c
+              : {
+                  ...c,
+                  data: {
+                    ...c.data,
+                    [snapshot.dataArrayPath]: (
+                      c.data[snapshot.dataArrayPath] as Record<
+                        string,
+                        unknown
+                      >[]
+                    ).map((r) =>
+                      r &&
+                      typeof r === "object" &&
+                      r[snapshot.guidField] === snapshot.guid
+                        ? { ...r, [snapshot.propertyKey]: snapshot.original }
+                        : r,
+                    ),
+                  },
+                },
+          ),
+        prev,
+      ),
+    );
   };
 
   const cleanupCreatedDraftRecipes = (
@@ -198,6 +250,7 @@ export function useEdgeTypeDialogState({
 
   const handleCancel = () => {
     cleanupCreatedDraftRecipes();
+    restoreCostSnapshots();
     onCancel();
     resetState();
   };
@@ -296,6 +349,7 @@ export function useEdgeTypeDialogState({
     setObjectArrayEditor,
     handleConfirm,
     handleCancel,
+    registerCostSnapshot,
     handleCreateRecipe,
     handleEditRecipe,
     sourceLabel: getNodeLabel(sourceNode),

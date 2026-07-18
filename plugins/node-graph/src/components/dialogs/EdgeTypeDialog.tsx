@@ -35,6 +35,7 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
     setObjectArrayEditor,
     handleConfirm,
     handleCancel,
+    registerCostSnapshot,
     handleCreateRecipe,
     handleEditRecipe,
     sourceLabel,
@@ -73,6 +74,7 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
             setJsonData={props.setJsonData}
             schemaMetas={props.schemaMetas}
             onMarkDirty={props.onMarkDirty}
+            onRegisterCostSnapshot={registerCostSnapshot}
           />
         )}
 

@@ -44,6 +44,17 @@ export interface ObjectArrayEditorState {
   schema: ArraySchema;
 }
 
+// buildCost編集のCancel復元用スナップショット
+// Snapshot for restoring build-cost edits on cancel
+export interface CostSnapshot {
+  schemaId: string;
+  dataArrayPath: string;
+  guidField: string;
+  guid: string;
+  propertyKey: string;
+  original: unknown;
+}
+
 export type UuidForeignKeyProperty = ObjectPropertySchema & {
   type: "uuid";
   foreignKey: { schemaId: string };

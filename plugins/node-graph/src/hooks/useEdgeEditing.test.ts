@@ -67,3 +67,45 @@ describe("buildEditedEdge", () => {
     });
   });
 });
+
+describe("buildEditedEdge type conversions", () => {
+  it("converts a recipe edge to buildCost, stripping markerEnd and recipeRefs", () => {
+    const result = buildEditedEdge(baseRecipeEdge(), {
+      edgeType: "buildCost",
+    });
+
+    expect(result).toEqual({
+      id: "edge-1",
+      source: "source",
+      target: "target",
+      type: "buildCost",
+      data: { edgeType: "buildCost" },
+    });
+  });
+
+  it("converts a buildCost edge to recipe with the given recipeRefs", () => {
+    const buildCostEdge: ReactFlowEdge = {
+      id: "edge-2",
+      source: "source",
+      target: "target",
+      type: "buildCost",
+      data: { edgeType: "buildCost", buildCostLabel: "iron x5" },
+    };
+
+    const result = buildEditedEdge(buildCostEdge, {
+      edgeType: "recipe",
+      recipeRefs: [{ edgeType: "craftRecipe", masterGuid: "new-guid" }],
+    });
+
+    expect(result).toEqual({
+      id: "edge-2",
+      source: "source",
+      target: "target",
+      type: "recipe",
+      data: {
+        edgeType: "recipe",
+        recipeRefs: [{ edgeType: "craftRecipe", masterGuid: "new-guid" }],
+      },
+    });
+  });
+});

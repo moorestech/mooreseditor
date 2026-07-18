@@ -48,6 +48,11 @@ export function useEdgeTypeDialogState({
   >([]);
   const initializedForOpenRef = useRef(false);
 
+  // 建設コストはターゲットがblock/trainのときだけ選択可能
+  // Build Cost is selectable only when the target is a block/train node
+  const isBuildCostAvailable =
+    targetNode?.type === "block" || targetNode?.type === "train";
+
   // Initialize from existing edge data when editing
   useEffect(() => {
     if (!opened) {
@@ -60,7 +65,15 @@ export function useEdgeTypeDialogState({
     // 既存エッジ編集は現在型を初期選択し、選択済みレシピも毎回リセットする
     // Editing preselects the current type; recipe selections reset on every open
     const refs = initialRecipeRefs ?? [];
-    setMode(initialMode ?? (refs.length > 0 ? "recipe" : "dependency"));
+    const requestedMode =
+      initialMode ?? (refs.length > 0 ? "recipe" : "dependency");
+    // buildCost不可ターゲット（付け替え等）ではdependencyへ退避
+    // Fall back to dependency when buildCost is unavailable for the target
+    setMode(
+      requestedMode === "buildCost" && !isBuildCostAvailable
+        ? "dependency"
+        : requestedMode,
+    );
     setCraftRecipeGuids(
       refs.filter((r) => r.edgeType === "craftRecipe").map((r) => r.masterGuid),
     );
@@ -69,12 +82,7 @@ export function useEdgeTypeDialogState({
         .filter((r) => r.edgeType === "machineRecipe")
         .map((r) => r.masterGuid),
     );
-  }, [opened, initialRecipeRefs, initialMode]);
-
-  // 建設コストはターゲットがblock/trainのときだけ選択可能
-  // Build Cost is selectable only when the target is a block/train node
-  const isBuildCostAvailable =
-    targetNode?.type === "block" || targetNode?.type === "train";
+  }, [opened, initialRecipeRefs, initialMode, isBuildCostAvailable]);
 
   const recipeOptions = useMemo(
     () => buildRecipeOptions(jsonData, schemaMetas),
@@ -168,6 +176,9 @@ export function useEdgeTypeDialogState({
   };
 
   const handleConfirm = () => {
+    // buildCost不可ターゲットへのbuildCost確定を拒否
+    // Reject confirming buildCost for targets that cannot have one
+    if (mode === "buildCost" && !isBuildCostAvailable) return;
     if (mode === "recipe") {
       if (selectedRecipeRefs.length === 0) return;
       const selectedKeys = new Set(

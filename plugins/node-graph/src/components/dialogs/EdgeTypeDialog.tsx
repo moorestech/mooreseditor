@@ -101,7 +101,10 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
           </Button>
           <Button
             onClick={handleConfirm}
-            disabled={mode === "recipe" && selectedRecipeRefs.length === 0}
+            disabled={
+              (mode === "recipe" && selectedRecipeRefs.length === 0) ||
+              (mode === "buildCost" && !isBuildCostAvailable)
+            }
           >
             OK
           </Button>

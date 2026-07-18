@@ -139,6 +139,47 @@ describe("useEdgeTypeDialogState", () => {
     expect(result.current.mode).toBe("buildCost");
   });
 
+  it("falls back to dependency and blocks confirm when buildCost is unavailable", () => {
+    const columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
+    const onConfirm = vi.fn();
+    const createProps = () => ({
+      opened: true,
+      onConfirm,
+      onCancel: vi.fn(),
+      jsonData: columns,
+      setJsonData: vi.fn(),
+      schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+      sourceNode: {
+        id: "source",
+        type: "item",
+        data: { masterGuid: "item-a" },
+      } as any,
+      targetNode: {
+        id: "target",
+        type: "item",
+        data: { masterGuid: "item-b" },
+      } as any,
+      onMarkDirty: vi.fn(),
+      initialMode: "buildCost" as const,
+    });
+
+    const { result } = renderHook(
+      (props: ReturnType<typeof createProps>) => useEdgeTypeDialogState(props),
+      { initialProps: createProps() },
+    );
+
+    expect(result.current.isBuildCostAvailable).toBe(false);
+    expect(result.current.mode).toBe("dependency");
+
+    act(() => {
+      result.current.setMode("buildCost");
+    });
+    act(() => {
+      result.current.handleConfirm();
+    });
+    expect(onConfirm).not.toHaveBeenCalled();
+  });
+
   it("resets stale mode and recipe selections when reopened without initial state", () => {
     const columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
     const createProps = (opened: boolean) => ({

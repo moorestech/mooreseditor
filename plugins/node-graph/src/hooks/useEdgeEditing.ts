@@ -70,21 +70,25 @@ export function useEdgeEditing({
   const { state, dispatch } = useNodeEditorContext();
   const [editingEdge, setEditingEdge] = useState<ReactFlowEdge | null>(null);
 
+  // 新規接続ダイアログ表示中は編集要求を無視し、状態の同時成立を防ぐ
+  // Ignore edit requests while a new-connection dialog is pending
   const handleEdgeDoubleClick = useCallback(
     (_event: React.MouseEvent, edge: ReactFlowEdge) => {
+      if (pendingConnection) return;
       setEditingEdge(edge);
     },
-    [],
+    [pendingConnection],
   );
 
   const handleRequestEditEdge = useCallback(
     (edgeId: string) => {
+      if (pendingConnection) return;
       const edge = state.edges.find((e) => e.id === edgeId);
       if (edge) {
         setEditingEdge(edge);
       }
     },
-    [state.edges],
+    [pendingConnection, state.edges],
   );
 
   const handleEdgeEditConfirm = useCallback(

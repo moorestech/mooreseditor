@@ -7,6 +7,7 @@ import {
   Text,
 } from "@mantine/core";
 
+import BuildCostSection from "./edgeTypeDialog/BuildCostSection";
 import EdgeRecipeSection from "./edgeTypeDialog/EdgeRecipeSection";
 import { useEdgeTypeDialogState } from "./edgeTypeDialog/useEdgeTypeDialogState";
 
@@ -66,10 +67,13 @@ export default function EdgeTypeDialog(props: EdgeTypeDialogProps) {
         />
 
         {mode === "buildCost" && (
-          <Text size="xs" c="dimmed">
-            Cost is derived from the target&apos;s requiredItems. Edit them in
-            the Properties panel.
-          </Text>
+          <BuildCostSection
+            targetNode={props.targetNode}
+            jsonData={props.jsonData}
+            setJsonData={props.setJsonData}
+            schemaMetas={props.schemaMetas}
+            onMarkDirty={props.onMarkDirty}
+          />
         )}
 
         {mode === "recipe" && (

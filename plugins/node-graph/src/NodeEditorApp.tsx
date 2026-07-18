@@ -83,6 +83,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
 
   // Edge editing + dialog state
   const {
+    editingEdge,
     handleEdgeDoubleClick,
     handleRequestEditEdge,
     isEdgeDialogOpen,
@@ -129,6 +130,16 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
     ? resolvedNodes.find((n) => n.id === state.selectedNodeId) ?? null
     : null;
 
+  // 既存エッジ編集中は新規接続を受け付けず、ダイアログ状態の同時成立を防ぐ
+  // Reject new connections while an edge is being edited to keep dialog states exclusive
+  const handleConnect = useCallback(
+    (connection: Connection) => {
+      if (editingEdge) return;
+      onConnect(connection);
+    },
+    [editingEdge, onConnect],
+  );
+
   const handleEdgeReconnect = useCallback(
     (oldEdge: ReactFlowEdge, newConnection: Connection) => {
       const isReconnected = onReconnect(oldEdge, newConnection);
@@ -163,7 +174,7 @@ export default function NodeEditorApp(props: NodeEditorViewProps) {
             edges={resolvedEdges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
+            onConnect={handleConnect}
             onReconnect={handleEdgeReconnect}
             onNodeSelect={handleNodeSelect}
             onEdgeDoubleClick={handleEdgeDoubleClick}

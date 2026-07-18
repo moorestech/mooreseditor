@@ -285,6 +285,64 @@ describe("useEdgeTypeDialogState", () => {
     expect(columns[0].data.data[0].requiredItems).toEqual(originalItems);
   });
 
+  it("keeps snapshotted build-cost edits when the dialog is confirmed", () => {
+    const originalItems = [{ itemGuid: "item-x", count: 5 }];
+    const editedItems = [{ itemGuid: "item-x", count: 9 }];
+    let columns: Column[] = [
+      {
+        title: "blocks",
+        data: { data: [{ blockGuid: "block-b", requiredItems: editedItems }] },
+      },
+    ];
+    const setJsonData = vi.fn((updater) => {
+      columns = typeof updater === "function" ? updater(columns) : updater;
+    });
+
+    const { result } = renderHook(() =>
+      useEdgeTypeDialogState({
+        opened: true,
+        onConfirm: vi.fn(),
+        onCancel: vi.fn(),
+        jsonData: columns,
+        setJsonData,
+        schemaMetas: new Map([["craftRecipes", createCraftRecipeMeta()]]),
+        sourceNode: {
+          id: "source",
+          type: "item",
+          data: { masterGuid: "item-a" },
+        } as any,
+        targetNode: {
+          id: "target",
+          type: "block",
+          data: { masterGuid: "block-b" },
+        } as any,
+        onMarkDirty: vi.fn(),
+      }),
+    );
+
+    act(() => {
+      result.current.registerCostSnapshot({
+        schemaId: "blocks",
+        dataArrayPath: "data",
+        guidField: "blockGuid",
+        guid: "block-b",
+        propertyKey: "requiredItems",
+        original: originalItems,
+      });
+    });
+
+    act(() => {
+      result.current.handleConfirm();
+    });
+    // Confirmは編集を保持し、以後のCancelでも復元されない
+    // Confirm keeps the edits; a later cancel must not restore them
+    act(() => {
+      result.current.handleCancel();
+    });
+
+    expect(columns[0].data.data[0].requiredItems).toEqual(editedItems);
+  });
+
   it("removes only unselected draft recipes when the dialog is confirmed", () => {
     let columns: Column[] = [{ title: "craftRecipes", data: { data: [] } }];
     const setJsonData = vi.fn((updater) => {

@@ -69,7 +69,30 @@ describe("buildEditedEdge", () => {
 });
 
 describe("buildEditedEdge type conversions", () => {
-  it("converts a recipe edge to buildCost, stripping markerEnd and recipeRefs", () => {
+  it("converts a marker-carrying dependency edge to buildCost, stripping markerEnd", () => {
+    const dependencyEdge: ReactFlowEdge = {
+      id: "edge-1",
+      source: "source",
+      target: "target",
+      type: "arrow",
+      data: { edgeType: "dependency" },
+      markerEnd: { type: MarkerType.ArrowClosed },
+    };
+
+    const result = buildEditedEdge(dependencyEdge, {
+      edgeType: "buildCost",
+    });
+
+    expect(result).toEqual({
+      id: "edge-1",
+      source: "source",
+      target: "target",
+      type: "buildCost",
+      data: { edgeType: "buildCost" },
+    });
+  });
+
+  it("converts a recipe edge to buildCost, stripping recipeRefs", () => {
     const result = buildEditedEdge(baseRecipeEdge(), {
       edgeType: "buildCost",
     });

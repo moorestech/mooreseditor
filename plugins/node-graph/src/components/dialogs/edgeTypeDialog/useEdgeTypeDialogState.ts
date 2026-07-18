@@ -159,28 +159,26 @@ export function useEdgeTypeDialogState({
     setJsonData((prev) =>
       snapshots.reduce(
         (columns, snapshot) =>
-          columns.map((c) =>
-            c.title !== snapshot.schemaId
-              ? c
-              : {
-                  ...c,
-                  data: {
-                    ...c.data,
-                    [snapshot.dataArrayPath]: (
-                      c.data[snapshot.dataArrayPath] as Record<
-                        string,
-                        unknown
-                      >[]
-                    ).map((r) =>
-                      r &&
-                      typeof r === "object" &&
-                      r[snapshot.guidField] === snapshot.guid
-                        ? { ...r, [snapshot.propertyKey]: snapshot.original }
-                        : r,
-                    ),
-                  },
-                },
-          ),
+          columns.map((c) => {
+            if (c.title !== snapshot.schemaId) return c;
+            const rows = c.data?.[snapshot.dataArrayPath];
+            if (!Array.isArray(rows)) return c;
+            return {
+              ...c,
+              data: {
+                ...c.data,
+                [snapshot.dataArrayPath]: (
+                  rows as Record<string, unknown>[]
+                ).map((r) =>
+                  r &&
+                  typeof r === "object" &&
+                  r[snapshot.guidField] === snapshot.guid
+                    ? { ...r, [snapshot.propertyKey]: snapshot.original }
+                    : r,
+                ),
+              },
+            };
+          }),
         prev,
       ),
     );
